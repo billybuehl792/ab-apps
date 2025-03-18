@@ -1,12 +1,8 @@
 import { createContext, useContext } from "react";
-import type { User } from "../types/global";
+import type { User } from "firebase/auth";
 
-const AuthContext = createContext<{
-  user: User | null;
-  loading: boolean;
-}>({
+const AuthContext = createContext<{ user: User | null }>({
   user: null,
-  loading: true,
 });
 
 const useAuth = () => {

@@ -1,26 +1,32 @@
-import { type FC, type PropsWithChildren, useEffect, useState } from "react";
+import {
+  type ContextType,
+  type FC,
+  type PropsWithChildren,
+  useEffect,
+  useState,
+} from "react";
+import { CircularProgress } from "@mui/material";
 import { AuthContext } from "../context/AuthContext";
-import { User } from "../types/global";
+import { auth } from "../firebase";
 
 const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [value, setValue] = useState<ContextType<typeof AuthContext>>({
+    user: null,
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setUser({ id: "1", name: "Hello User" });
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setValue({ user });
       setLoading(false);
-    }, 2000);
+    });
 
-    return () => {
-      setUser(null);
-      setLoading(true);
-    };
+    return unsubscribe;
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
-      {children}
+    <AuthContext.Provider value={value}>
+      {loading ? <CircularProgress /> : children}
     </AuthContext.Provider>
   );
 };
