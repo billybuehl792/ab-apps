@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Button, type ButtonProps, Stack, TextField } from "@mui/material";
-import { useAuth } from "../context/AuthContext";
-import { signIn, signOut } from "../firebase/auth";
+import { useAuth } from "@/context/AuthContext";
+import { signIn, signOut } from "@/firebase/auth";
 
-export const Route = createFileRoute("/private")({
+export const Route = createFileRoute("/private/")({
   component: Private,
 });
 

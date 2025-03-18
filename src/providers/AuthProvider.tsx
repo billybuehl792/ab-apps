@@ -6,8 +6,8 @@ import {
   useState,
 } from "react";
 import { CircularProgress } from "@mui/material";
-import { AuthContext } from "../context/AuthContext";
-import { auth } from "../firebase";
+import { AuthContext } from "@/context/AuthContext";
+import { auth } from "@/firebase";
 
 const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [value, setValue] = useState<ContextType<typeof AuthContext>>({

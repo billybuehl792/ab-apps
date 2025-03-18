@@ -8,10 +8,10 @@ import {
 } from "@mui/material";
 
 const posts = [
-  { id: 1, label: "hello world" },
-  { id: 2, label: "oh cool" },
-  { id: 3, label: "test" },
-  { id: 4, label: "searching" },
+  { id: "1", label: "hello world" },
+  { id: "2", label: "oh cool" },
+  { id: "3", label: "test" },
+  { id: "4", label: "searching" },
 ];
 
 export const Route = createFileRoute("/posts/")({
@@ -60,11 +60,7 @@ function Posts() {
         />
       </Stack>
       {posts.map((post) => (
-        <Link
-          key={post.id}
-          to="/posts/$postId"
-          params={{ postId: post.id.toString() }}
-        >
+        <Link key={post.id} to="/posts/$id" params={{ id: post.id }}>
           {post.label}
         </Link>
       ))}

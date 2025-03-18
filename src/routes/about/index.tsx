@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Stack } from "@mui/material";
 
-export const Route = createFileRoute("/about")({
+export const Route = createFileRoute("/about/")({
   component: About,
 });
 

@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Stack } from "@mui/material";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "@/context/AuthContext";
 
 interface RouterContext {
   auth: ContextType<typeof AuthContext>;
@@ -24,6 +24,9 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         </Link>
         <Link to="/posts" className="[&.active]:font-bold">
           Posts
+        </Link>
+        <Link to="/customers" className="[&.active]:font-bold">
+          Customers
         </Link>
         <Link to="/private" className="[&.active]:font-bold">
           Private

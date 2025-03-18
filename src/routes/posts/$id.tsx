@@ -1,17 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CircularProgress } from "@mui/material";
 
-export const Route = createFileRoute("/posts/$postId")({
+export const Route = createFileRoute("/posts/$id")({
   component: Post,
   loader: async ({ params }) => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
-    return { postId: params.postId };
+    return { id: params.id };
   },
   pendingComponent: () => <CircularProgress />,
 });
 
 function Post() {
-  const { postId } = Route.useLoaderData();
+  const { id } = Route.useLoaderData();
 
-  return <div>Hello {postId}!</div>;
+  return <div>Hello {id}!</div>;
 }

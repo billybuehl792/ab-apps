@@ -11,29 +11,25 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as PrivateImport } from './routes/private'
-import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as PrivateIndexImport } from './routes/private/index'
 import { Route as PostsIndexImport } from './routes/posts/index'
-import { Route as PostsPostIdImport } from './routes/posts/$postId'
+import { Route as CustomersIndexImport } from './routes/customers/index'
+import { Route as AboutIndexImport } from './routes/about/index'
+import { Route as PostsIdImport } from './routes/posts/$id'
+import { Route as CustomersIdImport } from './routes/customers/$id'
 
 // Create/Update Routes
-
-const PrivateRoute = PrivateImport.update({
-  id: '/private',
-  path: '/private',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const AboutRoute = AboutImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PrivateIndexRoute = PrivateIndexImport.update({
+  id: '/private/',
+  path: '/private/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -43,9 +39,27 @@ const PostsIndexRoute = PostsIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const PostsPostIdRoute = PostsPostIdImport.update({
-  id: '/posts/$postId',
-  path: '/posts/$postId',
+const CustomersIndexRoute = CustomersIndexImport.update({
+  id: '/customers/',
+  path: '/customers/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AboutIndexRoute = AboutIndexImport.update({
+  id: '/about/',
+  path: '/about/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PostsIdRoute = PostsIdImport.update({
+  id: '/posts/$id',
+  path: '/posts/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CustomersIdRoute = CustomersIdImport.update({
+  id: '/customers/$id',
+  path: '/customers/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,25 +74,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      id: '/about'
+    '/customers/$id': {
+      id: '/customers/$id'
+      path: '/customers/$id'
+      fullPath: '/customers/$id'
+      preLoaderRoute: typeof CustomersIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/posts/$id': {
+      id: '/posts/$id'
+      path: '/posts/$id'
+      fullPath: '/posts/$id'
+      preLoaderRoute: typeof PostsIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/about/': {
+      id: '/about/'
       path: '/about'
       fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
+      preLoaderRoute: typeof AboutIndexImport
       parentRoute: typeof rootRoute
     }
-    '/private': {
-      id: '/private'
-      path: '/private'
-      fullPath: '/private'
-      preLoaderRoute: typeof PrivateImport
-      parentRoute: typeof rootRoute
-    }
-    '/posts/$postId': {
-      id: '/posts/$postId'
-      path: '/posts/$postId'
-      fullPath: '/posts/$postId'
-      preLoaderRoute: typeof PostsPostIdImport
+    '/customers/': {
+      id: '/customers/'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof CustomersIndexImport
       parentRoute: typeof rootRoute
     }
     '/posts/': {
@@ -88,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/private/': {
+      id: '/private/'
+      path: '/private'
+      fullPath: '/private'
+      preLoaderRoute: typeof PrivateIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -95,52 +123,84 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/private': typeof PrivateRoute
-  '/posts/$postId': typeof PostsPostIdRoute
+  '/customers/$id': typeof CustomersIdRoute
+  '/posts/$id': typeof PostsIdRoute
+  '/about': typeof AboutIndexRoute
+  '/customers': typeof CustomersIndexRoute
   '/posts': typeof PostsIndexRoute
+  '/private': typeof PrivateIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/private': typeof PrivateRoute
-  '/posts/$postId': typeof PostsPostIdRoute
+  '/customers/$id': typeof CustomersIdRoute
+  '/posts/$id': typeof PostsIdRoute
+  '/about': typeof AboutIndexRoute
+  '/customers': typeof CustomersIndexRoute
   '/posts': typeof PostsIndexRoute
+  '/private': typeof PrivateIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/private': typeof PrivateRoute
-  '/posts/$postId': typeof PostsPostIdRoute
+  '/customers/$id': typeof CustomersIdRoute
+  '/posts/$id': typeof PostsIdRoute
+  '/about/': typeof AboutIndexRoute
+  '/customers/': typeof CustomersIndexRoute
   '/posts/': typeof PostsIndexRoute
+  '/private/': typeof PrivateIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/private' | '/posts/$postId' | '/posts'
+  fullPaths:
+    | '/'
+    | '/customers/$id'
+    | '/posts/$id'
+    | '/about'
+    | '/customers'
+    | '/posts'
+    | '/private'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/private' | '/posts/$postId' | '/posts'
-  id: '__root__' | '/' | '/about' | '/private' | '/posts/$postId' | '/posts/'
+  to:
+    | '/'
+    | '/customers/$id'
+    | '/posts/$id'
+    | '/about'
+    | '/customers'
+    | '/posts'
+    | '/private'
+  id:
+    | '__root__'
+    | '/'
+    | '/customers/$id'
+    | '/posts/$id'
+    | '/about/'
+    | '/customers/'
+    | '/posts/'
+    | '/private/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  PrivateRoute: typeof PrivateRoute
-  PostsPostIdRoute: typeof PostsPostIdRoute
+  CustomersIdRoute: typeof CustomersIdRoute
+  PostsIdRoute: typeof PostsIdRoute
+  AboutIndexRoute: typeof AboutIndexRoute
+  CustomersIndexRoute: typeof CustomersIndexRoute
   PostsIndexRoute: typeof PostsIndexRoute
+  PrivateIndexRoute: typeof PrivateIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  PrivateRoute: PrivateRoute,
-  PostsPostIdRoute: PostsPostIdRoute,
+  CustomersIdRoute: CustomersIdRoute,
+  PostsIdRoute: PostsIdRoute,
+  AboutIndexRoute: AboutIndexRoute,
+  CustomersIndexRoute: CustomersIndexRoute,
   PostsIndexRoute: PostsIndexRoute,
+  PrivateIndexRoute: PrivateIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -154,26 +214,34 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about",
-        "/private",
-        "/posts/$postId",
-        "/posts/"
+        "/customers/$id",
+        "/posts/$id",
+        "/about/",
+        "/customers/",
+        "/posts/",
+        "/private/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/about": {
-      "filePath": "about.tsx"
+    "/customers/$id": {
+      "filePath": "customers/$id.tsx"
     },
-    "/private": {
-      "filePath": "private.tsx"
+    "/posts/$id": {
+      "filePath": "posts/$id.tsx"
     },
-    "/posts/$postId": {
-      "filePath": "posts/$postId.tsx"
+    "/about/": {
+      "filePath": "about/index.tsx"
+    },
+    "/customers/": {
+      "filePath": "customers/index.tsx"
     },
     "/posts/": {
       "filePath": "posts/index.tsx"
+    },
+    "/private/": {
+      "filePath": "private/index.tsx"
     }
   }
 }
