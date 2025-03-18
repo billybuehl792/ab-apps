@@ -1,8 +1,18 @@
-import { Stack } from "@mui/material";
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { type ContextType } from "react";
+import {
+  createRootRouteWithContext,
+  Link,
+  Outlet,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { Stack } from "@mui/material";
+import { AuthContext } from "../context/AuthContext";
 
-export const Route = createRootRoute({
+interface RouterContext {
+  auth: ContextType<typeof AuthContext>;
+}
+
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => (
     <>
       <Stack direction="row" spacing={2}>
@@ -14,6 +24,9 @@ export const Route = createRootRoute({
         </Link>
         <Link to="/posts" className="[&.active]:font-bold">
           Posts
+        </Link>
+        <Link to="/private" className="[&.active]:font-bold">
+          Private
         </Link>
       </Stack>
       <hr />
