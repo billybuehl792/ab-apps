@@ -3,17 +3,35 @@ import {
   collection,
   deleteDoc,
   doc,
+  getCountFromServer,
   getDoc,
   getDocs,
   query,
+  QueryConstraint,
   updateDoc,
 } from "firebase/firestore";
 import { db } from ".";
 import type { Customer } from "@/types/global";
 
-const getCustomerList = async (): Promise<Customer[]> => {
+const getCustomerCount = async (
+  ...constraints: QueryConstraint[]
+): Promise<number> => {
   try {
-    const q = query(collection(db, "customers"));
+    const q = query(collection(db, "customers"), ...constraints);
+    const querySnapshot = await getCountFromServer(q);
+
+    return querySnapshot.data().count;
+  } catch (error) {
+    console.error("Error retrieving customer count:", error);
+    throw error;
+  }
+};
+
+const getCustomerList = async (
+  ...constraints: QueryConstraint[]
+): Promise<Customer[]> => {
+  try {
+    const q = query(collection(db, "customers"), ...constraints);
     const querySnapshot = await getDocs(q);
 
     return querySnapshot.docs.map(
@@ -72,6 +90,7 @@ const deleteCustomer = async (id: Customer["id"]): Promise<void> => {
 };
 
 export {
+  getCustomerCount,
   getCustomerList,
   getCustomer,
   createCustomer,

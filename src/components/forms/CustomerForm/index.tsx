@@ -10,7 +10,7 @@ import {
   Typography,
   type StackProps,
 } from "@mui/material";
-import { createCustomer, updateCustomer } from "@/firebase/db";
+import { createCustomer, updateCustomer } from "@/firebase/queries";
 import type { Customer } from "@/types/global";
 
 interface CustomerForm

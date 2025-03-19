@@ -16,13 +16,13 @@ const posts = [
 
 export const Route = createFileRoute("/posts/")({
   component: Posts,
-  validateSearch: (search: Record<string, unknown>): { term?: string } => ({
-    term: search.term as string,
+  validateSearch: ({ s }: Record<string, unknown>): { s?: string } => ({
+    s: s as string,
   }),
-  loaderDeps: ({ search: { term } }) => ({ term }),
-  loader: async ({ deps: { term = "" } }) => {
+  loaderDeps: ({ search: { s } }) => ({ s }),
+  loader: async ({ deps: { s = "" } }) => {
     const filteredPosts = posts.filter((post) =>
-      post.label.toLowerCase().includes(term.toLowerCase())
+      post.label.toLowerCase().includes(s.toLowerCase())
     );
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/posts/")({
 
 function Posts() {
   const { posts } = Route.useLoaderData();
-  const { term } = Route.useSearch();
+  const { s } = Route.useSearch();
 
   const navigate = useNavigate();
 
@@ -43,7 +43,7 @@ function Posts() {
   const handleSearch: TextFieldProps["onChange"] = (event) =>
     navigate({
       to: "/posts",
-      search: { term: event.target.value },
+      search: { s: event.target.value },
     });
 
   return (
@@ -55,7 +55,7 @@ function Posts() {
           label="Search field"
           type="search"
           variant="filled"
-          value={term}
+          value={s}
           onChange={handleSearch}
         />
       </Stack>

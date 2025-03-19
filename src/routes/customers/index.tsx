@@ -3,9 +3,21 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { deleteCustomer, getCustomerList } from "@/firebase/db";
-import { Button, CircularProgress, Stack, Typography } from "@mui/material";
-import { Add, Delete, Edit } from "@mui/icons-material";
+import { orderBy } from "firebase/firestore";
+import {
+  createCustomer,
+  deleteCustomer,
+  getCustomerCount,
+  getCustomerList,
+} from "@/firebase/queries";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { Add, ContentCopy, Delete, Edit } from "@mui/icons-material";
 import CustomerCard from "@/components/cards/CustomerCard";
 import type { Customer } from "@/types/global";
 
@@ -14,8 +26,10 @@ export const Route = createFileRoute("/customers/")({
   loader: async ({ context }) => {
     if (!context.auth.user) throw new Error("User not authenticated");
 
-    const customers = await getCustomerList();
-    return { customers };
+    const count = await getCustomerCount();
+    const customers = await getCustomerList(orderBy("name"));
+
+    return { customers, count };
   },
   pendingComponent: () => <CircularProgress />,
   errorComponent: ({ error }) => <Stack>{error.message}</Stack>,
@@ -26,7 +40,7 @@ function Customers() {
 
   const router = useRouter();
   const navigate = useNavigate();
-  const { customers } = Route.useLoaderData();
+  const { customers, count } = Route.useLoaderData();
 
   /** Callbacks */
 
@@ -39,9 +53,25 @@ function Customers() {
     }
   };
 
+  const handleDuplicateCustomer = async (customer: Customer) => {
+    try {
+      await createCustomer({
+        name: `${customer.name} (Copy)`,
+        email: customer.email,
+        phone: customer.phone,
+        address: customer.address,
+      });
+      router.invalidate();
+    } catch (error) {
+      console.error("Error duplicating customer:", error);
+    }
+  };
+
   return (
     <Stack spacing={1}>
-      <Typography variant="body1">Customers</Typography>
+      <Typography variant="body1">
+        Customers <Box component="span">({count})</Box>
+      </Typography>
       <Stack spacing={1}>
         {customers.map((customer) => (
           <CustomerCard
@@ -53,6 +83,12 @@ function Customers() {
                 label: "Edit",
                 icon: <Edit />,
                 onClick: () => navigate({ to: `/customers/${customer.id}` }),
+              },
+              {
+                id: "duplicate",
+                label: "Duplicate",
+                icon: <ContentCopy />,
+                onClick: () => handleDuplicateCustomer(customer),
               },
               {
                 id: "delete",
