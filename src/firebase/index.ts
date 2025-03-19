@@ -13,11 +13,11 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 if (import.meta.env.DEV) self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-const appCheck = initializeAppCheck(app, {
+initializeAppCheck(app, {
   provider: new ReCaptchaV3Provider(
     import.meta.env.VITE_PUBLIC_RECAPTCHA_SITE_KEY
   ),
   isTokenAutoRefreshEnabled: true,
 });
 
-export { analytics, auth, db, storage, appCheck };
+export { analytics, auth, db, storage };
