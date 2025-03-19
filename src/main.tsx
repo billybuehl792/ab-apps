@@ -4,6 +4,11 @@ import { router } from "./router";
 import App from "./App";
 import AuthProvider from "./providers/AuthProvider";
 
+declare global {
+  // eslint-disable-next-line no-var
+  var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
+}
+
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
