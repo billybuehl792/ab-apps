@@ -10,3 +10,14 @@ export interface Customer {
   address: string;
   phone: string;
 }
+
+export interface MenuOption<T = string> {
+  id: T;
+  render?: boolean;
+  label: string;
+  icon?: IconDefinition | ReactNode;
+  selected?: boolean;
+  disabled?: boolean;
+  tooltip?: string;
+  onClick: (value?: IMenuOption, event?: React.MouseEvent) => void;
+}

@@ -1,4 +1,13 @@
-import { collection, doc, getDoc, getDocs, query } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from ".";
 import type { Customer } from "@/types/global";
 
@@ -28,4 +37,44 @@ const getCustomer = async (id: string): Promise<Customer> => {
   }
 };
 
-export { getCustomerList, getCustomer };
+const createCustomer = async (
+  customer: Omit<Customer, "id">
+): Promise<Customer> => {
+  try {
+    const customerDoc = await addDoc(collection(db, "customers"), customer);
+    return { ...customer, id: customerDoc.id };
+  } catch (error) {
+    console.error("Error creating customer:", error);
+    throw error;
+  }
+};
+
+const updateCustomer = async ({
+  id,
+  ...customer
+}: Customer): Promise<Customer> => {
+  try {
+    await updateDoc(doc(db, "customers", id), customer);
+    return { id, ...customer };
+  } catch (error) {
+    console.error("Error updating customer:", error);
+    throw error;
+  }
+};
+
+const deleteCustomer = async (id: Customer["id"]): Promise<void> => {
+  try {
+    await deleteDoc(doc(db, "customers", id));
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    throw error;
+  }
+};
+
+export {
+  getCustomerList,
+  getCustomer,
+  createCustomer,
+  updateCustomer,
+  deleteCustomer,
+};
