@@ -9,7 +9,7 @@ import {
   Typography,
   type CardProps,
 } from "@mui/material";
-import MenuButton from "@/components/buttons/MenuButton";
+import MenuIconButton from "@/components/buttons/MenuIconButton";
 import type { Customer, MenuOption } from "@/types/global";
 
 interface CustomerCard
@@ -56,7 +56,7 @@ const CustomerCard: FC<CustomerCard> = ({
             </Stack>
           </Stack>
 
-          {!!options && <MenuButton options={options} />}
+          {!!options && <MenuIconButton options={options} />}
         </CardContent>
       </CardActionArea>
     </Card>

@@ -11,12 +11,12 @@ import {
 import { MoreVert } from "@mui/icons-material";
 import type { MenuOption } from "@/types/global";
 
-interface MenuButton extends IconButtonProps {
+interface MenuIconButton extends IconButtonProps {
   options: MenuOption[];
   icon?: ReactNode;
 }
 
-const MenuButton: FC<MenuButton> = ({
+const MenuIconButton: FC<MenuIconButton> = ({
   options,
   icon = <MoreVert />,
   ...props
@@ -76,4 +76,4 @@ const MenuButton: FC<MenuButton> = ({
   );
 };
 
-export default MenuButton;
+export default MenuIconButton;
