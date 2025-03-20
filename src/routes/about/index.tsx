@@ -7,18 +7,15 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { getCustomerCount } from "@/firebase/queries";
+import { getCustomerCount, getCustomerList } from "@/firebase/api";
 import CustomerCard from "@/components/cards/CustomerCard";
 import {
-  collection,
-  DocumentData,
-  getDocs,
   limit,
   orderBy,
-  query,
+  QueryDocumentSnapshot,
   startAfter,
 } from "firebase/firestore";
-import { db } from "@/firebase";
+import { getQueryKey } from "@/utils/queries";
 import type { Customer } from "@/types/global";
 
 const PAGE_SIZE = 3;
@@ -29,7 +26,7 @@ export const Route = createFileRoute("/about/")({
     if (!context.auth.user) throw new Error("User not authenticated");
   },
   loader: async () => {
-    const count = await getCustomerCount();
+    const count = (await getCustomerCount()).data().count;
     return { count };
   },
   pendingComponent: () => <CircularProgress />,
@@ -44,16 +41,17 @@ function About() {
   /** Queries */
 
   const customerListQuery = useInfiniteQuery({
-    queryKey: ["customerList", [orderBy("name"), limit(PAGE_SIZE)]] as const,
-    initialPageParam: {} as DocumentData,
-    queryFn: ({ queryKey: [_, constraints], pageParam }) =>
-      getDocs(
-        query(
-          collection(db, "customers"),
+    queryKey: getQueryKey("customerList", {
+      constraints: [orderBy("name"), limit(PAGE_SIZE)],
+    }),
+    initialPageParam: {} as QueryDocumentSnapshot<Customer>,
+    queryFn: ({ queryKey: [_, { constraints = [] }], pageParam }) =>
+      getCustomerList({
+        constraints: [
           ...constraints,
-          ...(pageParam?.id ? [startAfter(pageParam)] : [])
-        )
-      ),
+          ...(pageParam?.id ? [startAfter(pageParam)] : []),
+        ],
+      }),
     getNextPageParam: (lastPage, pages) =>
       pages.reduce((acc, doc) => acc + doc.docs.length, 0) < count
         ? lastPage.docs.at(-1)
@@ -66,9 +64,7 @@ function About() {
       <Stack spacing={1}>
         <Stack spacing={1}>
           {customerListQuery.data?.pages.map((snapshot) =>
-            snapshot.docs.map((doc) => (
-              <CustomerCard key={doc.id} customer={doc.data() as Customer} />
-            ))
+            snapshot.docs.map((doc) => <CustomerCard key={doc.id} doc={doc} />)
           )}
           {(customerListQuery.isFetchingNextPage ||
             customerListQuery.isLoading) &&

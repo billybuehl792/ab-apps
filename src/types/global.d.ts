@@ -1,10 +1,6 @@
-export interface User {
-  id: string;
-  name: string;
-}
+import type { QueryConstraint } from "firebase/firestore";
 
 export interface Customer {
-  id: string;
   name: string;
   email: string;
   address: string;
@@ -21,3 +17,12 @@ export interface MenuOption<T = string> {
   tooltip?: string;
   onClick: (value?: IMenuOption, event?: React.MouseEvent) => void;
 }
+
+export interface QueryOptions<C extends QueryConstraint = QueryConstraint> {
+  constraints?: C[];
+}
+
+export type QueryKey<C extends QueryConstraint = QueryConstraint> = [
+  string,
+  QueryOptions<C>,
+];

@@ -1,8 +1,7 @@
-import { type FC } from "react";
+import { type FC, type MouseEvent } from "react";
 import {
   Card,
   CardActionArea,
-  type CardActionAreaProps,
   CardContent,
   Divider,
   Stack,
@@ -11,23 +10,30 @@ import {
 } from "@mui/material";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
 import type { Customer, MenuOption } from "@/types/global";
+import type { QueryDocumentSnapshot } from "firebase/firestore";
 
-interface CustomerCard
-  extends Omit<CardProps, "onClick">,
-    Pick<CardActionAreaProps, "onClick"> {
-  customer: Customer;
+interface CustomerCard extends Omit<CardProps, "onClick"> {
+  doc: QueryDocumentSnapshot<Customer>;
+  onClick?: (
+    event: MouseEvent<HTMLButtonElement>,
+    doc: QueryDocumentSnapshot<Customer>
+  ) => void;
   options?: MenuOption[];
 }
 
 const CustomerCard: FC<CustomerCard> = ({
-  customer,
+  doc,
   options,
   onClick,
   ...props
 }) => {
+  /** Values */
+
+  const customer = doc.data();
+
   return (
     <Card variant="outlined" {...props}>
-      <CardActionArea onClick={onClick}>
+      <CardActionArea onClick={(event) => onClick?.(event, doc)}>
         <CardContent
           component={Stack}
           direction="row"

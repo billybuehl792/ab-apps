@@ -10,10 +10,5 @@ function RouteComponent() {
 
   const navigate = useNavigate();
 
-  return (
-    <CustomerForm
-      width={500}
-      onSuccess={(customer) => navigate({ to: `/customers/${customer.id}` })}
-    />
-  );
+  return <CustomerForm onSuccess={() => navigate({ to: "/customers" })} />;
 }

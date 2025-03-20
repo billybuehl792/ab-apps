@@ -3,13 +3,13 @@ import {
   useNavigate,
   useRouter,
 } from "@tanstack/react-router";
-import { orderBy } from "firebase/firestore";
+import { orderBy, QueryDocumentSnapshot } from "firebase/firestore";
 import {
   createCustomer,
   deleteCustomer,
   getCustomerCount,
   getCustomerList,
-} from "@/firebase/queries";
+} from "@/firebase/api";
 import {
   Box,
   Button,
@@ -27,10 +27,12 @@ export const Route = createFileRoute("/customers/")({
     if (!context.auth.user) throw new Error("User not authenticated");
   },
   loader: async () => {
-    const count = await getCustomerCount();
-    const customers = await getCustomerList(orderBy("name"));
+    const count = (await getCustomerCount()).data().count;
+    const customerDocList = (
+      await getCustomerList({ constraints: [orderBy("name")] })
+    ).docs;
 
-    return { customers, count };
+    return { customerDocList, count };
   },
   pendingComponent: () => <CircularProgress />,
   errorComponent: ({ error }) => <Stack>{error.message}</Stack>,
@@ -41,21 +43,24 @@ function Customers() {
 
   const router = useRouter();
   const navigate = useNavigate();
-  const { customers, count } = Route.useLoaderData();
+  const { customerDocList, count } = Route.useLoaderData();
 
   /** Callbacks */
 
-  const handleDeleteCustomer = async (customer: Customer) => {
+  const handleDeleteCustomer = async (doc: QueryDocumentSnapshot<Customer>) => {
     try {
-      await deleteCustomer(customer.id);
+      await deleteCustomer(doc.id);
       router.invalidate();
     } catch (error) {
       console.error("Error deleting customer:", error);
     }
   };
 
-  const handleDuplicateCustomer = async (customer: Customer) => {
+  const handleDuplicateCustomer = async (
+    doc: QueryDocumentSnapshot<Customer>
+  ) => {
     try {
+      const customer = doc.data();
       await createCustomer({
         name: `${customer.name} (Copy)`,
         email: customer.email,
@@ -74,31 +79,31 @@ function Customers() {
         Customers <Box component="span">({count})</Box>
       </Typography>
       <Stack spacing={1}>
-        {customers.map((customer) => (
+        {customerDocList.map((doc) => (
           <CustomerCard
-            key={customer.id}
-            customer={customer}
+            key={doc.id}
+            doc={doc}
             options={[
               {
                 id: "edit",
                 label: "Edit",
                 icon: <Edit />,
-                onClick: () => navigate({ to: `/customers/${customer.id}` }),
+                onClick: () => navigate({ to: `/customers/${doc.id}` }),
               },
               {
                 id: "duplicate",
                 label: "Duplicate",
                 icon: <ContentCopy />,
-                onClick: () => handleDuplicateCustomer(customer),
+                onClick: () => handleDuplicateCustomer(doc),
               },
               {
                 id: "delete",
                 label: "Delete",
                 icon: <Delete />,
-                onClick: () => handleDeleteCustomer(customer),
+                onClick: () => handleDeleteCustomer(doc),
               },
             ]}
-            onClick={() => navigate({ to: `/customers/${customer.id}` })}
+            onClick={() => navigate({ to: `/customers/${doc.id}` })}
           />
         ))}
         <Stack direction="row">

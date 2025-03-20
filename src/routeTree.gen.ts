@@ -12,10 +12,10 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
-import { Route as TestIndexImport } from './routes/test/index'
 import { Route as PrivateIndexImport } from './routes/private/index'
 import { Route as PostsIndexImport } from './routes/posts/index'
 import { Route as CustomersIndexImport } from './routes/customers/index'
+import { Route as AnotherIndexImport } from './routes/another/index'
 import { Route as AboutIndexImport } from './routes/about/index'
 import { Route as PostsIdImport } from './routes/posts/$id'
 import { Route as CustomersCreateImport } from './routes/customers/create'
@@ -26,12 +26,6 @@ import { Route as CustomersIdImport } from './routes/customers/$id'
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const TestIndexRoute = TestIndexImport.update({
-  id: '/test/',
-  path: '/test/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -50,6 +44,12 @@ const PostsIndexRoute = PostsIndexImport.update({
 const CustomersIndexRoute = CustomersIndexImport.update({
   id: '/customers/',
   path: '/customers/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AnotherIndexRoute = AnotherIndexImport.update({
+  id: '/another/',
+  path: '/another/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -116,6 +116,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutIndexImport
       parentRoute: typeof rootRoute
     }
+    '/another/': {
+      id: '/another/'
+      path: '/another'
+      fullPath: '/another'
+      preLoaderRoute: typeof AnotherIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/customers/': {
       id: '/customers/'
       path: '/customers'
@@ -137,13 +144,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateIndexImport
       parentRoute: typeof rootRoute
     }
-    '/test/': {
-      id: '/test/'
-      path: '/test'
-      fullPath: '/test'
-      preLoaderRoute: typeof TestIndexImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
@@ -155,10 +155,10 @@ export interface FileRoutesByFullPath {
   '/customers/create': typeof CustomersCreateRoute
   '/posts/$id': typeof PostsIdRoute
   '/about': typeof AboutIndexRoute
+  '/another': typeof AnotherIndexRoute
   '/customers': typeof CustomersIndexRoute
   '/posts': typeof PostsIndexRoute
   '/private': typeof PrivateIndexRoute
-  '/test': typeof TestIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -167,10 +167,10 @@ export interface FileRoutesByTo {
   '/customers/create': typeof CustomersCreateRoute
   '/posts/$id': typeof PostsIdRoute
   '/about': typeof AboutIndexRoute
+  '/another': typeof AnotherIndexRoute
   '/customers': typeof CustomersIndexRoute
   '/posts': typeof PostsIndexRoute
   '/private': typeof PrivateIndexRoute
-  '/test': typeof TestIndexRoute
 }
 
 export interface FileRoutesById {
@@ -180,10 +180,10 @@ export interface FileRoutesById {
   '/customers/create': typeof CustomersCreateRoute
   '/posts/$id': typeof PostsIdRoute
   '/about/': typeof AboutIndexRoute
+  '/another/': typeof AnotherIndexRoute
   '/customers/': typeof CustomersIndexRoute
   '/posts/': typeof PostsIndexRoute
   '/private/': typeof PrivateIndexRoute
-  '/test/': typeof TestIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -194,10 +194,10 @@ export interface FileRouteTypes {
     | '/customers/create'
     | '/posts/$id'
     | '/about'
+    | '/another'
     | '/customers'
     | '/posts'
     | '/private'
-    | '/test'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -205,10 +205,10 @@ export interface FileRouteTypes {
     | '/customers/create'
     | '/posts/$id'
     | '/about'
+    | '/another'
     | '/customers'
     | '/posts'
     | '/private'
-    | '/test'
   id:
     | '__root__'
     | '/'
@@ -216,10 +216,10 @@ export interface FileRouteTypes {
     | '/customers/create'
     | '/posts/$id'
     | '/about/'
+    | '/another/'
     | '/customers/'
     | '/posts/'
     | '/private/'
-    | '/test/'
   fileRoutesById: FileRoutesById
 }
 
@@ -229,10 +229,10 @@ export interface RootRouteChildren {
   CustomersCreateRoute: typeof CustomersCreateRoute
   PostsIdRoute: typeof PostsIdRoute
   AboutIndexRoute: typeof AboutIndexRoute
+  AnotherIndexRoute: typeof AnotherIndexRoute
   CustomersIndexRoute: typeof CustomersIndexRoute
   PostsIndexRoute: typeof PostsIndexRoute
   PrivateIndexRoute: typeof PrivateIndexRoute
-  TestIndexRoute: typeof TestIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -241,10 +241,10 @@ const rootRouteChildren: RootRouteChildren = {
   CustomersCreateRoute: CustomersCreateRoute,
   PostsIdRoute: PostsIdRoute,
   AboutIndexRoute: AboutIndexRoute,
+  AnotherIndexRoute: AnotherIndexRoute,
   CustomersIndexRoute: CustomersIndexRoute,
   PostsIndexRoute: PostsIndexRoute,
   PrivateIndexRoute: PrivateIndexRoute,
-  TestIndexRoute: TestIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -262,10 +262,10 @@ export const routeTree = rootRoute
         "/customers/create",
         "/posts/$id",
         "/about/",
+        "/another/",
         "/customers/",
         "/posts/",
-        "/private/",
-        "/test/"
+        "/private/"
       ]
     },
     "/": {
@@ -283,6 +283,9 @@ export const routeTree = rootRoute
     "/about/": {
       "filePath": "about/index.tsx"
     },
+    "/another/": {
+      "filePath": "another/index.tsx"
+    },
     "/customers/": {
       "filePath": "customers/index.tsx"
     },
@@ -291,9 +294,6 @@ export const routeTree = rootRoute
     },
     "/private/": {
       "filePath": "private/index.tsx"
-    },
-    "/test/": {
-      "filePath": "test/index.tsx"
     }
   }
 }

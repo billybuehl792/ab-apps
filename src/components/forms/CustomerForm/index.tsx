@@ -10,37 +10,46 @@ import {
   Typography,
   type StackProps,
 } from "@mui/material";
-import { createCustomer, updateCustomer } from "@/firebase/queries";
+import { createCustomer, updateCustomer } from "@/firebase/api";
 import type { Customer } from "@/types/global";
+import { DocumentSnapshot } from "firebase/firestore";
 
 interface CustomerForm
   extends Omit<StackProps, "onSuccess" | "onError">,
     UseFormProps<Customer> {
-  onSuccess?: (customer: Customer) => void;
+  customer?: DocumentSnapshot<Customer>;
+  onSuccess?: (docId: string) => void;
   onError?: (error: Error) => void;
 }
 
-const CustomerForm: FC<CustomerForm> = ({ onSuccess, onError, ...props }) => {
+const CustomerForm: FC<CustomerForm> = ({
+  customer,
+  onSuccess,
+  onError,
+  ...props
+}) => {
   /** Values */
 
-  const isEditForm = !!props?.values?.id;
+  const isEditForm = !!customer;
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { isSubmitting, isDirty, isValid, disabled },
-  } = useForm<Customer>(props);
+  } = useForm<Customer>({ values: customer?.data(), ...props });
 
   /** Callbacks */
 
   const onSubmit: StackProps["onSubmit"] = handleSubmit(async (data) => {
     try {
-      const customer = isEditForm
-        ? await updateCustomer(data)
-        : await createCustomer(data);
-
-      onSuccess?.(customer);
+      if (isEditForm) {
+        await updateCustomer(customer.id, data);
+        onSuccess?.(customer.id);
+      } else {
+        const customerRef = await createCustomer(data);
+        onSuccess?.(customerRef.id);
+      }
     } catch (error) {
       onError?.(error as Error);
     }
