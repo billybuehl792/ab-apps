@@ -44,21 +44,20 @@ function About() {
   /** Queries */
 
   const customerListQuery = useInfiniteQuery({
-    queryKey: ["customerList"],
+    queryKey: ["customerList", [orderBy("name"), limit(PAGE_SIZE)]] as const,
     initialPageParam: {} as DocumentData,
-    refetchOnWindowFocus: false,
-    gcTime: 0,
-    queryFn: async ({ pageParam }) =>
+    queryFn: ({ queryKey: [_, constraints], pageParam }) =>
       getDocs(
         query(
           collection(db, "customers"),
-          orderBy("name"),
-          limit(PAGE_SIZE),
+          ...constraints,
           ...(pageParam?.id ? [startAfter(pageParam)] : [])
         )
       ),
     getNextPageParam: (lastPage, pages) =>
-      pages.length * PAGE_SIZE < count ? lastPage.docs.at(-1) : undefined,
+      pages.reduce((acc, doc) => acc + doc.docs.length, 0) < count
+        ? lastPage.docs.at(-1)
+        : null,
   });
 
   return (
