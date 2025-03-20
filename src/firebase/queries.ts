@@ -3,11 +3,13 @@ import {
   collection,
   deleteDoc,
   doc,
+  DocumentData,
   getCountFromServer,
   getDoc,
   getDocs,
   query,
   QueryConstraint,
+  QuerySnapshot,
   updateDoc,
 } from "firebase/firestore";
 import { db } from ".";
@@ -37,6 +39,18 @@ const getCustomerList = async (
     return querySnapshot.docs.map(
       (doc) => ({ id: doc.id, ...doc.data() }) as Customer
     );
+  } catch (error) {
+    console.error("Error retrieving customers:", error);
+    throw error;
+  }
+};
+
+const getCustomerList2 = async (
+  ...constraints: QueryConstraint[]
+): Promise<QuerySnapshot<Customer>> => {
+  try {
+    const q = query(collection(db, "customers"), ...constraints);
+    return (await getDocs(q)) as QuerySnapshot<Customer>;
   } catch (error) {
     console.error("Error retrieving customers:", error);
     throw error;
@@ -92,6 +106,7 @@ const deleteCustomer = async (id: Customer["id"]): Promise<void> => {
 export {
   getCustomerCount,
   getCustomerList,
+  getCustomerList2,
   getCustomer,
   createCustomer,
   updateCustomer,
