@@ -18,11 +18,9 @@ export interface MenuOption<T = string> {
   onClick: (value?: IMenuOption, event?: React.MouseEvent) => void;
 }
 
-export interface QueryOptions<C extends QueryConstraint = QueryConstraint> {
-  constraints?: C[];
+interface QueryOptions {
+  id?: string;
+  constraints?: QueryConstraint[];
 }
 
-export type QueryKey<C extends QueryConstraint = QueryConstraint> = [
-  string,
-  QueryOptions<C>,
-];
+export type QueryKey<O extends QueryOptions = QueryOptions> = [string, O];

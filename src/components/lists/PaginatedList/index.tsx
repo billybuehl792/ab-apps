@@ -18,24 +18,24 @@ import type { QueryKey } from "@/types/global";
 
 const ROWS_PER_PAGE_OPTIONS = [3, 5, 10];
 
-interface PaginatedListProps<T extends DocumentData = DocumentData>
-  extends StackProps {
+interface PaginatedListProps<
+  T extends DocumentData = DocumentData,
+  Q extends QueryKey = QueryKey,
+> extends StackProps {
   count: number;
-  queryOptions: UseQueryOptions<
-    QuerySnapshot<T>,
-    Error,
-    QuerySnapshot<T>,
-    QueryKey
-  >;
+  queryOptions: UseQueryOptions<QuerySnapshot<T>, Error, QuerySnapshot<T>, Q>;
   renderItem: (item: QueryDocumentSnapshot<T>) => ReactNode;
 }
 
-const PaginatedList = <T extends DocumentData = DocumentData>({
+const PaginatedList = <
+  T extends DocumentData = DocumentData,
+  Q extends QueryKey = QueryKey,
+>({
   count,
   queryOptions,
   renderItem,
   ...props
-}: PaginatedListProps<T>) => {
+}: PaginatedListProps<T, Q>) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE_OPTIONS[0]);
   const [lastDocs, setLastDocs] = useState<DocumentData[]>([]);
@@ -46,22 +46,21 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
 
   /** Queries */
 
-  const [identifier, { constraints = [] }] = queryOptions.queryKey;
-  const filteredConstraints = constraints.filter(
-    (constraint) => !["startAfter", "limit"].includes(constraint.type)
-  );
+  const queryKey = [
+    queryOptions.queryKey[0],
+    {
+      constraints: [
+        ...(queryOptions.queryKey[1]?.constraints?.filter(
+          (constraint) => !["startAfter", "limit"].includes(constraint.type)
+        ) ?? []),
+        limit(rowsPerPage),
+        ...(lastDoc ? [startAfter(lastDoc)] : []),
+      ],
+    },
+  ] as Q;
   const query = useQuery({
     ...queryOptions,
-    queryKey: [
-      identifier,
-      {
-        constraints: [
-          ...filteredConstraints,
-          limit(rowsPerPage),
-          ...(lastDoc ? [startAfter(lastDoc)] : []),
-        ],
-      },
-    ],
+    queryKey,
   });
 
   /** Callbacks */

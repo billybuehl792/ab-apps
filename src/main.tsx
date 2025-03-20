@@ -4,6 +4,7 @@ import { router } from "./router";
 import App from "./App";
 import AuthProvider from "./providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { QueryKey } from "./types/global";
 
 declare global {
   // eslint-disable-next-line no-var
@@ -13,6 +14,13 @@ declare global {
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
+  }
+}
+
+declare module "@tanstack/react-query" {
+  interface Register {
+    queryKey: QueryKey;
+    mutationKey: QueryKey;
   }
 }
 
