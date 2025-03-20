@@ -11,7 +11,7 @@ export interface MenuOption<T = string> {
   id: T;
   render?: boolean;
   label: string;
-  icon?: IconDefinition | ReactNode;
+  icon?: ReactNode;
   selected?: boolean;
   disabled?: boolean;
   tooltip?: string;

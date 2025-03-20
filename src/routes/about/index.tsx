@@ -41,7 +41,7 @@ function About() {
   /** Queries */
 
   const customerListQuery = useInfiniteQuery({
-    queryKey: getQueryKey("customerList", {
+    queryKey: getQueryKey("customerInfiniteList", {
       constraints: [orderBy("name"), limit(PAGE_SIZE)],
     }),
     initialPageParam: {} as QueryDocumentSnapshot<Customer>,
@@ -53,7 +53,7 @@ function About() {
         ],
       }),
     getNextPageParam: (lastPage, pages) =>
-      pages.reduce((acc, doc) => acc + doc.docs.length, 0) < count
+      pages.reduce((acc, doc) => acc + doc.docs?.length, 0) < count
         ? lastPage.docs.at(-1)
         : null,
   });
