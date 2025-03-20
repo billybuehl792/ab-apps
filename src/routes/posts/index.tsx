@@ -19,10 +19,10 @@ export const Route = createFileRoute("/posts/")({
   validateSearch: ({ s }: Record<string, unknown>): { s?: string } => ({
     s: s as string,
   }),
-  loaderDeps: ({ search: { s } }) => ({ s }),
-  loader: async ({ deps: { s = "" } }) => {
+  loaderDeps: ({ search }) => search,
+  loader: async ({ deps }) => {
     const filteredPosts = posts.filter((post) =>
-      post.label.toLowerCase().includes(s.toLowerCase())
+      post.label.toLowerCase().includes((deps.s ?? "").toLowerCase())
     );
 
     await new Promise((resolve) => setTimeout(resolve, 1000));

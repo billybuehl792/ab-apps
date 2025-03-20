@@ -23,9 +23,10 @@ import type { Customer } from "@/types/global";
 
 export const Route = createFileRoute("/customers/")({
   component: Customers,
-  loader: async ({ context }) => {
+  beforeLoad: async ({ context }) => {
     if (!context.auth.user) throw new Error("User not authenticated");
-
+  },
+  loader: async () => {
     const count = await getCustomerCount();
     const customers = await getCustomerList(orderBy("name"));
 
