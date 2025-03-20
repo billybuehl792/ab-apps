@@ -19,14 +19,17 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         <Link to="/" className="[&.active]:font-bold">
           Home
         </Link>
-        <Link to="/about" className="[&.active]:font-bold">
-          About
-        </Link>
         <Link to="/posts" className="[&.active]:font-bold">
           Posts
         </Link>
         <Link to="/customers" className="[&.active]:font-bold">
           Customers
+        </Link>
+        <Link to="/another" className="[&.active]:font-bold">
+          Paginated Customers
+        </Link>
+        <Link to="/about" className="[&.active]:font-bold">
+          Infinite Customers
         </Link>
         <Link to="/private" className="[&.active]:font-bold">
           Private
