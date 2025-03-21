@@ -1,7 +1,4 @@
-import type { QueryConstraint } from "firebase/firestore";
-
-export type Customer = QueryDocumentSnapshot<CustomerData>;
-interface CustomerData {
+export interface CustomerData {
   name: string;
   email: string;
   address: string;
@@ -18,10 +15,3 @@ export interface MenuOption<T = string> {
   tooltip?: string;
   onClick: (value?: IMenuOption, event?: React.MouseEvent) => void;
 }
-
-interface QueryOptions {
-  id?: string;
-  constraints?: QueryConstraint[];
-}
-
-export type QueryKey<O extends QueryOptions = QueryOptions> = [string, O];

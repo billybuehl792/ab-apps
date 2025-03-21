@@ -1,41 +1,53 @@
 import { type ReactNode, useState } from "react";
 import {
+  getCountFromServer,
+  getDocs,
   limit,
-  QueryDocumentSnapshot,
-  QuerySnapshot,
+  query,
+  type QueryDocumentSnapshot,
   startAfter,
   type DocumentData,
+  type CollectionReference,
+  type QueryConstraint,
 } from "firebase/firestore";
 import {
   Skeleton,
+  type SkeletonProps,
   Stack,
   type StackProps,
   TablePagination,
   type TablePaginationProps,
 } from "@mui/material";
-import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
-import type { QueryKey } from "@/types/global";
+import { useQuery } from "@tanstack/react-query";
 
 const ROWS_PER_PAGE_OPTIONS = [3, 5, 10];
 
-interface PaginatedListProps<
-  T extends DocumentData = DocumentData,
-  Q extends QueryKey = QueryKey,
-> extends StackProps {
-  count: number;
-  queryOptions: UseQueryOptions<QuerySnapshot<T>, Error, QuerySnapshot<T>, Q>;
+interface PaginatedListProps<T extends DocumentData = DocumentData>
+  extends StackProps {
+  collection: CollectionReference<T>;
+  constraints?: QueryConstraint[];
   renderItem: (item: QueryDocumentSnapshot<T>) => ReactNode;
+  slotProps?: {
+    pagination?: TablePaginationProps;
+    skeleton?: SkeletonProps;
+  };
 }
 
-const PaginatedList = <
-  T extends DocumentData = DocumentData,
-  Q extends QueryKey = QueryKey,
->({
-  count,
-  queryOptions,
+/**
+ * This component renders a paginated list of items from a Firestore collection.
+ * @param {PaginatedListProps} props
+ * @param {CollectionReference} props.collection - The Firestore collection to query.
+ * @param {QueryConstraint[]} [props.constraints] - An array of query constraints.
+ * @param {(item: QueryDocumentSnapshot) => ReactNode} props.renderItem - A function that renders each item in the list.
+ * @returns {ReactNode}
+ */
+const PaginatedList = <T extends DocumentData = DocumentData>({
+  collection,
+  constraints = [],
   renderItem,
+  slotProps: { pagination: paginationProps, skeleton: skeletonProps } = {},
   ...props
-}: PaginatedListProps<T, Q>) => {
+}: PaginatedListProps<T>): ReactNode => {
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE_OPTIONS[0]);
   const [lastDocs, setLastDocs] = useState<DocumentData[]>([]);
@@ -46,21 +58,26 @@ const PaginatedList = <
 
   /** Queries */
 
-  const queryKey = [
-    queryOptions.queryKey[0],
-    {
-      constraints: [
-        ...(queryOptions.queryKey[1]?.constraints?.filter(
-          (constraint) => !["startAfter", "limit"].includes(constraint.type)
-        ) ?? []),
+  const countQuery = useQuery({
+    queryKey: [collection.id, getCountFromServer, ...constraints] as const,
+    queryFn: ({ queryKey: [_, fn, ...constraints] }) =>
+      fn(query(collection, ...constraints)),
+  });
+  const count = countQuery.data?.data().count ?? 0;
+
+  const listQuery = useQuery({
+    queryKey: [
+      collection.id,
+      getDocs,
+      ...[
+        ...constraints,
         limit(rowsPerPage),
         ...(lastDoc ? [startAfter(lastDoc)] : []),
       ],
-    },
-  ] as Q;
-  const query = useQuery({
-    ...queryOptions,
-    queryKey,
+    ] as const,
+    queryFn: ({ queryKey: [_, fn, ...constraints] }) =>
+      fn(query(collection, ...constraints)),
+    enabled: Boolean(count),
   });
 
   /** Callbacks */
@@ -81,7 +98,7 @@ const PaginatedList = <
         current.slice(0, Math.max(current.length - 1, 0))
       );
     else {
-      const currentLastDoc = query.data?.docs.at(-1);
+      const currentLastDoc = listQuery.data?.docs.at(-1);
       if (!currentLastDoc) return;
       setLastDocs((current) => [...current, currentLastDoc]);
     }
@@ -90,26 +107,29 @@ const PaginatedList = <
   };
 
   return (
-    <Stack spacing={2} {...props}>
-      <Stack spacing={1}>
-        {query.isLoading
-          ? Array(Math.min(rowsPerPage, count - currentPage * rowsPerPage))
-              .fill(null)
-              .map((_, index) => (
-                <Skeleton key={index} height={82} variant="rounded" />
-              ))
-          : query.data?.docs.map(renderItem)}
-      </Stack>
-
+    <Stack spacing={1} {...props}>
+      {countQuery.isLoading || listQuery.isLoading
+        ? Array(Math.min(rowsPerPage, count - currentPage * rowsPerPage))
+            .fill(null)
+            .map((_, index) => (
+              <Skeleton
+                key={index}
+                height={82}
+                variant="rounded"
+                {...skeletonProps}
+              />
+            ))
+        : listQuery.data?.docs.map(renderItem)}
       <TablePagination
         component="div"
         count={count}
         page={currentPage}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
-        disabled={query.isLoading}
+        disabled={countQuery.isLoading || listQuery.isLoading}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
+        {...paginationProps}
       />
     </Stack>
   );
