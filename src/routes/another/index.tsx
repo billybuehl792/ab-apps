@@ -1,4 +1,4 @@
-import CustomerCard from "@/components/cards/CustomerCard";
+import CustomerCard from "@/containers/cards/CustomerCard";
 import PaginatedList from "@/components/lists/PaginatedList";
 import { getCustomerCount, getCustomerList } from "@/firebase/api";
 import { CircularProgress, Stack } from "@mui/material";
@@ -33,7 +33,9 @@ function Another() {
     <PaginatedList
       count={count}
       queryOptions={q}
-      renderItem={(doc) => <CustomerCard key={doc.id} doc={doc} />}
+      renderItem={(customer) => (
+        <CustomerCard key={customer.id} customer={customer} />
+      )}
     />
   );
 }

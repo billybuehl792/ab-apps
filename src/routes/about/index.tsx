@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { getCustomerCount, getCustomerList } from "@/firebase/api";
-import CustomerCard from "@/components/cards/CustomerCard";
+import CustomerCard from "@/containers/cards/CustomerCard";
 import {
   limit,
   orderBy,
@@ -64,7 +64,9 @@ function About() {
       <Stack spacing={1}>
         <Stack spacing={1}>
           {customerListQuery.data?.pages.map((snapshot) =>
-            snapshot.docs.map((doc) => <CustomerCard key={doc.id} doc={doc} />)
+            snapshot.docs.map((customer) => (
+              <CustomerCard key={customer.id} customer={customer} />
+            ))
           )}
           {(customerListQuery.isFetchingNextPage ||
             customerListQuery.isLoading) &&

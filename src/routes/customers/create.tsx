@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import CustomerForm from "@/components/forms/CustomerForm";
+import CustomerForm from "@/containers/forms/CustomerForm";
 
 export const Route = createFileRoute("/customers/create")({
   component: RouteComponent,

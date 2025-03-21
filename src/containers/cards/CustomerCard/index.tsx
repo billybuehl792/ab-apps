@@ -10,30 +10,32 @@ import {
 } from "@mui/material";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
 import type { Customer, MenuOption } from "@/types/global";
-import type { QueryDocumentSnapshot } from "firebase/firestore";
 
 interface CustomerCard extends Omit<CardProps, "onClick"> {
-  doc: QueryDocumentSnapshot<Customer>;
-  onClick?: (
-    event: MouseEvent<HTMLButtonElement>,
-    doc: QueryDocumentSnapshot<Customer>
-  ) => void;
+  customer: Customer;
+  onClick?: (event: MouseEvent<HTMLButtonElement>, customer: Customer) => void;
   options?: MenuOption[];
 }
 
+/**
+ * This component renders a card with customer information.
+ * @param customer - The customer document snapshot.
+ * @param options - The options to display in the card menu.
+ * @param onClick - The function to call when the card is clicked.
+ */
 const CustomerCard: FC<CustomerCard> = ({
-  doc,
+  customer,
   options,
   onClick,
   ...props
 }) => {
   /** Values */
 
-  const customer = doc.data();
+  const { name, phone, email, address } = customer.data();
 
   return (
     <Card variant="outlined" {...props}>
-      <CardActionArea onClick={(event) => onClick?.(event, doc)}>
+      <CardActionArea onClick={(event) => onClick?.(event, customer)}>
         <CardContent
           component={Stack}
           direction="row"
@@ -42,7 +44,7 @@ const CustomerCard: FC<CustomerCard> = ({
         >
           <Stack spacing={1}>
             <Typography variant="body2" fontWeight="bold">
-              {customer.name}
+              {name}
             </Typography>
             <Stack
               direction="row"
@@ -50,15 +52,9 @@ const CustomerCard: FC<CustomerCard> = ({
               divider={<Divider orientation="vertical" flexItem />}
               alignItems="center"
             >
-              <Typography variant="subtitle2">
-                Phone: {customer.phone}
-              </Typography>
-              <Typography variant="subtitle2">
-                Email: {customer.email}
-              </Typography>
-              <Typography variant="subtitle2">
-                Address: {customer.address}
-              </Typography>
+              <Typography variant="subtitle2">Phone: {phone}</Typography>
+              <Typography variant="subtitle2">Email: {email}</Typography>
+              <Typography variant="subtitle2">Address: {address}</Typography>
             </Stack>
           </Stack>
 

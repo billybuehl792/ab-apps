@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { CircularProgress, Stack } from "@mui/material";
 import { getCustomer } from "@/firebase/api";
-import CustomerForm from "@/components/forms/CustomerForm";
+import CustomerForm from "@/containers/forms/CustomerForm";
 
 export const Route = createFileRoute("/customers/$id")({
   component: Customer,

@@ -18,7 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Add, ContentCopy, Delete, Edit } from "@mui/icons-material";
-import CustomerCard from "@/components/cards/CustomerCard";
+import CustomerCard from "@/containers/cards/CustomerCard";
 import type { Customer } from "@/types/global";
 
 export const Route = createFileRoute("/customers/")({
@@ -79,31 +79,31 @@ function Customers() {
         Customers <Box component="span">({count})</Box>
       </Typography>
       <Stack spacing={1}>
-        {customerDocList.map((doc) => (
+        {customerDocList.map((customer) => (
           <CustomerCard
-            key={doc.id}
-            doc={doc}
+            key={customer.id}
+            customer={customer}
             options={[
               {
                 id: "edit",
                 label: "Edit",
                 icon: <Edit />,
-                onClick: () => navigate({ to: `/customers/${doc.id}` }),
+                onClick: () => navigate({ to: `/customers/${customer.id}` }),
               },
               {
                 id: "duplicate",
                 label: "Duplicate",
                 icon: <ContentCopy />,
-                onClick: () => handleDuplicateCustomer(doc),
+                onClick: () => handleDuplicateCustomer(customer),
               },
               {
                 id: "delete",
                 label: "Delete",
                 icon: <Delete />,
-                onClick: () => handleDeleteCustomer(doc),
+                onClick: () => handleDeleteCustomer(customer),
               },
             ]}
-            onClick={() => navigate({ to: `/customers/${doc.id}` })}
+            onClick={() => navigate({ to: `/customers/${customer.id}` })}
           />
         ))}
         <Stack direction="row">

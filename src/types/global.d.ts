@@ -1,6 +1,7 @@
 import type { QueryConstraint } from "firebase/firestore";
 
-export interface Customer {
+export type Customer = QueryDocumentSnapshot<CustomerData>;
+interface CustomerData {
   name: string;
   email: string;
   address: string;

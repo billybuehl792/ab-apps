@@ -12,12 +12,11 @@ import {
 } from "@mui/material";
 import { createCustomer, updateCustomer } from "@/firebase/api";
 import type { Customer } from "@/types/global";
-import { DocumentSnapshot } from "firebase/firestore";
 
 interface CustomerForm
   extends Omit<StackProps, "onSuccess" | "onError">,
     UseFormProps<Customer> {
-  customer?: DocumentSnapshot<Customer>;
+  customer?: Customer;
   onSuccess?: (docId: string) => void;
   onError?: (error: Error) => void;
 }
