@@ -70,6 +70,7 @@ const PaginatedList = <
   ) => {
     const value = +event.target.value;
 
+    setLastDocs([]);
     setCurrentPage(0);
     setRowsPerPage(value);
   };
