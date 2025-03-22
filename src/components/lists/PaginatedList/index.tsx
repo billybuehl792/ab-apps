@@ -20,12 +20,11 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
-const ROWS_PER_PAGE_OPTIONS = [3, 5, 10];
-
-interface PaginatedListProps<T extends DocumentData = DocumentData>
+interface PaginatedList<T extends DocumentData = DocumentData>
   extends StackProps {
   collection: CollectionReference<T>;
   constraints?: QueryConstraint[];
+  rowsPerPageOptions?: number[];
   renderItem: (item: QueryDocumentSnapshot<T>) => ReactNode;
   slotProps?: {
     pagination?: TablePaginationProps;
@@ -35,7 +34,7 @@ interface PaginatedListProps<T extends DocumentData = DocumentData>
 
 /**
  * This component renders a paginated list of items from a Firestore collection.
- * @param {PaginatedListProps} props
+ * @param {PaginatedList} props
  * @param {CollectionReference} props.collection - The Firestore collection to query.
  * @param {QueryConstraint[]} [props.constraints] - An array of query constraints.
  * @param {(item: QueryDocumentSnapshot) => ReactNode} props.renderItem - A function that renders each item in the list.
@@ -44,12 +43,13 @@ interface PaginatedListProps<T extends DocumentData = DocumentData>
 const PaginatedList = <T extends DocumentData = DocumentData>({
   collection,
   constraints = [],
+  rowsPerPageOptions = [10, 20, 30],
   renderItem,
   slotProps: { pagination: paginationProps, skeleton: skeletonProps } = {},
   ...props
-}: PaginatedListProps<T>): ReactNode => {
+}: PaginatedList<T>): ReactNode => {
   const [currentPage, setCurrentPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE_OPTIONS[0]);
+  const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0] ?? 10);
   const [lastDocs, setLastDocs] = useState<DocumentData[]>([]);
 
   /** Values */
@@ -125,7 +125,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
         count={count}
         page={currentPage}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
+        rowsPerPageOptions={rowsPerPageOptions}
         disabled={countQuery.isLoading || listQuery.isLoading}
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}

@@ -20,7 +20,7 @@ import {
   type StackProps,
 } from "@mui/material";
 
-interface PaginatedListProps<T extends DocumentData = DocumentData>
+interface InfiniteList<T extends DocumentData = DocumentData>
   extends StackProps {
   collection: CollectionReference<T>;
   pageSize?: number;
@@ -34,7 +34,7 @@ interface PaginatedListProps<T extends DocumentData = DocumentData>
 
 /**
  * This component renders an infinite list of items from a Firestore collection.
- * @param {PaginatedListProps} props
+ * @param {InfiniteList} props
  * @param {CollectionReference} props.collection - The Firestore collection to query.
  * @param {number} [props.pageSize=10] - The number of items to fetch per page.
  * @param {QueryNonFilterConstraint[]} [props.constraints] - An array of query constraints.
@@ -44,14 +44,14 @@ interface PaginatedListProps<T extends DocumentData = DocumentData>
 const InfiniteList = <T extends DocumentData = DocumentData>({
   collection,
   constraints = [],
-  pageSize = 5,
+  pageSize = 10,
   renderItem,
   slotProps: {
     loadMoreButton: loadMoreButtonProps,
     skeleton: skeletonProps,
   } = {},
   ...props
-}: PaginatedListProps<T>): ReactNode => {
+}: InfiniteList<T>): ReactNode => {
   /** Queries */
 
   const countQuery = useQuery({

@@ -1,104 +1,61 @@
-import { type FC, type MouseEvent } from "react";
-import { useNavigate, useRouter } from "@tanstack/react-router";
-import { addDoc, deleteDoc, QueryDocumentSnapshot } from "firebase/firestore";
+import { type ReactNode, type FC, type MouseEvent } from "react";
+import { type QueryDocumentSnapshot } from "firebase/firestore";
 import {
   Card,
   CardActionArea,
-  CardActionAreaProps,
+  type CardActionAreaProps,
   CardContent,
   Divider,
   Stack,
   Typography,
   type CardProps,
+  type CardContentProps,
 } from "@mui/material";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
 import type { CustomerData, MenuOption } from "@/types/global";
-import { ContentCopy, Delete, Edit } from "@mui/icons-material";
 
 interface CustomerCard extends Omit<CardProps, "onClick"> {
   customer: QueryDocumentSnapshot<CustomerData>;
+  disabled?: boolean;
+  options?: MenuOption[];
   onClick?: (
     event: MouseEvent<HTMLButtonElement>,
     customer: QueryDocumentSnapshot<CustomerData>
   ) => void;
-  options?: MenuOption[];
+  slotProps?: {
+    cardActionArea?: CardActionAreaProps;
+    cardContent?: CardContentProps;
+  };
 }
 
-/**
- * This component renders a card with customer information.
- * @param customer - The customer document snapshot.
- * @param options - The options to display in the card menu.
- * @param onClick - The function to call when the card is clicked.
- */
 const CustomerCard: FC<CustomerCard> = ({
   customer,
-  options: optionsProp,
-  onClick: onClickProp,
+  disabled,
+  options,
+  onClick,
+  slotProps: {
+    cardActionArea: cardActionAreaProps,
+    cardContent: cardContentProps,
+  } = {},
   ...props
-}) => {
+}: CustomerCard): ReactNode => {
   /** Values */
 
   const { name, phone, email, address } = customer.data();
 
-  const router = useRouter();
-  const navigate = useNavigate();
-
-  const options = optionsProp ?? [
-    {
-      id: "edit",
-      label: "Edit",
-      icon: <Edit />,
-      onClick: () => navigate({ to: `/customers/${customer.id}` }),
-    },
-    {
-      id: "duplicate",
-      label: "Duplicate",
-      icon: <ContentCopy />,
-      onClick: async () => {
-        try {
-          const { name, phone, email, address } = customer.data();
-          await addDoc(customer.ref.parent, {
-            name: `${name} (Copy)`,
-            email,
-            phone,
-            address,
-          });
-          router.invalidate();
-        } catch (error) {
-          console.error("Error duplicating customer:", error);
-        }
-      },
-    },
-    {
-      id: "delete",
-      label: "Delete",
-      icon: <Delete />,
-      onClick: async () => {
-        try {
-          await deleteDoc(customer.ref);
-          router.invalidate();
-        } catch (error) {
-          console.error("Error deleting customer:", error);
-        }
-      },
-    },
-  ];
-
-  /** Callbacks */
-
-  const onClick: CardActionAreaProps["onClick"] = (event) => {
-    if (onClickProp) onClickProp(event, customer);
-    else navigate({ to: `/customers/${customer.id}` });
-  };
-
   return (
     <Card variant="outlined" {...props}>
-      <CardActionArea onClick={onClick}>
+      <CardActionArea
+        onClick={(event) => onClick?.(event, customer)}
+        disabled={disabled}
+        {...cardActionAreaProps}
+      >
         <CardContent
           component={Stack}
           direction="row"
           justifyContent="space-between"
           alignItems="center"
+          {...cardContentProps}
         >
           <Stack spacing={1}>
             <Typography variant="body2" fontWeight="bold">
@@ -116,7 +73,7 @@ const CustomerCard: FC<CustomerCard> = ({
             </Stack>
           </Stack>
 
-          {Boolean(options.length) && <MenuIconButton options={options} />}
+          {!!options && <MenuIconButton options={options} />}
         </CardContent>
       </CardActionArea>
     </Card>
