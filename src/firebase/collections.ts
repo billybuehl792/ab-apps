@@ -1,6 +1,6 @@
 import { collection } from "firebase/firestore";
 import { db } from ".";
-import type { ClientData } from "@/types/global";
+import type { ClientData, MaterialData } from "@/types/global";
 
 const clientCollection = collection(db, "clients").withConverter<ClientData>({
   toFirestore: (client: ClientData) => client,
@@ -8,4 +8,13 @@ const clientCollection = collection(db, "clients").withConverter<ClientData>({
     snapshot.data(options) as ClientData,
 });
 
-export { clientCollection };
+const materialCollection = collection(
+  db,
+  "materials"
+).withConverter<MaterialData>({
+  toFirestore: (material: MaterialData) => material,
+  fromFirestore: (snapshot, options): MaterialData =>
+    snapshot.data(options) as MaterialData,
+});
+
+export { clientCollection, materialCollection };

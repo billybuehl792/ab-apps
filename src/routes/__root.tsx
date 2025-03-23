@@ -17,22 +17,16 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     <>
       <Stack direction="row" spacing={2}>
         <Link to="/" className="[&.active]:font-bold">
-          Home
-        </Link>
-        <Link to="/posts" className="[&.active]:font-bold">
-          Posts
+          Dashboard
         </Link>
         <Link to="/clients" className="[&.active]:font-bold">
           Clients
         </Link>
-        <Link to="/another" className="[&.active]:font-bold">
-          Paginated Clients
+        <Link to="/calculator" className="[&.active]:font-bold">
+          Calculator
         </Link>
-        <Link to="/about" className="[&.active]:font-bold">
-          Infinite Clients
-        </Link>
-        <Link to="/private" className="[&.active]:font-bold">
-          Private
+        <Link to="/login" className="[&.active]:font-bold">
+          Login
         </Link>
       </Stack>
       <hr />

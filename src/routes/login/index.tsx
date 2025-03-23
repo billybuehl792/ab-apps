@@ -4,11 +4,11 @@ import { Button, type ButtonProps, Stack, TextField } from "@mui/material";
 import { useAuth } from "@/context/AuthContext";
 import { signIn, signOut } from "@/firebase/auth";
 
-export const Route = createFileRoute("/private/")({
-  component: Private,
+export const Route = createFileRoute("/login/")({
+  component: RouteComponent,
 });
 
-function Private() {
+function RouteComponent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);

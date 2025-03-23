@@ -9,6 +9,12 @@ export interface ClientData {
   zip: number;
 }
 
+export interface MaterialData {
+  label: string;
+  value: number;
+  description: string;
+}
+
 export interface MenuOption<T = string> {
   id: T;
   render?: boolean;

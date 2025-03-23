@@ -5,7 +5,7 @@ import { clientCollection } from "@/firebase/collections";
 import { doc, getDoc } from "firebase/firestore";
 
 export const Route = createFileRoute("/clients/$id")({
-  component: Client,
+  component: RouteComponent,
   beforeLoad: ({ context }) => {
     if (!context.auth.user) throw new Error("User not authenticated");
   },
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/clients/$id")({
   errorComponent: ({ error }) => <Stack>{error.message}</Stack>,
 });
 
-function Client() {
+function RouteComponent() {
   /** Values */
 
   const navigate = useNavigate();
