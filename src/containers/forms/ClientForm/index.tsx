@@ -11,44 +11,44 @@ import {
   type StackProps,
 } from "@mui/material";
 import { addDoc, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
-import { customerCollection } from "@/firebase/collections";
-import type { CustomerData } from "@/types/global";
+import { clientCollection } from "@/firebase/collections";
+import type { ClientData } from "@/types/global";
 
-interface CustomerForm
+interface ClientForm
   extends Omit<StackProps, "onSuccess" | "onError">,
-    UseFormProps<CustomerData> {
-  customer?: QueryDocumentSnapshot<CustomerData>;
+    UseFormProps<ClientData> {
+  client?: QueryDocumentSnapshot<ClientData>;
   onSuccess?: (docId: string) => void;
   onError?: (error: Error) => void;
 }
 
-const CustomerForm: FC<CustomerForm> = ({
-  customer,
+const ClientForm: FC<ClientForm> = ({
+  client,
   onSuccess,
   onError,
   ...props
 }) => {
   /** Values */
 
-  const isEditForm = !!customer;
+  const isEditForm = !!client;
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { isSubmitting, isDirty, isValid, disabled },
-  } = useForm<CustomerData>({ values: customer?.data(), ...props });
+  } = useForm<ClientData>({ values: client?.data(), ...props });
 
   /** Callbacks */
 
   const onSubmit: StackProps["onSubmit"] = handleSubmit(async (data) => {
     try {
       if (isEditForm) {
-        await updateDoc(customer.ref, { ...data });
-        onSuccess?.(customer.id);
+        await updateDoc(client.ref, { ...data });
+        onSuccess?.(client.id);
       } else {
-        const customerRef = await addDoc(customerCollection, data);
-        onSuccess?.(customerRef.id);
+        const clientRef = await addDoc(clientCollection, data);
+        onSuccess?.(clientRef.id);
       }
     } catch (error) {
       onError?.(error as Error);
@@ -69,16 +69,31 @@ const CustomerForm: FC<CustomerForm> = ({
       {...props}
     >
       <Typography variant="h6">
-        {isEditForm ? "Edit" : "Create"} Customer
+        {isEditForm ? "Edit" : "Create"} Client
       </Typography>
 
       <Card>
         <CardContent component={Stack} spacing={1}>
-          <TextField
-            type="text"
-            label="Name"
-            {...register("name", { required: true, maxLength: 128, disabled })}
-          />
+          <Stack direction="row" spacing={1}>
+            <TextField
+              type="text"
+              label="First Name"
+              {...register("first_name", {
+                required: true,
+                maxLength: 128,
+                disabled,
+              })}
+            />
+            <TextField
+              type="text"
+              label="Last Name"
+              {...register("first_name", {
+                required: true,
+                maxLength: 128,
+                disabled,
+              })}
+            />
+          </Stack>
           <TextField
             type="email"
             label="Email"
@@ -125,4 +140,4 @@ const CustomerForm: FC<CustomerForm> = ({
   );
 };
 
-export default CustomerForm;
+export default ClientForm;

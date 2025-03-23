@@ -12,15 +12,15 @@ import {
   type CardContentProps,
 } from "@mui/material";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
-import type { CustomerData, MenuOption } from "@/types/global";
+import type { ClientData, MenuOption } from "@/types/global";
 
-interface CustomerCard extends Omit<CardProps, "onClick"> {
-  customer: QueryDocumentSnapshot<CustomerData>;
+interface ClientCard extends Omit<CardProps, "onClick"> {
+  client: QueryDocumentSnapshot<ClientData>;
   disabled?: boolean;
   options?: MenuOption[];
   onClick?: (
     event: MouseEvent<HTMLButtonElement>,
-    customer: QueryDocumentSnapshot<CustomerData>
+    client: QueryDocumentSnapshot<ClientData>
   ) => void;
   slotProps?: {
     cardActionArea?: CardActionAreaProps;
@@ -28,8 +28,8 @@ interface CustomerCard extends Omit<CardProps, "onClick"> {
   };
 }
 
-const CustomerCard: FC<CustomerCard> = ({
-  customer,
+const ClientCard: FC<ClientCard> = ({
+  client,
   disabled,
   options,
   onClick,
@@ -38,15 +38,15 @@ const CustomerCard: FC<CustomerCard> = ({
     cardContent: cardContentProps,
   } = {},
   ...props
-}: CustomerCard): ReactNode => {
+}: ClientCard): ReactNode => {
   /** Values */
 
-  const { name, phone, email, address } = customer.data();
+  const { first_name, last_name, phone, email, address } = client.data();
 
   return (
     <Card variant="outlined" {...props}>
       <CardActionArea
-        onClick={(event) => onClick?.(event, customer)}
+        onClick={(event) => onClick?.(event, client)}
         disabled={disabled}
         {...cardActionAreaProps}
       >
@@ -59,7 +59,7 @@ const CustomerCard: FC<CustomerCard> = ({
         >
           <Stack spacing={1}>
             <Typography variant="body2" fontWeight="bold">
-              {name}
+              {first_name} {last_name}
             </Typography>
             <Stack
               direction="row"
@@ -80,4 +80,4 @@ const CustomerCard: FC<CustomerCard> = ({
   );
 };
 
-export default CustomerCard;
+export default ClientCard;

@@ -1,14 +1,11 @@
 import { collection } from "firebase/firestore";
 import { db } from ".";
-import type { CustomerData } from "@/types/global";
+import type { ClientData } from "@/types/global";
 
-const customerCollection = collection(
-  db,
-  "customers"
-).withConverter<CustomerData>({
-  toFirestore: (customer: CustomerData) => customer,
-  fromFirestore: (snapshot, options): CustomerData =>
-    snapshot.data(options) as CustomerData,
+const clientCollection = collection(db, "clients").withConverter<ClientData>({
+  toFirestore: (client: ClientData) => client,
+  fromFirestore: (snapshot, options): ClientData =>
+    snapshot.data(options) as ClientData,
 });
 
-export { customerCollection };
+export { clientCollection };

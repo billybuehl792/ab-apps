@@ -14,12 +14,12 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as PrivateIndexImport } from './routes/private/index'
 import { Route as PostsIndexImport } from './routes/posts/index'
-import { Route as CustomersIndexImport } from './routes/customers/index'
+import { Route as ClientsIndexImport } from './routes/clients/index'
 import { Route as AnotherIndexImport } from './routes/another/index'
 import { Route as AboutIndexImport } from './routes/about/index'
 import { Route as PostsIdImport } from './routes/posts/$id'
-import { Route as CustomersCreateImport } from './routes/customers/create'
-import { Route as CustomersIdImport } from './routes/customers/$id'
+import { Route as ClientsCreateImport } from './routes/clients/create'
+import { Route as ClientsIdImport } from './routes/clients/$id'
 
 // Create/Update Routes
 
@@ -41,9 +41,9 @@ const PostsIndexRoute = PostsIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const CustomersIndexRoute = CustomersIndexImport.update({
-  id: '/customers/',
-  path: '/customers/',
+const ClientsIndexRoute = ClientsIndexImport.update({
+  id: '/clients/',
+  path: '/clients/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -65,15 +65,15 @@ const PostsIdRoute = PostsIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const CustomersCreateRoute = CustomersCreateImport.update({
-  id: '/customers/create',
-  path: '/customers/create',
+const ClientsCreateRoute = ClientsCreateImport.update({
+  id: '/clients/create',
+  path: '/clients/create',
   getParentRoute: () => rootRoute,
 } as any)
 
-const CustomersIdRoute = CustomersIdImport.update({
-  id: '/customers/$id',
-  path: '/customers/$id',
+const ClientsIdRoute = ClientsIdImport.update({
+  id: '/clients/$id',
+  path: '/clients/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -88,18 +88,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/customers/$id': {
-      id: '/customers/$id'
-      path: '/customers/$id'
-      fullPath: '/customers/$id'
-      preLoaderRoute: typeof CustomersIdImport
+    '/clients/$id': {
+      id: '/clients/$id'
+      path: '/clients/$id'
+      fullPath: '/clients/$id'
+      preLoaderRoute: typeof ClientsIdImport
       parentRoute: typeof rootRoute
     }
-    '/customers/create': {
-      id: '/customers/create'
-      path: '/customers/create'
-      fullPath: '/customers/create'
-      preLoaderRoute: typeof CustomersCreateImport
+    '/clients/create': {
+      id: '/clients/create'
+      path: '/clients/create'
+      fullPath: '/clients/create'
+      preLoaderRoute: typeof ClientsCreateImport
       parentRoute: typeof rootRoute
     }
     '/posts/$id': {
@@ -123,11 +123,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnotherIndexImport
       parentRoute: typeof rootRoute
     }
-    '/customers/': {
-      id: '/customers/'
-      path: '/customers'
-      fullPath: '/customers'
-      preLoaderRoute: typeof CustomersIndexImport
+    '/clients/': {
+      id: '/clients/'
+      path: '/clients'
+      fullPath: '/clients'
+      preLoaderRoute: typeof ClientsIndexImport
       parentRoute: typeof rootRoute
     }
     '/posts/': {
@@ -151,24 +151,24 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/customers/$id': typeof CustomersIdRoute
-  '/customers/create': typeof CustomersCreateRoute
+  '/clients/$id': typeof ClientsIdRoute
+  '/clients/create': typeof ClientsCreateRoute
   '/posts/$id': typeof PostsIdRoute
   '/about': typeof AboutIndexRoute
   '/another': typeof AnotherIndexRoute
-  '/customers': typeof CustomersIndexRoute
+  '/clients': typeof ClientsIndexRoute
   '/posts': typeof PostsIndexRoute
   '/private': typeof PrivateIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/customers/$id': typeof CustomersIdRoute
-  '/customers/create': typeof CustomersCreateRoute
+  '/clients/$id': typeof ClientsIdRoute
+  '/clients/create': typeof ClientsCreateRoute
   '/posts/$id': typeof PostsIdRoute
   '/about': typeof AboutIndexRoute
   '/another': typeof AnotherIndexRoute
-  '/customers': typeof CustomersIndexRoute
+  '/clients': typeof ClientsIndexRoute
   '/posts': typeof PostsIndexRoute
   '/private': typeof PrivateIndexRoute
 }
@@ -176,12 +176,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/customers/$id': typeof CustomersIdRoute
-  '/customers/create': typeof CustomersCreateRoute
+  '/clients/$id': typeof ClientsIdRoute
+  '/clients/create': typeof ClientsCreateRoute
   '/posts/$id': typeof PostsIdRoute
   '/about/': typeof AboutIndexRoute
   '/another/': typeof AnotherIndexRoute
-  '/customers/': typeof CustomersIndexRoute
+  '/clients/': typeof ClientsIndexRoute
   '/posts/': typeof PostsIndexRoute
   '/private/': typeof PrivateIndexRoute
 }
@@ -190,34 +190,34 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/customers/$id'
-    | '/customers/create'
+    | '/clients/$id'
+    | '/clients/create'
     | '/posts/$id'
     | '/about'
     | '/another'
-    | '/customers'
+    | '/clients'
     | '/posts'
     | '/private'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/customers/$id'
-    | '/customers/create'
+    | '/clients/$id'
+    | '/clients/create'
     | '/posts/$id'
     | '/about'
     | '/another'
-    | '/customers'
+    | '/clients'
     | '/posts'
     | '/private'
   id:
     | '__root__'
     | '/'
-    | '/customers/$id'
-    | '/customers/create'
+    | '/clients/$id'
+    | '/clients/create'
     | '/posts/$id'
     | '/about/'
     | '/another/'
-    | '/customers/'
+    | '/clients/'
     | '/posts/'
     | '/private/'
   fileRoutesById: FileRoutesById
@@ -225,24 +225,24 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CustomersIdRoute: typeof CustomersIdRoute
-  CustomersCreateRoute: typeof CustomersCreateRoute
+  ClientsIdRoute: typeof ClientsIdRoute
+  ClientsCreateRoute: typeof ClientsCreateRoute
   PostsIdRoute: typeof PostsIdRoute
   AboutIndexRoute: typeof AboutIndexRoute
   AnotherIndexRoute: typeof AnotherIndexRoute
-  CustomersIndexRoute: typeof CustomersIndexRoute
+  ClientsIndexRoute: typeof ClientsIndexRoute
   PostsIndexRoute: typeof PostsIndexRoute
   PrivateIndexRoute: typeof PrivateIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CustomersIdRoute: CustomersIdRoute,
-  CustomersCreateRoute: CustomersCreateRoute,
+  ClientsIdRoute: ClientsIdRoute,
+  ClientsCreateRoute: ClientsCreateRoute,
   PostsIdRoute: PostsIdRoute,
   AboutIndexRoute: AboutIndexRoute,
   AnotherIndexRoute: AnotherIndexRoute,
-  CustomersIndexRoute: CustomersIndexRoute,
+  ClientsIndexRoute: ClientsIndexRoute,
   PostsIndexRoute: PostsIndexRoute,
   PrivateIndexRoute: PrivateIndexRoute,
 }
@@ -258,12 +258,12 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/customers/$id",
-        "/customers/create",
+        "/clients/$id",
+        "/clients/create",
         "/posts/$id",
         "/about/",
         "/another/",
-        "/customers/",
+        "/clients/",
         "/posts/",
         "/private/"
       ]
@@ -271,11 +271,11 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.tsx"
     },
-    "/customers/$id": {
-      "filePath": "customers/$id.tsx"
+    "/clients/$id": {
+      "filePath": "clients/$id.tsx"
     },
-    "/customers/create": {
-      "filePath": "customers/create.tsx"
+    "/clients/create": {
+      "filePath": "clients/create.tsx"
     },
     "/posts/$id": {
       "filePath": "posts/$id.tsx"
@@ -286,8 +286,8 @@ export const routeTree = rootRoute
     "/another/": {
       "filePath": "another/index.tsx"
     },
-    "/customers/": {
-      "filePath": "customers/index.tsx"
+    "/clients/": {
+      "filePath": "clients/index.tsx"
     },
     "/posts/": {
       "filePath": "posts/index.tsx"

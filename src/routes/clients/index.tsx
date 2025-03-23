@@ -1,22 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Box, Stack, Typography } from "@mui/material";
-import CustomerPaginatedList from "@/containers/lists/CustomerPaginatedList";
+import ClientPaginatedList from "@/containers/lists/ClientPaginatedList";
 
-export const Route = createFileRoute("/customers/")({
-  component: Customers,
+export const Route = createFileRoute("/clients/")({
+  component: Clients,
   beforeLoad: ({ context }) => {
     if (!context.auth.user) throw new Error("User not authenticated");
   },
   errorComponent: ({ error }) => <Stack>{error.message}</Stack>,
 });
 
-function Customers() {
+function Clients() {
   return (
     <Stack spacing={1}>
       <Typography variant="body1">
-        Customers <Box component="span">(-)</Box>
+        Clients <Box component="span">(-)</Box>
       </Typography>
-      <CustomerPaginatedList />
+      <ClientPaginatedList />
     </Stack>
   );
 }

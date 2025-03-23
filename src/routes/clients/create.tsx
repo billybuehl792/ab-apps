@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import CustomerForm from "@/containers/forms/CustomerForm";
+import ClientForm from "@/containers/forms/ClientForm";
 import { Stack } from "@mui/material";
 
-export const Route = createFileRoute("/customers/create")({
+export const Route = createFileRoute("/clients/create")({
   component: RouteComponent,
   beforeLoad: ({ context }) => {
     if (!context.auth.user) throw new Error("User not authenticated");
@@ -15,5 +15,5 @@ function RouteComponent() {
 
   const navigate = useNavigate();
 
-  return <CustomerForm onSuccess={() => navigate({ to: "/customers" })} />;
+  return <ClientForm onSuccess={() => navigate({ to: "/clients" })} />;
 }

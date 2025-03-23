@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import CustomerPaginatedList from "@/containers/lists/CustomerPaginatedList";
+import ClientPaginatedList from "@/containers/lists/ClientPaginatedList";
 import { Stack } from "@mui/material";
 
 export const Route = createFileRoute("/another/")({
@@ -11,5 +11,5 @@ export const Route = createFileRoute("/another/")({
 });
 
 function Another() {
-  return <CustomerPaginatedList />;
+  return <ClientPaginatedList />;
 }
