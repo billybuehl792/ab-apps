@@ -7,6 +7,7 @@ import {
   Toolbar,
   Typography,
   type AppBarProps,
+  Link as MuiLink,
 } from "@mui/material";
 
 const Navbar: FC<AppBarProps> = () => {
@@ -14,13 +15,22 @@ const Navbar: FC<AppBarProps> = () => {
 
   const navLinks = [
     { id: "clients", name: "Clients", path: "/clients" },
-    { id: "calculator", name: "Calculator", path: "/calculator" },
+    {
+      id: "estimateCalculator",
+      name: "Estimate Calculator",
+      path: "/estimator",
+    },
+    {
+      id: "login",
+      name: "Login",
+      path: "/login",
+    },
   ];
 
   return (
     <AppBar position="static">
       <Container>
-        <Toolbar disableGutters>
+        <Toolbar component={Stack} direction="row" spacing={2} disableGutters>
           <Typography
             component={Link}
             to="/"
@@ -37,22 +47,20 @@ const Navbar: FC<AppBarProps> = () => {
           >
             AB Apps
           </Typography>
-          <Stack direction="row" spacing={2}>
-            {navLinks.map((link) => (
-              <Typography
-                key={link.id}
-                component={Link}
-                to={link.path}
-                sx={{
-                  textDecoration: "none",
-                  color: "inherit",
-                  fontWeight: 300,
-                }}
-              >
-                {link.name}
-              </Typography>
-            ))}
-          </Stack>
+          {navLinks.map((link) => (
+            <MuiLink
+              key={link.id}
+              component={Link}
+              to={link.path}
+              variant="body2"
+              underline="none"
+              color="inherit"
+              noWrap
+              inactiveProps={{ style: { opacity: 0.5 } }}
+            >
+              {link.name}
+            </MuiLink>
+          ))}
         </Toolbar>
       </Container>
     </AppBar>

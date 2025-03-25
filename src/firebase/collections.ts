@@ -1,6 +1,6 @@
 import { collection } from "firebase/firestore";
 import { db } from ".";
-import type { ClientData, MaterialData } from "@/types/global";
+import type { ClientData, MaterialData } from "@/firebase/types";
 
 const clientCollection = collection(db, "clients").withConverter<ClientData>({
   toFirestore: (client: ClientData) => client,

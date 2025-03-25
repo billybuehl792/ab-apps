@@ -6,5 +6,6 @@ export const router = createRouter({
   defaultPendingMs: 0,
   context: {
     auth: { user: null },
+    queryClient: null!,
   },
 });

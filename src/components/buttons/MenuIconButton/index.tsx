@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 import type { MenuOption } from "@/types/global";
+import { sxUtils } from "@/utils/sx";
 
 interface MenuIconButton extends IconButtonProps {
   options: MenuOption[];
@@ -40,7 +41,8 @@ interface MenuIconButton extends IconButtonProps {
  */
 const MenuIconButton: FC<MenuIconButton> = ({
   options,
-  icon = <MoreVert />,
+  size = "small",
+  icon = <MoreVert fontSize={size} />,
   slotProps: {
     menu: menuProps,
     menuItem: {
@@ -71,9 +73,14 @@ const MenuIconButton: FC<MenuIconButton> = ({
       <IconButton
         component="span"
         id={buttonId.current}
+        size={size}
         onMouseDown={(event: Event) => event.stopPropagation()}
         onClick={onClick}
         {...props}
+        sx={[
+          { visibility: anchorEl ? "visible !important" : undefined },
+          ...sxUtils.asArray(props?.sx),
+        ]}
       >
         {icon}
       </IconButton>
@@ -96,7 +103,7 @@ const MenuIconButton: FC<MenuIconButton> = ({
           .map(({ id, label, icon, onClick }) => (
             <MenuItem
               key={id}
-              onClick={(event) => onClose(() => onClick(id, event))}
+              onClick={(event) => onClose(() => onClick(event, id))}
               {...menuItemProps}
             >
               {Boolean(icon) && (

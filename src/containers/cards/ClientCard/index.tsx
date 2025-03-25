@@ -12,7 +12,8 @@ import {
   type CardContentProps,
 } from "@mui/material";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
-import type { ClientData, MenuOption } from "@/types/global";
+import type { MenuOption } from "@/types/global";
+import type { ClientData } from "@/firebase/types";
 
 interface ClientCard extends Omit<CardProps, "onClick"> {
   client: QueryDocumentSnapshot<ClientData>;

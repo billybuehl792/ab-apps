@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { addDoc, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
 import { clientCollection } from "@/firebase/collections";
-import type { ClientData } from "@/types/global";
+import type { ClientData } from "@/firebase/types";
 
 interface ClientForm
   extends Omit<StackProps, "onSuccess" | "onError">,

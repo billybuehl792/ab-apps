@@ -6,7 +6,7 @@ import { Delete, Edit } from "@mui/icons-material";
 import { clientCollection } from "@/firebase/collections";
 import PaginatedList from "@/components/lists/PaginatedList";
 import ClientCard from "@/containers/cards/ClientCard";
-import type { ClientData } from "@/types/global";
+import type { ClientData } from "@/firebase/types";
 
 interface ClientPaginatedList
   extends Partial<
