@@ -18,7 +18,7 @@ const Navbar: FC<AppBarProps> = () => {
     {
       id: "estimateCalculator",
       name: "Estimate Calculator",
-      path: "/estimator",
+      path: "/estimate-calculator",
     },
     {
       id: "login",

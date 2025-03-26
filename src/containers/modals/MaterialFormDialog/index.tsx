@@ -11,10 +11,14 @@ import {
   InputAdornment,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material";
 import { useForm, type UseFormProps } from "react-hook-form";
-import type { MaterialData } from "@/firebase/types";
 import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
+import MenuIconButton from "@/components/buttons/MenuIconButton";
+import CloseIconButton from "@/components/buttons/CloseIconButton";
+import type { MaterialData } from "@/firebase/types";
+import type { MenuOption } from "@/types/global";
 
 type FormValues = MaterialData;
 
@@ -22,13 +26,23 @@ interface MaterialFormDialog
   extends Omit<DialogProps, "onSubmit">,
     UseFormProps<FormValues> {
   title?: string;
+  options?: MenuOption[];
   onSubmit: (data: FormValues) => void;
 }
 
+const DEFAULT_VALUES: FormValues = {
+  label: "",
+  value: 0,
+  description: "",
+};
+
 const MaterialFormDialog: FC<MaterialFormDialog> = ({
-  title = "Material Editor",
+  title = "Material",
+  values,
+  options,
   onClose,
   onSubmit: onSubmitProp,
+  onTransitionExited: onTransitionExitedProp,
   ...props
 }) => {
   const [showMoreEnabled, setShowMoreEnabled] = useState(false);
@@ -40,7 +54,11 @@ const MaterialFormDialog: FC<MaterialFormDialog> = ({
     handleSubmit,
     reset,
     formState: { disabled, isSubmitting, isDirty, isValid },
-  } = useForm<FormValues>(props);
+  } = useForm<FormValues>({
+    defaultValues: DEFAULT_VALUES,
+    values: values ?? DEFAULT_VALUES,
+    ...props,
+  });
 
   /** Callbacks */
 
@@ -51,20 +69,37 @@ const MaterialFormDialog: FC<MaterialFormDialog> = ({
     reset();
   };
 
+  const onTransitionExited: DialogProps["onTransitionExited"] = () => {
+    reset(DEFAULT_VALUES);
+    setShowMoreEnabled(false);
+    onTransitionExitedProp?.();
+  };
+
   return (
     <Dialog
       fullWidth
-      slotProps={{ paper: { component: "form", onSubmit, onReset } }}
+      slotProps={{
+        paper: { component: "form", onSubmit, onReset },
+      }}
       onClose={onClose}
+      onTransitionExited={onTransitionExited}
       {...props}
     >
-      <DialogTitle>{title}</DialogTitle>
-      <Stack
-        component={DialogContent}
-        spacing={2}
-        dividers
-        sx={{ overflow: "visible" }}
+      <DialogTitle
+        component={Stack}
+        direction="row"
+        justifyContent="space-between"
       >
+        <Stack direction="row" spacing={1} alignItems="center" width="100%">
+          <Typography variant="inherit" noWrap>
+            {title}
+          </Typography>
+          {!!options && <MenuIconButton options={options} />}
+        </Stack>
+        <CloseIconButton onClick={onClose} />
+      </DialogTitle>
+
+      <Stack component={DialogContent} spacing={2} dividers>
         <TextField
           label="Title"
           fullWidth
@@ -122,6 +157,7 @@ const MaterialFormDialog: FC<MaterialFormDialog> = ({
         </Button>
         <Button
           type="submit"
+          variant="outlined"
           loading={isSubmitting}
           disabled={disabled || !isValid || !isDirty}
         >

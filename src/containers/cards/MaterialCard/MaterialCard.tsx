@@ -13,6 +13,7 @@ import {
 import { sxUtils } from "@/utils/sx";
 import type { MaterialData } from "@/firebase/types";
 import type { MenuOption } from "@/types/global";
+import MenuIconButton from "@/components/buttons/MenuIconButton";
 
 const classes = generateUtilityClasses("MaterialCard", [
   "root",
@@ -26,9 +27,7 @@ interface MaterialCard extends Omit<CardProps, "onClick" | "content"> {
   material: QueryDocumentSnapshot<MaterialData>;
   disabled?: boolean;
   content?: ReactNode;
-  options?:
-    | MenuOption[]
-    | ((material: QueryDocumentSnapshot<MaterialData>) => MenuOption[]);
+  options?: MenuOption[];
   onClick?: (
     event: MouseEvent<HTMLButtonElement>,
     material: QueryDocumentSnapshot<MaterialData>
@@ -39,7 +38,7 @@ const MaterialCard: FC<MaterialCard> = ({
   material,
   disabled,
   content,
-  options: optionsProp,
+  options,
   onClick,
   ...props
 }) => {
@@ -51,9 +50,6 @@ const MaterialCard: FC<MaterialCard> = ({
     style: "currency",
     currency: "USD",
   }).format(value);
-
-  const options =
-    typeof optionsProp === "object" ? optionsProp : optionsProp?.(material);
 
   return (
     <Card
@@ -89,45 +85,39 @@ const MaterialCard: FC<MaterialCard> = ({
             className={classes.metadata}
             container
             direction="row"
+            spacing={1.5}
             flexGrow={1}
             alignItems="center"
           >
-            <Grid
-              component={Typography}
-              size={{ xs: "auto", sm: 3, md: 2 }}
-              noWrap
-              mr={1}
-            >
-              {label.toTitleCase()}
+            <Grid size={{ xs: 3, md: 2 }}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Typography variant="body1" noWrap>
+                  {label.toTitleCase()}
+                </Typography>
+                {!!options && (
+                  <MenuIconButton
+                    className={classes.menuIconButton}
+                    options={options}
+                    sx={{
+                      display: { xs: "none", sm: "inherit" },
+                      "@media (hover: hover)": {
+                        visibility: "hidden",
+                      },
+                    }}
+                  />
+                )}
+              </Stack>
             </Grid>
             <Grid
               component={Typography}
-              size={{ xs: "grow", sm: "grow" }}
+              size={{ xs: "grow" }}
+              variant="body2"
               noWrap
             >
               {cost}
             </Grid>
-            {!!content && (
-              <Grid size={{ xs: 2 }} minWidth={60}>
-                {content}
-              </Grid>
-            )}
+            {!!content && <Grid width={80}>{content}</Grid>}
           </Grid>
-
-          {/* {!!options && (
-            <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              <MenuIconButton
-                className={classes.menuIconButton}
-                size="small"
-                options={options}
-                sx={{
-                  "@media (hover: hover)": {
-                    visibility: "hidden",
-                  },
-                }}
-              />
-            </Box>
-          )} */}
         </CardContent>
       </CardActionArea>
     </Card>

@@ -13,7 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as LoginIndexImport } from './routes/login/index'
-import { Route as EstimatorIndexImport } from './routes/estimator/index'
+import { Route as EstimateCalculatorIndexImport } from './routes/estimate-calculator/index'
 import { Route as ClientsIndexImport } from './routes/clients/index'
 import { Route as ClientsCreateImport } from './routes/clients/create'
 import { Route as ClientsIdImport } from './routes/clients/$id'
@@ -32,9 +32,9 @@ const LoginIndexRoute = LoginIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const EstimatorIndexRoute = EstimatorIndexImport.update({
-  id: '/estimator/',
-  path: '/estimator/',
+const EstimateCalculatorIndexRoute = EstimateCalculatorIndexImport.update({
+  id: '/estimate-calculator/',
+  path: '/estimate-calculator/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -88,11 +88,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientsIndexImport
       parentRoute: typeof rootRoute
     }
-    '/estimator/': {
-      id: '/estimator/'
-      path: '/estimator'
-      fullPath: '/estimator'
-      preLoaderRoute: typeof EstimatorIndexImport
+    '/estimate-calculator/': {
+      id: '/estimate-calculator/'
+      path: '/estimate-calculator'
+      fullPath: '/estimate-calculator'
+      preLoaderRoute: typeof EstimateCalculatorIndexImport
       parentRoute: typeof rootRoute
     }
     '/login/': {
@@ -112,7 +112,7 @@ export interface FileRoutesByFullPath {
   '/clients/$id': typeof ClientsIdRoute
   '/clients/create': typeof ClientsCreateRoute
   '/clients': typeof ClientsIndexRoute
-  '/estimator': typeof EstimatorIndexRoute
+  '/estimate-calculator': typeof EstimateCalculatorIndexRoute
   '/login': typeof LoginIndexRoute
 }
 
@@ -121,7 +121,7 @@ export interface FileRoutesByTo {
   '/clients/$id': typeof ClientsIdRoute
   '/clients/create': typeof ClientsCreateRoute
   '/clients': typeof ClientsIndexRoute
-  '/estimator': typeof EstimatorIndexRoute
+  '/estimate-calculator': typeof EstimateCalculatorIndexRoute
   '/login': typeof LoginIndexRoute
 }
 
@@ -131,7 +131,7 @@ export interface FileRoutesById {
   '/clients/$id': typeof ClientsIdRoute
   '/clients/create': typeof ClientsCreateRoute
   '/clients/': typeof ClientsIndexRoute
-  '/estimator/': typeof EstimatorIndexRoute
+  '/estimate-calculator/': typeof EstimateCalculatorIndexRoute
   '/login/': typeof LoginIndexRoute
 }
 
@@ -142,7 +142,7 @@ export interface FileRouteTypes {
     | '/clients/$id'
     | '/clients/create'
     | '/clients'
-    | '/estimator'
+    | '/estimate-calculator'
     | '/login'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -150,7 +150,7 @@ export interface FileRouteTypes {
     | '/clients/$id'
     | '/clients/create'
     | '/clients'
-    | '/estimator'
+    | '/estimate-calculator'
     | '/login'
   id:
     | '__root__'
@@ -158,7 +158,7 @@ export interface FileRouteTypes {
     | '/clients/$id'
     | '/clients/create'
     | '/clients/'
-    | '/estimator/'
+    | '/estimate-calculator/'
     | '/login/'
   fileRoutesById: FileRoutesById
 }
@@ -168,7 +168,7 @@ export interface RootRouteChildren {
   ClientsIdRoute: typeof ClientsIdRoute
   ClientsCreateRoute: typeof ClientsCreateRoute
   ClientsIndexRoute: typeof ClientsIndexRoute
-  EstimatorIndexRoute: typeof EstimatorIndexRoute
+  EstimateCalculatorIndexRoute: typeof EstimateCalculatorIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
 }
 
@@ -177,7 +177,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClientsIdRoute: ClientsIdRoute,
   ClientsCreateRoute: ClientsCreateRoute,
   ClientsIndexRoute: ClientsIndexRoute,
-  EstimatorIndexRoute: EstimatorIndexRoute,
+  EstimateCalculatorIndexRoute: EstimateCalculatorIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
 }
 
@@ -195,7 +195,7 @@ export const routeTree = rootRoute
         "/clients/$id",
         "/clients/create",
         "/clients/",
-        "/estimator/",
+        "/estimate-calculator/",
         "/login/"
       ]
     },
@@ -211,8 +211,8 @@ export const routeTree = rootRoute
     "/clients/": {
       "filePath": "clients/index.tsx"
     },
-    "/estimator/": {
-      "filePath": "estimator/index.tsx"
+    "/estimate-calculator/": {
+      "filePath": "estimate-calculator/index.tsx"
     },
     "/login/": {
       "filePath": "login/index.tsx"

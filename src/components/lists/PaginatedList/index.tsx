@@ -63,7 +63,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
     queryFn: ({ queryKey: [_, fn, ...constraints] }) =>
       fn(query(collection, ...constraints)),
   });
-  const count = countQuery.data?.data().count ?? 0;
+  const count = countQuery.data?.data().count ?? Infinity;
 
   const listQuery = useQuery({
     queryKey: [
@@ -77,7 +77,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
     ] as const,
     queryFn: ({ queryKey: [_, fn, ...constraints] }) =>
       fn(query(collection, ...constraints)),
-    enabled: Boolean(count),
+    enabled: countQuery.isSuccess,
   });
 
   /** Callbacks */

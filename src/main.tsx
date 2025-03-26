@@ -5,6 +5,8 @@ import App from "./App";
 import AuthProvider from "./providers/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./utils/string";
+import { ThemeProvider } from "@mui/material";
+import { theme } from "./theme";
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -20,7 +22,9 @@ if (!rootElement.innerHTML) {
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <App />
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
         </AuthProvider>
       </QueryClientProvider>
     </StrictMode>

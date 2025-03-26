@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { useMemo, useState, type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   addDoc,
@@ -10,23 +10,21 @@ import {
   updateDoc,
   type QueryDocumentSnapshot,
 } from "firebase/firestore";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Grid2 as Grid,
-  Stack,
-  TextField,
-  type StackProps,
-} from "@mui/material";
+import { Button, Stack, TextField, type StackProps } from "@mui/material";
+import { Add, Delete, Edit } from "@mui/icons-material";
 import { materialCollection } from "@/firebase/collections";
 import MaterialFormDialog from "../modals/MaterialFormDialog";
-import type { MaterialData } from "@/firebase/types";
-import { useFieldArray, useForm } from "react-hook-form";
+import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import MaterialCard from "../cards/MaterialCard/MaterialCard";
+import EstimateCalculatorHeader from "./layout/EstimateCalculatorHeader";
+import type { MaterialData } from "@/firebase/types";
 
-interface FormValues {
-  materials: { id: string; count?: number }[];
+export interface EstimateCalculatorFormValues {
+  materials: {
+    id: QueryDocumentSnapshot["id"];
+    value: number;
+    count?: number;
+  }[];
 }
 
 const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
@@ -34,64 +32,69 @@ const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
   const [selectedMaterial, setSelectedMaterial] =
     useState<QueryDocumentSnapshot<MaterialData> | null>(null);
 
-  /** Values */
+  /** Queries */
 
   const materialsQuery = useQuery({
-    queryKey: [materialCollection.path],
-    queryFn: () => getDocs(query(materialCollection, orderBy("value", "desc"))),
+    queryKey: [materialCollection.path, orderBy("value", "desc")] as const,
+    queryFn: ({ queryKey: [_, ...constraints] }) =>
+      getDocs(query(materialCollection, ...constraints)),
   });
 
-  const { control, register, watch } = useForm<FormValues>({
+  /** Values */
+
+  const materials = useMemo(
+    () =>
+      materialsQuery.data?.docs.map((doc) => ({
+        id: doc.id,
+        value: doc.data().value,
+      })) ?? [],
+    [materialsQuery.data]
+  );
+
+  const methods = useForm<EstimateCalculatorFormValues>({
     mode: "all",
-    values: {
-      materials: materialsQuery.data?.docs.map(({ id }) => ({ id })) ?? [],
-    },
+    values: { materials },
     ...props,
   });
-  const { fields } = useFieldArray({
+  const { fields } = useFieldArray<
+    EstimateCalculatorFormValues,
+    "materials",
+    "fieldId"
+  >({
     name: "materials",
     keyName: "fieldId",
-    control,
+    control: methods.control,
   });
-
-  const fieldArray = watch("materials");
-  const total = fieldArray.reduce((acc, { id, count = 0 }) => {
-    const material = materialsQuery.data?.docs.find(
-      ({ id: docId }) => docId === id
-    );
-    if (!material) return acc;
-
-    return acc + material.data().value * count;
-  }, 0);
-  const totalUSD = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(total);
 
   /** Callbacks */
 
   const handleCreateMaterial = async (data: MaterialData) => {
     try {
       await addDoc(materialCollection, { ...data, value: +data.value });
+      materialsQuery.refetch();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleUpdateMaterial = async (id: string, data: MaterialData) => {
+  const handleUpdateMaterial = async (
+    id: QueryDocumentSnapshot["id"],
+    data: MaterialData
+  ) => {
     try {
       const materialRef = doc(materialCollection, id);
       await updateDoc(materialRef, { ...data, value: +data.value });
+      materialsQuery.refetch();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDeleteMaterial = async (
-    material: QueryDocumentSnapshot<MaterialData>
-  ) => {
+  const handleDeleteMaterial = async (id: QueryDocumentSnapshot["id"]) => {
     try {
-      await deleteDoc(material.ref);
+      const materialRef = doc(materialCollection, id);
+      await deleteDoc(materialRef);
+      materialsQuery.refetch();
     } catch (error) {
       console.error(error);
     }
@@ -99,19 +102,10 @@ const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
 
   return (
     <>
-      <Stack spacing={2} {...props}>
-        <Grid container spacing={2}>
-          <Grid component={Card} size={{ xs: 12, sm: 6 }}>
-            <CardContent sx={{ pb: 0 }}>Total</CardContent>
-            <CardHeader title={totalUSD} />
-          </Grid>
-          <Grid component={Card} size={{ xs: 12, sm: 6 }}>
-            <CardContent sx={{ pb: 0 }}>Subtotal</CardContent>
-            <CardHeader title={totalUSD} />
-          </Grid>
-        </Grid>
-        <Stack component="form" spacing={2}>
-          <Stack spacing={1} component="fieldset" border="none" padding={0}>
+      <FormProvider {...methods}>
+        <Stack spacing={1} {...props}>
+          <EstimateCalculatorHeader />
+          <Stack component="form" spacing={1} border="none" padding={0}>
             {fields.map((field, index) => {
               const material = materialsQuery.data?.docs.find(
                 ({ id }) => id === field.id
@@ -122,10 +116,23 @@ const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
                 <MaterialCard
                   key={field.id}
                   material={material}
-                  onClick={(_, material) => {
-                    setSelectedMaterial(material);
-                    setMaterialFormOpen(true);
-                  }}
+                  options={[
+                    {
+                      id: "edit",
+                      label: "Edit",
+                      icon: <Edit />,
+                      onClick: () => {
+                        setSelectedMaterial(material);
+                        setMaterialFormOpen(true);
+                      },
+                    },
+                    {
+                      id: "delete",
+                      label: "Delete",
+                      icon: <Delete />,
+                      onClick: () => handleDeleteMaterial(material.id),
+                    },
+                  ]}
                   content={
                     <TextField
                       variant="filled"
@@ -135,37 +142,61 @@ const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
                       slotProps={{
                         input: { inputProps: { min: 0, max: 1000 } },
                       }}
-                      {...register(`materials.${index}.count`, {
+                      sx={{ width: 80 }}
+                      {...methods.register(`materials.${index}.count`, {
                         min: 0,
                         max: 1000,
                       })}
                     />
                   }
+                  onClick={() => {
+                    setSelectedMaterial(material);
+                    setMaterialFormOpen(true);
+                  }}
                 />
               );
             })}
           </Stack>
+
+          <Stack direction="row" justifyContent="flex-end">
+            <Button
+              startIcon={<Add />}
+              onClick={() => setMaterialFormOpen(true)}
+            >
+              Material
+            </Button>
+          </Stack>
         </Stack>
-      </Stack>
+      </FormProvider>
 
       {/* Modals */}
       <MaterialFormDialog
         open={materialFormOpen}
         title={
           selectedMaterial
-            ? `Edit ${selectedMaterial.data().label}`
+            ? selectedMaterial.data().label.toTitleCase()
             : "Create Material"
         }
-        values={
-          selectedMaterial?.data() ?? { label: "", value: 0, description: "" }
-        }
-        onSubmit={async (values) => {
+        values={selectedMaterial?.data()}
+        {...(!!selectedMaterial && {
+          options: [
+            {
+              id: "delete",
+              label: "Delete",
+              icon: <Delete />,
+              onClick: () => {
+                handleDeleteMaterial(selectedMaterial.id);
+                setMaterialFormOpen(false);
+              },
+            },
+          ],
+        })}
+        onSubmit={async (formData) => {
           if (selectedMaterial)
-            await handleUpdateMaterial(selectedMaterial.id, values);
-          else await handleCreateMaterial(values);
+            await handleUpdateMaterial(selectedMaterial.id, formData);
+          else await handleCreateMaterial(formData);
 
           setMaterialFormOpen(false);
-          materialsQuery.refetch();
         }}
         onClose={() => setMaterialFormOpen(false)}
         onTransitionExited={() => setSelectedMaterial(null)}
