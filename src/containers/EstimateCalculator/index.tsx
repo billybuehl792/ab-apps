@@ -10,7 +10,7 @@ import {
   updateDoc,
   type QueryDocumentSnapshot,
 } from "firebase/firestore";
-import { Button, Stack, TextField, type StackProps } from "@mui/material";
+import { Button, Stack, type StackProps } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { materialCollection } from "@/firebase/collections";
 import MaterialFormDialog from "../modals/MaterialFormDialog";
@@ -21,7 +21,7 @@ import type { MaterialData } from "@/firebase/types";
 
 export interface EstimateCalculatorFormValues {
   materials: {
-    id: QueryDocumentSnapshot["id"];
+    id: string;
     value: number;
     count?: number;
   }[];
@@ -77,10 +77,7 @@ const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
     }
   };
 
-  const handleUpdateMaterial = async (
-    id: QueryDocumentSnapshot["id"],
-    data: MaterialData
-  ) => {
+  const handleUpdateMaterial = async (id: string, data: MaterialData) => {
     try {
       const materialRef = doc(materialCollection, id);
       await updateDoc(materialRef, { ...data, value: +data.value });
@@ -90,7 +87,7 @@ const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
     }
   };
 
-  const handleDeleteMaterial = async (id: QueryDocumentSnapshot["id"]) => {
+  const handleDeleteMaterial = async (id: string) => {
     try {
       const materialRef = doc(materialCollection, id);
       await deleteDoc(materialRef);
@@ -133,22 +130,14 @@ const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
                       onClick: () => handleDeleteMaterial(material.id),
                     },
                   ]}
-                  content={
-                    <TextField
-                      variant="filled"
-                      fullWidth
-                      type="number"
-                      onClick={(event) => event.stopPropagation()}
-                      slotProps={{
-                        input: { inputProps: { min: 0, max: 1000 } },
-                      }}
-                      sx={{ width: 80 }}
-                      {...methods.register(`materials.${index}.count`, {
+                  slotProps={{
+                    textField: {
+                      ...methods.register(`materials.${index}.count`, {
                         min: 0,
                         max: 1000,
-                      })}
-                    />
-                  }
+                      }),
+                    },
+                  }}
                   onClick={() => {
                     setSelectedMaterial(material);
                     setMaterialFormOpen(true);

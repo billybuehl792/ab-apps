@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
@@ -6,5 +6,9 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  return <Stack spacing={2}>Welcome to Home Page</Stack>;
+  return (
+    <Stack spacing={2}>
+      <Typography variant="body2">Welcome to Home Page</Typography>
+    </Stack>
+  );
 }
