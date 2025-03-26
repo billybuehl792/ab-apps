@@ -4,7 +4,6 @@ import {
   getDocs,
   limit,
   query,
-  type QueryDocumentSnapshot,
   startAfter,
   type DocumentData,
   type CollectionReference,
@@ -25,7 +24,7 @@ interface PaginatedList<T extends DocumentData = DocumentData>
   collection: CollectionReference<T>;
   constraints?: QueryConstraint[];
   rowsPerPageOptions?: number[];
-  renderItem: (item: QueryDocumentSnapshot<T>) => ReactNode;
+  renderItem: (item: T & { id: string }) => ReactNode;
   slotProps?: {
     pagination?: TablePaginationProps;
     skeleton?: SkeletonProps;
@@ -59,24 +58,26 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
   /** Queries */
 
   const countQuery = useQuery({
-    queryKey: [collection.id, getCountFromServer, ...constraints] as const,
-    queryFn: ({ queryKey: [_, fn, ...constraints] }) =>
-      fn(query(collection, ...constraints)),
+    queryKey: [collection.id, "count", ...constraints] as const,
+    queryFn: ({ queryKey: [_, __, ...constraints] }) =>
+      getCountFromServer(query(collection, ...constraints)),
   });
   const count = countQuery.data?.data().count ?? Infinity;
 
   const listQuery = useQuery({
     queryKey: [
       collection.id,
-      getDocs,
       ...[
         ...constraints,
         limit(rowsPerPage),
         ...(lastDoc ? [startAfter(lastDoc)] : []),
       ],
     ] as const,
-    queryFn: ({ queryKey: [_, fn, ...constraints] }) =>
-      fn(query(collection, ...constraints)),
+    queryFn: async ({ queryKey: [_, ...constraints] }) => {
+      const q = query(collection, ...constraints);
+      const snapshot = await getDocs(q);
+      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    },
     enabled: countQuery.isSuccess,
   });
 
@@ -98,7 +99,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
         current.slice(0, Math.max(current.length - 1, 0))
       );
     else {
-      const currentLastDoc = listQuery.data?.docs.at(-1);
+      const currentLastDoc = listQuery.data?.at(-1);
       if (!currentLastDoc) return;
       setLastDocs((current) => [...current, currentLastDoc]);
     }
@@ -119,7 +120,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
                 {...skeletonProps}
               />
             ))
-        : listQuery.data?.docs.map(renderItem)}
+        : listQuery.data?.map(renderItem)}
       <TablePagination
         component="div"
         count={count}

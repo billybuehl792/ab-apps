@@ -1,5 +1,4 @@
 import { type FC, type MouseEvent } from "react";
-import { type QueryDocumentSnapshot } from "firebase/firestore";
 import {
   Card,
   CardActionArea,
@@ -15,8 +14,8 @@ import {
 } from "@mui/material";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
 import { sxUtils } from "@/utils/sx";
-import type { MaterialData } from "@/firebase/types";
 import type { MenuOption } from "@/types/global";
+import type { Material } from "@/firebase/types";
 
 const classes = generateUtilityClasses("MaterialCard", [
   "root",
@@ -25,24 +24,21 @@ const classes = generateUtilityClasses("MaterialCard", [
 ]);
 
 interface MaterialCard extends Omit<CardProps, "onClick"> {
-  material: QueryDocumentSnapshot<MaterialData>;
+  material: Material;
   disabled?: boolean;
-  options?: MenuOption[];
+  options?: MenuOption[] | ((material: Material) => MenuOption[]);
   slotProps?: {
     cardActionArea?: CardActionAreaProps;
     cardContent?: CardContentProps;
     textField?: TextFieldProps;
   };
-  onClick?: (
-    event: MouseEvent<HTMLButtonElement>,
-    material: QueryDocumentSnapshot<MaterialData>
-  ) => void;
+  onClick?: (event: MouseEvent<HTMLButtonElement>, material: Material) => void;
 }
 
 const MaterialCard: FC<MaterialCard> = ({
   material,
   disabled,
-  options,
+  options: optionsProp,
   slotProps: {
     cardActionArea: cardActionAreaProps,
     cardContent: cardContentProps,
@@ -53,12 +49,13 @@ const MaterialCard: FC<MaterialCard> = ({
 }) => {
   /** Values */
 
-  const { label, value } = material.data();
+  const options =
+    typeof optionsProp === "function" ? optionsProp(material) : optionsProp;
 
   const cost = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-  }).format(value);
+  }).format(material.value);
 
   return (
     <Card
@@ -99,7 +96,7 @@ const MaterialCard: FC<MaterialCard> = ({
             justifyItems="flex-start"
           >
             <Typography variant="body1" noWrap>
-              {label.toTitleCase()}
+              {material.label.toTitleCase()}
             </Typography>
             {!!options && (
               <MenuIconButton

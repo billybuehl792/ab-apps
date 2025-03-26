@@ -1,5 +1,4 @@
 import { type ReactNode, type FC, type MouseEvent } from "react";
-import { type QueryDocumentSnapshot } from "firebase/firestore";
 import {
   Card,
   CardActionArea,
@@ -13,16 +12,13 @@ import {
 } from "@mui/material";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
 import type { MenuOption } from "@/types/global";
-import type { ClientData } from "@/firebase/types";
+import type { Client } from "@/firebase/types";
 
 interface ClientCard extends Omit<CardProps, "onClick"> {
-  client: QueryDocumentSnapshot<ClientData>;
+  client: Client;
   disabled?: boolean;
-  options?: MenuOption[];
-  onClick?: (
-    event: MouseEvent<HTMLButtonElement>,
-    client: QueryDocumentSnapshot<ClientData>
-  ) => void;
+  options?: MenuOption[] | ((client: Client) => MenuOption[]);
+  onClick?: (event: MouseEvent<HTMLButtonElement>, client: Client) => void;
   slotProps?: {
     cardActionArea?: CardActionAreaProps;
     cardContent?: CardContentProps;
@@ -32,7 +28,7 @@ interface ClientCard extends Omit<CardProps, "onClick"> {
 const ClientCard: FC<ClientCard> = ({
   client,
   disabled,
-  options,
+  options: optionsProp,
   onClick,
   slotProps: {
     cardActionArea: cardActionAreaProps,
@@ -42,7 +38,8 @@ const ClientCard: FC<ClientCard> = ({
 }: ClientCard): ReactNode => {
   /** Values */
 
-  const { first_name, last_name, phone, email, address } = client.data();
+  const options =
+    typeof optionsProp === "function" ? optionsProp(client) : optionsProp;
 
   return (
     <Card variant="outlined" {...props}>
@@ -60,7 +57,7 @@ const ClientCard: FC<ClientCard> = ({
         >
           <Stack spacing={1}>
             <Typography variant="body2" fontWeight="bold">
-              {first_name} {last_name}
+              {client.first_name} {client.last_name}
             </Typography>
             <Stack
               direction="row"
@@ -68,9 +65,11 @@ const ClientCard: FC<ClientCard> = ({
               divider={<Divider orientation="vertical" flexItem />}
               alignItems="center"
             >
-              <Typography variant="subtitle2">Phone: {phone}</Typography>
-              <Typography variant="subtitle2">Email: {email}</Typography>
-              <Typography variant="subtitle2">Address: {address}</Typography>
+              <Typography variant="subtitle2">Phone: {client.phone}</Typography>
+              <Typography variant="subtitle2">Email: {client.email}</Typography>
+              <Typography variant="subtitle2">
+                Address: {client.address}
+              </Typography>
             </Stack>
           </Stack>
 

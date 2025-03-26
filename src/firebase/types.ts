@@ -1,4 +1,5 @@
-export interface ClientData {
+export interface Client {
+  id: string;
   first_name: string;
   last_name: string;
   email: string;
@@ -9,7 +10,8 @@ export interface ClientData {
   zip: number;
 }
 
-export interface MaterialData {
+export interface Material {
+  id: string;
   label: string;
   value: number;
   description: string;

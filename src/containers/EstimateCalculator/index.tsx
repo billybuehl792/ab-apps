@@ -1,86 +1,59 @@
-import { useMemo, useState, type FC } from "react";
+import { useState, type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  addDoc,
-  deleteDoc,
-  doc,
-  getDocs,
-  orderBy,
-  query,
-  updateDoc,
-  type QueryDocumentSnapshot,
-} from "firebase/firestore";
-import { Button, Stack, type StackProps } from "@mui/material";
+import { addDoc, deleteDoc, doc, orderBy, updateDoc } from "firebase/firestore";
+import { FormProvider, useForm } from "react-hook-form";
+import { Button, Stack, useMediaQuery, type StackProps } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { materialCollection } from "@/firebase/collections";
+import { firestoreQueries } from "@/firebase/queries";
 import MaterialFormDialog from "../modals/MaterialFormDialog";
-import { FormProvider, useFieldArray, useForm } from "react-hook-form";
-import MaterialCard from "../cards/MaterialCard/MaterialCard";
 import EstimateCalculatorHeader from "./layout/EstimateCalculatorHeader";
-import type { MaterialData } from "@/firebase/types";
+import EstimateCalculatorFieldArray from "./layout/EstimateCalculatorFieldArray";
+import type { Material } from "@/firebase/types";
 
 export interface EstimateCalculatorFormValues {
-  materials: {
-    id: string;
-    value: number;
-    count?: number;
-  }[];
+  materials: (Material & { count?: number })[];
 }
 
 const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
   const [materialFormOpen, setMaterialFormOpen] = useState(false);
-  const [selectedMaterial, setSelectedMaterial] =
-    useState<QueryDocumentSnapshot<MaterialData> | null>(null);
+  const [selectedMaterial, setSelectedMaterial] = useState<
+    Material | undefined
+  >(undefined);
 
   /** Queries */
 
-  const materialsQuery = useQuery({
-    queryKey: [materialCollection.path, orderBy("value", "desc")] as const,
-    queryFn: ({ queryKey: [_, ...constraints] }) =>
-      getDocs(query(materialCollection, ...constraints)),
-  });
+  const materialsQuery = useQuery(
+    firestoreQueries.getMaterialList(orderBy("value", "desc"))
+  );
 
   /** Values */
 
-  const materials = useMemo(
-    () =>
-      materialsQuery.data?.docs.map((doc) => ({
-        id: doc.id,
-        value: doc.data().value,
-      })) ?? [],
-    [materialsQuery.data]
-  );
-
+  const isSm = useMediaQuery((theme) => theme.breakpoints.up("sm"));
   const methods = useForm<EstimateCalculatorFormValues>({
     mode: "all",
-    values: { materials },
+    values: { materials: materialsQuery.data ?? [] },
     ...props,
-  });
-  const { fields } = useFieldArray<
-    EstimateCalculatorFormValues,
-    "materials",
-    "fieldId"
-  >({
-    name: "materials",
-    keyName: "fieldId",
-    control: methods.control,
   });
 
   /** Callbacks */
 
-  const handleCreateMaterial = async (data: MaterialData) => {
+  const handleCreateMaterial = async (formData: Omit<Material, "id">) => {
     try {
-      await addDoc(materialCollection, { ...data, value: +data.value });
+      await addDoc(materialCollection, { ...formData, value: +formData.value });
       materialsQuery.refetch();
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleUpdateMaterial = async (id: string, data: MaterialData) => {
+  const handleUpdateMaterial = async (
+    id: string,
+    formData: Omit<Material, "id">
+  ) => {
     try {
       const materialRef = doc(materialCollection, id);
-      await updateDoc(materialRef, { ...data, value: +data.value });
+      await updateDoc(materialRef, { ...formData, value: +formData.value });
       materialsQuery.refetch();
     } catch (error) {
       console.error(error);
@@ -102,50 +75,35 @@ const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
       <FormProvider {...methods}>
         <Stack spacing={1} {...props}>
           <EstimateCalculatorHeader />
-          <Stack component="form" spacing={1} border="none" padding={0}>
-            {fields.map((field, index) => {
-              const material = materialsQuery.data?.docs.find(
-                ({ id }) => id === field.id
-              );
-              if (!material) return null;
-
-              return (
-                <MaterialCard
-                  key={field.id}
-                  material={material}
-                  options={[
-                    {
-                      id: "edit",
-                      label: "Edit",
-                      icon: <Edit />,
-                      onClick: () => {
-                        setSelectedMaterial(material);
-                        setMaterialFormOpen(true);
-                      },
+          <EstimateCalculatorFieldArray
+            slotProps={{
+              card: {
+                options: (material) => [
+                  {
+                    id: "edit",
+                    label: "Edit",
+                    icon: <Edit />,
+                    onClick: () => {
+                      setSelectedMaterial(material);
+                      setMaterialFormOpen(true);
                     },
-                    {
-                      id: "delete",
-                      label: "Delete",
-                      icon: <Delete />,
-                      onClick: () => handleDeleteMaterial(material.id),
-                    },
-                  ]}
-                  slotProps={{
-                    textField: {
-                      ...methods.register(`materials.${index}.count`, {
-                        min: 0,
-                        max: 1000,
-                      }),
-                    },
-                  }}
-                  onClick={() => {
-                    setSelectedMaterial(material);
+                  },
+                  {
+                    id: "delete",
+                    label: "Delete",
+                    icon: <Delete />,
+                    onClick: () => handleDeleteMaterial(material.id),
+                  },
+                ],
+                ...(!isSm && {
+                  onClick: (_, material) => {
                     setMaterialFormOpen(true);
-                  }}
-                />
-              );
-            })}
-          </Stack>
+                    setSelectedMaterial(material);
+                  },
+                }),
+              },
+            }}
+          />
 
           <Stack direction="row" justifyContent="flex-end">
             <Button
@@ -163,10 +121,10 @@ const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
         open={materialFormOpen}
         title={
           selectedMaterial
-            ? selectedMaterial.data().label.toTitleCase()
+            ? selectedMaterial.label.toTitleCase()
             : "Create Material"
         }
-        values={selectedMaterial?.data()}
+        values={selectedMaterial}
         {...(!!selectedMaterial && {
           options: [
             {
@@ -188,7 +146,7 @@ const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
           setMaterialFormOpen(false);
         }}
         onClose={() => setMaterialFormOpen(false)}
-        onTransitionExited={() => setSelectedMaterial(null)}
+        onTransitionExited={() => setSelectedMaterial(undefined)}
       />
     </>
   );

@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FormEventHandler, type FC } from "react";
 import { useForm, type UseFormProps } from "react-hook-form";
 import {
   Button,
@@ -10,52 +10,50 @@ import {
   Typography,
   type StackProps,
 } from "@mui/material";
-import { addDoc, QueryDocumentSnapshot, updateDoc } from "firebase/firestore";
-import { clientCollection } from "@/firebase/collections";
-import type { ClientData } from "@/firebase/types";
+import type { Client } from "@/firebase/types";
+
+type FormValues = Omit<Client, "id">;
 
 interface ClientForm
-  extends Omit<StackProps, "onSuccess" | "onError">,
-    UseFormProps<ClientData> {
-  client?: QueryDocumentSnapshot<ClientData>;
-  onSuccess?: (docId: string) => void;
-  onError?: (error: Error) => void;
+  extends Omit<StackProps, "onSubmit">,
+    UseFormProps<FormValues> {
+  title?: string;
+  onSubmit: (data: FormValues) => void;
 }
 
+const DEFAULT_VALUES: FormValues = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  phone: "",
+  address: "",
+  city: "",
+  state: "",
+  zip: 0,
+};
+
 const ClientForm: FC<ClientForm> = ({
-  client,
-  onSuccess,
-  onError,
+  title = "Client",
+  values,
+  onSubmit: onSubmitProp,
   ...props
 }) => {
-  /** Values */
-
-  const isEditForm = !!client;
-
   const {
     register,
     handleSubmit,
     reset,
     formState: { isSubmitting, isDirty, isValid, disabled },
-  } = useForm<ClientData>({ values: client?.data(), ...props });
+  } = useForm<FormValues>({
+    defaultValues: DEFAULT_VALUES,
+    values: values ?? DEFAULT_VALUES,
+    ...props,
+  });
 
   /** Callbacks */
 
-  const onSubmit: StackProps["onSubmit"] = handleSubmit(async (data) => {
-    try {
-      if (isEditForm) {
-        await updateDoc(client.ref, { ...data });
-        onSuccess?.(client.id);
-      } else {
-        const clientRef = await addDoc(clientCollection, data);
-        onSuccess?.(clientRef.id);
-      }
-    } catch (error) {
-      onError?.(error as Error);
-    }
-  });
+  const onSubmit: FormEventHandler = handleSubmit(onSubmitProp);
 
-  const onReset: StackProps["onReset"] = (event) => {
+  const onReset: FormEventHandler = (event) => {
     event.preventDefault();
     reset();
   };
@@ -68,11 +66,9 @@ const ClientForm: FC<ClientForm> = ({
       onReset={onReset}
       {...props}
     >
-      <Typography variant="h6">
-        {isEditForm ? "Edit" : "Create"} Client
-      </Typography>
+      <Typography variant="h6">{title}</Typography>
 
-      <Card>
+      <Card variant="outlined">
         <CardContent component={Stack} spacing={1}>
           <Stack direction="row" spacing={1}>
             <TextField
@@ -117,10 +113,10 @@ const ClientForm: FC<ClientForm> = ({
       </Card>
 
       <Stack direction="row" spacing={1} justifyContent="flex-end">
-        <Fade in={isEditForm && isDirty}>
+        <Fade in={isDirty}>
           <Button
             type="reset"
-            variant="outlined"
+            variant="text"
             color="error"
             disabled={isSubmitting || disabled}
           >
@@ -129,11 +125,11 @@ const ClientForm: FC<ClientForm> = ({
         </Fade>
         <Button
           type="submit"
-          variant="contained"
+          variant="outlined"
           loading={isSubmitting}
           disabled={!isDirty || !isValid || disabled}
         >
-          {isEditForm ? "Update" : "Create"}
+          Submit
         </Button>
       </Stack>
     </Stack>

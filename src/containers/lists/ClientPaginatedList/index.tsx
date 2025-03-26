@@ -1,12 +1,12 @@
 import { type ComponentProps, type FC } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { deleteDoc, orderBy, QueryDocumentSnapshot } from "firebase/firestore";
+import { deleteDoc, doc, orderBy } from "firebase/firestore";
 import { Delete, Edit } from "@mui/icons-material";
 import { clientCollection } from "@/firebase/collections";
 import PaginatedList from "@/components/lists/PaginatedList";
 import ClientCard from "@/containers/cards/ClientCard";
-import type { ClientData } from "@/firebase/types";
+import type { Client } from "@/firebase/types";
 
 interface ClientPaginatedList
   extends Partial<
@@ -27,11 +27,9 @@ const ClientPaginatedList: FC<ClientPaginatedList> = ({
 
   /** Callbacks */
 
-  const handleDeleteClient = async (
-    client: QueryDocumentSnapshot<ClientData>
-  ) => {
+  const handleDeleteClient = async (client: Client) => {
     try {
-      await deleteDoc(client.ref);
+      await deleteDoc(doc(clientCollection, client.id));
       queryClient.invalidateQueries({
         queryKey: [clientCollection.path],
       });
