@@ -6,16 +6,6 @@ import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    TanStackRouterVite({ target: "react", autoCodeSplitting: true }),
-    react(),
-    Inspect(),
-  ],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "src"),
-    },
-  },
   build: {
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
@@ -30,6 +20,16 @@ export default defineConfig({
           }
         },
       },
+    },
+  },
+  plugins: [
+    TanStackRouterVite({ target: "react", autoCodeSplitting: true }),
+    react(),
+    Inspect(),
+  ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
     },
   },
 });

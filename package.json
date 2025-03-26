@@ -8,6 +8,7 @@
     "dev": "npm run check:ts && vite dev",
     "build": "tsc -b --noEmit && vite build",
     "lint": "eslint .",
+    "host": "vite --host",
     "preview": "vite preview",
     "test": "vitest"
   },
