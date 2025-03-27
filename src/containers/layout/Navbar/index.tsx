@@ -10,7 +10,7 @@ import {
   Link as MuiLink,
 } from "@mui/material";
 
-const Navbar: FC<AppBarProps> = () => {
+const Navbar: FC<AppBarProps> = (props) => {
   /** Values */
 
   const navLinks = [
@@ -28,7 +28,7 @@ const Navbar: FC<AppBarProps> = () => {
   ];
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" {...props}>
       <Container>
         <Toolbar component={Stack} direction="row" spacing={2} disableGutters>
           <Typography

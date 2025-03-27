@@ -1,4 +1,10 @@
-import { type ReactNode, type FC, useState, useRef } from "react";
+import {
+  type ReactNode,
+  type FC,
+  useState,
+  useRef,
+  type MouseEvent,
+} from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   IconButton,
@@ -13,13 +19,14 @@ import {
   type IconButtonProps,
 } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
-import type { MenuOption } from "@/types/global";
 import { sxUtils } from "@/utils/sx";
+import type { MenuOption } from "@/types/global";
 
-interface MenuIconButton extends IconButtonProps {
+interface MenuIconButtonProps extends IconButtonProps {
   options: MenuOption[];
   icon?: ReactNode;
   slotProps?: {
+    root?: IconButtonProps;
     menu?: MenuProps;
     menuItem?: {
       text?: ListItemTextProps;
@@ -30,7 +37,7 @@ interface MenuIconButton extends IconButtonProps {
 
 /**
  * This component renders an `IconButton` with a menu that contains a list of options.
- * @param {MenuIconButton} props
+ * @param {MenuIconButtonProps} props
  * @param {MenuOption[]} props.options - An array of options to display in the menu.
  * @param {ReactNode} [props.icon] - The icon to display in the `IconButton`.
  * @param {MenuProps} [props.slotProps.menu] - Props for the `Menu` component.
@@ -39,7 +46,7 @@ interface MenuIconButton extends IconButtonProps {
  * @param {ListItemIconProps} [props.slotProps.menuItem.icon] - Props for the `ListItemIcon` component.
  * @returns {ReactNode}
  */
-const MenuIconButton: FC<MenuIconButton> = ({
+const MenuIconButton: FC<MenuIconButtonProps> = ({
   options,
   size = "small",
   icon = <MoreVert fontSize={size} />,
@@ -52,7 +59,7 @@ const MenuIconButton: FC<MenuIconButton> = ({
     } = {},
   } = {},
   ...props
-}: MenuIconButton): ReactNode => {
+}: MenuIconButtonProps): ReactNode => {
   const buttonId = useRef(`options-button-${uuidv4()}`);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -74,7 +81,7 @@ const MenuIconButton: FC<MenuIconButton> = ({
         component="span"
         id={buttonId.current}
         size={size}
-        onMouseDown={(event: Event) => event.stopPropagation()}
+        onMouseDown={(event: MouseEvent) => event.stopPropagation()}
         onClick={onClick}
         {...props}
         sx={[

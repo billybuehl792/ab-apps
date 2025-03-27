@@ -4,13 +4,13 @@ import { Stack, type StackProps } from "@mui/material";
 import { EstimateCalculatorFormValues } from "..";
 import MaterialCard from "@/containers/cards/MaterialCard/MaterialCard";
 
-interface EstimateCalculatorFieldArray extends StackProps {
+interface EstimateCalculatorFieldArrayProps extends StackProps {
   slotProps?: {
     card?: Partial<ComponentProps<typeof MaterialCard>>;
   };
 }
 
-const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArray> = ({
+const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArrayProps> = ({
   slotProps: { card: cardProps } = {},
   ...props
 }) => {
@@ -28,7 +28,7 @@ const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArray> = ({
   });
 
   return (
-    <Stack component="form" spacing={1} border="none" padding={0} {...props}>
+    <Stack component="form" spacing={1} {...props}>
       {fields.map(({ fieldId: id, count: _, ...material }, index) => {
         return (
           <MaterialCard

@@ -8,6 +8,7 @@ import {
   type DocumentData,
   type CollectionReference,
   type QueryConstraint,
+  type QueryDocumentSnapshot,
 } from "firebase/firestore";
 import {
   Skeleton,
@@ -19,12 +20,12 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
-interface PaginatedList<T extends DocumentData = DocumentData>
+interface PaginatedListProps<T extends DocumentData = DocumentData>
   extends StackProps {
   collection: CollectionReference<T>;
   constraints?: QueryConstraint[];
   rowsPerPageOptions?: number[];
-  renderItem: (item: T & { id: string }) => ReactNode;
+  renderItem: (item: T & Pick<QueryDocumentSnapshot, "id">) => ReactNode;
   slotProps?: {
     pagination?: TablePaginationProps;
     skeleton?: SkeletonProps;
@@ -32,12 +33,18 @@ interface PaginatedList<T extends DocumentData = DocumentData>
 }
 
 /**
- * This component renders a paginated list of items from a Firestore collection.
- * @param {PaginatedList} props
- * @param {CollectionReference} props.collection - The Firestore collection to query.
- * @param {QueryConstraint[]} [props.constraints] - An array of query constraints.
- * @param {(item: QueryDocumentSnapshot) => ReactNode} props.renderItem - A function that renders each item in the list.
- * @returns {ReactNode}
+ * A component that renders a paginated list of items from a Firestore collection.
+ *
+ * @template T - The type of the Firestore document data.
+ * @param {PaginatedListProps<T>} props - The props for the component.
+ * @param {CollectionReference<T>} props.collection - The Firestore collection to query.
+ * @param {QueryConstraint[]} [props.constraints] - An optional array of query constraints to filter the collection.
+ * @param {number[]} [props.rowsPerPageOptions] - An optional array of rows per page options for pagination.
+ * @param {(item: T & Pick<QueryDocumentSnapshot, "id">) => ReactNode} props.renderItem - A function to render each item in the list.
+ * @param {object} [props.slotProps] - Optional slot props for customizing pagination and skeleton components.
+ * @param {TablePaginationProps} [props.slotProps.pagination] - Props for the pagination component.
+ * @param {SkeletonProps} [props.slotProps.skeleton] - Props for the skeleton component.
+ * @returns {ReactNode} The rendered paginated list.
  */
 const PaginatedList = <T extends DocumentData = DocumentData>({
   collection,
@@ -46,7 +53,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
   renderItem,
   slotProps: { pagination: paginationProps, skeleton: skeletonProps } = {},
   ...props
-}: PaginatedList<T>): ReactNode => {
+}: PaginatedListProps<T>): ReactNode => {
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0] ?? 10);
   const [lastDocs, setLastDocs] = useState<DocumentData[]>([]);
@@ -78,7 +85,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
       const snapshot = await getDocs(q);
       return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
     },
-    enabled: countQuery.isSuccess,
+    enabled: countQuery.isSuccess && count > 0,
   });
 
   /** Callbacks */

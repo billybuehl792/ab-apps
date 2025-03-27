@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { type EstimateCalculatorFormValues } from "..";
 
-const EstimateCalculatorHeader: FC<GridProps> = ({ ...props }) => {
+const EstimateCalculatorHeader: FC<GridProps> = (props) => {
   /** Values */
 
   const { watch } = useFormContext<EstimateCalculatorFormValues>();

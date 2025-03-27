@@ -1,23 +1,23 @@
-import { type ReactNode, type FC } from "react";
+import { type ReactNode, type FC, type MouseEvent } from "react";
 import { IconButton, type IconButtonProps } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 
-interface EditIconButton extends IconButtonProps {
+interface EditIconButtonProps extends IconButtonProps {
   icon?: ReactNode;
 }
 
 /**
  * This component renders an `IconButton` with an `Edit` icon.
- * @param {EditIconButton} props
+ * @param {EditIconButtonProps} props
  * @param {ReactNode} [props.icon] - The icon to display in the `IconButton`.
  * @returns {ReactNode}
  */
-const EditIconButton: FC<EditIconButton> = ({
+const EditIconButton: FC<EditIconButtonProps> = ({
   size = "small",
   icon = <Edit fontSize={size} />,
   onClick: onClickProp,
   ...props
-}: EditIconButton): ReactNode => {
+}: EditIconButtonProps): ReactNode => {
   /** Callbacks */
 
   const onClick: IconButtonProps["onClick"] = (event) => {
@@ -29,7 +29,7 @@ const EditIconButton: FC<EditIconButton> = ({
     <IconButton
       component="span"
       size={size}
-      onMouseDown={(event: Event) => event.stopPropagation()}
+      onMouseDown={(event: MouseEvent) => event.stopPropagation()}
       onClick={onClick}
       {...props}
     >

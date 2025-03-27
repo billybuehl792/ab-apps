@@ -7,8 +7,8 @@ import {
   startAfter,
   type DocumentData,
   type CollectionReference,
-  type QueryNonFilterConstraint,
   limit,
+  type QueryConstraint,
 } from "firebase/firestore";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
@@ -20,12 +20,12 @@ import {
   type StackProps,
 } from "@mui/material";
 
-interface InfiniteList<T extends DocumentData = DocumentData>
+interface InfiniteListProps<T extends DocumentData = DocumentData>
   extends StackProps {
   collection: CollectionReference<T>;
   pageSize?: number;
-  constraints?: QueryNonFilterConstraint[];
-  renderItem: (item: QueryDocumentSnapshot<T>) => ReactNode;
+  constraints?: QueryConstraint[];
+  renderItem: (item: T & Pick<QueryDocumentSnapshot, "id">) => ReactNode;
   slotProps?: {
     loadMoreButton?: ButtonProps;
     skeleton?: SkeletonProps;
@@ -34,12 +34,17 @@ interface InfiniteList<T extends DocumentData = DocumentData>
 
 /**
  * This component renders an infinite list of items from a Firestore collection.
- * @param {InfiniteList} props
- * @param {CollectionReference} props.collection - The Firestore collection to query.
+ *
+ * @template T - The type of the Firestore document data.
+ * @param {InfiniteListProps<T>} props - The props for the InfiniteList component.
+ * @param {CollectionReference<T>} props.collection - The Firestore collection to query.
  * @param {number} [props.pageSize=10] - The number of items to fetch per page.
- * @param {QueryNonFilterConstraint[]} [props.constraints] - An array of query constraints.
- * @param {(item: QueryDocumentSnapshot) => ReactNode} props.renderItem - A function that renders each item in the list.
- * @returns {ReactNode}
+ * @param {QueryConstraint[]} [props.constraints] - An array of query constraints to filter or modify the query.
+ * @param {(item: T & Pick<QueryDocumentSnapshot, "id">) => ReactNode} props.renderItem - A function that renders each item in the list.
+ * @param {object} [props.slotProps] - Additional props for customizing child components.
+ * @param {ButtonProps} [props.slotProps.loadMoreButton] - Props for the "Load More" button.
+ * @param {SkeletonProps} [props.slotProps.skeleton] - Props for the skeleton loader.
+ * @returns {ReactNode} The rendered infinite list component.
  */
 const InfiniteList = <T extends DocumentData = DocumentData>({
   collection,
@@ -51,42 +56,42 @@ const InfiniteList = <T extends DocumentData = DocumentData>({
     skeleton: skeletonProps,
   } = {},
   ...props
-}: InfiniteList<T>): ReactNode => {
+}: InfiniteListProps<T>): ReactNode => {
   /** Queries */
 
   const countQuery = useQuery({
-    queryKey: [collection.id, getCountFromServer, ...constraints] as const,
-    queryFn: ({ queryKey: [_, fn, ...constraints] }) =>
-      fn(query(collection, ...constraints)),
+    queryKey: [collection.id, "count", ...constraints] as const,
+    queryFn: ({ queryKey: [_, __, ...constraints] }) =>
+      getCountFromServer(query(collection, ...constraints)),
   });
   const count = countQuery.data?.data().count ?? 0;
 
   const listQuery = useInfiniteQuery({
     queryKey: [
       collection.id,
-      getDocs,
       "infinite",
       ...[limit(pageSize), ...constraints],
     ] as const,
-    initialPageParam: {} as QueryDocumentSnapshot<T>,
-    queryFn: ({ queryKey: [_, fn, __, ...constraints], pageParam }) =>
-      fn(
-        query(
-          collection,
-          ...constraints,
-          ...(pageParam?.id ? [startAfter(pageParam)] : [])
-        )
-      ),
+    initialPageParam: {} as Pick<QueryDocumentSnapshot, "id">,
+    queryFn: async ({ queryKey: [_, __, ...constraints], pageParam }) => {
+      const q = query(
+        collection,
+        ...constraints,
+        ...(pageParam?.id ? [startAfter(pageParam)] : [])
+      );
+      const snapshot = await getDocs(q);
+      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    },
     getNextPageParam: (lastPage, pages) =>
-      pages.reduce((acc, doc) => acc + doc.size, 0) < count
-        ? (lastPage.docs.at(-1) ?? null)
+      pages.reduce((acc, page) => acc + page.length, 0) < count
+        ? (lastPage.at(-1) ?? null)
         : null,
-    enabled: Boolean(count),
+    enabled: countQuery.isSuccess && count > 0,
   });
 
   return (
     <Stack spacing={1} {...props}>
-      {listQuery.data?.pages.map((snapshot) => snapshot.docs.map(renderItem))}
+      {listQuery.data?.pages.map((page) => page.map(renderItem))}
       {(countQuery.isLoading ||
         listQuery.isLoading ||
         listQuery.isFetchingNextPage) &&

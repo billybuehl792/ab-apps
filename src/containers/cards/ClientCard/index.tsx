@@ -1,4 +1,4 @@
-import { type ReactNode, type FC, type MouseEvent } from "react";
+import { type FC, type MouseEvent } from "react";
 import {
   Card,
   CardActionArea,
@@ -14,7 +14,7 @@ import MenuIconButton from "@/components/buttons/MenuIconButton";
 import type { MenuOption } from "@/types/global";
 import type { Client } from "@/firebase/types";
 
-interface ClientCard extends Omit<CardProps, "onClick"> {
+interface ClientCardProps extends Omit<CardProps, "onClick"> {
   client: Client;
   disabled?: boolean;
   options?: MenuOption[] | ((client: Client) => MenuOption[]);
@@ -25,7 +25,7 @@ interface ClientCard extends Omit<CardProps, "onClick"> {
   };
 }
 
-const ClientCard: FC<ClientCard> = ({
+const ClientCard: FC<ClientCardProps> = ({
   client,
   disabled,
   options: optionsProp,
@@ -35,7 +35,7 @@ const ClientCard: FC<ClientCard> = ({
     cardContent: cardContentProps,
   } = {},
   ...props
-}: ClientCard): ReactNode => {
+}) => {
   /** Values */
 
   const options =

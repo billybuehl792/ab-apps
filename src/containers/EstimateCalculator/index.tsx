@@ -9,13 +9,13 @@ import { firestoreQueries } from "@/firebase/queries";
 import MaterialFormDialog from "../modals/MaterialFormDialog";
 import EstimateCalculatorHeader from "./layout/EstimateCalculatorHeader";
 import EstimateCalculatorFieldArray from "./layout/EstimateCalculatorFieldArray";
-import type { Material } from "@/firebase/types";
+import type { Material, MaterialData } from "@/firebase/types";
 
 export interface EstimateCalculatorFormValues {
   materials: (Material & { count?: number })[];
 }
 
-const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
+const EstimateCalculator: FC<StackProps> = (props) => {
   const [materialFormOpen, setMaterialFormOpen] = useState(false);
   const [selectedMaterial, setSelectedMaterial] = useState<
     Material | undefined
@@ -38,7 +38,7 @@ const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
 
   /** Callbacks */
 
-  const handleCreateMaterial = async (formData: Omit<Material, "id">) => {
+  const handleCreateMaterial = async (formData: MaterialData) => {
     try {
       await addDoc(materialCollection, { ...formData, value: +formData.value });
       materialsQuery.refetch();
@@ -47,10 +47,7 @@ const EstimateCalculator: FC<StackProps> = ({ ...props }) => {
     }
   };
 
-  const handleUpdateMaterial = async (
-    id: string,
-    formData: Omit<Material, "id">
-  ) => {
+  const handleUpdateMaterial = async (id: string, formData: MaterialData) => {
     try {
       const materialRef = doc(materialCollection, id);
       await updateDoc(materialRef, { ...formData, value: +formData.value });

@@ -23,7 +23,7 @@ const classes = generateUtilityClasses("MaterialCard", [
   "menuIconButton",
 ]);
 
-interface MaterialCard extends Omit<CardProps, "onClick"> {
+interface MaterialCardProps extends Omit<CardProps, "onClick"> {
   material: Material;
   disabled?: boolean;
   options?: MenuOption[] | ((material: Material) => MenuOption[]);
@@ -35,7 +35,7 @@ interface MaterialCard extends Omit<CardProps, "onClick"> {
   onClick?: (event: MouseEvent<HTMLButtonElement>, material: Material) => void;
 }
 
-const MaterialCard: FC<MaterialCard> = ({
+const MaterialCard: FC<MaterialCardProps> = ({
   material,
   disabled,
   options: optionsProp,

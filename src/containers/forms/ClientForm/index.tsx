@@ -1,4 +1,4 @@
-import { type FormEventHandler, type FC } from "react";
+import { type FC, type FormEvent } from "react";
 import { useForm, type UseFormProps } from "react-hook-form";
 import {
   Button,
@@ -10,11 +10,11 @@ import {
   Typography,
   type StackProps,
 } from "@mui/material";
-import type { Client } from "@/firebase/types";
+import type { ClientData } from "@/firebase/types";
 
-type FormValues = Omit<Client, "id">;
+type FormValues = ClientData;
 
-interface ClientForm
+interface ClientFormProps
   extends Omit<StackProps, "onSubmit">,
     UseFormProps<FormValues> {
   title?: string;
@@ -32,12 +32,14 @@ const DEFAULT_VALUES: FormValues = {
   zip: 0,
 };
 
-const ClientForm: FC<ClientForm> = ({
+const ClientForm: FC<ClientFormProps> = ({
   title = "Client",
   values,
-  onSubmit: onSubmitProp,
+  onSubmit,
   ...props
 }) => {
+  /** Values */
+
   const {
     register,
     handleSubmit,
@@ -49,26 +51,20 @@ const ClientForm: FC<ClientForm> = ({
     ...props,
   });
 
-  /** Callbacks */
-
-  const onSubmit: FormEventHandler = handleSubmit(onSubmitProp);
-
-  const onReset: FormEventHandler = (event) => {
-    event.preventDefault();
-    reset();
-  };
-
   return (
     <Stack
       component="form"
       spacing={1}
-      onSubmit={onSubmit}
-      onReset={onReset}
+      onSubmit={handleSubmit(onSubmit)}
+      onReset={(event: FormEvent) => {
+        event.preventDefault();
+        reset();
+      }}
       {...props}
     >
       <Typography variant="h6">{title}</Typography>
 
-      <Card variant="outlined">
+      <Card component="fieldset" variant="outlined">
         <CardContent component={Stack} spacing={1}>
           <Stack direction="row" spacing={1}>
             <TextField
@@ -83,7 +79,7 @@ const ClientForm: FC<ClientForm> = ({
             <TextField
               type="text"
               label="Last Name"
-              {...register("first_name", {
+              {...register("last_name", {
                 required: true,
                 maxLength: 128,
                 disabled,

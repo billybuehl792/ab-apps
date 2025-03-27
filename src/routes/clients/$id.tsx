@@ -34,7 +34,7 @@ function RouteComponent() {
   ) => {
     try {
       const docRef = doc(clientCollection, client.id);
-      await updateDoc(docRef, formData);
+      await updateDoc(docRef, { ...formData });
       navigate({ to: "/clients" });
     } catch (error) {
       alert("Error updating client");

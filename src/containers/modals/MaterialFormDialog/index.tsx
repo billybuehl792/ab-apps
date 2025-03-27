@@ -17,12 +17,12 @@ import { useForm, type UseFormProps } from "react-hook-form";
 import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
 import CloseIconButton from "@/components/buttons/CloseIconButton";
-import type { Material } from "@/firebase/types";
+import type { MaterialData } from "@/firebase/types";
 import type { MenuOption } from "@/types/global";
 
-type FormValues = Omit<Material, "id">;
+type FormValues = MaterialData;
 
-interface MaterialFormDialog
+interface MaterialFormDialogProps
   extends Omit<DialogProps, "onSubmit">,
     UseFormProps<FormValues> {
   title?: string;
@@ -36,7 +36,7 @@ const DEFAULT_VALUES: FormValues = {
   description: "",
 };
 
-const MaterialFormDialog: FC<MaterialFormDialog> = ({
+const MaterialFormDialog: FC<MaterialFormDialogProps> = ({
   title = "Material",
   values,
   options,

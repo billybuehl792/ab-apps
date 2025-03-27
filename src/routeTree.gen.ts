@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as PlaygroundIndexImport } from './routes/playground/index'
 import { Route as LoginIndexImport } from './routes/login/index'
 import { Route as EstimateCalculatorIndexImport } from './routes/estimate-calculator/index'
 import { Route as ClientsIndexImport } from './routes/clients/index'
@@ -23,6 +24,12 @@ import { Route as ClientsIdImport } from './routes/clients/$id'
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PlaygroundIndexRoute = PlaygroundIndexImport.update({
+  id: '/playground/',
+  path: '/playground/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -102,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexImport
       parentRoute: typeof rootRoute
     }
+    '/playground/': {
+      id: '/playground/'
+      path: '/playground'
+      fullPath: '/playground'
+      preLoaderRoute: typeof PlaygroundIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -114,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/clients': typeof ClientsIndexRoute
   '/estimate-calculator': typeof EstimateCalculatorIndexRoute
   '/login': typeof LoginIndexRoute
+  '/playground': typeof PlaygroundIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -123,6 +138,7 @@ export interface FileRoutesByTo {
   '/clients': typeof ClientsIndexRoute
   '/estimate-calculator': typeof EstimateCalculatorIndexRoute
   '/login': typeof LoginIndexRoute
+  '/playground': typeof PlaygroundIndexRoute
 }
 
 export interface FileRoutesById {
@@ -133,6 +149,7 @@ export interface FileRoutesById {
   '/clients/': typeof ClientsIndexRoute
   '/estimate-calculator/': typeof EstimateCalculatorIndexRoute
   '/login/': typeof LoginIndexRoute
+  '/playground/': typeof PlaygroundIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -144,6 +161,7 @@ export interface FileRouteTypes {
     | '/clients'
     | '/estimate-calculator'
     | '/login'
+    | '/playground'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -152,6 +170,7 @@ export interface FileRouteTypes {
     | '/clients'
     | '/estimate-calculator'
     | '/login'
+    | '/playground'
   id:
     | '__root__'
     | '/'
@@ -160,6 +179,7 @@ export interface FileRouteTypes {
     | '/clients/'
     | '/estimate-calculator/'
     | '/login/'
+    | '/playground/'
   fileRoutesById: FileRoutesById
 }
 
@@ -170,6 +190,7 @@ export interface RootRouteChildren {
   ClientsIndexRoute: typeof ClientsIndexRoute
   EstimateCalculatorIndexRoute: typeof EstimateCalculatorIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
+  PlaygroundIndexRoute: typeof PlaygroundIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -179,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClientsIndexRoute: ClientsIndexRoute,
   EstimateCalculatorIndexRoute: EstimateCalculatorIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
+  PlaygroundIndexRoute: PlaygroundIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -196,7 +218,8 @@ export const routeTree = rootRoute
         "/clients/create",
         "/clients/",
         "/estimate-calculator/",
-        "/login/"
+        "/login/",
+        "/playground/"
       ]
     },
     "/": {
@@ -216,6 +239,9 @@ export const routeTree = rootRoute
     },
     "/login/": {
       "filePath": "login/index.tsx"
+    },
+    "/playground/": {
+      "filePath": "playground/index.tsx"
     }
   }
 }

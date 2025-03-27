@@ -8,7 +8,7 @@ import PaginatedList from "@/components/lists/PaginatedList";
 import ClientCard from "@/containers/cards/ClientCard";
 import type { Client } from "@/firebase/types";
 
-interface ClientPaginatedList
+interface ClientPaginatedListProps
   extends Partial<
     Omit<ComponentProps<typeof PaginatedList>, "collection" | "slotProps">
   > {
@@ -16,7 +16,7 @@ interface ClientPaginatedList
     typeof PaginatedList
   >["slotProps"];
 }
-const ClientPaginatedList: FC<ClientPaginatedList> = ({
+const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
   slotProps: { card: cardProps, ...slotProps } = {},
   ...props
 }) => {
