@@ -2,7 +2,7 @@ import { type ComponentProps, type FC } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Stack, type StackProps } from "@mui/material";
 import { EstimateCalculatorFormValues } from "..";
-import MaterialCard from "@/containers/cards/MaterialCard/MaterialCard";
+import MaterialCard from "@/containers/cards/MaterialCard";
 
 interface EstimateCalculatorFieldArrayProps extends StackProps {
   slotProps?: {

@@ -1,17 +1,37 @@
-import PaginatedList from "@/components/lists/PaginatedList";
-import ClientCard from "@/containers/cards/ClientCard";
-import { clientCollection } from "@/firebase/collections";
-import { createFileRoute } from "@tanstack/react-router";
+import MaterialCard from "@/containers/cards/MaterialCard";
+import { Dialog, DialogContent, Stack } from "@mui/material";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 
 export const Route = createFileRoute("/playground/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const navigate = useNavigate();
+
   return (
-    <PaginatedList
-      collection={clientCollection}
-      renderItem={(item) => <ClientCard key={item.id} client={item} />}
-    />
+    <>
+      <Stack spacing={1}>
+        <MaterialCard
+          material={{
+            id: "example-id",
+            label: "Example Label",
+            value: 10,
+            description: "Example Description",
+          }}
+          options={[
+            { id: "delete", label: "Delete", onClick: () => alert("delete") },
+            { id: "edit", label: "Edit", onClick: () => navigate({ to: "/" }) },
+          ]}
+        />
+      </Stack>
+
+      <Dialog open={modalOpen} onClose={() => setModalOpen(false)}>
+        <DialogContent>Modal Here</DialogContent>
+      </Dialog>
+    </>
   );
 }

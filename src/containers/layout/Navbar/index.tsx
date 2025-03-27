@@ -25,6 +25,11 @@ const Navbar: FC<AppBarProps> = (props) => {
       name: "Login",
       path: "/login",
     },
+    {
+      id: "playground",
+      name: "Playground",
+      path: "/playground",
+    },
   ];
 
   return (

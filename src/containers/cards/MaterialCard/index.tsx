@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent } from "react";
+import { useState, type FC, type MouseEvent } from "react";
 import {
   Card,
   CardActionArea,
@@ -12,7 +12,9 @@ import {
   type TextFieldProps,
   Typography,
 } from "@mui/material";
+import { LongPressEventType, useLongPress } from "use-long-press";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
+import OptionDrawer from "@/components/modals/OptionDrawer";
 import { sxUtils } from "@/utils/sx";
 import type { MenuOption } from "@/types/global";
 import type { Material } from "@/firebase/types";
@@ -47,7 +49,14 @@ const MaterialCard: FC<MaterialCardProps> = ({
   onClick,
   ...props
 }) => {
+  const [optionsOpen, setOptionsOpen] = useState(false);
+
   /** Values */
+
+  const touchHandlers = useLongPress(() => setOptionsOpen(true), {
+    detect: LongPressEventType.Touch,
+    threshold: 500,
+  });
 
   const options =
     typeof optionsProp === "function" ? optionsProp(material) : optionsProp;
@@ -59,6 +68,7 @@ const MaterialCard: FC<MaterialCardProps> = ({
 
   return (
     <Card
+      id={material.id}
       className={classes.root}
       variant="outlined"
       {...props}
@@ -77,7 +87,9 @@ const MaterialCard: FC<MaterialCardProps> = ({
     >
       <CardActionArea
         disabled={disabled}
+        disableTouchRipple={!onClick}
         onClick={(event) => onClick?.(event, material)}
+        {...touchHandlers()}
         {...cardActionAreaProps}
       >
         <CardContent
@@ -104,6 +116,9 @@ const MaterialCard: FC<MaterialCardProps> = ({
                 options={options}
                 sx={{
                   display: { xs: "none", sm: "inherit" },
+                  "@media (hover:none)": {
+                    display: "none",
+                  },
                   "@media (hover: hover)": {
                     visibility: "hidden",
                   },
@@ -127,6 +142,15 @@ const MaterialCard: FC<MaterialCardProps> = ({
           />
         </CardContent>
       </CardActionArea>
+
+      {/* Modals */}
+      {!!options && (
+        <OptionDrawer
+          open={optionsOpen}
+          options={options}
+          onClose={() => setOptionsOpen(false)}
+        />
+      )}
     </Card>
   );
 };

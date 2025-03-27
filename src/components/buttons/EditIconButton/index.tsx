@@ -1,4 +1,9 @@
-import { type ReactNode, type FC, type MouseEvent } from "react";
+import {
+  type ReactNode,
+  type FC,
+  type MouseEvent,
+  type TouchEvent,
+} from "react";
 import { IconButton, type IconButtonProps } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 
@@ -30,6 +35,7 @@ const EditIconButton: FC<EditIconButtonProps> = ({
       component="span"
       size={size}
       onMouseDown={(event: MouseEvent) => event.stopPropagation()}
+      onTouchStart={(event: TouchEvent) => event.stopPropagation()}
       onClick={onClick}
       {...props}
     >

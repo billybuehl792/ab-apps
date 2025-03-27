@@ -41,5 +41,6 @@ export interface MenuOption<T extends MenuOptionType = MenuOptionType> {
   selected?: boolean;
   disabled?: boolean;
   tooltip?: string;
+  disableCloseOnSelect?: boolean;
   onClick: (event: React.MouseEvent, id: T) => void;
 }

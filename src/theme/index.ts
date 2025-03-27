@@ -28,5 +28,12 @@ export const theme = createTheme({
         },
       },
     },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          borderRadius: 10,
+        },
+      },
+    },
   },
 });

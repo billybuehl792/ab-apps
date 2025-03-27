@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent } from "react";
+import { useState, type FC, type MouseEvent } from "react";
 import {
   Card,
   CardActionArea,
@@ -11,6 +11,8 @@ import {
   type CardContentProps,
 } from "@mui/material";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
+import OptionDrawer from "@/components/modals/OptionDrawer";
+import { LongPressEventType, useLongPress } from "use-long-press";
 import type { MenuOption } from "@/types/global";
 import type { Client } from "@/firebase/types";
 
@@ -36,7 +38,14 @@ const ClientCard: FC<ClientCardProps> = ({
   } = {},
   ...props
 }) => {
+  const [optionsOpen, setOptionsOpen] = useState(false);
+
   /** Values */
+
+  const touchHandlers = useLongPress(() => setOptionsOpen(true), {
+    detect: LongPressEventType.Touch,
+    threshold: 500,
+  });
 
   const options =
     typeof optionsProp === "function" ? optionsProp(client) : optionsProp;
@@ -46,6 +55,8 @@ const ClientCard: FC<ClientCardProps> = ({
       <CardActionArea
         onClick={(event) => onClick?.(event, client)}
         disabled={disabled}
+        disableTouchRipple={!onClick}
+        {...touchHandlers()}
         {...cardActionAreaProps}
       >
         <CardContent
@@ -73,9 +84,27 @@ const ClientCard: FC<ClientCardProps> = ({
             </Stack>
           </Stack>
 
-          {!!options && <MenuIconButton options={options} />}
+          {!!options && (
+            <MenuIconButton
+              options={options}
+              sx={{
+                "@media (hover:none)": {
+                  display: "none",
+                },
+              }}
+            />
+          )}
         </CardContent>
       </CardActionArea>
+
+      {/* Modals */}
+      {!!options && (
+        <OptionDrawer
+          open={optionsOpen}
+          options={options}
+          onClose={() => setOptionsOpen(false)}
+        />
+      )}
     </Card>
   );
 };
