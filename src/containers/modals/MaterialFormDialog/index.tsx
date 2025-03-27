@@ -78,6 +78,7 @@ const MaterialFormDialog: FC<MaterialFormDialog> = ({
   return (
     <Dialog
       fullWidth
+      aria-hidden={false}
       slotProps={{
         paper: { component: "form", onSubmit, onReset },
       }}

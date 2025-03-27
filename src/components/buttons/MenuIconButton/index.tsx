@@ -86,6 +86,7 @@ const MenuIconButton: FC<MenuIconButton> = ({
       </IconButton>
       <Menu
         id="menu"
+        aria-hidden={false}
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClick={(event) => event.stopPropagation()}
