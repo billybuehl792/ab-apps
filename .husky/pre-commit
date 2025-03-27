@@ -1,0 +1,8 @@
+echo "[Husky] Running pre-commit hook"
+
+npx tsc -b --noEmit
+if [ $? -ne 0 ]; then
+    echo "TypeScript compilation failed. Commit aborted."
+    exit 1
+fi
+
