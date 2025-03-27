@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import EstimateCalculator from "@/containers/EstimateCalculator";
+import EstimateCalculator from "@/containers/features/EstimateCalculator";
 import { firestoreQueries } from "@/firebase/queries";
 import { CircularProgress } from "@mui/material";
 import { orderBy } from "firebase/firestore";

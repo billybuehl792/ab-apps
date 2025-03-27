@@ -1,12 +1,11 @@
 import { type ComponentProps, type FC } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
-import { deleteDoc, doc, orderBy } from "firebase/firestore";
+import { orderBy } from "firebase/firestore";
 import { Delete, Edit } from "@mui/icons-material";
 import { clientCollection } from "@/firebase/collections";
+import { firestoreMutations } from "@/firebase/mutations";
 import PaginatedList from "@/components/lists/PaginatedList";
 import ClientCard from "@/containers/cards/ClientCard";
-import type { Client } from "@/firebase/types";
 
 interface ClientPaginatedListProps
   extends Partial<
@@ -22,21 +21,10 @@ const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
 }) => {
   /** Values */
 
-  const queryClient = useQueryClient();
+  const { remove } = firestoreMutations.useClientMutations();
   const navigate = useNavigate();
 
   /** Callbacks */
-
-  const handleDeleteClient = async (client: Client) => {
-    try {
-      await deleteDoc(doc(clientCollection, client.id));
-      queryClient.invalidateQueries({
-        queryKey: [clientCollection.path],
-      });
-    } catch (error) {
-      console.error("Error deleting client:", error);
-    }
-  };
 
   return (
     <PaginatedList
@@ -58,7 +46,7 @@ const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
               id: "delete",
               label: "Delete",
               icon: <Delete />,
-              onClick: () => handleDeleteClient(client),
+              onClick: () => remove.mutate(client.id),
             },
           ]}
           {...cardProps}

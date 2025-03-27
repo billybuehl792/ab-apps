@@ -1,15 +1,15 @@
 import { useState, type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { addDoc, deleteDoc, doc, orderBy, updateDoc } from "firebase/firestore";
+import { orderBy } from "firebase/firestore";
 import { FormProvider, useForm } from "react-hook-form";
-import { Button, Stack, useMediaQuery, type StackProps } from "@mui/material";
+import { Button, Stack, type StackProps } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
-import { materialCollection } from "@/firebase/collections";
 import { firestoreQueries } from "@/firebase/queries";
-import MaterialFormDialog from "../modals/MaterialFormDialog";
+import { firestoreMutations } from "@/firebase/mutations";
+import MaterialFormDialog from "@/containers/modals/MaterialFormDialog";
 import EstimateCalculatorHeader from "./layout/EstimateCalculatorHeader";
 import EstimateCalculatorFieldArray from "./layout/EstimateCalculatorFieldArray";
-import type { Material, MaterialData } from "@/firebase/types";
+import type { Material } from "@/firebase/types";
 
 export interface EstimateCalculatorFormValues {
   materials: (Material & { count?: number })[];
@@ -29,43 +29,13 @@ const EstimateCalculator: FC<StackProps> = (props) => {
 
   /** Values */
 
-  const isSm = useMediaQuery((theme) => theme.breakpoints.up("sm"));
+  const { create, update, remove } = firestoreMutations.useMaterialMutations();
+
   const methods = useForm<EstimateCalculatorFormValues>({
     mode: "all",
     values: { materials: materialsQuery.data ?? [] },
     ...props,
   });
-
-  /** Callbacks */
-
-  const handleCreateMaterial = async (formData: MaterialData) => {
-    try {
-      await addDoc(materialCollection, { ...formData, value: +formData.value });
-      materialsQuery.refetch();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleUpdateMaterial = async (id: string, formData: MaterialData) => {
-    try {
-      const materialRef = doc(materialCollection, id);
-      await updateDoc(materialRef, { ...formData, value: +formData.value });
-      materialsQuery.refetch();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleDeleteMaterial = async (id: string) => {
-    try {
-      const materialRef = doc(materialCollection, id);
-      await deleteDoc(materialRef);
-      materialsQuery.refetch();
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return (
     <>
@@ -89,15 +59,12 @@ const EstimateCalculator: FC<StackProps> = (props) => {
                     id: "delete",
                     label: "Delete",
                     icon: <Delete />,
-                    onClick: () => handleDeleteMaterial(material.id),
+                    onClick: () =>
+                      remove.mutate(material.id, {
+                        onSuccess: () => materialsQuery.refetch(),
+                      }),
                   },
                 ],
-                ...(!isSm && {
-                  onClick: (_, material) => {
-                    setMaterialFormOpen(true);
-                    setSelectedMaterial(material);
-                  },
-                }),
               },
             }}
           />
@@ -128,17 +95,17 @@ const EstimateCalculator: FC<StackProps> = (props) => {
               id: "delete",
               label: "Delete",
               icon: <Delete />,
-              onClick: () => {
-                handleDeleteMaterial(selectedMaterial.id);
-                setMaterialFormOpen(false);
-              },
+              onClick: () =>
+                remove.mutate(selectedMaterial.id, {
+                  onSuccess: () => setMaterialFormOpen(false),
+                }),
             },
           ],
         })}
         onSubmit={async (formData) => {
           if (selectedMaterial)
-            await handleUpdateMaterial(selectedMaterial.id, formData);
-          else await handleCreateMaterial(formData);
+            await update.mutateAsync({ id: selectedMaterial.id, ...formData });
+          else await create.mutateAsync(formData);
 
           setMaterialFormOpen(false);
         }}

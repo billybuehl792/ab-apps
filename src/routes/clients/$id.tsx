@@ -1,9 +1,7 @@
-import { type ComponentProps } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { doc, updateDoc } from "firebase/firestore";
 import { CircularProgress, Stack } from "@mui/material";
-import { clientCollection } from "@/firebase/collections";
 import { firestoreQueries } from "@/firebase/queries";
+import { firestoreMutations } from "@/firebase/mutations";
 import ClientForm from "@/containers/forms/ClientForm";
 
 export const Route = createFileRoute("/clients/$id")({
@@ -24,22 +22,19 @@ export const Route = createFileRoute("/clients/$id")({
 function RouteComponent() {
   /** Values */
 
-  const navigate = useNavigate();
   const { client } = Route.useLoaderData();
+  const { update } = firestoreMutations.useClientMutations();
+  const navigate = useNavigate();
 
-  /** Callbacks */
-
-  const onSubmit: ComponentProps<typeof ClientForm>["onSubmit"] = async (
-    formData
-  ) => {
-    try {
-      const docRef = doc(clientCollection, client.id);
-      await updateDoc(docRef, { ...formData });
-      navigate({ to: "/clients" });
-    } catch (error) {
-      alert("Error updating client");
-    }
-  };
-
-  return <ClientForm values={client} onSubmit={onSubmit} />;
+  return (
+    <ClientForm
+      values={client}
+      onSubmit={(formData) =>
+        update.mutate(
+          { id: client.id, ...formData },
+          { onSuccess: () => navigate({ to: "/clients" }) }
+        )
+      }
+    />
+  );
 }

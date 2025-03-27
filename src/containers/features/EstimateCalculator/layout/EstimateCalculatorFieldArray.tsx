@@ -29,11 +29,11 @@ const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArrayProps> = ({
 
   return (
     <Stack component="form" spacing={1} {...props}>
-      {fields.map(({ fieldId: id, count: _, ...material }, index) => {
+      {fields.map((field, index) => {
         return (
           <MaterialCard
-            key={id}
-            material={material}
+            key={field.id}
+            material={field}
             {...cardProps}
             slotProps={{
               ...cardProps?.slotProps,
