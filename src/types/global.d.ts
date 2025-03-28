@@ -1,6 +1,34 @@
+import { type ReactNode, type MouseEvent } from "react";
+import { type ToOptions } from "@tanstack/react-router";
+
 declare global {
   // eslint-disable-next-line no-var
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
+
+  interface MenuOption {
+    id: string;
+    render?: boolean;
+    label: string;
+    icon?: ReactNode;
+    selected?: boolean;
+    disabled?: boolean;
+    tooltip?: string;
+    disableCloseOnSelect?: boolean;
+    onClick: (event: MouseEvent, id: string) => void;
+  }
+
+  interface ListItem {
+    id: string;
+    render?: boolean;
+    label: string;
+    icon?: ReactNode;
+    to?: ToOptions["to"];
+    items?: ListItem[];
+    disabled?: boolean;
+    selected?: boolean;
+    expanded?: boolean;
+    onClick?: (event: MouseEvent, id: string) => void;
+  }
 
   interface String {
     /**
@@ -30,17 +58,4 @@ declare global {
      */
     truncate(length?: number, append?: string): string;
   }
-}
-
-export type MenuOptionType = "edit" | "delete" | "duplicate";
-export interface MenuOption<T extends MenuOptionType = MenuOptionType> {
-  id: T;
-  render?: boolean;
-  label: string;
-  icon?: ReactNode;
-  selected?: boolean;
-  disabled?: boolean;
-  tooltip?: string;
-  disableCloseOnSelect?: boolean;
-  onClick: (event: React.MouseEvent, id: T) => void;
 }

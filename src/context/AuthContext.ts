@@ -1,8 +1,21 @@
 import { createContext, useContext } from "react";
-import type { User } from "firebase/auth";
+import { type UseMutationResult } from "@tanstack/react-query";
+import type { User, UserCredential } from "firebase/auth";
 
-const AuthContext = createContext<{ user: User | null }>({
+interface AuthContextValue {
+  user: User | null;
+  loading: boolean;
+  signIn?: UseMutationResult<
+    UserCredential,
+    Error,
+    { email: string; password: string }
+  >;
+  signOut?: UseMutationResult<void, Error, void>;
+}
+
+const AuthContext = createContext<AuthContextValue>({
   user: null,
+  loading: true,
 });
 
 const useAuth = () => {

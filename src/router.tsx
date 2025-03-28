@@ -5,7 +5,10 @@ export const router = createRouter({
   routeTree,
   defaultPendingMs: 0,
   context: {
-    auth: { user: null },
+    auth: {
+      user: null,
+      loading: true,
+    },
     queryClient: null!,
   },
 });

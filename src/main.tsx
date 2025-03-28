@@ -24,23 +24,28 @@ if (!rootElement.innerHTML) {
   const queryClient = new QueryClient();
   root.render(
     <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <ThemeProvider theme={theme}>
-            <SnackbarProvider
-              Components={{
-                default: Snackbar,
-                success: Snackbar,
-                error: Snackbar,
-                warning: Snackbar,
-                info: Snackbar,
-              }}
-            >
+      <SnackbarProvider
+        maxSnack={3}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        Components={{
+          default: Snackbar,
+          success: Snackbar,
+          error: Snackbar,
+          warning: Snackbar,
+          info: Snackbar,
+        }}
+      >
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <ThemeProvider theme={theme}>
               <App />
-            </SnackbarProvider>
-          </ThemeProvider>
-        </AuthProvider>
-      </QueryClientProvider>
+            </ThemeProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </SnackbarProvider>
     </StrictMode>
   );
 }

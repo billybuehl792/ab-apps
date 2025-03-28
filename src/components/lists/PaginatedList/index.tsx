@@ -56,7 +56,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
 }: PaginatedListProps<T>): ReactNode => {
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0] ?? 10);
-  const [lastDocs, setLastDocs] = useState<DocumentData[]>([]);
+  const [lastDocs, setLastDocs] = useState<QueryDocumentSnapshot[]>([]);
 
   /** Values */
 
@@ -80,12 +80,9 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
         ...(lastDoc ? [startAfter(lastDoc)] : []),
       ],
     ] as const,
-    queryFn: async ({ queryKey: [_, ...constraints] }) => {
-      const q = query(collection, ...constraints);
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    },
-    enabled: countQuery.isSuccess && count > 0,
+    queryFn: ({ queryKey: [_, ...constraints] }) =>
+      getDocs(query(collection, ...constraints)),
+    enabled: countQuery.isSuccess,
   });
 
   /** Callbacks */
@@ -106,7 +103,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
         current.slice(0, Math.max(current.length - 1, 0))
       );
     else {
-      const currentLastDoc = listQuery.data?.at(-1);
+      const currentLastDoc = listQuery.data?.docs.at(-1);
       if (!currentLastDoc) return;
       setLastDocs((current) => [...current, currentLastDoc]);
     }
@@ -127,7 +124,9 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
                 {...skeletonProps}
               />
             ))
-        : listQuery.data?.map(renderItem)}
+        : listQuery.data?.docs.map((doc) =>
+            renderItem({ id: doc.id, ...doc.data() })
+          )}
       <TablePagination
         component="div"
         count={count}

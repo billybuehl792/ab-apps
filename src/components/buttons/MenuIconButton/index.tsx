@@ -12,7 +12,6 @@ import { IconButton, type IconButtonProps } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 import OptionMenu from "@/components/modals/OptionMenu";
 import { sxUtils } from "@/utils/sx";
-import type { MenuOption } from "@/types/global";
 
 interface MenuIconButtonProps extends IconButtonProps {
   options: MenuOption[];

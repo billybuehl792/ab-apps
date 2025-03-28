@@ -4,19 +4,19 @@ import { orderBy } from "firebase/firestore";
 import { Delete, Edit } from "@mui/icons-material";
 import { clientCollection } from "@/firebase/collections";
 import { firestoreMutations } from "@/firebase/mutations";
-import PaginatedList from "@/components/lists/PaginatedList";
+import InfiniteList from "@/components/lists/InfiniteList";
 import ClientCard from "@/containers/cards/ClientCard";
 
-interface ClientPaginatedListProps
+interface ClientInfiniteListProps
   extends Partial<
-    Omit<ComponentProps<typeof PaginatedList>, "collection" | "slotProps">
+    Omit<ComponentProps<typeof InfiniteList>, "collection" | "slotProps">
   > {
   slotProps?: { card?: ComponentProps<typeof ClientCard> } & ComponentProps<
-    typeof PaginatedList
+    typeof InfiniteList
   >["slotProps"];
 }
 
-const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
+const ClientInfiniteList: FC<ClientInfiniteListProps> = ({
   slotProps: { card: cardProps, ...slotProps } = {},
   ...props
 }) => {
@@ -28,10 +28,9 @@ const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
   /** Callbacks */
 
   return (
-    <PaginatedList
+    <InfiniteList
       collection={clientCollection}
       constraints={[orderBy("first_name")]}
-      rowsPerPageOptions={[3, 5, 10]}
       renderItem={(client) => (
         <ClientCard
           key={client.id}
@@ -59,4 +58,4 @@ const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
   );
 };
 
-export default ClientPaginatedList;
+export default ClientInfiniteList;

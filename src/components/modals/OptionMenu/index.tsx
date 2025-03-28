@@ -8,7 +8,6 @@ import {
   type ListItemTextProps,
   ListItemIcon,
 } from "@mui/material";
-import type { MenuOption } from "@/types/global";
 
 interface OptionMenuProps extends Omit<MenuProps, "slotProps"> {
   options: MenuOption[];

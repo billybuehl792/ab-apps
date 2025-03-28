@@ -14,7 +14,6 @@ import {
   type SwipeableDrawerProps,
 } from "@mui/material";
 import { sxUtils } from "@/utils/sx";
-import type { MenuOption } from "@/types/global";
 
 interface OptionDrawerProps
   extends Omit<Partial<SwipeableDrawerProps>, "slotProps"> {

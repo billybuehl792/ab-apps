@@ -18,7 +18,6 @@ import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
 import CloseIconButton from "@/components/buttons/CloseIconButton";
 import type { MaterialData } from "@/firebase/types";
-import type { MenuOption } from "@/types/global";
 
 type FormValues = MaterialData;
 

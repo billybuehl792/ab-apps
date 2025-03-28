@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   getCountFromServer,
   getDocs,
@@ -10,7 +11,6 @@ import {
   limit,
   type QueryConstraint,
 } from "firebase/firestore";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   Button,
   type ButtonProps,
@@ -67,31 +67,28 @@ const InfiniteList = <T extends DocumentData = DocumentData>({
   const count = countQuery.data?.data().count ?? 0;
 
   const listQuery = useInfiniteQuery({
-    queryKey: [
-      collection.id,
-      "infinite",
-      ...[limit(pageSize), ...constraints],
-    ] as const,
-    initialPageParam: {} as Pick<QueryDocumentSnapshot, "id">,
-    queryFn: async ({ queryKey: [_, __, ...constraints], pageParam }) => {
-      const q = query(
-        collection,
-        ...constraints,
-        ...(pageParam?.id ? [startAfter(pageParam)] : [])
-      );
-      const snapshot = await getDocs(q);
-      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    },
+    queryKey: [collection.id, ...[limit(pageSize), ...constraints]] as const,
+    initialPageParam: {} as QueryDocumentSnapshot,
+    queryFn: ({ queryKey: [_, ...constraints], pageParam }) =>
+      getDocs(
+        query(
+          collection,
+          ...constraints,
+          ...(pageParam?.id ? [startAfter(pageParam)] : [])
+        )
+      ),
     getNextPageParam: (lastPage, pages) =>
-      pages.reduce((acc, page) => acc + page.length, 0) < count
-        ? (lastPage.at(-1) ?? null)
+      pages.reduce((acc, page) => acc + page.size, 0) < count
+        ? (lastPage.docs.at(-1) ?? null)
         : null,
     enabled: countQuery.isSuccess && count > 0,
   });
 
   return (
     <Stack spacing={1} {...props}>
-      {listQuery.data?.pages.map((page) => page.map(renderItem))}
+      {listQuery.data?.pages.map((page) =>
+        page.docs.map((doc) => renderItem({ id: doc.id, ...doc.data() }))
+      )}
       {(countQuery.isLoading ||
         listQuery.isLoading ||
         listQuery.isFetchingNextPage) &&

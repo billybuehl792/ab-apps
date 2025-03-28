@@ -1,18 +1,22 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { CircularProgress, Stack } from "@mui/material";
 import { firestoreQueries } from "@/firebase/queries";
 import { firestoreMutations } from "@/firebase/mutations";
 import ClientForm from "@/containers/forms/ClientForm";
+import type { Client } from "@/firebase/types";
 
 export const Route = createFileRoute("/clients/$id")({
   component: RouteComponent,
-  beforeLoad: ({ context }) => {
-    if (!context.auth.user) throw new Error("User not authenticated");
+  beforeLoad: ({ context, location }) => {
+    if (!context.auth.user)
+      throw redirect({ to: "/sign-in", search: { redirect: location.href } });
   },
   loader: async ({ context, params }) => {
-    const client = await context.queryClient.fetchQuery(
+    const clientSnapshot = await context.queryClient.fetchQuery(
       firestoreQueries.getClient(params.id)
     );
+    const client: Client = { id: clientSnapshot.id, ...clientSnapshot.data() };
+
     return { client };
   },
   pendingComponent: () => <CircularProgress />,
@@ -29,12 +33,12 @@ function RouteComponent() {
   return (
     <ClientForm
       values={client}
-      onSubmit={(formData) =>
-        update.mutate(
+      onSubmit={async (formData) => {
+        await update.mutateAsync(
           { id: client.id, ...formData },
           { onSuccess: () => navigate({ to: "/clients" }) }
-        )
-      }
+        );
+      }}
     />
   );
 }

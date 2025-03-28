@@ -27,8 +27,8 @@ const useClientMutations = () => {
 
   const update = useMutation({
     mutationKey: [clientCollection.id, "update"],
-    mutationFn: async (data: Client) => {
-      const docRef = doc(clientCollection, data.id);
+    mutationFn: async ({ id, ...data }: Client) => {
+      const docRef = doc(clientCollection, id);
       await updateDoc(docRef, { ...data });
     },
     onSuccess: (_, data) => {
@@ -88,8 +88,8 @@ const useMaterialMutations = () => {
 
   const update = useMutation({
     mutationKey: [materialCollection.id, "update"],
-    mutationFn: async (data: Material) => {
-      const docRef = doc(materialCollection, data.id);
+    mutationFn: async ({ id, ...data }: Material) => {
+      const docRef = doc(materialCollection, id);
       await updateDoc(docRef, { ...data, value: +data.value });
     },
     onSuccess: (_, data) => {

@@ -13,7 +13,6 @@ import {
 import MenuIconButton from "@/components/buttons/MenuIconButton";
 import OptionDrawer from "@/components/modals/OptionDrawer";
 import { LongPressEventType, useLongPress } from "use-long-press";
-import type { MenuOption } from "@/types/global";
 import type { Client } from "@/firebase/types";
 
 interface ClientCardProps extends Omit<CardProps, "onClick"> {

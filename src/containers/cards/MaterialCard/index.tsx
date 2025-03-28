@@ -16,7 +16,6 @@ import { LongPressEventType, useLongPress } from "use-long-press";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
 import OptionDrawer from "@/components/modals/OptionDrawer";
 import { sxUtils } from "@/utils/sx";
-import type { MenuOption } from "@/types/global";
 import type { Material } from "@/firebase/types";
 
 const classes = generateUtilityClasses("MaterialCard", [

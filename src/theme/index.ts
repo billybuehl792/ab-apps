@@ -31,8 +31,25 @@ export const theme = createTheme({
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          borderRadius: 10,
+          ["& .MuiDrawer-paperAnchorBottom"]: {
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+          },
         },
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: () => ({
+          position: "relative",
+          height: "100%",
+          [theme.breakpoints.up("xs")]: {
+            minHeight: "unset",
+          },
+          [theme.breakpoints.up("sm")]: {
+            minHeight: "unset",
+          },
+        }),
       },
     },
   },

@@ -1,24 +1,26 @@
-import { type FC, type FormEvent } from "react";
+import { type FormEventHandler, type FC } from "react";
 import { useForm, type UseFormProps } from "react-hook-form";
 import {
   Button,
   Card,
   CardContent,
   Fade,
+  FormHelperText,
   Stack,
   TextField,
-  Typography,
   type StackProps,
 } from "@mui/material";
+import { firebaseUtils } from "@/firebase/utils";
+import EmailField from "@/components/fields/EmailField";
+import { RegexPattern } from "@/utils/regex";
 import type { ClientData } from "@/firebase/types";
 
 type FormValues = ClientData;
 
 interface ClientFormProps
-  extends Omit<StackProps, "onSubmit">,
+  extends Omit<StackProps<"form">, "onSubmit">,
     UseFormProps<FormValues> {
-  title?: string;
-  onSubmit: (data: FormValues) => void;
+  onSubmit: (data: FormValues) => Promise<void>;
 }
 
 const DEFAULT_VALUES: FormValues = {
@@ -33,9 +35,8 @@ const DEFAULT_VALUES: FormValues = {
 };
 
 const ClientForm: FC<ClientFormProps> = ({
-  title = "Client",
   values,
-  onSubmit,
+  onSubmit: onSubmitProp,
   ...props
 }) => {
   /** Values */
@@ -43,68 +44,103 @@ const ClientForm: FC<ClientFormProps> = ({
   const {
     register,
     handleSubmit,
+    setError,
     reset,
-    formState: { isSubmitting, isDirty, isValid, disabled },
+    formState: { errors, isSubmitting, isDirty, disabled },
   } = useForm<FormValues>({
     defaultValues: DEFAULT_VALUES,
     values: values ?? DEFAULT_VALUES,
     ...props,
   });
 
+  /** Callbacks */
+
+  const onSubmit = handleSubmit(async (formData) => {
+    try {
+      await onSubmitProp(formData);
+    } catch (error) {
+      setError("root", {
+        message: firebaseUtils.getErrorMessage(error as Error),
+      });
+    }
+  });
+
+  const onReset: FormEventHandler = (event) => {
+    event.preventDefault();
+    reset();
+  };
+
   return (
     <Stack
       component="form"
       spacing={1}
-      onSubmit={handleSubmit(onSubmit)}
-      onReset={(event: FormEvent) => {
-        event.preventDefault();
-        reset();
-      }}
+      onSubmit={onSubmit}
+      onReset={onReset}
       {...props}
     >
-      <Typography variant="h6">{title}</Typography>
-
       <Card component="fieldset" variant="outlined">
         <CardContent component={Stack} spacing={1}>
-          <Stack direction="row" spacing={1}>
-            <TextField
-              type="text"
-              label="First Name"
-              {...register("first_name", {
-                required: true,
-                maxLength: 128,
-                disabled,
+          <Stack component="fieldset" spacing={2}>
+            <Stack direction="row" spacing={1}>
+              <TextField
+                type="text"
+                label="First Name"
+                error={Boolean(errors.first_name)}
+                helperText={errors.first_name?.message}
+                fullWidth
+                {...register("first_name", {
+                  required: "First name is required",
+                  maxLength: { value: 128, message: "First name is too long" },
+                })}
+              />
+              <TextField
+                type="text"
+                label="Last Name"
+                error={Boolean(errors.last_name)}
+                helperText={errors.last_name?.message}
+                fullWidth
+                {...register("last_name", {
+                  required: "Last name is required",
+                  maxLength: { value: 128, message: "Last name is too long" },
+                })}
+              />
+            </Stack>
+            <EmailField
+              error={Boolean(errors.email)}
+              helperText={errors.email?.message}
+              {...register("email", {
+                required: "Email is required",
+                maxLength: { value: 128, message: "Email is too long" },
+                pattern: {
+                  value: RegexPattern.EMAIL,
+                  message: "Invalid email",
+                },
               })}
             />
             <TextField
               type="text"
-              label="Last Name"
-              {...register("last_name", {
-                required: true,
-                maxLength: 128,
-                disabled,
+              label="Address"
+              error={Boolean(errors.address)}
+              helperText={errors.address?.message}
+              {...register("address", {
+                required: "Address is required",
+                maxLength: { value: 128, message: "Address is too long" },
+              })}
+            />
+            <TextField
+              type="tel"
+              label="Phone"
+              error={Boolean(errors.phone)}
+              helperText={errors.phone?.message}
+              {...register("phone", {
+                required: "Phone is required",
+                maxLength: { value: 16, message: "Phone is too long" },
               })}
             />
           </Stack>
-          <TextField
-            type="email"
-            label="Email"
-            {...register("email", { required: true, maxLength: 128, disabled })}
-          />
-          <TextField
-            type="text"
-            label="Address"
-            {...register("address", {
-              required: true,
-              maxLength: 130,
-              disabled,
-            })}
-          />
-          <TextField
-            type="tel"
-            label="Phone"
-            {...register("phone", { required: true, maxLength: 16, disabled })}
-          />
+          {!!errors.root && (
+            <FormHelperText error>{errors.root.message}</FormHelperText>
+          )}
         </CardContent>
       </Card>
 
@@ -123,7 +159,7 @@ const ClientForm: FC<ClientFormProps> = ({
           type="submit"
           variant="outlined"
           loading={isSubmitting}
-          disabled={!isDirty || !isValid || disabled}
+          disabled={!isDirty || disabled}
         >
           Submit
         </Button>

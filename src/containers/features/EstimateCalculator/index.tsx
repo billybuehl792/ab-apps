@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { useMemo, useState, type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { orderBy } from "firebase/firestore";
 import { FormProvider, useForm } from "react-hook-form";
@@ -6,7 +6,7 @@ import { Button, Stack, type StackProps } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { firestoreQueries } from "@/firebase/queries";
 import { firestoreMutations } from "@/firebase/mutations";
-import MaterialFormDialog from "@/containers/modals/MaterialFormDialog";
+import MaterialFormDialog from "@/containers/lists/NavigationList/modals/MaterialFormDialog";
 import EstimateCalculatorHeader from "./layout/EstimateCalculatorHeader";
 import EstimateCalculatorFieldArray from "./layout/EstimateCalculatorFieldArray";
 import type { Material } from "@/firebase/types";
@@ -26,6 +26,12 @@ const EstimateCalculator: FC<StackProps> = (props) => {
   const materialsQuery = useQuery(
     firestoreQueries.getMaterialList(orderBy("value", "desc"))
   );
+  const materials = useMemo(
+    () =>
+      materialsQuery.data?.docs.map((doc) => ({ id: doc.id, ...doc.data() })) ??
+      [],
+    [materialsQuery.data]
+  );
 
   /** Values */
 
@@ -33,7 +39,7 @@ const EstimateCalculator: FC<StackProps> = (props) => {
 
   const methods = useForm<EstimateCalculatorFormValues>({
     mode: "all",
-    values: { materials: materialsQuery.data ?? [] },
+    values: { materials },
     ...props,
   });
 

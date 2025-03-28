@@ -1,12 +1,16 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Stack } from "@mui/material";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { Stack, Typography } from "@mui/material";
 import ClientForm from "@/containers/forms/ClientForm";
 import { firestoreMutations } from "@/firebase/mutations";
 
 export const Route = createFileRoute("/clients/create")({
   component: RouteComponent,
-  beforeLoad: ({ context }) => {
-    if (!context.auth.user) throw new Error("User not authenticated");
+  beforeLoad: ({ context, location }) => {
+    if (!context.auth.user)
+      throw redirect({
+        to: "/sign-in",
+        search: { redirect: location.href },
+      });
   },
   errorComponent: ({ error }) => <Stack>{error.message}</Stack>,
 });
@@ -18,12 +22,15 @@ function RouteComponent() {
   const { create } = firestoreMutations.useClientMutations();
 
   return (
-    <ClientForm
-      onSubmit={(formData) =>
-        create.mutate(formData, {
-          onSuccess: () => navigate({ to: "/clients" }),
-        })
-      }
-    />
+    <Stack spacing={1} p={2}>
+      <Typography variant="h6">Create Client</Typography>
+      <ClientForm
+        onSubmit={async (formData) => {
+          await create.mutateAsync(formData, {
+            onSuccess: () => navigate({ to: "/clients" }),
+          });
+        }}
+      />
+    </Stack>
   );
 }
