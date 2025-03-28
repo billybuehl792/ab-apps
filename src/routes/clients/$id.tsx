@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { CircularProgress, Stack } from "@mui/material";
+import { CircularProgress, Stack, Typography } from "@mui/material";
 import { firestoreQueries } from "@/firebase/queries";
 import { firestoreMutations } from "@/firebase/mutations";
 import ClientForm from "@/containers/forms/ClientForm";
@@ -30,15 +30,20 @@ function RouteComponent() {
   const { update } = firestoreMutations.useClientMutations();
   const navigate = useNavigate();
 
+  const clientName = `${client.first_name.toCapitalized()} ${client.last_name.toCapitalized()}`;
+
   return (
-    <ClientForm
-      values={client}
-      onSubmit={async (formData) => {
-        await update.mutateAsync(
-          { id: client.id, ...formData },
-          { onSuccess: () => navigate({ to: "/clients" }) }
-        );
-      }}
-    />
+    <Stack spacing={1} p={2}>
+      <Typography variant="h6">Edit {clientName}</Typography>
+      <ClientForm
+        values={client}
+        onSubmit={async (formData) => {
+          await update.mutateAsync(
+            { id: client.id, ...formData },
+            { onSuccess: () => navigate({ to: "/clients" }) }
+          );
+        }}
+      />
+    </Stack>
   );
 }
