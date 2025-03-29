@@ -55,6 +55,8 @@ const MaterialCard: FC<MaterialCardProps> = ({
   const touchHandlers = useLongPress(() => setOptionsOpen(true), {
     detect: LongPressEventType.Touch,
     threshold: 500,
+    cancelOnMovement: true,
+    cancelOutsideElement: true,
   });
 
   const options =
@@ -69,7 +71,6 @@ const MaterialCard: FC<MaterialCardProps> = ({
     <Card
       id={material.id}
       className={classes.root}
-      variant="outlined"
       {...props}
       sx={[
         {
@@ -90,6 +91,10 @@ const MaterialCard: FC<MaterialCardProps> = ({
         onClick={(event) => onClick?.(event, material)}
         {...touchHandlers()}
         {...cardActionAreaProps}
+        sx={[
+          { cursor: onClick ? "pointer" : "default" },
+          ...sxUtils.asArray(cardActionAreaProps?.sx),
+        ]}
       >
         <CardContent
           className={classes.contentWrapper}

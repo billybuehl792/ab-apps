@@ -157,7 +157,6 @@ const ClientForm: FC<ClientFormProps> = ({
         </Fade>
         <Button
           type="submit"
-          variant="outlined"
           loading={isSubmitting}
           disabled={!isDirty || disabled}
         >

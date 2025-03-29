@@ -103,12 +103,10 @@ const MaterialFormDialog: FC<MaterialFormDialogProps> = ({
         <TextField
           label="Title"
           fullWidth
-          disabled={isSubmitting}
-          {...register("label")}
+          {...register("label", { required: "Material title is required." })}
         />
         <TextField
           label="Cost / Unit"
-          disabled={isSubmitting}
           type="number"
           slotProps={{
             input: {
@@ -118,7 +116,10 @@ const MaterialFormDialog: FC<MaterialFormDialogProps> = ({
               ),
             },
           }}
-          {...register("value")}
+          {...register("value", {
+            required: "Material cost is required.",
+            valueAsNumber: true,
+          })}
         />
 
         <Stack direction="row" justifyContent="center">
@@ -141,7 +142,6 @@ const MaterialFormDialog: FC<MaterialFormDialogProps> = ({
           <TextField
             label="Description"
             fullWidth
-            disabled={isSubmitting}
             {...register("description")}
           />
         </Collapse>
@@ -157,7 +157,6 @@ const MaterialFormDialog: FC<MaterialFormDialogProps> = ({
         </Button>
         <Button
           type="submit"
-          variant="outlined"
           loading={isSubmitting}
           disabled={disabled || !isValid || !isDirty}
         >

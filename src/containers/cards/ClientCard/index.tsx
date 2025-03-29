@@ -13,6 +13,7 @@ import {
 import MenuIconButton from "@/components/buttons/MenuIconButton";
 import OptionDrawer from "@/components/modals/OptionDrawer";
 import { LongPressEventType, useLongPress } from "use-long-press";
+import { sxUtils } from "@/utils/sx";
 import type { Client } from "@/firebase/types";
 
 interface ClientCardProps extends Omit<CardProps, "onClick"> {
@@ -44,19 +45,25 @@ const ClientCard: FC<ClientCardProps> = ({
   const touchHandlers = useLongPress(() => setOptionsOpen(true), {
     detect: LongPressEventType.Touch,
     threshold: 500,
+    cancelOnMovement: true,
+    cancelOutsideElement: true,
   });
 
   const options =
     typeof optionsProp === "function" ? optionsProp(client) : optionsProp;
 
   return (
-    <Card variant="outlined" {...props}>
+    <Card {...props}>
       <CardActionArea
-        onClick={(event) => onClick?.(event, client)}
         disabled={disabled}
         disableTouchRipple={!onClick}
+        onClick={(event) => onClick?.(event, client)}
         {...touchHandlers()}
         {...cardActionAreaProps}
+        sx={[
+          { cursor: onClick ? "pointer" : "default" },
+          ...sxUtils.asArray(cardActionAreaProps?.sx),
+        ]}
       >
         <CardContent
           component={Stack}

@@ -26,9 +26,8 @@ interface ExpandIconButtonProps extends Omit<IconButtonProps, "onChange"> {
  */
 const ExpandIconButton: FC<ExpandIconButtonProps> = ({
   expanded: expandedProp,
-  size = "small",
-  expandedIcon = <ExpandLess fontSize={size} />,
-  collapsedIcon = <ExpandMore fontSize={size} />,
+  expandedIcon = <ExpandLess />,
+  collapsedIcon = <ExpandMore />,
   onChange: onChangeProp,
   ...props
 }: ExpandIconButtonProps): ReactNode => {
@@ -46,7 +45,6 @@ const ExpandIconButton: FC<ExpandIconButtonProps> = ({
   return (
     <IconButton
       component="span"
-      size={size}
       onMouseDown={(event: MouseEvent) => event.stopPropagation()}
       onTouchStart={(event: TouchEvent) => event.stopPropagation()}
       onClick={(event: MouseEvent) => onChange(event, !expanded)}

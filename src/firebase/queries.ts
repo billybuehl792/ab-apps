@@ -17,7 +17,7 @@ const getMaterialList = (...constraints: QueryConstraint[]) =>
 
 const getClient = (id: string) =>
   queryOptions({
-    queryKey: [materialCollection.path, id] as const,
+    queryKey: [clientCollection.path, id] as const,
     queryFn: async ({ queryKey: [_, id] }) => {
       const docRef = doc(clientCollection, id);
       const docSnap = await getDoc(docRef);

@@ -56,7 +56,7 @@ const SignInForm: FC<SignInFormProps> = ({
 
   return (
     <Stack component="form" spacing={1} onSubmit={onSubmit} {...props}>
-      <Card variant="outlined">
+      <Card>
         <CardContent component={Stack} spacing={2}>
           <Stack component="fieldset" spacing={2}>
             <EmailField
@@ -90,12 +90,7 @@ const SignInForm: FC<SignInFormProps> = ({
       </Card>
 
       <Stack direction="row" justifyContent="flex-end">
-        <Button
-          type="submit"
-          variant="outlined"
-          loading={isSubmitting}
-          disabled={disabled}
-        >
+        <Button type="submit" loading={isSubmitting} disabled={disabled}>
           Sign In
         </Button>
       </Stack>

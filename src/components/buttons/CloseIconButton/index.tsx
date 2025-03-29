@@ -19,8 +19,7 @@ interface CloseIconButtonProps extends Omit<IconButtonProps, "onClick"> {
  * @returns {ReactNode}
  */
 const CloseIconButton: FC<CloseIconButtonProps> = ({
-  size = "small",
-  icon = <Close fontSize={size} />,
+  icon = <Close />,
   onClick: onClickProp,
   ...props
 }: CloseIconButtonProps): ReactNode => {
@@ -34,7 +33,6 @@ const CloseIconButton: FC<CloseIconButtonProps> = ({
   return (
     <IconButton
       component="span"
-      size={size}
       onMouseDown={(event: MouseEvent) => event.stopPropagation()}
       onTouchStart={(event: TouchEvent) => event.stopPropagation()}
       onClick={onClick}

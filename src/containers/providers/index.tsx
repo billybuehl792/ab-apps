@@ -1,9 +1,10 @@
 import { type FC, type PropsWithChildren } from "react";
-import { Snackbar, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SnackbarProvider } from "notistack";
 import AuthProvider from "./AuthProvider";
 import { theme } from "@/theme";
+import Snackbar from "@/components/alerts/Snackbar";
 
 const Providers: FC<PropsWithChildren> = ({ children }) => {
   /** Values */

@@ -33,12 +33,7 @@ const EstimateCalculatorHeader: FC<GridProps> = (props) => {
   return (
     <Grid container spacing={1} {...props}>
       {items.map(({ label, value }) => (
-        <Grid
-          key={label}
-          component={Card}
-          variant="outlined"
-          size={{ xs: 12, sm: 6 }}
-        >
+        <Grid key={label} component={Card} size={{ xs: 12, sm: 6 }}>
           <CardContent component={Stack}>
             <Typography variant="subtitle2">{label}</Typography>
             <Typography variant="h5">{value}</Typography>

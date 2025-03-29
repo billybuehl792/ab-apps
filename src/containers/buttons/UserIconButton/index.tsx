@@ -4,10 +4,9 @@ import { Avatar } from "@mui/material";
 import { useAuth } from "@/context/AuthContext";
 import MenuIconButton from "@/components/buttons/MenuIconButton";
 
-const UserIconButton: FC<Partial<ComponentProps<typeof MenuIconButton>>> = ({
-  size = "small",
-  ...props
-}) => {
+const UserIconButton: FC<Partial<ComponentProps<typeof MenuIconButton>>> = (
+  props
+) => {
   /** Values */
 
   const { user, signOut } = useAuth();
@@ -15,19 +14,18 @@ const UserIconButton: FC<Partial<ComponentProps<typeof MenuIconButton>>> = ({
   const router = useRouter();
 
   const userName = user?.displayName ?? user?.email ?? "user";
-  const avatarSize = size === "small" ? 30 : 40;
 
   const options: MenuOption[] = [
     {
       id: "signIn",
-      render: !user,
       label: "Sign In",
+      render: !user,
       onClick: () => navigate({ to: "/sign-in" }),
     },
     {
-      id: "singOut",
-      render: !!user,
+      id: "signOut",
       label: "Sign Out",
+      render: !!user,
       onClick: async () =>
         await signOut?.mutateAsync(undefined, {
           onSuccess: () => router.invalidate(),
@@ -37,15 +35,8 @@ const UserIconButton: FC<Partial<ComponentProps<typeof MenuIconButton>>> = ({
 
   return (
     <MenuIconButton
-      size={size}
       options={options}
-      icon={
-        <Avatar
-          alt={userName}
-          src={user?.photoURL || ""}
-          sx={{ width: avatarSize, height: avatarSize }}
-        />
-      }
+      icon={<Avatar alt={userName} src={user?.photoURL || ""} />}
       {...props}
     />
   );

@@ -18,7 +18,7 @@ const NavigationList: FC<Partial<ComponentProps<typeof NestedList>>> = (
       label: "Dashboard",
       to: "/",
       selected: pathname === "/",
-      icon: <Home fontSize="small" />,
+      icon: <Home />,
     },
     {
       id: "clients",
@@ -27,7 +27,7 @@ const NavigationList: FC<Partial<ComponentProps<typeof NestedList>>> = (
       render: Boolean(user),
       selected: pathname === "/clients",
       expanded: pathname.startsWith("/clients"),
-      icon: <Groups fontSize="small" />,
+      icon: <Groups />,
       items: [
         {
           id: "clientsCreate",
@@ -35,7 +35,7 @@ const NavigationList: FC<Partial<ComponentProps<typeof NestedList>>> = (
           to: "/clients/create",
           render: Boolean(user),
           selected: pathname === "/clients/create",
-          icon: <PersonAdd fontSize="small" />,
+          icon: <PersonAdd />,
         },
       ],
     },
@@ -45,7 +45,7 @@ const NavigationList: FC<Partial<ComponentProps<typeof NestedList>>> = (
       to: "/estimate-calculator",
       render: Boolean(user),
       selected: pathname === "/estimate-calculator",
-      icon: <Construction fontSize="small" />,
+      icon: <Construction />,
     },
   ];
 

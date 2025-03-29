@@ -1,7 +1,5 @@
-import { type FC } from "react";
+import { type ComponentProps, type FC } from "react";
 import {
-  Box,
-  type BoxProps,
   ListItemIcon,
   type ListItemIconProps,
   ListItemText,
@@ -9,14 +7,11 @@ import {
   MenuItem,
   MenuList,
   type MenuListProps,
-  Stack,
-  SwipeableDrawer,
-  type SwipeableDrawerProps,
 } from "@mui/material";
-import { sxUtils } from "@/utils/sx";
+import SwipeableDrawer from "../SwipeableDrawer";
 
 interface OptionDrawerProps
-  extends Omit<Partial<SwipeableDrawerProps>, "slotProps"> {
+  extends Omit<Partial<ComponentProps<typeof SwipeableDrawer>>, "slotProps"> {
   options: MenuOption[];
   fullHeight?: boolean;
   disableCloseOnSelect?: boolean;
@@ -26,24 +21,8 @@ interface OptionDrawerProps
       text?: ListItemTextProps;
       icon?: ListItemIconProps;
     };
-  } & SwipeableDrawerProps["slotProps"];
+  } & ComponentProps<typeof SwipeableDrawer>["slotProps"];
 }
-
-const Puller: FC<BoxProps> = (props) => (
-  <Box
-    {...props}
-    sx={[
-      {
-        width: 30,
-        height: 5,
-        borderRadius: 10,
-        bgcolor: ({ palette }) => palette.grey[400],
-        m: 1,
-      },
-      ...sxUtils.asArray(props?.sx),
-    ]}
-  />
-);
 
 /**
  * This component renders a `SwipeableDrawer` with a list of selectable options.
@@ -60,9 +39,8 @@ const Puller: FC<BoxProps> = (props) => (
  */
 const OptionDrawer: FC<OptionDrawerProps> = ({
   options,
-  fullHeight,
   disableCloseOnSelect: keepOpen,
-  onClose: onCloseProp,
+  onClose,
   slotProps: {
     container: containerProps,
     menuItem: {
@@ -74,25 +52,8 @@ const OptionDrawer: FC<OptionDrawerProps> = ({
   } = {},
   ...props
 }: OptionDrawerProps): React.JSX.Element => {
-  /** Callbacks */
-
-  const onClose: SwipeableDrawerProps["onClose"] = (event) =>
-    onCloseProp?.(event);
-
   return (
-    <SwipeableDrawer
-      anchor="bottom"
-      onOpen={() => null}
-      onClose={onClose}
-      ModalProps={{ keepMounted: false }}
-      slotProps={slotProps}
-      sx={{ height: fullHeight ? "95vh" : "auto" }}
-      {...props}
-    >
-      <Stack direction="row" justifyContent="center">
-        <Puller />
-      </Stack>
-
+    <SwipeableDrawer slotProps={slotProps} onClose={onClose} {...props}>
       <MenuList {...containerProps}>
         {options
           .filter(({ render }) => render !== false)

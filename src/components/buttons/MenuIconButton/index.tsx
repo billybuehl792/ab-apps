@@ -31,8 +31,7 @@ interface MenuIconButtonProps extends IconButtonProps {
  */
 const MenuIconButton: FC<MenuIconButtonProps> = ({
   options,
-  size = "small",
-  icon = <MoreVert fontSize={size} />,
+  icon = <MoreVert />,
   slotProps: { menu: menuProps } = {},
   ...props
 }: MenuIconButtonProps): ReactNode => {
@@ -44,7 +43,6 @@ const MenuIconButton: FC<MenuIconButtonProps> = ({
       <IconButton
         component="span"
         id={buttonId.current}
-        size={size}
         onMouseDown={(event: MouseEvent) => event.stopPropagation()}
         onTouchStart={(event: TouchEvent) => event.stopPropagation()}
         onClick={(event: MouseEvent) => {

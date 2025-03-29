@@ -18,8 +18,7 @@ interface EditIconButtonProps extends IconButtonProps {
  * @returns {ReactNode}
  */
 const EditIconButton: FC<EditIconButtonProps> = ({
-  size = "small",
-  icon = <Edit fontSize={size} />,
+  icon = <Edit />,
   onClick: onClickProp,
   ...props
 }: EditIconButtonProps): ReactNode => {
@@ -33,7 +32,6 @@ const EditIconButton: FC<EditIconButtonProps> = ({
   return (
     <IconButton
       component="span"
-      size={size}
       onMouseDown={(event: MouseEvent) => event.stopPropagation()}
       onTouchStart={(event: TouchEvent) => event.stopPropagation()}
       onClick={onClick}

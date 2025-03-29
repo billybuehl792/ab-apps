@@ -6,7 +6,7 @@ import { Button, Stack, type StackProps } from "@mui/material";
 import { Add, Delete, Edit } from "@mui/icons-material";
 import { firestoreQueries } from "@/firebase/queries";
 import { firestoreMutations } from "@/firebase/mutations";
-import MaterialFormDialog from "@/containers/lists/NavigationList/modals/MaterialFormDialog";
+import MaterialFormDialog from "@/containers/modals/MaterialFormDialog";
 import EstimateCalculatorHeader from "./layout/EstimateCalculatorHeader";
 import EstimateCalculatorFieldArray from "./layout/EstimateCalculatorFieldArray";
 import type { Material } from "@/firebase/types";

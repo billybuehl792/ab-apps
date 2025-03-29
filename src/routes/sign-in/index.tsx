@@ -21,7 +21,7 @@ function RouteComponent() {
   const { signIn } = useAuth();
 
   return (
-    <Stack spacing={0.5} maxWidth={500}>
+    <Stack spacing={0.5} p={2}>
       <Typography variant="h6">Sign In</Typography>
       <SignInForm
         onSubmit={async (formData) => {
