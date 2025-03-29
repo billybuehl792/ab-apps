@@ -3,14 +3,10 @@ import "./utils/string";
 
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider } from "@mui/material";
-import { SnackbarProvider } from "notistack";
-import AuthProvider from "./providers/AuthProvider";
-import { router } from "./router";
+import { createRouter } from "@tanstack/react-router";
+import { routeTree } from "./routeTree.gen";
+import Providers from "./containers/providers";
 import App from "./App";
-import Snackbar from "./components/alerts/Snackbar";
-import { theme } from "./theme";
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -18,34 +14,27 @@ declare module "@tanstack/react-router" {
   }
 }
 
+export const router = createRouter({
+  routeTree,
+  defaultPendingMs: 0,
+  context: {
+    auth: {
+      user: null,
+      loading: true,
+    },
+    queryClient: null!,
+  },
+  defaultNotFoundComponent: () => "Page not found :(",
+});
+
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
-  const queryClient = new QueryClient();
   root.render(
     <StrictMode>
-      <SnackbarProvider
-        maxSnack={3}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        Components={{
-          default: Snackbar,
-          success: Snackbar,
-          error: Snackbar,
-          warning: Snackbar,
-          info: Snackbar,
-        }}
-      >
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <ThemeProvider theme={theme}>
-              <App />
-            </ThemeProvider>
-          </AuthProvider>
-        </QueryClientProvider>
-      </SnackbarProvider>
+      <Providers>
+        <App />
+      </Providers>
     </StrictMode>
   );
 }
