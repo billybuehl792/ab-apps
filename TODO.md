@@ -1,2 +1,5 @@
-- [ ] Side Navbar
-- [ ] Float input on numerical fields
+- Float input on numerical fields
+- Mobile nav
+- Write component tests
+- Figure out how to recover deleted data from firebase
+- Fix Nested List

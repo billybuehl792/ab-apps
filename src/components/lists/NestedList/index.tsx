@@ -89,7 +89,7 @@ const NestedListItem: FC<NestedListItemProps> = ({
           {...(!!item.to && { component: Link, to: item.to })}
           onClick={(event) => item?.onClick?.(event, item.id)}
           {...buttonProps}
-          sx={{ pl: indent, ...buttonProps?.sx }}
+          sx={[{ pl: indent }, ...sxUtils.asArray(buttonProps?.sx)]}
         >
           {!!item?.icon && (
             <ListItemIcon
