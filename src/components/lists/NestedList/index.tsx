@@ -1,4 +1,5 @@
 import { type ComponentProps, useState, type FC } from "react";
+import { Link } from "@tanstack/react-router";
 import {
   Collapse,
   List,
@@ -15,7 +16,6 @@ import {
 } from "@mui/material";
 import ExpandIconButton from "@/components/buttons/ExpandIconButton";
 import { sxUtils } from "@/utils/sx";
-import { Link } from "@tanstack/react-router";
 
 interface NestedListProps extends ListProps {
   items: ListItem[];

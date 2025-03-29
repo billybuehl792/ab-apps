@@ -6,6 +6,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { Box } from "@mui/material";
 import DesktopAppBar from "@/containers/layout/DesktopAppBar";
 import DesktopSidePanel from "@/containers/layout/DesktopSidePanel";
+import { DESKTOP_APP_BAR_HEIGHT } from "@/constants/layout";
 
 interface RouterContext {
   auth: ContextType<typeof AuthContext>;
@@ -16,9 +17,12 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => (
     <>
       <Box display="flex">
-        <DesktopAppBar style={{ height: 60 }} />
+        <DesktopAppBar style={{ height: DESKTOP_APP_BAR_HEIGHT }} />
         <DesktopSidePanel />
-        <Box component="main" style={{ marginTop: 60, flexGrow: 1 }}>
+        <Box
+          component="main"
+          style={{ marginTop: DESKTOP_APP_BAR_HEIGHT, flexGrow: 1 }}
+        >
           <Outlet />
         </Box>
       </Box>
