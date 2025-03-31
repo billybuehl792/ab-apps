@@ -1,8 +1,9 @@
 import { type ComponentProps, type FC } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Stack, type StackProps } from "@mui/material";
-import { EstimateCalculatorFormValues } from "..";
+import { type EstimateCalculatorFormValues } from "..";
 import MaterialCard from "@/containers/cards/MaterialCard";
+import IntegerField from "@/components/fields/IntegerField";
 
 interface EstimateCalculatorFieldArrayProps extends StackProps {
   slotProps?: {
@@ -34,16 +35,16 @@ const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArrayProps> = ({
           <MaterialCard
             key={field.id}
             material={field}
+            endContent={
+              <IntegerField
+                size="small"
+                slotProps={{
+                  input: { inputProps: { min: 0, max: 1000 } },
+                }}
+                {...register(`materials.${index}.count`)}
+              />
+            }
             {...cardProps}
-            slotProps={{
-              ...cardProps?.slotProps,
-              textField: {
-                ...register(`materials.${index}.count`, {
-                  min: 0,
-                  max: 1000,
-                }),
-              },
-            }}
           />
         );
       })}

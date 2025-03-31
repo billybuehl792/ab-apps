@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import SwipeableDrawer from "../SwipeableDrawer";
 
-interface OptionDrawerProps
+interface MenuOptionsDrawerProps
   extends Omit<Partial<ComponentProps<typeof SwipeableDrawer>>, "slotProps"> {
   options: MenuOption[];
   fullHeight?: boolean;
@@ -26,7 +26,7 @@ interface OptionDrawerProps
 
 /**
  * This component renders a `SwipeableDrawer` with a list of selectable options.
- * @param {OptionDrawerProps} props - The props for the `OptionDrawer` component.
+ * @param {MenuOptionsDrawerProps} props - The props for the `MenuOptionsDrawer` component.
  * @param {MenuOption[]} props.options - An array of options to display in the drawer.
  * @param {boolean} [props.fullHeight] - If true, the drawer will take up most of the screen height.
  * @param {boolean} [props.disableCloseOnSelect] - If true, the drawer will not close when an option is selected.
@@ -35,9 +35,9 @@ interface OptionDrawerProps
  * @param {Object} [props.slotProps.menuItem] - Props for customizing individual menu items.
  * @param {ListItemTextProps} [props.slotProps.menuItem.text] - Props for the `ListItemText` component.
  * @param {ListItemIconProps} [props.slotProps.menuItem.icon] - Props for the `ListItemIcon` component.
- * @returns {React.JSX.Element} The rendered `OptionDrawer` component.
+ * @returns {React.JSX.Element} The rendered `MenuOptionsDrawer` component.
  */
-const OptionDrawer: FC<OptionDrawerProps> = ({
+const MenuOptionsDrawer: FC<MenuOptionsDrawerProps> = ({
   options,
   disableCloseOnSelect: keepOpen,
   onClose,
@@ -51,7 +51,7 @@ const OptionDrawer: FC<OptionDrawerProps> = ({
     ...slotProps
   } = {},
   ...props
-}: OptionDrawerProps): React.JSX.Element => {
+}: MenuOptionsDrawerProps): React.JSX.Element => {
   return (
     <SwipeableDrawer slotProps={slotProps} onClose={onClose} {...props}>
       <MenuList {...containerProps}>
@@ -77,4 +77,4 @@ const OptionDrawer: FC<OptionDrawerProps> = ({
   );
 };
 
-export default OptionDrawer;
+export default MenuOptionsDrawer;

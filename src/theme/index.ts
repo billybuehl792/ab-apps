@@ -67,6 +67,11 @@ export const theme = createTheme({
         },
       },
     },
+    MuiTextField: {
+      defaultProps: {
+        variant: "outlined",
+      },
+    },
     MuiToolbar: {
       styleOverrides: {
         root: () => ({

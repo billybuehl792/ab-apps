@@ -9,7 +9,7 @@ import {
   ListItemIcon,
 } from "@mui/material";
 
-interface OptionMenuProps extends Omit<MenuProps, "slotProps"> {
+interface OptionsMenuProps extends Omit<MenuProps, "slotProps"> {
   options: MenuOption[];
   disableCloseOnSelect?: boolean;
   slotProps?: {
@@ -22,16 +22,16 @@ interface OptionMenuProps extends Omit<MenuProps, "slotProps"> {
 
 /**
  * This component renders a `Menu` with a list of selectable options.
- * @param {OptionMenuProps} props - The props for the `OptionMenu` component.
+ * @param {OptionsMenuProps} props - The props for the `OptionsMenu` component.
  * @param {MenuOption[]} props.options - An array of options to display in the menu.
  * @param {boolean} [props.disableCloseOnSelect] - If true, the menu will not close when an option is selected.
  * @param {Object} [props.slotProps] - Additional props for customizing the menu and its items.
  * @param {Object} [props.slotProps.menuItem] - Props for customizing individual menu items.
  * @param {ListItemTextProps} [props.slotProps.menuItem.text] - Props for the `ListItemText` component.
  * @param {ListItemIconProps} [props.slotProps.menuItem.icon] - Props for the `ListItemIcon` component.
- * @returns {React.JSX.Element} The rendered `OptionMenu` component.
+ * @returns {React.JSX.Element} The rendered `OptionsMenu` component.
  */
-const OptionMenu: FC<OptionMenuProps> = ({
+const OptionsMenu: FC<OptionsMenuProps> = ({
   options,
   disableCloseOnSelect: keepOpen,
   onClose,
@@ -44,7 +44,7 @@ const OptionMenu: FC<OptionMenuProps> = ({
     ...slotProps
   } = {},
   ...props
-}: OptionMenuProps): React.JSX.Element => {
+}: OptionsMenuProps): React.JSX.Element => {
   return (
     <Menu
       id="menu"
@@ -79,4 +79,4 @@ const OptionMenu: FC<OptionMenuProps> = ({
   );
 };
 
-export default OptionMenu;
+export default OptionsMenu;

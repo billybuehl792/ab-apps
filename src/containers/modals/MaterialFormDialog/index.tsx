@@ -15,9 +15,10 @@ import {
 } from "@mui/material";
 import { useForm, type UseFormProps } from "react-hook-form";
 import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
-import MenuIconButton from "@/components/buttons/MenuIconButton";
+import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 import CloseIconButton from "@/components/buttons/CloseIconButton";
 import type { MaterialData } from "@/firebase/types";
+import DollarField from "@/components/fields/DollarField";
 
 type FormValues = MaterialData;
 
@@ -94,7 +95,7 @@ const MaterialFormDialog: FC<MaterialFormDialogProps> = ({
           <Typography variant="inherit" noWrap>
             {title}
           </Typography>
-          {!!options && <MenuIconButton options={options} />}
+          {!!options && <MenuOptionsIconButton options={options} />}
         </Stack>
         <CloseIconButton onClick={onClose} />
       </DialogTitle>
@@ -105,12 +106,11 @@ const MaterialFormDialog: FC<MaterialFormDialogProps> = ({
           fullWidth
           {...register("label", { required: "Material title is required." })}
         />
-        <TextField
+        <DollarField
           label="Cost / Unit"
-          type="number"
           slotProps={{
             input: {
-              inputProps: { min: 0, max: 5000, step: 1 },
+              inputProps: { min: 0, max: 5000 },
               startAdornment: (
                 <InputAdornment position="start">$</InputAdornment>
               ),
@@ -119,6 +119,12 @@ const MaterialFormDialog: FC<MaterialFormDialogProps> = ({
           {...register("value", {
             required: "Material cost is required.",
             valueAsNumber: true,
+            validate: {
+              positive: (value) =>
+                value > 0 || "Material cost must be positive.",
+              max: (value) =>
+                value <= 5000 || "Material cost must be less than $5000.",
+            },
           })}
         />
 

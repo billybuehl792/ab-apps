@@ -78,7 +78,7 @@ const ClientForm: FC<ClientFormProps> = ({
       onReset={onReset}
       {...props}
     >
-      <Card component="fieldset" variant="outlined">
+      <Card component="fieldset">
         <CardContent component={Stack} spacing={1}>
           <Stack component="fieldset" spacing={2}>
             <Stack direction="row" spacing={1}>

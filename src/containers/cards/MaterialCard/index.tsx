@@ -1,4 +1,4 @@
-import { useState, type FC, type MouseEvent } from "react";
+import { type ReactNode, useState, type FC, type MouseEvent } from "react";
 import {
   Card,
   CardActionArea,
@@ -8,13 +8,11 @@ import {
   type CardProps,
   generateUtilityClasses,
   Stack,
-  TextField,
-  type TextFieldProps,
   Typography,
 } from "@mui/material";
 import { LongPressEventType, useLongPress } from "use-long-press";
-import MenuIconButton from "@/components/buttons/MenuIconButton";
-import OptionDrawer from "@/components/modals/OptionDrawer";
+import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
+import MenuOptionsDrawer from "@/components/modals/MenuOptionsDrawer";
 import { sxUtils } from "@/utils/sx";
 import type { Material } from "@/firebase/types";
 
@@ -28,10 +26,10 @@ interface MaterialCardProps extends Omit<CardProps, "onClick"> {
   material: Material;
   disabled?: boolean;
   options?: MenuOption[] | ((material: Material) => MenuOption[]);
+  endContent?: ReactNode;
   slotProps?: {
     cardActionArea?: CardActionAreaProps;
     cardContent?: CardContentProps;
-    textField?: TextFieldProps;
   };
   onClick?: (event: MouseEvent<HTMLButtonElement>, material: Material) => void;
 }
@@ -40,10 +38,10 @@ const MaterialCard: FC<MaterialCardProps> = ({
   material,
   disabled,
   options: optionsProp,
+  endContent,
   slotProps: {
     cardActionArea: cardActionAreaProps,
     cardContent: cardContentProps,
-    textField: textFieldProps,
   } = {},
   onClick,
   ...props
@@ -115,7 +113,7 @@ const MaterialCard: FC<MaterialCardProps> = ({
               {material.label.toTitleCase()}
             </Typography>
             {!!options && (
-              <MenuIconButton
+              <MenuOptionsIconButton
                 className={classes.menuIconButton}
                 options={options}
                 sx={{
@@ -133,23 +131,13 @@ const MaterialCard: FC<MaterialCardProps> = ({
           <Typography variant="body2" noWrap>
             {cost}
           </Typography>
-          <TextField
-            variant="outlined"
-            type="number"
-            size="small"
-            onMouseDown={(event) => event.stopPropagation()}
-            onClick={(event) => event.stopPropagation()}
-            slotProps={{
-              input: { inputProps: { min: 0, max: 1000 } },
-            }}
-            {...textFieldProps}
-          />
+          {endContent}
         </CardContent>
       </CardActionArea>
 
       {/* Modals */}
       {!!options && (
-        <OptionDrawer
+        <MenuOptionsDrawer
           open={optionsOpen}
           options={options}
           onClose={() => setOptionsOpen(false)}

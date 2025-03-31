@@ -2,7 +2,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Stack, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import ClientPaginatedList from "@/containers/lists/ClientPaginatedList";
-import MenuIconButton from "@/components/buttons/MenuIconButton";
+import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 
 export const Route = createFileRoute("/clients/")({
   component: RouteComponent,
@@ -25,7 +25,7 @@ function RouteComponent() {
     <Stack spacing={1} p={2}>
       <Stack direction="row" spacing={0.5} alignItems="center" width="100%">
         <Typography variant="h6">Clients</Typography>
-        <MenuIconButton
+        <MenuOptionsIconButton
           options={[
             {
               id: "create",

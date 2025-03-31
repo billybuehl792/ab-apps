@@ -73,7 +73,10 @@ const useMaterialMutations = () => {
   const create = useMutation({
     mutationKey: [materialCollection.id, "create"],
     mutationFn: (data: MaterialData) =>
-      addDoc(materialCollection, { ...data, value: +data.value }),
+      addDoc(materialCollection, {
+        ...data,
+        value: +Number(data.value).toFixed(2),
+      }),
     onSuccess: (_, data) => {
       queryClient.invalidateQueries({ queryKey: [materialCollection.id] });
       enqueueSnackbar(`Material created: ${data.label}`, {
@@ -90,7 +93,10 @@ const useMaterialMutations = () => {
     mutationKey: [materialCollection.id, "update"],
     mutationFn: async ({ id, ...data }: Material) => {
       const docRef = doc(materialCollection, id);
-      await updateDoc(docRef, { ...data, value: +data.value });
+      await updateDoc(docRef, {
+        ...data,
+        value: +Number(data.value).toFixed(2),
+      });
     },
     onSuccess: (_, data) => {
       queryClient.invalidateQueries({ queryKey: [materialCollection.id] });

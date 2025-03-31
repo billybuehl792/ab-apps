@@ -2,11 +2,11 @@ import { type FC, type ComponentProps } from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { Avatar } from "@mui/material";
 import { useAuth } from "@/context/AuthContext";
-import MenuIconButton from "@/components/buttons/MenuIconButton";
+import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 
-const UserIconButton: FC<Partial<ComponentProps<typeof MenuIconButton>>> = (
-  props
-) => {
+const UserIconButton: FC<
+  Partial<ComponentProps<typeof MenuOptionsIconButton>>
+> = (props) => {
   /** Values */
 
   const { user, signOut } = useAuth();
@@ -34,7 +34,7 @@ const UserIconButton: FC<Partial<ComponentProps<typeof MenuIconButton>>> = (
   ];
 
   return (
-    <MenuIconButton
+    <MenuOptionsIconButton
       options={options}
       icon={<Avatar alt={userName} src={user?.photoURL || ""} />}
       {...props}

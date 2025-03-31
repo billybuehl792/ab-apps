@@ -17,9 +17,10 @@ const EstimateCalculatorHeader: FC<GridProps> = (props) => {
 
   const fieldArray = watch("materials");
 
-  const total = fieldArray.reduce((acc, { value, count = 0 }) => {
-    return acc + value * count;
+  const total = fieldArray.reduce((acc, { value, count }) => {
+    return acc + value * (Number(count) || 0);
   }, 0);
+
   const totalUSD = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",

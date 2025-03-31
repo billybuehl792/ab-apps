@@ -10,8 +10,8 @@ import {
   type CardProps,
   type CardContentProps,
 } from "@mui/material";
-import MenuIconButton from "@/components/buttons/MenuIconButton";
-import OptionDrawer from "@/components/modals/OptionDrawer";
+import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
+import MenuOptionsDrawer from "@/components/modals/MenuOptionsDrawer";
 import { LongPressEventType, useLongPress } from "use-long-press";
 import { sxUtils } from "@/utils/sx";
 import type { Client } from "@/firebase/types";
@@ -91,7 +91,7 @@ const ClientCard: FC<ClientCardProps> = ({
           </Stack>
 
           {!!options && (
-            <MenuIconButton
+            <MenuOptionsIconButton
               options={options}
               sx={{
                 "@media (hover:none)": {
@@ -105,7 +105,7 @@ const ClientCard: FC<ClientCardProps> = ({
 
       {/* Modals */}
       {!!options && (
-        <OptionDrawer
+        <MenuOptionsDrawer
           open={optionsOpen}
           options={options}
           onClose={() => setOptionsOpen(false)}
