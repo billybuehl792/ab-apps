@@ -1,5 +1,6 @@
 import DollarField from "@/components/fields/DollarField";
 import IntegerField from "@/components/fields/IntegerField";
+import PercentField from "@/components/fields/PercentField";
 import { Stack, Typography } from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -13,6 +14,7 @@ function Index() {
       <Typography variant="body2">Welcome to Home Page</Typography>
       <DollarField />
       <IntegerField />
+      <PercentField />
     </Stack>
   );
 }

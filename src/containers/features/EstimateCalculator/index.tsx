@@ -1,26 +1,24 @@
-import { useMemo, useState, type FC } from "react";
+import { useMemo, type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { orderBy } from "firebase/firestore";
 import { FormProvider, useForm } from "react-hook-form";
-import { Button, Stack, type StackProps } from "@mui/material";
-import { Add, Delete, Edit } from "@mui/icons-material";
+import { Stack, type StackProps } from "@mui/material";
 import { firestoreQueries } from "@/firebase/queries";
-import { firestoreMutations } from "@/firebase/mutations";
-import MaterialFormDialog from "@/containers/modals/MaterialFormDialog";
 import EstimateCalculatorHeader from "./layout/EstimateCalculatorHeader";
 import EstimateCalculatorFieldArray from "./layout/EstimateCalculatorFieldArray";
+import EstimateCalculatorMeta from "./layout/EstimateCalculatorMeta";
 import type { Material } from "@/firebase/types";
 
 export interface EstimateCalculatorFormValues {
+  name?: string;
+  address?: string;
+  tax?: number;
   materials: (Material & { count?: number })[];
 }
 
-const EstimateCalculator: FC<StackProps> = (props) => {
-  const [materialFormOpen, setMaterialFormOpen] = useState(false);
-  const [selectedMaterial, setSelectedMaterial] = useState<
-    Material | undefined
-  >(undefined);
+const DEFAULT_TAX_PERCENTAGE = 7;
 
+const EstimateCalculator: FC<StackProps> = (props) => {
   /** Queries */
 
   const materialsQuery = useQuery(
@@ -35,90 +33,34 @@ const EstimateCalculator: FC<StackProps> = (props) => {
 
   /** Values */
 
-  const { create, update, remove } = firestoreMutations.useMaterialMutations();
-
   const methods = useForm<EstimateCalculatorFormValues>({
     mode: "all",
+    defaultValues: { tax: DEFAULT_TAX_PERCENTAGE, materials: [] },
     values: { materials },
     ...props,
   });
 
   return (
-    <>
-      <FormProvider {...methods}>
-        <Stack spacing={1} {...props}>
+    <FormProvider {...methods}>
+      <Stack sx={{ position: "relative", overflow: "auto" }}>
+        <Stack
+          spacing={2}
+          sx={{
+            position: "sticky",
+            top: 0,
+            zIndex: 1,
+            p: 2,
+            pb: 0,
+            bgcolor: ({ palette }) => palette.background.default,
+          }}
+        >
           <EstimateCalculatorHeader />
-          <EstimateCalculatorFieldArray
-            slotProps={{
-              card: {
-                options: (material) => [
-                  {
-                    id: "edit",
-                    label: "Edit",
-                    icon: <Edit />,
-                    onClick: () => {
-                      setSelectedMaterial(material);
-                      setMaterialFormOpen(true);
-                    },
-                  },
-                  {
-                    id: "delete",
-                    label: "Delete",
-                    icon: <Delete />,
-                    onClick: () =>
-                      remove.mutate(material.id, {
-                        onSuccess: () => materialsQuery.refetch(),
-                      }),
-                  },
-                ],
-              },
-            }}
-          />
-
-          <Stack direction="row" justifyContent="flex-end">
-            <Button
-              startIcon={<Add />}
-              onClick={() => setMaterialFormOpen(true)}
-            >
-              Material
-            </Button>
-          </Stack>
+          <EstimateCalculatorMeta />
         </Stack>
-      </FormProvider>
 
-      {/* Modals */}
-      <MaterialFormDialog
-        open={materialFormOpen}
-        title={
-          selectedMaterial
-            ? selectedMaterial.label.toTitleCase()
-            : "Create Material"
-        }
-        values={selectedMaterial}
-        {...(!!selectedMaterial && {
-          options: [
-            {
-              id: "delete",
-              label: "Delete",
-              icon: <Delete />,
-              onClick: () =>
-                remove.mutate(selectedMaterial.id, {
-                  onSuccess: () => setMaterialFormOpen(false),
-                }),
-            },
-          ],
-        })}
-        onSubmit={async (formData) => {
-          if (selectedMaterial)
-            await update.mutateAsync({ id: selectedMaterial.id, ...formData });
-          else await create.mutateAsync(formData);
-
-          setMaterialFormOpen(false);
-        }}
-        onClose={() => setMaterialFormOpen(false)}
-        onTransitionExited={() => setSelectedMaterial(undefined)}
-      />
-    </>
+        <EstimateCalculatorFieldArray p={2} />
+      </Stack>
+    </FormProvider>
   );
 };
 

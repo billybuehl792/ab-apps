@@ -1,4 +1,4 @@
-import { type ContextType } from "react";
+import { useId, type ContextType } from "react";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { type QueryClient } from "@tanstack/react-query";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
@@ -29,6 +29,7 @@ function RouteComponent() {
         <Box
           component="main"
           style={{
+            height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
             marginTop: APP_BAR_HEIGHT,
             flexGrow: 1,
           }}

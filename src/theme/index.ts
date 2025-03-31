@@ -37,12 +37,22 @@ export const theme = createTheme({
     },
     MuiCardContent: {
       styleOverrides: {
-        root: {
-          padding: 16,
-          ":last-child": {
-            paddingBottom: 16,
+        root: ({ theme }) => ({
+          [theme.breakpoints.up("xs")]: {
+            padding: 16,
+            paddingTop: 8,
+            paddingBottom: 8,
+            ":last-child": {
+              paddingBottom: 8,
+            },
           },
-        },
+          [theme.breakpoints.up("sm")]: {
+            padding: 16,
+            ":last-child": {
+              paddingBottom: 16,
+            },
+          },
+        }),
       },
     },
     MuiIconButton: {
@@ -74,7 +84,7 @@ export const theme = createTheme({
     },
     MuiToolbar: {
       styleOverrides: {
-        root: () => ({
+        root: ({ theme }) => ({
           position: "relative",
           height: "100%",
           [theme.breakpoints.up("xs")]: {

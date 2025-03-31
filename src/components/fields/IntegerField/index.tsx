@@ -14,11 +14,15 @@ const IntegerField: FC<TextFieldProps> = (props) => {
       {...props}
       slotProps={{
         ...props?.slotProps,
-        htmlInput: {
-          type: "number",
-          step: "1",
-          pattern: "[0-9]*",
-          ...props?.slotProps?.htmlInput,
+        input: {
+          inputProps: {
+            inputMode: "numeric",
+            pattern: "[0-9]*",
+            step: "1",
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            ...props?.slotProps?.input?.inputProps,
+          },
         },
       }}
     />
