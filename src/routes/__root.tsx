@@ -1,4 +1,4 @@
-import { useId, type ContextType } from "react";
+import { type ContextType } from "react";
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { type QueryClient } from "@tanstack/react-query";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
