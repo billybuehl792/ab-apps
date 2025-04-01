@@ -1,20 +1,27 @@
-import { type ComponentProps, type FC } from "react";
+import { type ReactNode, type ComponentProps, type FC } from "react";
 import {
   Box,
   type BoxProps,
   SwipeableDrawer as MUISwipeableDrawer,
   Stack,
   type SwipeableDrawerProps as MUISwipeableDrawerProps,
+  useMediaQuery,
 } from "@mui/material";
+import DrawerHeader from "../DrawerHeader";
 import { sxUtils } from "@/utils/sx";
 
 interface SwipeableDrawerProps
-  extends Omit<MUISwipeableDrawerProps, "onOpen" | "onClose" | "slotProps"> {
+  extends Omit<
+    MUISwipeableDrawerProps,
+    "title" | "onOpen" | "onClose" | "slotProps"
+  > {
+  title?: ReactNode;
   fullHeight?: boolean;
   onOpen?: MUISwipeableDrawerProps["onOpen"];
   onClose?: MUISwipeableDrawerProps["onClose"];
   slotProps?: {
     puller?: ComponentProps<typeof Puller>;
+    header?: ComponentProps<typeof DrawerHeader>;
   } & MUISwipeableDrawerProps["slotProps"];
 }
 
@@ -27,7 +34,8 @@ const Puller: FC<BoxProps> = (props) => (
         height: 5,
         borderRadius: 10,
         bgcolor: ({ palette }) => palette.grey[400],
-        m: 1,
+        mt: 1,
+        mb: 0.25,
       },
       ...sxUtils.asArray(props?.sx),
     ]}
@@ -39,13 +47,18 @@ const Puller: FC<BoxProps> = (props) => (
  * It provides a bottom drawer with a puller and customizable styles.
  */
 const SwipeableDrawer: FC<SwipeableDrawerProps> = ({
+  title,
   children,
   fullHeight,
   onOpen,
   onClose,
-  slotProps: { puller: pullerProps, ...slotProps } = {},
+  slotProps: { puller: pullerProps, header: headerProps, ...slotProps } = {},
   ...props
 }) => {
+  /** Values */
+
+  const isMobile = useMediaQuery("(hover: none)");
+
   return (
     <MUISwipeableDrawer
       anchor="bottom"
@@ -57,33 +70,24 @@ const SwipeableDrawer: FC<SwipeableDrawerProps> = ({
         paper: {
           ...slotProps?.paper,
           sx: [
-            { height: fullHeight ? "95vh" : "auto" },
-            {
-              "@media (hover:none)": {
-                ["&.MuiDrawer-paperAnchorBottom"]: {
-                  borderTopLeftRadius: 16,
-                  borderTopRightRadius: 16,
-                },
-              },
+            isMobile && {
+              borderTopLeftRadius: 16,
+              borderTopRightRadius: 16,
             },
+            { height: fullHeight ? "95vh" : "auto" },
           ],
         },
       }}
       {...props}
     >
-      <Stack
-        direction="row"
-        justifyContent="center"
-        sx={{
-          display: "none",
-          "@media (hover:none)": {
-            display: "flex",
-          },
-        }}
-      >
-        <Puller {...pullerProps} />
-      </Stack>
-
+      {isMobile && (
+        <Stack direction="row" justifyContent="center">
+          <Puller {...pullerProps} />
+        </Stack>
+      )}
+      {Boolean(title) && (
+        <DrawerHeader title={title} onClose={onClose} {...headerProps} />
+      )}
       {children}
     </MUISwipeableDrawer>
   );

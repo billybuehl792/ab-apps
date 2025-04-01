@@ -13,28 +13,23 @@ interface EditIconButtonProps extends IconButtonProps {
 
 /**
  * This component renders an `IconButton` with an `Edit` icon.
- * @param {EditIconButtonProps} props
- * @param {ReactNode} [props.icon] - The icon to display in the `IconButton`.
- * @returns {ReactNode}
  */
 const EditIconButton: FC<EditIconButtonProps> = ({
   icon = <Edit />,
-  onClick: onClickProp,
+  onClick,
   ...props
-}: EditIconButtonProps): ReactNode => {
-  /** Callbacks */
-
-  const onClick: IconButtonProps["onClick"] = (event) => {
-    event.stopPropagation();
-    onClickProp?.(event);
-  };
-
+}) => {
   return (
     <IconButton
       component="span"
       onMouseDown={(event: MouseEvent) => event.stopPropagation()}
       onTouchStart={(event: TouchEvent) => event.stopPropagation()}
-      onClick={onClick}
+      onClick={(
+        event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+      ) => {
+        event.stopPropagation();
+        onClick?.(event);
+      }}
       {...props}
     >
       {icon}

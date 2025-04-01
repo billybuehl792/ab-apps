@@ -7,35 +7,29 @@ import {
 import { IconButton, type IconButtonProps } from "@mui/material";
 import { Close } from "@mui/icons-material";
 
-interface CloseIconButtonProps extends Omit<IconButtonProps, "onClick"> {
+interface CloseIconButtonProps extends IconButtonProps {
   icon?: ReactNode;
-  onClick?: (event: CloseEvent, reason: "escapeKeyDown") => void;
 }
 
 /**
  * This component renders an `IconButton` with a `Close` icon.
- * @param {CloseIconButtonProps} props
- * @param {ReactNode} [props.icon] - The icon to display in the `IconButton`.
- * @returns {ReactNode}
  */
 const CloseIconButton: FC<CloseIconButtonProps> = ({
   icon = <Close />,
-  onClick: onClickProp,
+  onClick,
   ...props
-}: CloseIconButtonProps): ReactNode => {
-  /** Callbacks */
-
-  const onClick: IconButtonProps["onClick"] = (event) => {
-    event.stopPropagation();
-    onClickProp?.(new CloseEvent("close"), "escapeKeyDown");
-  };
-
+}) => {
   return (
     <IconButton
       component="span"
       onMouseDown={(event: MouseEvent) => event.stopPropagation()}
       onTouchStart={(event: TouchEvent) => event.stopPropagation()}
-      onClick={onClick}
+      onClick={(
+        event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+      ) => {
+        event.stopPropagation();
+        onClick?.(event);
+      }}
       {...props}
     >
       {icon}

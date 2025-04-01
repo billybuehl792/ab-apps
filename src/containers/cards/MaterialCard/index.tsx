@@ -9,12 +9,14 @@ import {
   generateUtilityClasses,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
-import { LongPressEventType, useLongPress } from "use-long-press";
+import { useLongPress } from "use-long-press";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 import MenuOptionsDrawer from "@/components/modals/MenuOptionsDrawer";
 import { sxUtils } from "@/utils/sx";
 import type { Material } from "@/firebase/types";
+import { LONG_PRESS_OPTIONS } from "@/constants/events";
 
 const classes = generateUtilityClasses("MaterialCard", [
   "root",
@@ -50,13 +52,6 @@ const MaterialCard: FC<MaterialCardProps> = ({
 
   /** Values */
 
-  const touchHandlers = useLongPress(() => setOptionsOpen(true), {
-    detect: LongPressEventType.Touch,
-    threshold: 500,
-    cancelOnMovement: true,
-    cancelOutsideElement: true,
-  });
-
   const options =
     typeof optionsProp === "function" ? optionsProp(material) : optionsProp;
 
@@ -65,18 +60,22 @@ const MaterialCard: FC<MaterialCardProps> = ({
     currency: "USD",
   }).format(material.value);
 
+  const isMobile = useMediaQuery("(hover: none)");
+  const touchHandlers = useLongPress(
+    () => setOptionsOpen(true),
+    LONG_PRESS_OPTIONS
+  );
+
   return (
     <Card
       id={material.id}
       className={classes.root}
       {...props}
       sx={[
-        {
-          "@media (hover:hover)": {
-            "&:hover": {
-              [`.${classes.menuIconButton}`]: {
-                visibility: "visible",
-              },
+        !isMobile && {
+          "&:hover": {
+            [`.${classes.menuIconButton}`]: {
+              visibility: "visible",
             },
           },
         },
@@ -85,7 +84,6 @@ const MaterialCard: FC<MaterialCardProps> = ({
     >
       <CardActionArea
         disabled={disabled}
-        disableTouchRipple={!onClick}
         onClick={(event) => onClick?.(event, material)}
         {...touchHandlers()}
         {...cardActionAreaProps}
@@ -112,21 +110,21 @@ const MaterialCard: FC<MaterialCardProps> = ({
             <Typography variant="body1" noWrap>
               {material.label.toTitleCase()}
             </Typography>
-            {!!options && (
-              <MenuOptionsIconButton
-                className={classes.menuIconButton}
-                options={options}
-                sx={{
-                  display: { xs: "none", sm: "inherit" },
-                  "@media (hover:none)": {
-                    display: "none",
-                  },
-                  "@media (hover: hover)": {
-                    visibility: "hidden",
-                  },
-                }}
-              />
-            )}
+            {!!options &&
+              (isMobile ? (
+                <MenuOptionsDrawer
+                  open={optionsOpen}
+                  title={material.label.toTitleCase()}
+                  options={options}
+                  onClose={() => setOptionsOpen(false)}
+                />
+              ) : (
+                <MenuOptionsIconButton
+                  className={classes.menuIconButton}
+                  options={options}
+                  sx={{ visibility: "hidden" }}
+                />
+              ))}
           </Stack>
           <Typography variant="body2" noWrap>
             {cost}
@@ -134,15 +132,6 @@ const MaterialCard: FC<MaterialCardProps> = ({
           {endContent}
         </CardContent>
       </CardActionArea>
-
-      {/* Modals */}
-      {!!options && (
-        <MenuOptionsDrawer
-          open={optionsOpen}
-          options={options}
-          onClose={() => setOptionsOpen(false)}
-        />
-      )}
     </Card>
   );
 };

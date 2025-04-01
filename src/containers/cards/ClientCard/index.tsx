@@ -9,10 +9,12 @@ import {
   Typography,
   type CardProps,
   type CardContentProps,
+  useMediaQuery,
 } from "@mui/material";
+import { useLongPress } from "use-long-press";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 import MenuOptionsDrawer from "@/components/modals/MenuOptionsDrawer";
-import { LongPressEventType, useLongPress } from "use-long-press";
+import { LONG_PRESS_OPTIONS } from "@/constants/events";
 import { sxUtils } from "@/utils/sx";
 import type { Client } from "@/firebase/types";
 
@@ -42,21 +44,21 @@ const ClientCard: FC<ClientCardProps> = ({
 
   /** Values */
 
-  const touchHandlers = useLongPress(() => setOptionsOpen(true), {
-    detect: LongPressEventType.Touch,
-    threshold: 500,
-    cancelOnMovement: true,
-    cancelOutsideElement: true,
-  });
+  const fullName = `${client.first_name} ${client.last_name}`;
 
   const options =
     typeof optionsProp === "function" ? optionsProp(client) : optionsProp;
+
+  const isMobile = useMediaQuery("(hover: none)");
+  const touchHandlers = useLongPress(
+    () => setOptionsOpen(true),
+    LONG_PRESS_OPTIONS
+  );
 
   return (
     <Card {...props}>
       <CardActionArea
         disabled={disabled}
-        disableTouchRipple={!onClick}
         onClick={(event) => onClick?.(event, client)}
         {...touchHandlers()}
         {...cardActionAreaProps}
@@ -74,7 +76,7 @@ const ClientCard: FC<ClientCardProps> = ({
         >
           <Stack spacing={1}>
             <Typography variant="body2" fontWeight="bold">
-              {client.first_name} {client.last_name}
+              {fullName.toTitleCase()}
             </Typography>
             <Stack
               direction="row"
@@ -90,27 +92,19 @@ const ClientCard: FC<ClientCardProps> = ({
             </Stack>
           </Stack>
 
-          {!!options && (
-            <MenuOptionsIconButton
-              options={options}
-              sx={{
-                "@media (hover:none)": {
-                  display: "none",
-                },
-              }}
-            />
-          )}
+          {!!options &&
+            (isMobile ? (
+              <MenuOptionsDrawer
+                open={optionsOpen}
+                title={fullName.toTitleCase()}
+                options={options}
+                onClose={() => setOptionsOpen(false)}
+              />
+            ) : (
+              <MenuOptionsIconButton options={options} />
+            ))}
         </CardContent>
       </CardActionArea>
-
-      {/* Modals */}
-      {!!options && (
-        <MenuOptionsDrawer
-          open={optionsOpen}
-          options={options}
-          onClose={() => setOptionsOpen(false)}
-        />
-      )}
     </Card>
   );
 };

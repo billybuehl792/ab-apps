@@ -97,7 +97,9 @@ const MaterialFormDialog: FC<MaterialFormDialogProps> = ({
           </Typography>
           {!!options && <MenuOptionsIconButton options={options} />}
         </Stack>
-        <CloseIconButton onClick={onClose} />
+        <CloseIconButton
+          onClick={(event) => onClose?.(event, "backdropClick")}
+        />
       </DialogTitle>
 
       <Stack component={DialogContent} spacing={2} dividers>

@@ -1,4 +1,4 @@
-import { type ComponentProps, useState, type FC } from "react";
+import { type ComponentProps, useState, type FC, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   Collapse,
@@ -40,7 +40,7 @@ const NestedList: FC<NestedListProps> = ({
   ...props
 }) => {
   return (
-    <List disablePadding {...props}>
+    <List disablePadding dense {...props}>
       {items
         .filter(({ render }) => render !== false)
         .map((item) => (
@@ -61,12 +61,18 @@ const NestedListItem: FC<NestedListItemProps> = ({
   } = {},
   ...props
 }) => {
-  const [open, setOpen] = useState(!!item.expanded);
+  const [expanded, setExpanded] = useState(false);
 
   /** Values */
 
   const hasChildren =
     item.items?.some(({ render }) => render !== false) ?? false;
+
+  /** Effects */
+
+  useEffect(() => {
+    setExpanded(!!item.expanded);
+  }, [item.expanded]);
 
   return (
     <>
@@ -75,8 +81,8 @@ const NestedListItem: FC<NestedListItemProps> = ({
         {...(hasChildren && {
           secondaryAction: (
             <ExpandIconButton
-              expanded={item.expanded || open}
-              onChange={(value) => setOpen(value)}
+              expanded={item.expanded || expanded}
+              onChange={(value) => setExpanded(value)}
             />
           ),
         })}
@@ -112,7 +118,7 @@ const NestedListItem: FC<NestedListItemProps> = ({
       </ListItem>
 
       {hasChildren && (
-        <Collapse in={open} timeout="auto" unmountOnExit>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
           <NestedList
             component="div"
             items={item.items ?? []}

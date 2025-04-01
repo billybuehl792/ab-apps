@@ -1,8 +1,8 @@
 import { type ComponentProps, type FC } from "react";
 import { useLocation } from "@tanstack/react-router";
 import { Construction, Groups, Home, PersonAdd } from "@mui/icons-material";
-import NestedList from "@/components/lists/NestedList";
 import { useAuth } from "@/context/AuthContext";
+import NestedList from "@/components/lists/NestedList";
 
 const NavigationList: FC<Partial<ComponentProps<typeof NestedList>>> = (
   props
@@ -26,7 +26,7 @@ const NavigationList: FC<Partial<ComponentProps<typeof NestedList>>> = (
       to: "/clients",
       render: Boolean(user),
       selected: pathname === "/clients",
-      expanded: pathname.startsWith("/clients"),
+      expanded: ["/clients/create"].includes(pathname),
       icon: <Groups />,
       items: [
         {
