@@ -73,6 +73,7 @@ const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArrayProps> = ({
                   slotProps={{
                     input: { inputProps: { min: 0, max: 1000 } },
                   }}
+                  sx={{ width: 100 }}
                   {...register(`materials.${index}.count`)}
                 />
               }

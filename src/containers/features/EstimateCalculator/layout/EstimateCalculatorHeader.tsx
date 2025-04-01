@@ -33,20 +33,32 @@ const EstimateCalculatorHeader: FC<GridProps> = (props) => {
   }).format(total);
 
   const items = [
-    { label: "Subtotal", value: subtotalUSD },
-    { label: "Total", value: totalUSD },
+    { label: "subtotal", value: subtotalUSD },
+    { label: "total", value: totalUSD },
   ];
 
   return (
     <Grid container spacing={1} {...props}>
-      {items.map(({ label, value }) => (
-        <Grid key={label} component={Card} size={{ xs: 6 }}>
-          <CardContent component={Stack} sx={{ padding: 1 }}>
-            <Typography variant="subtitle2">{label}</Typography>
-            <Typography variant="h5">{value}</Typography>
-          </CardContent>
-        </Grid>
-      ))}
+      {items.map(({ label, value }) => {
+        const isTotal = label === "total";
+
+        return (
+          <Grid key={label} component={Card} size={{ xs: isTotal ? 8 : 4 }}>
+            <CardContent component={Stack} sx={{ padding: 1 }}>
+              <Typography variant="subtitle2">{label.toTitleCase()}</Typography>
+              <Typography
+                variant="h5"
+                sx={{
+                  color: ({ palette }) =>
+                    !isTotal ? palette.grey[500] : undefined,
+                }}
+              >
+                {value}
+              </Typography>
+            </CardContent>
+          </Grid>
+        );
+      })}
     </Grid>
   );
 };

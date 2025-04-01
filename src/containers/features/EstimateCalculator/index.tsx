@@ -1,4 +1,4 @@
-import { useMemo, type FC } from "react";
+import { useEffect, useMemo, type FC } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { orderBy } from "firebase/firestore";
 import { FormProvider, useForm } from "react-hook-form";
@@ -7,16 +7,22 @@ import { firestoreQueries } from "@/firebase/queries";
 import EstimateCalculatorHeader from "./layout/EstimateCalculatorHeader";
 import EstimateCalculatorFieldArray from "./layout/EstimateCalculatorFieldArray";
 import EstimateCalculatorMeta from "./layout/EstimateCalculatorMeta";
+import EstimateCalculatorFooter from "./layout/EstimateCalculatorFooter";
 import type { Material } from "@/firebase/types";
 
 export interface EstimateCalculatorFormValues {
-  name?: string;
-  address?: string;
-  tax?: number;
-  materials: (Material & { count?: number })[];
+  name: string;
+  address: string;
+  tax: number;
+  materials: (Material & { count?: number | null })[];
 }
 
-const DEFAULT_TAX_PERCENTAGE = 7;
+const DEFAULT_VALUES: EstimateCalculatorFormValues = {
+  name: "",
+  address: "",
+  tax: 7,
+  materials: [],
+};
 
 const EstimateCalculator: FC<StackProps> = (props) => {
   /** Queries */
@@ -35,10 +41,16 @@ const EstimateCalculator: FC<StackProps> = (props) => {
 
   const methods = useForm<EstimateCalculatorFormValues>({
     mode: "all",
-    defaultValues: { tax: DEFAULT_TAX_PERCENTAGE, materials: [] },
-    values: { materials },
+    defaultValues: DEFAULT_VALUES,
+    values: { ...DEFAULT_VALUES, materials },
     ...props,
   });
+
+  /** Effects */
+
+  useEffect(() => {
+    methods.reset({ ...DEFAULT_VALUES, materials }, { keepValues: true });
+  }, [methods, materials]);
 
   return (
     <FormProvider {...methods}>
@@ -58,7 +70,11 @@ const EstimateCalculator: FC<StackProps> = (props) => {
           <EstimateCalculatorMeta />
         </Stack>
 
-        <EstimateCalculatorFieldArray p={2} />
+        <EstimateCalculatorFieldArray p={2} pb={1} />
+
+        <EstimateCalculatorFooter
+          sx={{ position: "sticky", bottom: 0, p: 2, pt: 0 }}
+        />
       </Stack>
     </FormProvider>
   );
