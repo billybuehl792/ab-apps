@@ -1,12 +1,12 @@
 import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { Stack, type StackProps, TextField } from "@mui/material";
-import { type EstimateCalculatorFormValues } from "..";
+import { type EstimateCalculatorValues } from "..";
 
 const EstimateCalculatorMeta: FC<StackProps> = (props) => {
   /** Values */
 
-  const { register } = useFormContext<EstimateCalculatorFormValues>();
+  const { register } = useFormContext<EstimateCalculatorValues>();
 
   return (
     <Stack spacing={2} {...props}>

@@ -1,8 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import EstimateCalculator from "@/containers/features/EstimateCalculator";
-import { firestoreQueries } from "@/firebase/queries";
-import { CircularProgress, Stack } from "@mui/material";
-import { orderBy } from "firebase/firestore";
+import { Stack } from "@mui/material";
 
 export const Route = createFileRoute("/estimate-calculator/")({
   component: RouteComponent,
@@ -10,12 +8,6 @@ export const Route = createFileRoute("/estimate-calculator/")({
     if (!context.auth.user)
       throw redirect({ to: "/sign-in", search: { redirect: location.href } });
   },
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(
-      firestoreQueries.getMaterialList(orderBy("value", "desc"))
-    );
-  },
-  pendingComponent: () => <CircularProgress />,
   errorComponent: ({ error }) => <div>{error.message}</div>,
 });
 

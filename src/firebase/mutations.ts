@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { addDoc, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { useSnackbar } from "notistack";
 import { clientCollection, materialCollection } from "./collections";
 import type { Client, ClientData, Material, MaterialData } from "./types";
@@ -29,7 +29,7 @@ const useClientMutations = () => {
     mutationKey: [clientCollection.id, "update"],
     mutationFn: async ({ id, ...data }: Client) => {
       const docRef = doc(clientCollection, id);
-      await updateDoc(docRef, { ...data });
+      await setDoc(docRef, { ...data });
     },
     onSuccess: (_, data) => {
       queryClient.invalidateQueries({ queryKey: [clientCollection.id] });
@@ -93,10 +93,7 @@ const useMaterialMutations = () => {
     mutationKey: [materialCollection.id, "update"],
     mutationFn: async ({ id, ...data }: Material) => {
       const docRef = doc(materialCollection, id);
-      await updateDoc(docRef, {
-        ...data,
-        value: +Number(data.value).toFixed(2),
-      });
+      await setDoc(docRef, data);
     },
     onSuccess: (_, data) => {
       queryClient.invalidateQueries({ queryKey: [materialCollection.id] });

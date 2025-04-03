@@ -8,12 +8,12 @@ import {
   Typography,
   type Grid2Props as GridProps,
 } from "@mui/material";
-import { type EstimateCalculatorFormValues } from "..";
+import { type EstimateCalculatorValues } from "..";
 
 const EstimateCalculatorHeader: FC<GridProps> = (props) => {
   /** Values */
 
-  const { watch } = useFormContext<EstimateCalculatorFormValues>();
+  const { watch } = useFormContext<EstimateCalculatorValues>();
 
   const fieldArray = watch("materials");
   const tax = watch("tax") || 0;

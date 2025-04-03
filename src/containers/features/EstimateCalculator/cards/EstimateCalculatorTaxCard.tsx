@@ -8,12 +8,12 @@ import {
 } from "@mui/material";
 import PercentField from "@/components/fields/PercentField";
 import { useFormContext } from "react-hook-form";
-import { EstimateCalculatorFormValues } from "..";
+import { EstimateCalculatorValues } from "..";
 
 const EstimateCalculatorTaxCard: FC<CardProps> = (props) => {
   /** Values */
 
-  const { register } = useFormContext<EstimateCalculatorFormValues>();
+  const { register } = useFormContext<EstimateCalculatorValues>();
 
   return (
     <Card {...props}>
