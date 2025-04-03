@@ -100,4 +100,12 @@ export const theme = createTheme({
       },
     },
   },
+  palette: {
+    primary: {
+      main: "#2b4277",
+      contrastText: "#fff",
+      dark: "#0E1114",
+      light: "#DEDEDE",
+    },
+  },
 });
