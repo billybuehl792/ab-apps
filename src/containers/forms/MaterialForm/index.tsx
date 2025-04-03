@@ -11,30 +11,16 @@ import type { MaterialData } from "@/firebase/types";
 type MaterialFormProps = ComponentProps<typeof Form<MaterialData>> &
   UseFormProps<MaterialData>;
 
-const DEFAULT_VALUES: MaterialData = {
-  label: "",
-  value: 0,
-  description: "",
-};
-
-const MaterialForm: FC<MaterialFormProps> = ({
-  values,
-  onSubmit,
-  ...props
-}) => {
+const MaterialForm: FC<MaterialFormProps> = (props) => {
   const [showMoreEnabled, setShowMoreEnabled] = useState(false);
 
   /** Values */
 
-  const methods = useForm<MaterialData>({
-    defaultValues: DEFAULT_VALUES,
-    values: values ?? DEFAULT_VALUES,
-    ...props,
-  });
+  const methods = useForm<MaterialData>(props);
 
   return (
     <FormProvider {...methods}>
-      <Form onSubmit={onSubmit} {...props}>
+      <Form {...props}>
         <MaterialFormTitleField />
         <MaterialFormValueField />
 
