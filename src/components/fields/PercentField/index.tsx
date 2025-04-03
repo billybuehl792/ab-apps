@@ -17,8 +17,6 @@ const PercentField: FC<TextFieldProps> = (props) => {
             pattern: "[0-9]*",
             type: "number",
             step: "any",
-            max: 100,
-            min: 0,
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             ...props?.slotProps?.input?.inputProps,

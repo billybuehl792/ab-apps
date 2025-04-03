@@ -1,4 +1,5 @@
 import { type FC } from "react";
+import { useFormContext } from "react-hook-form";
 import {
   Card,
   CardContent,
@@ -7,13 +8,15 @@ import {
   type CardProps,
 } from "@mui/material";
 import PercentField from "@/components/fields/PercentField";
-import { useFormContext } from "react-hook-form";
-import { EstimateCalculatorValues } from "..";
+import type { EstimateCalculatorValues } from "../../types";
 
 const EstimateCalculatorTaxCard: FC<CardProps> = (props) => {
   /** Values */
 
-  const { register } = useFormContext<EstimateCalculatorValues>();
+  const {
+    formState: { errors },
+    register,
+  } = useFormContext<EstimateCalculatorValues>();
 
   return (
     <Card {...props}>
@@ -28,7 +31,16 @@ const EstimateCalculatorTaxCard: FC<CardProps> = (props) => {
         <Typography variant="body1" noWrap>
           Tax
         </Typography>
-        <PercentField size="small" sx={{ width: 110 }} {...register("tax")} />
+        <PercentField
+          size="small"
+          error={!!errors.tax}
+          sx={{ width: 110 }}
+          {...register("tax", {
+            min: { value: 0, message: "Value cannot be less than 0%" },
+            max: { value: 100, message: "Value cannot be greater than 100%" },
+            setValueAs: (value) => Math.min(Math.max(+value, 0), 100),
+          })}
+        />
       </CardContent>
     </Card>
   );

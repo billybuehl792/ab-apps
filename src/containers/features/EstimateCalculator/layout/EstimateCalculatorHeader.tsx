@@ -8,7 +8,7 @@ import {
   Typography,
   type Grid2Props as GridProps,
 } from "@mui/material";
-import { type EstimateCalculatorValues } from "..";
+import type { EstimateCalculatorValues } from "../types";
 
 const EstimateCalculatorHeader: FC<GridProps> = (props) => {
   /** Values */

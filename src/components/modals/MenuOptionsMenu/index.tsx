@@ -37,7 +37,6 @@ const MenuOptionsMenu: FC<MenuOptionsMenuProps> = ({
       {...props}
     >
       <MenuOptionsList
-        dense
         options={options.map((option) => ({
           ...option,
           onClick: (event) => {

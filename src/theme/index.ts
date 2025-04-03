@@ -55,6 +55,9 @@ export const theme = createTheme({
         }),
       },
     },
+    MuiDialogContent: {
+      defaultProps: { dividers: true },
+    },
     MuiIconButton: {
       styleOverrides: {
         sizeSmall: {

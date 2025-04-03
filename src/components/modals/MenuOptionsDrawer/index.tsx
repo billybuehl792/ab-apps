@@ -25,7 +25,6 @@ const MenuOptionsDrawer: FC<MenuOptionsDrawerProps> = ({
   return (
     <SwipeableDrawer onClose={onClose} slotProps={slotProps} {...props}>
       <MenuOptionsList
-        dense
         options={options.map((option) => ({
           ...option,
           onClick: (event) => {

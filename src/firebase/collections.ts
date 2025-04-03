@@ -4,13 +4,13 @@ import type { ClientData, MaterialData } from "@/firebase/types";
 
 const clientCollection = collection(db, "clients").withConverter<ClientData>({
   toFirestore: (client: ClientData) => ({
-    first_name: client.first_name,
-    last_name: client.last_name,
-    email: client.email,
-    phone: client.phone,
-    address: client.address,
-    city: client.city,
-    state: client.state,
+    first_name: client.first_name.trim(),
+    last_name: client.last_name.trim(),
+    email: client.email.trim(),
+    phone: client.phone.trim(),
+    address: client.address.trim(),
+    city: client.city.trim(),
+    state: client.state.trim(),
     zip: +client.zip,
   }),
   fromFirestore: (snapshot, options): ClientData =>
@@ -22,7 +22,7 @@ const materialCollection = collection(
   "materials"
 ).withConverter<MaterialData>({
   toFirestore: (material: MaterialData) => ({
-    label: material.label,
+    label: material.label.toTitleCase().trim(),
     value: +material.value,
     description: material.description || "",
   }),

@@ -1,8 +1,8 @@
 import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { Button, ButtonGroup, Stack, type StackProps } from "@mui/material";
-import { EstimateCalculatorValues } from "..";
 import { sxUtils } from "@/utils/sx";
+import type { EstimateCalculatorValues } from "../types";
 
 const EstimateCalculatorFooter: FC<StackProps> = (props) => {
   /** Values */
