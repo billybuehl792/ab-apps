@@ -17,10 +17,12 @@ const EstimateCalculatorHeader: FC<GridProps> = (props) => {
 
   const fieldArray = watch("materials");
   const tax = watch("tax") || 0;
+  const additional = watch("additional") || 0;
 
-  const subtotal = fieldArray.reduce((acc, { value, count }) => {
+  const materialTotal = fieldArray.reduce((acc, { value, count }) => {
     return acc + value * (Number(count) || 0);
   }, 0);
+  const subtotal = materialTotal + additional;
   const total = subtotal + (subtotal * tax) / 100;
 
   const subtotalUSD = new Intl.NumberFormat("en-US", {
@@ -45,7 +47,7 @@ const EstimateCalculatorHeader: FC<GridProps> = (props) => {
         return (
           <Grid key={label} component={Card} size={{ xs: isTotal ? 8 : 4 }}>
             <CardContent component={Stack} sx={{ padding: 1 }}>
-              <Typography variant="subtitle2">{label.toTitleCase()}</Typography>
+              <Typography variant="subtitle2">{label}</Typography>
               <Typography
                 variant="h5"
                 sx={{

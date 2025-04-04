@@ -4,9 +4,10 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { Button, Skeleton, Stack, type StackProps } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useEstimateCalculator } from "../context/EstimateCalculatorContext";
-import EstimateCalculatorTaxCard from "../components/cards/EstimateCalculatorTaxCard";
 import { ESTIMATE_CALCULATOR_DEFAULT_VALUES } from "@/containers/features/EstimateCalculator/constants";
 import EstimateCalculatorMaterialCard from "../components/cards/EstimateCalculatorMaterialCard";
+import EstimateCalculatorTaxCard from "../components/cards/EstimateCalculatorTaxCard";
+import EstimateCalculatorAdditionalCard from "../components/cards/EstimateCalculatorAdditionalCard";
 import type { EstimateCalculatorValues } from "../types";
 
 interface EstimateCalculatorFieldArrayProps extends StackProps {
@@ -56,7 +57,7 @@ const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArrayProps> = ({
     const currentValues = getValues();
     const merged = materials.map((m) => {
       const existing = currentValues.materials.find(({ id }) => m.id === id);
-      return { ...m, count: existing?.count ?? null };
+      return { ...m, count: existing?.count || null };
     });
 
     reset({ ...ESTIMATE_CALCULATOR_DEFAULT_VALUES, materials });
@@ -64,6 +65,7 @@ const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArrayProps> = ({
     setValue("name", currentValues.name);
     setValue("address", currentValues.address);
     setValue("tax", currentValues.tax);
+    setValue("additional", currentValues.additional);
     setValue("materials", merged);
   }, [materials, setValue, getValues, reset]);
 
@@ -87,6 +89,7 @@ const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArrayProps> = ({
               )
             )}
         <EstimateCalculatorTaxCard />
+        <EstimateCalculatorAdditionalCard />
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end">

@@ -7,13 +7,13 @@ import {
   Typography,
   type CardProps,
 } from "@mui/material";
-import PercentField from "@/components/fields/PercentField";
+import DollarField from "@/components/fields/DollarField";
 import type { EstimateCalculatorValues } from "../../types";
 
 const MIN = 0;
-const MAX = 100;
+const MAX = 10_000;
 
-const EstimateCalculatorTaxCard: FC<CardProps> = (props) => {
+const EstimateCalculatorAdditionalCard: FC<CardProps> = (props) => {
   /** Values */
 
   const {
@@ -32,18 +32,15 @@ const EstimateCalculatorTaxCard: FC<CardProps> = (props) => {
         justifyItems="flex-end"
       >
         <Typography variant="body1" noWrap>
-          Tax
+          Additional Costs
         </Typography>
-        <PercentField
+        <DollarField
           size="small"
-          error={!!errors.tax}
-          sx={{ width: 110 }}
-          {...register("tax", {
-            min: { value: MIN, message: `Value cannot be less than ${MIN}%` },
-            max: {
-              value: MAX,
-              message: `Value cannot be greater than ${MAX}%`,
-            },
+          error={!!errors.additional}
+          sx={{ width: 120 }}
+          {...register("additional", {
+            min: { value: MIN, message: `Value cannot be less than ${MIN}` },
+            max: { value: MAX, message: `Value cannot be greater than ${MAX}` },
             setValueAs: (value) => Math.min(Math.max(+value, MIN), MAX),
           })}
         />
@@ -52,4 +49,4 @@ const EstimateCalculatorTaxCard: FC<CardProps> = (props) => {
   );
 };
 
-export default EstimateCalculatorTaxCard;
+export default EstimateCalculatorAdditionalCard;

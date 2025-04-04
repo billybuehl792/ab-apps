@@ -7,6 +7,9 @@ import MaterialCard from "@/containers/cards/MaterialCard";
 import IntegerField from "@/components/fields/IntegerField";
 import type { EstimateCalculatorValues } from "../../types";
 
+const MIN = 0;
+const MAX = 10_000;
+
 const EstimateCalculatorMaterialCard: FC<
   ComponentProps<typeof MaterialCard> & { index: number }
 > = ({ material, index, ...props }) => {
@@ -47,9 +50,9 @@ const EstimateCalculatorMaterialCard: FC<
           error={!!errors.materials?.[index]?.count}
           sx={{ width: 100 }}
           {...register(`materials.${index}.count`, {
-            setValueAs: (value) => Math.min(Math.max(+value, 0), 10_000),
-            min: { value: 0, message: "Min value is 0" },
-            max: { value: 1000, message: "Max value is 1000" },
+            min: { value: MIN, message: `Min value is ${MIN}` },
+            max: { value: MAX, message: `Max value is ${MAX}` },
+            setValueAs: (value) => Math.min(Math.max(+value, MIN), MAX),
           })}
         />
       }
