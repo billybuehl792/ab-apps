@@ -5,7 +5,7 @@ import type { MaterialData } from "@/firebase/types";
 
 const MAX_LENGTH = 128;
 
-const MaterialFormDescriptionField: FC<TextFieldProps> = () => {
+const MaterialFormDescriptionField: FC<TextFieldProps> = (props) => {
   /** Values */
 
   const {
@@ -25,6 +25,7 @@ const MaterialFormDescriptionField: FC<TextFieldProps> = () => {
           message: `Max length is ${MAX_LENGTH}`,
         },
       })}
+      {...props}
     />
   );
 };

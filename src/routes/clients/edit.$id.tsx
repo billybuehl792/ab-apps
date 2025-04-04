@@ -1,18 +1,13 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import {
-  Card,
-  CardContent,
-  CircularProgress,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+import { CircularProgress, Stack, Typography } from "@mui/material";
+import { Delete } from "@mui/icons-material";
 import { firestoreQueries } from "@/firebase/queries";
 import { firestoreMutations } from "@/firebase/mutations";
+import ClientForm from "@/containers/forms/ClientForm";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 import type { Client } from "@/firebase/types";
 
-export const Route = createFileRoute("/clients/$id")({
+export const Route = createFileRoute("/clients/edit/$id")({
   component: RouteComponent,
   beforeLoad: ({ context, location }) => {
     if (!context.auth.user)
@@ -34,26 +29,21 @@ function RouteComponent() {
   /** Values */
 
   const { client } = Route.useLoaderData();
-  const { remove } = firestoreMutations.useClientMutations();
   const navigate = useNavigate();
+  const { update, remove } = firestoreMutations.useClientMutations();
 
   const clientFullName = `${client.first_name} ${client.last_name}`;
 
   const options: MenuOption[] = [
     {
-      id: "edit",
-      label: "Edit",
-      icon: <Edit />,
-      onClick: () => navigate({ to: `/clients/edit/${client.id}` }),
-    },
-    {
       id: "delete",
       label: "Delete",
       icon: <Delete />,
-      onClick: () =>
+      onClick: () => {
         remove.mutate(client.id, {
           onSuccess: () => navigate({ to: "/clients" }),
-        }),
+        });
+      },
     },
   ];
 
@@ -61,20 +51,21 @@ function RouteComponent() {
     <Stack spacing={1} p={2}>
       <Stack direction="row" spacing={1} alignItems="center">
         <Typography variant="h6" noWrap>
-          {clientFullName.toTitleCase()}
+          Edit {clientFullName.toTitleCase()}
         </Typography>
         <MenuOptionsIconButton options={options} />
       </Stack>
-
-      <Card>
-        <CardContent>
-          <Stack spacing={1}>
-            <Typography variant="body2">{client.address}</Typography>
-            <Typography variant="body2">{client.email}</Typography>
-            <Typography variant="body2">{client.phone.toPhone()}</Typography>
-          </Stack>
-        </CardContent>
-      </Card>
+      <ClientForm
+        values={client}
+        submitLabel="Update"
+        resetLabel="Cancel"
+        onSubmit={async (formData) => {
+          await update.mutateAsync(
+            { id: client.id, ...formData },
+            { onSuccess: () => navigate({ to: "/clients" }) }
+          );
+        }}
+      />
     </Stack>
   );
 }

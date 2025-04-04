@@ -6,23 +6,12 @@ import {
   CardContent,
   type CardContentProps,
   type CardProps,
-  generateUtilityClasses,
   Stack,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
-import { useLongPress } from "use-long-press";
-import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
-import MenuOptionsDrawer from "@/components/modals/MenuOptionsDrawer";
+import MenuOptionsMenu from "@/components/modals/MenuOptionsMenu";
 import { sxUtils } from "@/utils/sx";
 import type { Material } from "@/firebase/types";
-import { LONG_PRESS_OPTIONS } from "@/constants/events";
-
-const classes = generateUtilityClasses("MaterialCard", [
-  "root",
-  "contentWrapper",
-  "menuIconButton",
-]);
 
 interface MaterialCardProps extends Omit<CardProps, "onClick"> {
   material: Material;
@@ -41,14 +30,16 @@ const MaterialCard: FC<MaterialCardProps> = ({
   disabled,
   options: optionsProp,
   endContent,
+  onClick: onClickProp,
   slotProps: {
     cardActionArea: cardActionAreaProps,
     cardContent: cardContentProps,
   } = {},
-  onClick,
   ...props
 }) => {
-  const [optionsOpen, setOptionsOpen] = useState(false);
+  const [optionsAnchorEl, setOptionsAnchorEl] = useState<HTMLElement | null>(
+    null
+  );
 
   /** Values */
 
@@ -60,40 +51,25 @@ const MaterialCard: FC<MaterialCardProps> = ({
     currency: "USD",
   }).format(material.value);
 
-  const isMobile = useMediaQuery("(hover: none)");
-  const touchHandlers = useLongPress(
-    () => setOptionsOpen(true),
-    LONG_PRESS_OPTIONS
-  );
+  /** Callbacks */
+
+  const onClick: CardActionAreaProps["onClick"] = (event) => {
+    if (onClickProp) onClickProp(event, material);
+    else if (options) setOptionsAnchorEl(event.currentTarget);
+  };
 
   return (
-    <Card
-      id={material.id}
-      className={classes.root}
-      {...props}
-      sx={[
-        !isMobile && {
-          "&:hover": {
-            [`.${classes.menuIconButton}`]: {
-              visibility: "visible",
-            },
-          },
-        },
-        ...sxUtils.asArray(props?.sx),
-      ]}
-    >
+    <Card id={material.id} {...props}>
       <CardActionArea
         disabled={disabled}
-        onClick={(event) => onClick?.(event, material)}
-        {...touchHandlers()}
+        onClick={onClick}
         {...cardActionAreaProps}
         sx={[
-          { cursor: onClick ? "pointer" : "default" },
+          { cursor: !!options || onClickProp ? "pointer" : "default" },
           ...sxUtils.asArray(cardActionAreaProps?.sx),
         ]}
       >
         <CardContent
-          className={classes.contentWrapper}
           component={Stack}
           direction="row"
           spacing={1}
@@ -110,21 +86,6 @@ const MaterialCard: FC<MaterialCardProps> = ({
             <Typography variant="body1" noWrap>
               {material.label.toTitleCase()}
             </Typography>
-            {!!options &&
-              (isMobile ? (
-                <MenuOptionsDrawer
-                  open={optionsOpen}
-                  title={material.label.toTitleCase()}
-                  options={options}
-                  onClose={() => setOptionsOpen(false)}
-                />
-              ) : (
-                <MenuOptionsIconButton
-                  className={classes.menuIconButton}
-                  options={options}
-                  sx={{ visibility: "hidden" }}
-                />
-              ))}
           </Stack>
           <Typography variant="body2" noWrap>
             {cost}
@@ -132,6 +93,17 @@ const MaterialCard: FC<MaterialCardProps> = ({
           {endContent}
         </CardContent>
       </CardActionArea>
+
+      {!!options && (
+        <MenuOptionsMenu
+          open={Boolean(optionsAnchorEl)}
+          anchorEl={optionsAnchorEl}
+          anchorOrigin={{ horizontal: "center", vertical: "center" }}
+          transformOrigin={{ horizontal: "right", vertical: "bottom" }}
+          options={options}
+          onClose={() => setOptionsAnchorEl(null)}
+        />
+      )}
     </Card>
   );
 };

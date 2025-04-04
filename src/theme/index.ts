@@ -35,26 +35,6 @@ export const theme = createTheme({
         variant: "outlined",
       },
     },
-    MuiCardContent: {
-      styleOverrides: {
-        root: ({ theme }) => ({
-          [theme.breakpoints.up("xs")]: {
-            padding: 16,
-            paddingTop: 8,
-            paddingBottom: 8,
-            ":last-child": {
-              paddingBottom: 8,
-            },
-          },
-          [theme.breakpoints.up("sm")]: {
-            padding: 16,
-            ":last-child": {
-              paddingBottom: 16,
-            },
-          },
-        }),
-      },
-    },
     MuiDialogContent: {
       defaultProps: { dividers: true },
     },

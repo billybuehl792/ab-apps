@@ -39,7 +39,7 @@ const EstimateCalculator: FC<StackProps> = (props) => {
               <EstimateCalculatorMeta />
             </Stack>
 
-            <EstimateCalculatorFieldArray sx={{ flexGrow: 1, p: 2, pb: 1 }} />
+            <EstimateCalculatorFieldArray sx={{ flexGrow: 1, px: 2, py: 1 }} />
 
             <EstimateCalculatorFooter
               sx={{ position: "sticky", bottom: 0, p: 2, pt: 0 }}

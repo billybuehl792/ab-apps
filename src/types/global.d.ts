@@ -40,7 +40,15 @@ declare global {
     toCapitalized(): string;
 
     /**
-     * Converts a string to 'Title Case`, where the first character of each word is capitalized.
+     * Converts a string to 'Phone Case' ex: `(123) 456-7890`
+     *
+     * @param string - The input string to be converted to phone case.
+     * @returns A new string formatted as a phone number.
+     */
+    toPhone(): string;
+
+    /**
+     * Converts a string to 'Title Case', where the first character of each word is capitalized.
      *
      * @param string - The input string to be converted to title case.
      * @returns A new string with each word's first character capitalized.

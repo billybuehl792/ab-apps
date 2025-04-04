@@ -25,8 +25,6 @@ const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
   const { remove } = firestoreMutations.useClientMutations();
   const navigate = useNavigate();
 
-  /** Callbacks */
-
   return (
     <PaginatedList
       collection={clientCollection}
@@ -41,7 +39,7 @@ const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
               id: "edit",
               label: "Edit",
               icon: <Edit />,
-              onClick: () => navigate({ to: `/clients/${client.id}` }),
+              onClick: () => navigate({ to: `/clients/edit/${client.id}` }),
             },
             {
               id: "delete",
@@ -50,6 +48,7 @@ const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
               onClick: () => remove.mutate(client.id),
             },
           ]}
+          onClick={() => navigate({ to: `/clients/${client.id}` })}
           {...cardProps}
         />
       )}

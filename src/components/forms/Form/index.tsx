@@ -101,11 +101,7 @@ const FormActions = ({
           </Button>
         </Fade>
       )}
-      <Button
-        type="submit"
-        loading={isSubmitting}
-        disabled={!isDirty || disabled}
-      >
+      <Button type="submit" loading={isSubmitting} disabled={disabled}>
         {submitLabel}
       </Button>
     </Stack>

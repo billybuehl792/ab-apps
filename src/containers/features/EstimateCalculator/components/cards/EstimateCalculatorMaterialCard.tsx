@@ -48,6 +48,7 @@ const EstimateCalculatorMaterialCard: FC<
         <IntegerField
           size="small"
           error={!!errors.materials?.[index]?.count}
+          onClick={(event) => event.stopPropagation()}
           sx={{ width: 100 }}
           {...register(`materials.${index}.count`, {
             min: { value: MIN, message: `Min value is ${MIN}` },

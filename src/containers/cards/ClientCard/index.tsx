@@ -1,20 +1,15 @@
-import { useState, type FC, type MouseEvent } from "react";
+import { type FC, type MouseEvent } from "react";
 import {
   Card,
   CardActionArea,
   type CardActionAreaProps,
   CardContent,
-  Divider,
   Stack,
   Typography,
   type CardProps,
   type CardContentProps,
-  useMediaQuery,
 } from "@mui/material";
-import { useLongPress } from "use-long-press";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
-import MenuOptionsDrawer from "@/components/modals/MenuOptionsDrawer";
-import { LONG_PRESS_OPTIONS } from "@/constants/events";
 import { sxUtils } from "@/utils/sx";
 import type { Client } from "@/firebase/types";
 
@@ -40,8 +35,6 @@ const ClientCard: FC<ClientCardProps> = ({
   } = {},
   ...props
 }) => {
-  const [optionsOpen, setOptionsOpen] = useState(false);
-
   /** Values */
 
   const fullName = `${client.first_name} ${client.last_name}`;
@@ -49,18 +42,12 @@ const ClientCard: FC<ClientCardProps> = ({
   const options =
     typeof optionsProp === "function" ? optionsProp(client) : optionsProp;
 
-  const isMobile = useMediaQuery("(hover: none)");
-  const touchHandlers = useLongPress(
-    () => setOptionsOpen(true),
-    LONG_PRESS_OPTIONS
-  );
-
   return (
     <Card {...props}>
       <CardActionArea
         disabled={disabled}
         onClick={(event) => onClick?.(event, client)}
-        {...touchHandlers()}
+        disableTouchRipple={!onClick}
         {...cardActionAreaProps}
         sx={[
           { cursor: onClick ? "pointer" : "default" },
@@ -74,35 +61,15 @@ const ClientCard: FC<ClientCardProps> = ({
           alignItems="center"
           {...cardContentProps}
         >
-          <Stack spacing={1}>
-            <Typography variant="body2" fontWeight="bold">
+          <Stack spacing={0.75} overflow="hidden">
+            <Typography variant="body2" fontWeight="bold" noWrap>
               {fullName.toTitleCase()}
             </Typography>
-            <Stack
-              direction="row"
-              spacing={1}
-              divider={<Divider orientation="vertical" flexItem />}
-              alignItems="center"
-            >
-              <Typography variant="subtitle2">Phone: {client.phone}</Typography>
-              <Typography variant="subtitle2">Email: {client.email}</Typography>
-              <Typography variant="subtitle2">
-                Address: {client.address}
-              </Typography>
-            </Stack>
+            <Typography variant="subtitle2" noWrap>
+              {client.address}
+            </Typography>
           </Stack>
-
-          {!!options &&
-            (isMobile ? (
-              <MenuOptionsDrawer
-                open={optionsOpen}
-                title={fullName.toTitleCase()}
-                options={options}
-                onClose={() => setOptionsOpen(false)}
-              />
-            ) : (
-              <MenuOptionsIconButton options={options} />
-            ))}
+          {!!options && <MenuOptionsIconButton options={options} />}
         </CardContent>
       </CardActionArea>
     </Card>

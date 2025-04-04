@@ -1,26 +1,26 @@
 import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { TextField, type TextFieldProps } from "@mui/material";
-import type { MaterialData } from "@/firebase/types";
+import type { ClientData } from "@/firebase/types";
 
-const MAX_LENGTH = 128;
+const MAX_LENGTH = 32;
 
-const MaterialFormTitleField: FC<TextFieldProps> = (props) => {
+const ClientFormLastNameField: FC<TextFieldProps> = (props) => {
   /** Values */
 
   const {
     formState: { errors },
     register,
-  } = useFormContext<MaterialData>();
+  } = useFormContext<ClientData>();
 
   return (
     <TextField
-      label="Title"
+      label="Last Name"
+      error={Boolean(errors.last_name)}
+      helperText={errors.last_name?.message}
       fullWidth
-      error={!!errors.label}
-      helperText={errors.label?.message}
-      {...register("label", {
-        required: "Title is required",
+      {...register("last_name", {
+        required: "Last name is required",
         maxLength: {
           value: MAX_LENGTH,
           message: `Max length is ${MAX_LENGTH}`,
@@ -31,4 +31,4 @@ const MaterialFormTitleField: FC<TextFieldProps> = (props) => {
   );
 };
 
-export default MaterialFormTitleField;
+export default ClientFormLastNameField;

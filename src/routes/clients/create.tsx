@@ -25,6 +25,8 @@ function RouteComponent() {
     <Stack spacing={1} p={2}>
       <Typography variant="h6">Create Client</Typography>
       <ClientForm
+        disableReset
+        submitLabel="Create"
         onSubmit={async (formData) => {
           await create.mutateAsync(formData, {
             onSuccess: () => navigate({ to: "/clients" }),

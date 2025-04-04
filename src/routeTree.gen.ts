@@ -17,6 +17,7 @@ import { Route as EstimateCalculatorIndexImport } from './routes/estimate-calcul
 import { Route as ClientsIndexImport } from './routes/clients/index'
 import { Route as ClientsCreateImport } from './routes/clients/create'
 import { Route as ClientsIdImport } from './routes/clients/$id'
+import { Route as ClientsEditIdImport } from './routes/clients/edit.$id'
 
 // Create/Update Routes
 
@@ -53,6 +54,12 @@ const ClientsCreateRoute = ClientsCreateImport.update({
 const ClientsIdRoute = ClientsIdImport.update({
   id: '/clients/$id',
   path: '/clients/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ClientsEditIdRoute = ClientsEditIdImport.update({
+  id: '/clients/edit/$id',
+  path: '/clients/edit/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -102,6 +109,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInIndexImport
       parentRoute: typeof rootRoute
     }
+    '/clients/edit/$id': {
+      id: '/clients/edit/$id'
+      path: '/clients/edit/$id'
+      fullPath: '/clients/edit/$id'
+      preLoaderRoute: typeof ClientsEditIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -114,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/clients': typeof ClientsIndexRoute
   '/estimate-calculator': typeof EstimateCalculatorIndexRoute
   '/sign-in': typeof SignInIndexRoute
+  '/clients/edit/$id': typeof ClientsEditIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -123,6 +138,7 @@ export interface FileRoutesByTo {
   '/clients': typeof ClientsIndexRoute
   '/estimate-calculator': typeof EstimateCalculatorIndexRoute
   '/sign-in': typeof SignInIndexRoute
+  '/clients/edit/$id': typeof ClientsEditIdRoute
 }
 
 export interface FileRoutesById {
@@ -133,6 +149,7 @@ export interface FileRoutesById {
   '/clients/': typeof ClientsIndexRoute
   '/estimate-calculator/': typeof EstimateCalculatorIndexRoute
   '/sign-in/': typeof SignInIndexRoute
+  '/clients/edit/$id': typeof ClientsEditIdRoute
 }
 
 export interface FileRouteTypes {
@@ -144,6 +161,7 @@ export interface FileRouteTypes {
     | '/clients'
     | '/estimate-calculator'
     | '/sign-in'
+    | '/clients/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -152,6 +170,7 @@ export interface FileRouteTypes {
     | '/clients'
     | '/estimate-calculator'
     | '/sign-in'
+    | '/clients/edit/$id'
   id:
     | '__root__'
     | '/'
@@ -160,6 +179,7 @@ export interface FileRouteTypes {
     | '/clients/'
     | '/estimate-calculator/'
     | '/sign-in/'
+    | '/clients/edit/$id'
   fileRoutesById: FileRoutesById
 }
 
@@ -170,6 +190,7 @@ export interface RootRouteChildren {
   ClientsIndexRoute: typeof ClientsIndexRoute
   EstimateCalculatorIndexRoute: typeof EstimateCalculatorIndexRoute
   SignInIndexRoute: typeof SignInIndexRoute
+  ClientsEditIdRoute: typeof ClientsEditIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -179,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClientsIndexRoute: ClientsIndexRoute,
   EstimateCalculatorIndexRoute: EstimateCalculatorIndexRoute,
   SignInIndexRoute: SignInIndexRoute,
+  ClientsEditIdRoute: ClientsEditIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -196,7 +218,8 @@ export const routeTree = rootRoute
         "/clients/create",
         "/clients/",
         "/estimate-calculator/",
-        "/sign-in/"
+        "/sign-in/",
+        "/clients/edit/$id"
       ]
     },
     "/": {
@@ -216,6 +239,9 @@ export const routeTree = rootRoute
     },
     "/sign-in/": {
       "filePath": "sign-in/index.tsx"
+    },
+    "/clients/edit/$id": {
+      "filePath": "clients/edit.$id.tsx"
     }
   }
 }

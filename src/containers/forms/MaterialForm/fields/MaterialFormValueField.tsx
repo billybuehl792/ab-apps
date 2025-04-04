@@ -6,7 +6,9 @@ import type { MaterialData } from "@/firebase/types";
 const MIN = 0;
 const MAX = 10_000;
 
-const MaterialFormValueField: FC<ComponentProps<typeof DollarField>> = () => {
+const MaterialFormValueField: FC<ComponentProps<typeof DollarField>> = (
+  props
+) => {
   /** Values */
 
   const {
@@ -25,6 +27,7 @@ const MaterialFormValueField: FC<ComponentProps<typeof DollarField>> = () => {
         max: { value: MAX, message: `Max value is ${MAX}` },
         setValueAs: (value) => Math.min(Math.max(+value, MIN), MAX),
       })}
+      {...props}
     />
   );
 };
