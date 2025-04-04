@@ -11,6 +11,7 @@ import { APP_BAR_HEIGHT } from "@/constants/layout";
 interface RouterContext {
   auth: ContextType<typeof AuthContext>;
   queryClient: QueryClient;
+  crumb?: string;
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({

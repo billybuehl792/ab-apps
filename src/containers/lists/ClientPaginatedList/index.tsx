@@ -39,7 +39,11 @@ const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
               id: "edit",
               label: "Edit",
               icon: <Edit />,
-              onClick: () => navigate({ to: `/clients/edit/${client.id}` }),
+              onClick: () =>
+                navigate({
+                  to: `/clients/${client.id}`,
+                  search: { edit: true },
+                }),
             },
             {
               id: "delete",

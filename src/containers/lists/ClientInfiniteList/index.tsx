@@ -40,7 +40,11 @@ const ClientInfiniteList: FC<ClientInfiniteListProps> = ({
               id: "edit",
               label: "Edit",
               icon: <Edit />,
-              onClick: () => navigate({ to: `/clients/${client.id}` }),
+              onClick: () =>
+                navigate({
+                  to: `/clients/${client.id}`,
+                  search: { edit: true },
+                }),
             },
             {
               id: "delete",

@@ -12,7 +12,7 @@ export const Route = createFileRoute("/clients/create")({
         search: { redirect: location.href },
       });
   },
-  errorComponent: ({ error }) => <Stack>{error.message}</Stack>,
+  loader: () => ({ crumb: "Create" }),
 });
 
 function RouteComponent() {
@@ -22,7 +22,7 @@ function RouteComponent() {
   const { create } = firestoreMutations.useClientMutations();
 
   return (
-    <Stack spacing={1} p={2}>
+    <Stack spacing={1}>
       <Typography variant="h6">Create Client</Typography>
       <ClientForm
         disableReset

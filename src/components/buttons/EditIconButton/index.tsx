@@ -15,7 +15,8 @@ interface EditIconButtonProps extends IconButtonProps {
  * This component renders an `IconButton` with an `Edit` icon.
  */
 const EditIconButton: FC<EditIconButtonProps> = ({
-  icon = <Edit />,
+  size,
+  icon = <Edit fontSize={size} />,
   onClick,
   ...props
 }) => {

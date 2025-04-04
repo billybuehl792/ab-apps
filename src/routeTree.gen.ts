@@ -11,15 +11,21 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ClientsImport } from './routes/clients'
 import { Route as IndexImport } from './routes/index'
 import { Route as SignInIndexImport } from './routes/sign-in/index'
 import { Route as EstimateCalculatorIndexImport } from './routes/estimate-calculator/index'
 import { Route as ClientsIndexImport } from './routes/clients/index'
 import { Route as ClientsCreateImport } from './routes/clients/create'
 import { Route as ClientsIdImport } from './routes/clients/$id'
-import { Route as ClientsEditIdImport } from './routes/clients/edit.$id'
 
 // Create/Update Routes
+
+const ClientsRoute = ClientsImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexRoute = IndexImport.update({
   id: '/',
@@ -40,27 +46,21 @@ const EstimateCalculatorIndexRoute = EstimateCalculatorIndexImport.update({
 } as any)
 
 const ClientsIndexRoute = ClientsIndexImport.update({
-  id: '/clients/',
-  path: '/clients/',
-  getParentRoute: () => rootRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => ClientsRoute,
 } as any)
 
 const ClientsCreateRoute = ClientsCreateImport.update({
-  id: '/clients/create',
-  path: '/clients/create',
-  getParentRoute: () => rootRoute,
+  id: '/create',
+  path: '/create',
+  getParentRoute: () => ClientsRoute,
 } as any)
 
 const ClientsIdRoute = ClientsIdImport.update({
-  id: '/clients/$id',
-  path: '/clients/$id',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ClientsEditIdRoute = ClientsEditIdImport.update({
-  id: '/clients/edit/$id',
-  path: '/clients/edit/$id',
-  getParentRoute: () => rootRoute,
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ClientsRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -74,26 +74,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/clients': {
+      id: '/clients'
+      path: '/clients'
+      fullPath: '/clients'
+      preLoaderRoute: typeof ClientsImport
+      parentRoute: typeof rootRoute
+    }
     '/clients/$id': {
       id: '/clients/$id'
-      path: '/clients/$id'
+      path: '/$id'
       fullPath: '/clients/$id'
       preLoaderRoute: typeof ClientsIdImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof ClientsImport
     }
     '/clients/create': {
       id: '/clients/create'
-      path: '/clients/create'
+      path: '/create'
       fullPath: '/clients/create'
       preLoaderRoute: typeof ClientsCreateImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof ClientsImport
     }
     '/clients/': {
       id: '/clients/'
-      path: '/clients'
-      fullPath: '/clients'
+      path: '/'
+      fullPath: '/clients/'
       preLoaderRoute: typeof ClientsIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof ClientsImport
     }
     '/estimate-calculator/': {
       id: '/estimate-calculator/'
@@ -109,26 +116,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInIndexImport
       parentRoute: typeof rootRoute
     }
-    '/clients/edit/$id': {
-      id: '/clients/edit/$id'
-      path: '/clients/edit/$id'
-      fullPath: '/clients/edit/$id'
-      preLoaderRoute: typeof ClientsEditIdImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
 // Create and export the route tree
 
+interface ClientsRouteChildren {
+  ClientsIdRoute: typeof ClientsIdRoute
+  ClientsCreateRoute: typeof ClientsCreateRoute
+  ClientsIndexRoute: typeof ClientsIndexRoute
+}
+
+const ClientsRouteChildren: ClientsRouteChildren = {
+  ClientsIdRoute: ClientsIdRoute,
+  ClientsCreateRoute: ClientsCreateRoute,
+  ClientsIndexRoute: ClientsIndexRoute,
+}
+
+const ClientsRouteWithChildren =
+  ClientsRoute._addFileChildren(ClientsRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/clients': typeof ClientsRouteWithChildren
   '/clients/$id': typeof ClientsIdRoute
   '/clients/create': typeof ClientsCreateRoute
-  '/clients': typeof ClientsIndexRoute
+  '/clients/': typeof ClientsIndexRoute
   '/estimate-calculator': typeof EstimateCalculatorIndexRoute
   '/sign-in': typeof SignInIndexRoute
-  '/clients/edit/$id': typeof ClientsEditIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -138,30 +153,29 @@ export interface FileRoutesByTo {
   '/clients': typeof ClientsIndexRoute
   '/estimate-calculator': typeof EstimateCalculatorIndexRoute
   '/sign-in': typeof SignInIndexRoute
-  '/clients/edit/$id': typeof ClientsEditIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/clients': typeof ClientsRouteWithChildren
   '/clients/$id': typeof ClientsIdRoute
   '/clients/create': typeof ClientsCreateRoute
   '/clients/': typeof ClientsIndexRoute
   '/estimate-calculator/': typeof EstimateCalculatorIndexRoute
   '/sign-in/': typeof SignInIndexRoute
-  '/clients/edit/$id': typeof ClientsEditIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/clients'
     | '/clients/$id'
     | '/clients/create'
-    | '/clients'
+    | '/clients/'
     | '/estimate-calculator'
     | '/sign-in'
-    | '/clients/edit/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -170,37 +184,30 @@ export interface FileRouteTypes {
     | '/clients'
     | '/estimate-calculator'
     | '/sign-in'
-    | '/clients/edit/$id'
   id:
     | '__root__'
     | '/'
+    | '/clients'
     | '/clients/$id'
     | '/clients/create'
     | '/clients/'
     | '/estimate-calculator/'
     | '/sign-in/'
-    | '/clients/edit/$id'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ClientsIdRoute: typeof ClientsIdRoute
-  ClientsCreateRoute: typeof ClientsCreateRoute
-  ClientsIndexRoute: typeof ClientsIndexRoute
+  ClientsRoute: typeof ClientsRouteWithChildren
   EstimateCalculatorIndexRoute: typeof EstimateCalculatorIndexRoute
   SignInIndexRoute: typeof SignInIndexRoute
-  ClientsEditIdRoute: typeof ClientsEditIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ClientsIdRoute: ClientsIdRoute,
-  ClientsCreateRoute: ClientsCreateRoute,
-  ClientsIndexRoute: ClientsIndexRoute,
+  ClientsRoute: ClientsRouteWithChildren,
   EstimateCalculatorIndexRoute: EstimateCalculatorIndexRoute,
   SignInIndexRoute: SignInIndexRoute,
-  ClientsEditIdRoute: ClientsEditIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -214,34 +221,39 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/clients/$id",
-        "/clients/create",
-        "/clients/",
+        "/clients",
         "/estimate-calculator/",
-        "/sign-in/",
-        "/clients/edit/$id"
+        "/sign-in/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
+    "/clients": {
+      "filePath": "clients.tsx",
+      "children": [
+        "/clients/$id",
+        "/clients/create",
+        "/clients/"
+      ]
+    },
     "/clients/$id": {
-      "filePath": "clients/$id.tsx"
+      "filePath": "clients/$id.tsx",
+      "parent": "/clients"
     },
     "/clients/create": {
-      "filePath": "clients/create.tsx"
+      "filePath": "clients/create.tsx",
+      "parent": "/clients"
     },
     "/clients/": {
-      "filePath": "clients/index.tsx"
+      "filePath": "clients/index.tsx",
+      "parent": "/clients"
     },
     "/estimate-calculator/": {
       "filePath": "estimate-calculator/index.tsx"
     },
     "/sign-in/": {
       "filePath": "sign-in/index.tsx"
-    },
-    "/clients/edit/$id": {
-      "filePath": "clients/edit.$id.tsx"
     }
   }
 }

@@ -22,7 +22,7 @@ function RouteComponent() {
   const navigate = useNavigate();
 
   return (
-    <Stack spacing={1} p={2}>
+    <Stack spacing={1}>
       <Stack direction="row" spacing={0.5} alignItems="center" width="100%">
         <Typography variant="h6">Clients</Typography>
         <MenuOptionsIconButton

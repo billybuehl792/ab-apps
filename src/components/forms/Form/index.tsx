@@ -5,7 +5,10 @@ import { firebaseUtils } from "@/firebase/utils";
 
 interface FormProps<T extends FieldValues>
   extends Omit<StackProps<"form">, "onSubmit">,
-    Pick<FormActionsProps, "submitLabel" | "resetLabel" | "disableReset"> {
+    Pick<
+      FormActionsProps,
+      "submitLabel" | "resetLabel" | "disableReset" | "resetAsCancel"
+    > {
   onSubmit?: (data: T) => Promise<void>;
   slotProps?: {
     fieldset?: StackProps;
@@ -17,6 +20,7 @@ interface FormActionsProps extends StackProps {
   submitLabel?: ReactNode;
   resetLabel?: ReactNode;
   disableReset?: boolean;
+  resetAsCancel?: boolean;
 }
 
 /**
@@ -29,7 +33,9 @@ const Form = <T extends FieldValues>({
   submitLabel,
   resetLabel,
   disableReset,
+  resetAsCancel,
   onSubmit: onSubmitProp,
+  onReset: onResetProp,
   slotProps: { fieldset: fieldsetProps, actions: actionsProps } = {},
   ...props
 }: FormProps<T>) => {
@@ -49,8 +55,10 @@ const Form = <T extends FieldValues>({
     }
   });
 
-  const onReset: FormEventHandler = (event) => {
+  const onReset: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
+
+    onResetProp?.(event);
     methods.reset();
   };
 
@@ -69,6 +77,7 @@ const Form = <T extends FieldValues>({
         submitLabel={submitLabel}
         resetLabel={resetLabel}
         disableReset={disableReset}
+        resetAsCancel={resetAsCancel}
         {...actionsProps}
       />
     </Stack>
@@ -76,8 +85,9 @@ const Form = <T extends FieldValues>({
 };
 
 const FormActions = ({
+  resetAsCancel,
   submitLabel = "Submit",
-  resetLabel = "Reset",
+  resetLabel = resetAsCancel ? "Cancel" : "Reset",
   disableReset,
   ...props
 }: FormActionsProps) => {
@@ -90,7 +100,7 @@ const FormActions = ({
   return (
     <Stack direction="row" spacing={1} justifyContent="flex-end" {...props}>
       {!disableReset && (
-        <Fade in={isDirty}>
+        <Fade in={isDirty || resetAsCancel}>
           <Button
             type="reset"
             variant="text"
