@@ -9,15 +9,15 @@ const EstimateCalculatorMeta: FC<StackProps> = (props) => {
   const { register } = useFormContext<EstimateCalculatorValues>();
 
   return (
-    <Stack spacing={2} {...props}>
+    <Stack spacing={1} {...props}>
       <TextField
-        label="Customer Name"
+        placeholder="Customer Name"
         size="small"
         fullWidth
         {...register("name")}
       />
       <TextField
-        label="Address"
+        placeholder="Address"
         size="small"
         fullWidth
         {...register("address")}

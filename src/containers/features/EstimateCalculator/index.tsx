@@ -25,7 +25,7 @@ const EstimateCalculator: FC<StackProps> = (props) => {
         <>
           <Stack sx={{ position: "relative", overflow: "auto", flexGrow: 1 }}>
             <Stack
-              spacing={2}
+              spacing={1}
               sx={{
                 position: "sticky",
                 top: 0,
