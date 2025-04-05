@@ -1,4 +1,8 @@
 - Write component tests
 - Figure out how to recover deleted data from firebase
 - Fix Nested List
-- Add Breadcrumbs to page header
+- Multi-factor auth
+- Address input validation
+- Set up local test db
+- Page maxWidth
+- Back button
