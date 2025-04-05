@@ -29,7 +29,6 @@ const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
     <PaginatedList
       collection={clientCollection}
       constraints={[orderBy("first_name")]}
-      rowsPerPageOptions={[3, 5, 10]}
       renderItem={(client) => (
         <ClientCard
           key={client.id}

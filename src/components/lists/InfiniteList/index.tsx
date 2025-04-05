@@ -36,14 +36,9 @@ interface InfiniteListProps<T extends DocumentData = DocumentData>
  * This component renders an infinite list of items from a Firestore collection.
  *
  * @template T - The type of the Firestore document data.
- * @param {InfiniteListProps<T>} props - The props for the InfiniteList component.
  * @param {CollectionReference<T>} props.collection - The Firestore collection to query.
  * @param {number} [props.pageSize=10] - The number of items to fetch per page.
  * @param {QueryConstraint[]} [props.constraints] - An array of query constraints to filter or modify the query.
- * @param {(item: T & Pick<QueryDocumentSnapshot, "id">) => ReactNode} props.renderItem - A function that renders each item in the list.
- * @param {object} [props.slotProps] - Additional props for customizing child components.
- * @param {ButtonProps} [props.slotProps.loadMoreButton] - Props for the "Load More" button.
- * @param {SkeletonProps} [props.slotProps.skeleton] - Props for the skeleton loader.
  * @returns {ReactNode} The rendered infinite list component.
  */
 const InfiniteList = <T extends DocumentData = DocumentData>({
@@ -79,7 +74,7 @@ const InfiniteList = <T extends DocumentData = DocumentData>({
       ),
     getNextPageParam: (lastPage, pages) =>
       pages.reduce((acc, page) => acc + page.size, 0) < count
-        ? (lastPage.docs.at(-1) ?? null)
+        ? lastPage.docs[lastPage.size - 1]
         : null,
     enabled: countQuery.isSuccess && count > 0,
   });

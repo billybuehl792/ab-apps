@@ -1,4 +1,5 @@
 import { type ReactNode, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   getCountFromServer,
   getDocs,
@@ -18,7 +19,6 @@ import {
   TablePagination,
   type TablePaginationProps,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
 
 interface PaginatedListProps<T extends DocumentData = DocumentData>
   extends StackProps {
@@ -33,17 +33,11 @@ interface PaginatedListProps<T extends DocumentData = DocumentData>
 }
 
 /**
- * A component that renders a paginated list of items from a Firestore collection.
+ * This component renders a paginated list of items from a Firestore collection.
  *
  * @template T - The type of the Firestore document data.
- * @param {PaginatedListProps<T>} props - The props for the component.
  * @param {CollectionReference<T>} props.collection - The Firestore collection to query.
  * @param {QueryConstraint[]} [props.constraints] - An optional array of query constraints to filter the collection.
- * @param {number[]} [props.rowsPerPageOptions] - An optional array of rows per page options for pagination.
- * @param {(item: T & Pick<QueryDocumentSnapshot, "id">) => ReactNode} props.renderItem - A function to render each item in the list.
- * @param {object} [props.slotProps] - Optional slot props for customizing pagination and skeleton components.
- * @param {TablePaginationProps} [props.slotProps.pagination] - Props for the pagination component.
- * @param {SkeletonProps} [props.slotProps.skeleton] - Props for the skeleton component.
  * @returns {ReactNode} The rendered paginated list.
  */
 const PaginatedList = <T extends DocumentData = DocumentData>({
@@ -58,10 +52,6 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0] ?? 10);
   const [lastDocs, setLastDocs] = useState<QueryDocumentSnapshot[]>([]);
 
-  /** Values */
-
-  const lastDoc = lastDocs.at(-1);
-
   /** Queries */
 
   const countQuery = useQuery({
@@ -69,7 +59,10 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
     queryFn: ({ queryKey: [_, __, ...constraints] }) =>
       getCountFromServer(query(collection, ...constraints)),
   });
-  const count = countQuery.data?.data().count ?? Infinity;
+  const count = countQuery.data?.data().count ?? 0;
+  const skeletonCount = countQuery.isLoading
+    ? rowsPerPage
+    : Math.min(rowsPerPage, count - currentPage * rowsPerPage);
 
   const listQuery = useQuery({
     queryKey: [
@@ -77,12 +70,12 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
       ...[
         ...constraints,
         limit(rowsPerPage),
-        ...(lastDoc ? [startAfter(lastDoc)] : []),
+        ...(lastDocs.length ? [startAfter(lastDocs[lastDocs.length - 1])] : []),
       ],
     ] as const,
     queryFn: ({ queryKey: [_, ...constraints] }) =>
       getDocs(query(collection, ...constraints)),
-    enabled: countQuery.isSuccess,
+    enabled: countQuery.isSuccess && count > 0,
   });
 
   /** Callbacks */
@@ -90,11 +83,9 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
   const onRowsPerPageChange: TablePaginationProps["onRowsPerPageChange"] = (
     event
   ) => {
-    const value = +event.target.value;
-
     setLastDocs([]);
     setCurrentPage(0);
-    setRowsPerPage(value);
+    setRowsPerPage(+event.target.value);
   };
 
   const onPageChange: TablePaginationProps["onPageChange"] = (_event, page) => {
@@ -103,7 +94,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
         current.slice(0, Math.max(current.length - 1, 0))
       );
     else {
-      const currentLastDoc = listQuery.data?.docs.at(-1);
+      const currentLastDoc = listQuery.data?.docs[listQuery.data.size - 1];
       if (!currentLastDoc) return;
       setLastDocs((current) => [...current, currentLastDoc]);
     }
@@ -114,7 +105,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
   return (
     <Stack spacing={1} {...props}>
       {countQuery.isLoading || listQuery.isLoading
-        ? Array(Math.min(rowsPerPage, count - currentPage * rowsPerPage))
+        ? Array(skeletonCount)
             .fill(null)
             .map((_, index) => (
               <Skeleton
@@ -134,6 +125,13 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={rowsPerPageOptions}
         disabled={countQuery.isLoading || listQuery.isLoading}
+        labelDisplayedRows={({ from, to, count }) =>
+          countQuery.isLoading ? (
+            <Skeleton variant="rounded" width={52} />
+          ) : (
+            `${from} - ${to} of ${count}`
+          )
+        }
         onPageChange={onPageChange}
         onRowsPerPageChange={onRowsPerPageChange}
         {...paginationProps}

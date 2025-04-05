@@ -3,7 +3,7 @@ import { Stack, Typography } from "@mui/material";
 import { useAuth } from "@/context/AuthContext";
 import SignInForm from "@/containers/forms/SignInForm";
 
-export const Route = createFileRoute("/sign-in/")({
+export const Route = createFileRoute("/sign-in")({
   component: RouteComponent,
   beforeLoad: async ({ context }) => {
     if (context.auth.user) throw redirect({ to: "/" });

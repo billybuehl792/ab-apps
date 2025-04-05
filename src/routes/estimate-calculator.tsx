@@ -2,7 +2,7 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import EstimateCalculator from "@/containers/features/EstimateCalculator";
 import { Stack } from "@mui/material";
 
-export const Route = createFileRoute("/estimate-calculator/")({
+export const Route = createFileRoute("/estimate-calculator")({
   component: RouteComponent,
   beforeLoad: ({ context, location }) => {
     if (!context.auth.user)

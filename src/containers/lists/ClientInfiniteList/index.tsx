@@ -53,6 +53,7 @@ const ClientInfiniteList: FC<ClientInfiniteListProps> = ({
               onClick: () => remove.mutate(client.id),
             },
           ]}
+          onClick={() => navigate({ to: `/clients/${client.id}` })}
           {...cardProps}
         />
       )}
