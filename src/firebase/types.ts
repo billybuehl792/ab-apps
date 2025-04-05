@@ -7,9 +7,6 @@ export interface ClientData {
   email: string;
   phone: string;
   address: string;
-  city: string;
-  state: string;
-  zip: number;
 }
 
 export type Material = Pick<QueryDocumentSnapshot, "id"> & MaterialData;

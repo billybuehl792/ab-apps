@@ -36,6 +36,8 @@ const ClientFormPhoneField: FC<MuiTelInputProps> = (props) => {
           helperText={errors.phone?.message}
           error={Boolean(errors.phone)}
           defaultCountry="US"
+          onlyCountries={["US"]}
+          disableDropdown
           {...props}
           forceCallingCode
         />

@@ -9,9 +9,6 @@ const clientCollection = collection(db, "clients").withConverter<ClientData>({
     email: client.email.trim(),
     phone: client.phone.trim(),
     address: client.address.trim(),
-    city: client.city.trim(),
-    state: client.state.trim(),
-    zip: +client.zip,
   }),
   fromFirestore: (snapshot, options): ClientData =>
     snapshot.data(options) as ClientData,
