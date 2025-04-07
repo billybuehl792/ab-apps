@@ -88,8 +88,8 @@ const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArrayProps> = ({
                 />
               )
             )}
-        <EstimateCalculatorTaxCard />
         <EstimateCalculatorAdditionalCard />
+        <EstimateCalculatorTaxCard />
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end">
