@@ -1,17 +1,10 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Stack, Typography } from "@mui/material";
 import ClientForm from "@/containers/forms/ClientForm";
 import { firestoreMutations } from "@/firebase/mutations";
 
 export const Route = createFileRoute("/clients/create")({
   component: RouteComponent,
-  beforeLoad: ({ context, location }) => {
-    if (!context.auth.user)
-      throw redirect({
-        to: "/sign-in",
-        search: { redirect: location.href },
-      });
-  },
   loader: () => ({ crumb: "Create" }),
 });
 

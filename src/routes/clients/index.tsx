@@ -1,18 +1,10 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Stack, Typography } from "@mui/material";
 import ClientPaginatedList from "@/containers/lists/ClientPaginatedList";
 import AddIconButton from "@/components/buttons/AddIconButton";
 
 export const Route = createFileRoute("/clients/")({
   component: RouteComponent,
-  beforeLoad: ({ context, location }) => {
-    if (!context.auth.user)
-      throw redirect({
-        to: "/sign-in",
-        search: { redirect: location.href },
-      });
-  },
-  errorComponent: ({ error }) => <Stack>{error.message}</Stack>,
 });
 
 function RouteComponent() {

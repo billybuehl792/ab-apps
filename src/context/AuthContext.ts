@@ -11,6 +11,7 @@ interface AuthContextValue {
     { email: string; password: string }
   >;
   signOut?: UseMutationResult<void, Error, void>;
+  sendEmailVerification?: UseMutationResult<void, Error, User>;
 }
 
 const AuthContext = createContext<AuthContextValue>({

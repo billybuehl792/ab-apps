@@ -1,4 +1,4 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   Card,
   CardContent,
@@ -14,10 +14,6 @@ import type { Client } from "@/firebase/types";
 
 export const Route = createFileRoute("/clients/$id")({
   component: RouteComponent,
-  beforeLoad: ({ context, location }) => {
-    if (!context.auth.user)
-      throw redirect({ to: "/sign-in", search: { redirect: location.href } });
-  },
   validateSearch: (search: Record<string, unknown>): { edit?: boolean } => ({
     edit: Boolean(search.edit) || undefined,
   }),

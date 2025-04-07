@@ -6,13 +6,17 @@ import {
   useState,
 } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { signInWithEmailAndPassword, signOut as _signOut } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signOut as _signOut,
+  sendEmailVerification as _sendEmailVerification,
+  type User,
+} from "firebase/auth";
 import { useSnackbar } from "notistack";
-import { CircularProgress } from "@mui/material";
 import { AuthContext } from "@/context/AuthContext";
 import { auth } from "@/firebase";
 import { firebaseUtils } from "@/firebase/utils";
-import { delay } from "@/utils/queries";
+import { CircularProgress } from "@mui/material";
 
 const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] =
@@ -27,19 +31,12 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const signIn = useMutation({
     mutationKey: ["signIn"],
-    mutationFn: async (credentials: { email: string; password: string }) => {
-      await delay(500);
-      return await signInWithEmailAndPassword(
-        auth,
-        credentials.email,
-        credentials.password
-      );
-    },
-    onSuccess: ({ user }) => {
+    mutationFn: (credentials: { email: string; password: string }) =>
+      signInWithEmailAndPassword(auth, credentials.email, credentials.password),
+    onSuccess: ({ user }) =>
       enqueueSnackbar(`${user.displayName ?? user.email ?? "User"} signed in`, {
         variant: "success",
-      });
-    },
+      }),
     onError: (error) =>
       enqueueSnackbar(firebaseUtils.getErrorMessage(error), {
         variant: "error",
@@ -58,6 +55,17 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       }),
   });
 
+  const sendEmailVerification = useMutation({
+    mutationKey: ["sendEmailVerification"],
+    mutationFn: (user: User) => _sendEmailVerification(user),
+    onSuccess: () =>
+      enqueueSnackbar("Email verification link sent", { variant: "success" }),
+    onError: (error) =>
+      enqueueSnackbar(firebaseUtils.getErrorMessage(error), {
+        variant: "error",
+      }),
+  });
+
   /** Effects */
 
   useEffect(() => {
@@ -70,7 +78,9 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user, loading, signIn, signOut, sendEmailVerification }}
+    >
       {loading ? <CircularProgress /> : children}
     </AuthContext.Provider>
   );
