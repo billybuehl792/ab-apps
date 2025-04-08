@@ -19,7 +19,7 @@ const materialCollection = collection(
   "materials"
 ).withConverter<MaterialData>({
   toFirestore: (material: MaterialData) => ({
-    label: material.label.toTitleCase().trim(),
+    label: material.label.trim(),
     value: +material.value,
     description: material.description || "",
   }),

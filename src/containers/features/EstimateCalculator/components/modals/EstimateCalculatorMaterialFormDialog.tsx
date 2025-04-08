@@ -14,6 +14,8 @@ const EstimateCalculatorMaterialFormDialog: FC<
 
   const { create, update } = firestoreMutations.useMaterialMutations();
 
+  /** Callbacks */
+
   const onClose = () => setMaterialModal(false, materialModal.material);
 
   const onTransitionExited = () => setMaterialModal(false);
@@ -21,7 +23,7 @@ const EstimateCalculatorMaterialFormDialog: FC<
   return (
     <MaterialFormDialog
       open={materialModal.open}
-      label={materialModal.material?.label.toTitleCase() ?? "Create Material"}
+      label={materialModal.material?.label ?? "Create Material"}
       onClose={onClose}
       onTransitionExited={onTransitionExited}
       slotProps={{

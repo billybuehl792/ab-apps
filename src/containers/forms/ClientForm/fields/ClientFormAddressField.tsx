@@ -1,31 +1,38 @@
 import { type FC } from "react";
-import { useFormContext } from "react-hook-form";
-import { TextField, type TextFieldProps } from "@mui/material";
+import { useQueryClient } from "@tanstack/react-query";
+import { Controller, useFormContext } from "react-hook-form";
+import { type TextFieldProps } from "@mui/material";
+import { mapsQueries } from "@/maps/queries";
+import AddressField from "@/components/fields/AddressField";
 import type { ClientData } from "@/firebase/types";
 
-const MAX_LENGTH = 128;
-
-const ClientFormAddressField: FC<TextFieldProps> = (props) => {
+const ClientFormAddressField: FC<TextFieldProps> = () => {
   /** Values */
 
-  const {
-    formState: { errors },
-    register,
-  } = useFormContext<ClientData>();
+  const { control } = useFormContext<ClientData>();
+  const queryClient = useQueryClient();
 
   return (
-    <TextField
-      label="Address"
-      error={Boolean(errors.address)}
-      helperText={errors.address?.message}
-      {...register("address", {
-        required: "Address is required",
-        maxLength: {
-          value: MAX_LENGTH,
-          message: `Max length is ${MAX_LENGTH}`,
+    <Controller
+      name="address"
+      control={control}
+      rules={{
+        validate: {
+          isAddress: async (value) => {
+            const isValid = await queryClient.fetchQuery(
+              mapsQueries.validateAddress(value)
+            );
+            return isValid || "Must be a valid address";
+          },
         },
-      })}
-      {...props}
+      }}
+      render={({ field, formState: { errors } }) => (
+        <AddressField
+          error={Boolean(errors.address)}
+          helperText={errors.address?.message}
+          {...field}
+        />
+      )}
     />
   );
 };

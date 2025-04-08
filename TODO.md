@@ -2,7 +2,7 @@
 - Figure out how to recover deleted data from firebase
 - Fix Nested List
 - Multi-factor auth
-- Address input validation
 - Set up local test db
 - Page maxWidth
 - Back button
+- image upload and cloud storage

@@ -15,7 +15,11 @@ type ClientFormProps = ComponentProps<typeof Form<ClientData>> &
 const ClientForm: FC<ClientFormProps> = ({ slotProps, ...props }) => {
   /** Values */
 
-  const methods = useForm<ClientData>(props);
+  const methods = useForm<ClientData>({
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
+    ...props,
+  });
 
   return (
     <FormProvider {...methods}>

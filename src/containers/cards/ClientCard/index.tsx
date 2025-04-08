@@ -37,8 +37,6 @@ const ClientCard: FC<ClientCardProps> = ({
 }) => {
   /** Values */
 
-  const fullName = `${client.first_name} ${client.last_name}`;
-
   const options =
     typeof optionsProp === "function" ? optionsProp(client) : optionsProp;
 
@@ -63,7 +61,7 @@ const ClientCard: FC<ClientCardProps> = ({
         >
           <Stack spacing={0.75} overflow="hidden">
             <Typography variant="body2" fontWeight="bold" noWrap>
-              {fullName.toTitleCase()}
+              {`${client.first_name} ${client.last_name}`}
             </Typography>
             <Typography variant="subtitle2" noWrap>
               {client.address}

@@ -22,9 +22,8 @@ export const Route = createFileRoute("/clients/$id")({
       firestoreQueries.getClient(params.id)
     );
     const client: Client = { id: clientSnapshot.id, ...clientSnapshot.data() };
-    const clientFullName = `${client.first_name} ${client.last_name}`;
 
-    return { client, crumb: clientFullName.toTitleCase() };
+    return { client, crumb: `${client.first_name} ${client.last_name}` };
   },
   pendingComponent: () => <CircularProgress />,
   errorComponent: ({ error }) => <Stack>{error.message}</Stack>,
@@ -38,8 +37,6 @@ function RouteComponent() {
 
   const navigate = useNavigate();
 
-  const clientFullName = `${client.first_name} ${client.last_name}`;
-
   /** Mutations */
 
   const { update } = firestoreMutations.useClientMutations();
@@ -47,7 +44,7 @@ function RouteComponent() {
     <Stack spacing={1}>
       <Stack direction="row" spacing={1} alignItems="center">
         <Typography variant="h6" noWrap>
-          {clientFullName.toTitleCase()}
+          {`${client.first_name} ${client.last_name}`}
         </Typography>
         {!edit && (
           <EditIconButton
