@@ -45,9 +45,9 @@ const EstimateCalculatorHeader: FC<GridProps> = (props) => {
         const isTotal = label === "total";
 
         return (
-          <Grid key={label} component={Card} size={{ xs: isTotal ? 8 : 4 }}>
+          <Grid key={label} component={Card} size={{ xs: 6 }}>
             <CardContent component={Stack} sx={{ padding: 1 }}>
-              <Typography variant="subtitle2">{label}</Typography>
+              <Typography variant="subtitle2">{label.toTitleCase()}</Typography>
               <Typography
                 variant="h5"
                 sx={{
