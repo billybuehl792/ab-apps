@@ -1,8 +1,9 @@
 - Write component tests
 - Figure out how to recover deleted data from firebase
-- Fix Nested List
+- User permissions
 - Multi-factor auth
-- Set up local test db
+
+- Fix Nested List
 - Page maxWidth
 - Back button
 - image upload and cloud storage
