@@ -11,6 +11,14 @@ import {
   signOut as _signOut,
   sendEmailVerification as _sendEmailVerification,
   type User,
+  getMultiFactorResolver,
+  PhoneMultiFactorGenerator,
+  type MultiFactorError,
+  type ApplicationVerifier,
+  PhoneAuthProvider,
+  type PhoneMultiFactorInfo,
+  MultiFactorResolver,
+  type PhoneAuthCredential,
 } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { AuthContext } from "@/context/AuthContext";
@@ -66,6 +74,59 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       }),
   });
 
+  const sendMultiFactorVerification = useMutation({
+    mutationKey: ["sendMultiFactorVerification"],
+    mutationFn: async (data: {
+      verifier: ApplicationVerifier;
+      error: MultiFactorError;
+    }) => {
+      const resolver = getMultiFactorResolver(auth, data.error);
+      const multiFactorHint = resolver.hints.find(
+        (hint) => hint.factorId === PhoneMultiFactorGenerator.FACTOR_ID
+      ) as PhoneMultiFactorInfo | undefined;
+      if (!multiFactorHint) throw new Error("No phone number found");
+
+      const phoneAuthProvider = new PhoneAuthProvider(auth);
+      const verificationId = await phoneAuthProvider.verifyPhoneNumber(
+        { multiFactorHint, session: resolver.session },
+        data.verifier
+      );
+
+      return { resolver, verificationId, multiFactorHint };
+    },
+    onSuccess: ({ multiFactorHint }) =>
+      enqueueSnackbar(
+        `Verification message sent to ${multiFactorHint.phoneNumber}`,
+        { variant: "success" }
+      ),
+    onError: (error) =>
+      enqueueSnackbar(firebaseUtils.getErrorMessage(error), {
+        variant: "error",
+      }),
+  });
+
+  const verifyMultiFactorPhoneCode = useMutation({
+    mutationKey: ["verifyMultiFactorPhoneCode"],
+    mutationFn: async (data: {
+      resolver: MultiFactorResolver;
+      credential: PhoneAuthCredential;
+    }) => {
+      const multiFactorAssertion = PhoneMultiFactorGenerator.assertion(
+        data.credential
+      );
+
+      return await data.resolver.resolveSignIn(multiFactorAssertion);
+    },
+    onSuccess: ({ user }) =>
+      enqueueSnackbar(`${user.displayName ?? user.email ?? "User"} signed in`, {
+        variant: "success",
+      }),
+    onError: (error) =>
+      enqueueSnackbar(firebaseUtils.getErrorMessage(error), {
+        variant: "error",
+      }),
+  });
+
   /** Effects */
 
   useEffect(() => {
@@ -79,7 +140,15 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, signIn, signOut, sendEmailVerification }}
+      value={{
+        user,
+        loading,
+        signIn,
+        signOut,
+        sendEmailVerification,
+        sendMultiFactorVerification,
+        verifyMultiFactorPhoneCode,
+      }}
     >
       {loading ? <CircularProgress /> : children}
     </AuthContext.Provider>

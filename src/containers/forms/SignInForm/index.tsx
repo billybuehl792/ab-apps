@@ -2,6 +2,7 @@ import { type FC } from "react";
 import { useForm, type UseFormProps } from "react-hook-form";
 import {
   Button,
+  type ButtonProps,
   Card,
   CardContent,
   FormHelperText,
@@ -18,14 +19,13 @@ type FormValues = { email: string; password: string };
 interface SignInFormProps
   extends Omit<StackProps<"form">, "onSubmit">,
     UseFormProps<FormValues> {
+  slotProps?: { signInButton?: ButtonProps };
   onSubmit: (data: FormValues) => Promise<void>;
 }
 
-const DEFAULT_VALUES: FormValues = { email: "", password: "" };
-
 const SignInForm: FC<SignInFormProps> = ({
-  values,
   onSubmit: onSubmitProp,
+  slotProps: { signInButton: signInButtonProps } = {},
   ...props
 }) => {
   /** Values */
@@ -35,12 +35,7 @@ const SignInForm: FC<SignInFormProps> = ({
     handleSubmit,
     setError,
     formState: { errors, disabled, isSubmitting },
-  } = useForm<FormValues>({
-    defaultValues: DEFAULT_VALUES,
-    values: values ?? DEFAULT_VALUES,
-    shouldFocusError: true,
-    ...props,
-  });
+  } = useForm<FormValues>(props);
 
   /** Callbacks */
 
@@ -90,7 +85,12 @@ const SignInForm: FC<SignInFormProps> = ({
       </Card>
 
       <Stack direction="row" justifyContent="flex-end">
-        <Button type="submit" loading={isSubmitting} disabled={disabled}>
+        <Button
+          type="submit"
+          loading={isSubmitting}
+          disabled={disabled}
+          {...signInButtonProps}
+        >
           Sign In
         </Button>
       </Stack>
