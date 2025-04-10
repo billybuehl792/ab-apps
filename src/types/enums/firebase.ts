@@ -5,3 +5,8 @@ export enum FirebaseErrorCode {
   INVALID_VERIFICATION_CODE = "auth/invalid-verification-code",
   INVALID_VERIFICATION_ID = "auth/invalid-verification-id",
 }
+
+export enum FirebaseCollectionId {
+  CLIENTS = "clients",
+  MATERIALS = "materials",
+}

@@ -14,8 +14,9 @@ import {
   type ListProps,
   Typography,
 } from "@mui/material";
+
 import ExpandIconButton from "@/components/buttons/ExpandIconButton";
-import { sxUtils } from "@/utils/sx";
+import { sxAsArray } from "@/lib/utils/sx";
 
 interface NestedListProps extends ListProps {
   items: ListItem[];
@@ -95,12 +96,12 @@ const NestedListItem: FC<NestedListItemProps> = ({
           {...(!!item.to && { component: Link, to: item.to })}
           onClick={(event) => item?.onClick?.(event, item.id)}
           {...buttonProps}
-          sx={[{ pl: indent }, ...sxUtils.asArray(buttonProps?.sx)]}
+          sx={[{ pl: indent }, ...sxAsArray(buttonProps?.sx)]}
         >
           {!!item?.icon && (
             <ListItemIcon
               {...iconProps}
-              sx={[{ minWidth: 36 }, ...sxUtils.asArray(iconProps?.sx)]}
+              sx={[{ minWidth: 36 }, ...sxAsArray(iconProps?.sx)]}
             >
               {item.icon}
             </ListItemIcon>

@@ -10,10 +10,11 @@ import {
   type AppBarProps as MUIAppBarProps,
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
-import { useAuth } from "@/context/AuthContext";
-import UserIconButton from "@/containers/buttons/UserIconButton";
-import SignInButton from "@/containers/buttons/SignInButton";
+
+import useAuth from "@/hooks/auth/useAuth";
 import { APP_TITLE, APP_BAR_HEIGHT } from "@/constants/layout";
+import UserIconButton from "@/containers/buttons/UserIconButton";
+import SignInLinkButton from "@/containers/buttons/SignInLinkButton";
 import NavigationDrawer from "@/containers/modals/NavigationDrawer";
 
 const AppBar: FC<MUIAppBarProps> = (props) => {
@@ -74,7 +75,7 @@ const AppBar: FC<MUIAppBarProps> = (props) => {
             </Typography>
           </Stack>
 
-          {auth.user ? <UserIconButton /> : <SignInButton />}
+          {auth.user ? <UserIconButton /> : <SignInLinkButton />}
         </Stack>
       </Toolbar>
 

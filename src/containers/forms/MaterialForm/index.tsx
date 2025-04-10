@@ -6,7 +6,7 @@ import Form from "@/components/forms/Form";
 import MaterialFormValueField from "./fields/MaterialFormValueField";
 import MaterialFormTitleField from "./fields/MaterialFormTitleField";
 import MaterialFormDescriptionField from "./fields/MaterialFormDescriptionField";
-import type { MaterialData } from "@/firebase/types";
+import type { MaterialData } from "@/types/firebase";
 
 type MaterialFormProps = ComponentProps<typeof Form<MaterialData>> &
   UseFormProps<MaterialData>;

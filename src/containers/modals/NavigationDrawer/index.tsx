@@ -1,4 +1,5 @@
 import { type ComponentProps, type FC } from "react";
+
 import NavigationList from "@/containers/lists/NavigationList";
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
 import { APP_TITLE } from "@/constants/layout";

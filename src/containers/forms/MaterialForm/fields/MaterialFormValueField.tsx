@@ -1,7 +1,7 @@
 import { type ComponentProps, type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import DollarField from "@/components/fields/DollarField";
-import type { MaterialData } from "@/firebase/types";
+import type { MaterialData } from "@/types/firebase";
 
 const MIN = 0;
 const MAX = 10_000;

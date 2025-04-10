@@ -21,10 +21,11 @@ import {
   type PhoneAuthCredential,
 } from "firebase/auth";
 import { useSnackbar } from "notistack";
-import { AuthContext } from "@/context/AuthContext";
-import { auth } from "@/firebase";
-import { firebaseUtils } from "@/firebase/utils";
 import { CircularProgress } from "@mui/material";
+
+import AuthContext from "@/context/AuthContext";
+import { auth } from "@/lib/config/firebase";
+import { getErrorMessage } from "@/lib/utils/error";
 
 const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] =
@@ -46,7 +47,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         variant: "success",
       }),
     onError: (error) =>
-      enqueueSnackbar(firebaseUtils.getErrorMessage(error), {
+      enqueueSnackbar(getErrorMessage(error), {
         variant: "error",
       }),
   });
@@ -58,7 +59,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       enqueueSnackbar("Signed out", { variant: "success" });
     },
     onError: (error) =>
-      enqueueSnackbar(firebaseUtils.getErrorMessage(error), {
+      enqueueSnackbar(getErrorMessage(error), {
         variant: "error",
       }),
   });
@@ -69,7 +70,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     onSuccess: () =>
       enqueueSnackbar("Email verification link sent", { variant: "success" }),
     onError: (error) =>
-      enqueueSnackbar(firebaseUtils.getErrorMessage(error), {
+      enqueueSnackbar(getErrorMessage(error), {
         variant: "error",
       }),
   });
@@ -100,7 +101,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         { variant: "success" }
       ),
     onError: (error) =>
-      enqueueSnackbar(firebaseUtils.getErrorMessage(error), {
+      enqueueSnackbar(getErrorMessage(error), {
         variant: "error",
       }),
   });
@@ -122,7 +123,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         variant: "success",
       }),
     onError: (error) =>
-      enqueueSnackbar(firebaseUtils.getErrorMessage(error), {
+      enqueueSnackbar(getErrorMessage(error), {
         variant: "error",
       }),
   });

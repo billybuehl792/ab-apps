@@ -1,4 +1,4 @@
-import type { Material } from "@/firebase/types";
+import type { Material } from "@/types/firebase";
 
 export interface EstimateCalculatorValues {
   name?: string;

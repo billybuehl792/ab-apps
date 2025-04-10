@@ -1,6 +1,7 @@
-import Breadcrumbs from "@/containers/lists/Breadcrumbs";
-import { Stack } from "@mui/material";
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { Stack } from "@mui/material";
+
+import Breadcrumbs from "@/containers/lists/Breadcrumbs";
 
 export const Route = createFileRoute("/clients")({
   component: RouteComponent,

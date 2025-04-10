@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { TextField, type TextFieldProps } from "@mui/material";
-import type { MaterialData } from "@/firebase/types";
+import type { MaterialData } from "@/types/firebase";
 
 const MAX_LENGTH = 128;
 

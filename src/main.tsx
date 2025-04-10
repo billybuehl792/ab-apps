@@ -1,9 +1,10 @@
 import "reset-css/reset.css";
-import "./utils/string";
+import "./lib/utils/string";
 
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { createRouter } from "@tanstack/react-router";
+
 import { routeTree } from "./routeTree.gen";
 import App from "./App";
 import Providers from "./containers/providers";

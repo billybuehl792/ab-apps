@@ -9,9 +9,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+
 import MenuOptionsMenu from "@/components/modals/MenuOptionsMenu";
-import { sxUtils } from "@/utils/sx";
-import type { Material } from "@/firebase/types";
+import { sxAsArray } from "@/lib/utils/sx";
+import type { Material } from "@/types/firebase";
 
 interface MaterialCardProps extends Omit<CardProps, "onClick"> {
   material: Material;
@@ -66,7 +67,7 @@ const MaterialCard: FC<MaterialCardProps> = ({
         {...cardActionAreaProps}
         sx={[
           { cursor: !!options || onClickProp ? "pointer" : "default" },
-          ...sxUtils.asArray(cardActionAreaProps?.sx),
+          ...sxAsArray(cardActionAreaProps?.sx),
         ]}
       >
         <CardContent

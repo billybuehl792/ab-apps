@@ -9,9 +9,10 @@ import {
   type CardProps,
   type CardContentProps,
 } from "@mui/material";
+
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
-import { sxUtils } from "@/utils/sx";
-import type { Client } from "@/firebase/types";
+import { sxAsArray } from "@/lib/utils/sx";
+import type { Client } from "@/types/firebase";
 
 interface ClientCardProps extends Omit<CardProps, "onClick"> {
   client: Client;
@@ -49,7 +50,7 @@ const ClientCard: FC<ClientCardProps> = ({
         {...cardActionAreaProps}
         sx={[
           { cursor: onClick ? "pointer" : "default" },
-          ...sxUtils.asArray(cardActionAreaProps?.sx),
+          ...sxAsArray(cardActionAreaProps?.sx),
         ]}
       >
         <CardContent

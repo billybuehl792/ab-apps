@@ -1,7 +1,8 @@
 import { type FC, type ComponentProps } from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { Avatar } from "@mui/material";
-import { useAuth } from "@/context/AuthContext";
+
+import useAuth from "@/hooks/auth/useAuth";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 
 const UserIconButton: FC<

@@ -1,16 +1,17 @@
 import { useId, useState } from "react";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Button, Stack, TextField, Typography } from "@mui/material";
-import { useAuth } from "@/context/AuthContext";
-import SignInForm from "@/containers/forms/SignInForm";
-import useRecaptcha from "@/hooks/useRecaptcha";
 import {
   MultiFactorError,
   MultiFactorResolver,
   PhoneAuthProvider,
 } from "firebase/auth";
-import { FirebaseErrorCode } from "@/firebase/enums";
 import type { FirebaseError } from "firebase/app";
+
+import useRecaptchaVerifier from "@/hooks/auth/useRecaptchaVerifier";
+import useAuth from "@/hooks/auth/useAuth";
+import SignInForm from "@/containers/forms/SignInForm";
+import { FirebaseErrorCode } from "@/types/enums/firebase";
 
 export const Route = createFileRoute("/sign-in")({
   component: RouteComponent,
@@ -33,7 +34,7 @@ function RouteComponent() {
   const navigate = useNavigate();
 
   const signInId = useId();
-  const recaptchaVerifier = useRecaptcha(signInId);
+  const recaptchaVerifier = useRecaptchaVerifier(signInId);
   const { signIn, sendMultiFactorVerification, verifyMultiFactorPhoneCode } =
     useAuth();
 

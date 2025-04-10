@@ -1,5 +1,5 @@
-import { Card, CardContent, Stack, Typography } from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
+import { Card, CardContent, Stack, Typography } from "@mui/material";
 
 export const Route = createFileRoute("/")({
   component: Index,

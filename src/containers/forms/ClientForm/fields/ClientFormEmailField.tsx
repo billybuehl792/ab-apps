@@ -1,8 +1,8 @@
 import { type ComponentProps, type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import EmailField from "@/components/fields/EmailField";
-import { RegexPattern } from "@/utils/regex";
-import type { ClientData } from "@/firebase/types";
+import { RegexPattern } from "@/lib/utils/regex";
+import type { ClientData } from "@/types/firebase";
 
 const MAX_LENGTH = 128;
 

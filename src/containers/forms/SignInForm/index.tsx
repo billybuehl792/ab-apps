@@ -9,10 +9,11 @@ import {
   Stack,
   type StackProps,
 } from "@mui/material";
+
 import PasswordField from "@/components/fields/PasswordField";
 import EmailField from "@/components/fields/EmailField";
-import { RegexPattern } from "@/utils/regex";
-import { firebaseUtils } from "@/firebase/utils";
+import { RegexPattern } from "@/lib/utils/regex";
+import { getErrorMessage } from "@/lib/utils/error";
 
 type FormValues = { email: string; password: string };
 
@@ -44,7 +45,7 @@ const SignInForm: FC<SignInFormProps> = ({
       await onSubmitProp(formData);
     } catch (error) {
       setError("root", {
-        message: firebaseUtils.getErrorMessage(error as Error),
+        message: getErrorMessage(error as Error),
       });
     }
   });
@@ -56,6 +57,7 @@ const SignInForm: FC<SignInFormProps> = ({
           <Stack component="fieldset" spacing={2}>
             <EmailField
               fullWidth
+              autoComplete="email"
               error={Boolean(errors.email)}
               helperText={errors.email?.message}
               {...register("email", {
@@ -69,6 +71,7 @@ const SignInForm: FC<SignInFormProps> = ({
             />
             <PasswordField
               fullWidth
+              autoComplete="current-password"
               error={Boolean(errors.password)}
               helperText={errors.password?.message}
               {...register("password", {

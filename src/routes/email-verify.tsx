@@ -1,8 +1,9 @@
-import { useAuth } from "@/context/AuthContext";
-import { Check } from "@mui/icons-material";
-import { Button, Stack, Typography } from "@mui/material";
-import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { Button, Stack, Typography } from "@mui/material";
+import { Check } from "@mui/icons-material";
+
+import useAuth from "@/hooks/auth/useAuth";
 
 export const Route = createFileRoute("/email-verify")({
   component: RouteComponent,

@@ -1,7 +1,8 @@
 import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { Button, ButtonGroup, Stack, type StackProps } from "@mui/material";
-import { sxUtils } from "@/utils/sx";
+
+import { sxAsArray } from "@/lib/utils/sx";
 import type { EstimateCalculatorValues } from "../types";
 
 const EstimateCalculatorFooter: FC<StackProps> = (props) => {
@@ -14,7 +15,7 @@ const EstimateCalculatorFooter: FC<StackProps> = (props) => {
       {...props}
       sx={[
         { bgcolor: ({ palette }) => palette.background.default },
-        ...sxUtils.asArray(props?.sx),
+        ...sxAsArray(props?.sx),
       ]}
     >
       <ButtonGroup variant="outlined" size="large" fullWidth>

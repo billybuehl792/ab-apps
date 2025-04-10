@@ -2,9 +2,9 @@ import { type FC } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Controller, useFormContext } from "react-hook-form";
 import { type TextFieldProps } from "@mui/material";
-import { mapsQueries } from "@/maps/queries";
+import { validateAddress } from "@/lib/queries/google-maps";
 import AddressField from "@/components/fields/AddressField";
-import type { ClientData } from "@/firebase/types";
+import type { ClientData } from "@/types/firebase";
 
 const ClientFormAddressField: FC<TextFieldProps> = () => {
   /** Values */
@@ -20,7 +20,7 @@ const ClientFormAddressField: FC<TextFieldProps> = () => {
         validate: {
           isAddress: async (value) => {
             const isValid = await queryClient.fetchQuery(
-              mapsQueries.validateAddress(value)
+              validateAddress(value)
             );
             return isValid || "Must be a valid address";
           },

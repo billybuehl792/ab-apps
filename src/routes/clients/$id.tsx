@@ -6,21 +6,20 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { firestoreQueries } from "@/firebase/queries";
-import { firestoreMutations } from "@/firebase/mutations";
 import ClientForm from "@/containers/forms/ClientForm";
+
+import useClients from "@/hooks/firebase/useClients";
+import { getClient } from "@/lib/queries/firebase/clients";
 import EditIconButton from "@/components/buttons/EditIconButton";
-import type { Client } from "@/firebase/types";
+import type { Client } from "@/types/firebase";
 
 export const Route = createFileRoute("/clients/$id")({
   component: RouteComponent,
   validateSearch: (search: Record<string, unknown>): { edit?: boolean } => ({
     edit: Boolean(search.edit) || undefined,
   }),
-  loader: async ({ context, params }) => {
-    const clientSnapshot = await context.queryClient.fetchQuery(
-      firestoreQueries.getClient(params.id)
-    );
+  loader: async ({ context: { queryClient }, params }) => {
+    const clientSnapshot = await queryClient.fetchQuery(getClient(params.id));
     const client: Client = { id: clientSnapshot.id, ...clientSnapshot.data() };
 
     return { client, crumb: `${client.first_name} ${client.last_name}` };
@@ -39,7 +38,7 @@ function RouteComponent() {
 
   /** Mutations */
 
-  const { update } = firestoreMutations.useClientMutations();
+  const { update } = useClients();
   return (
     <Stack spacing={1}>
       <Stack direction="row" spacing={1} alignItems="center">

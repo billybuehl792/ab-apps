@@ -1,7 +1,8 @@
 import { type ComponentProps, type FC } from "react";
+
 import MaterialFormDialog from "@/containers/modals/MaterialFormDialog";
-import { useEstimateCalculator } from "../../context/EstimateCalculatorContext";
-import { firestoreMutations } from "@/firebase/mutations";
+import useMaterials from "@/hooks/firebase/useMaterials";
+import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 
 const EstimateCalculatorMaterialFormDialog: FC<
   Partial<ComponentProps<typeof MaterialFormDialog>>
@@ -12,7 +13,7 @@ const EstimateCalculatorMaterialFormDialog: FC<
 
   /** Mutations */
 
-  const { create, update } = firestoreMutations.useMaterialMutations();
+  const { create, update } = useMaterials();
 
   /** Callbacks */
 

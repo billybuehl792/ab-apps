@@ -5,7 +5,6 @@ import {
   type Libraries,
 } from "@react-google-maps/api";
 import { type ControllerRenderProps } from "react-hook-form";
-import { getBoundsFromLatLng } from "@/utils/navigator";
 import {
   IconButton,
   Skeleton,
@@ -13,6 +12,8 @@ import {
   type TextFieldProps,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
+
+import { getBoundsFromLatLng } from "@/lib/utils/maps";
 
 const LIBRARIES: Libraries = ["places"];
 const TYPES = ["address"];

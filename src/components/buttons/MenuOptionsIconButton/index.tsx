@@ -9,7 +9,7 @@ import {
 import { IconButton, type IconButtonProps } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 import MenuOptionsMenu from "@/components/modals/MenuOptionsMenu";
-import { sxUtils } from "@/utils/sx";
+import { sxAsArray } from "@/lib/utils/sx";
 
 interface MenuOptionsIconButtonProps extends IconButtonProps {
   options: MenuOption[];
@@ -50,7 +50,7 @@ const MenuOptionsIconButton: FC<MenuOptionsIconButtonProps> = ({
         {...props}
         sx={[
           { visibility: anchorEl ? "visible !important" : undefined },
-          ...sxUtils.asArray(props?.sx),
+          ...sxAsArray(props?.sx),
         ]}
       >
         {icon}

@@ -3,7 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Button, Skeleton, Stack, type StackProps } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import { useEstimateCalculator } from "../context/EstimateCalculatorContext";
+
+import useEstimateCalculator from "../hooks/useEstimateCalculator";
 import { ESTIMATE_CALCULATOR_DEFAULT_VALUES } from "@/containers/features/EstimateCalculator/constants";
 import EstimateCalculatorMaterialCard from "../components/cards/EstimateCalculatorMaterialCard";
 import EstimateCalculatorTaxCard from "../components/cards/EstimateCalculatorTaxCard";

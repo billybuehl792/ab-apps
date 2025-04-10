@@ -7,8 +7,9 @@ import {
   type SwipeableDrawerProps as MUISwipeableDrawerProps,
   useMediaQuery,
 } from "@mui/material";
+
 import DrawerHeader from "../DrawerHeader";
-import { sxUtils } from "@/utils/sx";
+import { sxAsArray } from "@/lib/utils/sx";
 
 interface SwipeableDrawerProps
   extends Omit<
@@ -37,7 +38,7 @@ const Puller: FC<BoxProps> = (props) => (
         mt: 1,
         mb: 0.25,
       },
-      ...sxUtils.asArray(props?.sx),
+      ...sxAsArray(props?.sx),
     ]}
   />
 );

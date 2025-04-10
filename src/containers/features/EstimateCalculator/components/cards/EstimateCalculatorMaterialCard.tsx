@@ -1,8 +1,9 @@
 import { ComponentProps, type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { Delete, Edit } from "@mui/icons-material";
-import { useEstimateCalculator } from "../../context/EstimateCalculatorContext";
-import { firestoreMutations } from "@/firebase/mutations";
+
+import useMaterials from "@/hooks/firebase/useMaterials";
+import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 import MaterialCard from "@/containers/cards/MaterialCard";
 import IntegerField from "@/components/fields/IntegerField";
 import type { EstimateCalculatorValues } from "../../types";
@@ -15,7 +16,7 @@ const EstimateCalculatorMaterialCard: FC<
 > = ({ material, index, ...props }) => {
   /** Mutations */
 
-  const { remove } = firestoreMutations.useMaterialMutations();
+  const { archive } = useMaterials();
 
   /** Values */
 
@@ -36,7 +37,7 @@ const EstimateCalculatorMaterialCard: FC<
       id: "delete",
       label: "Delete",
       icon: <Delete />,
-      onClick: () => remove.mutate(material.id),
+      onClick: () => archive.mutate(material.id),
     },
   ];
 

@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Stack, Typography } from "@mui/material";
+
+import useClients from "@/hooks/firebase/useClients";
 import ClientForm from "@/containers/forms/ClientForm";
-import { firestoreMutations } from "@/firebase/mutations";
 
 export const Route = createFileRoute("/clients/create")({
   component: RouteComponent,
@@ -12,7 +13,7 @@ function RouteComponent() {
   /** Values */
 
   const navigate = useNavigate();
-  const { create } = firestoreMutations.useClientMutations();
+  const { create } = useClients();
 
   return (
     <Stack spacing={1}>

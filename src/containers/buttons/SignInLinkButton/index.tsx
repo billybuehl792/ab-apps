@@ -2,7 +2,7 @@ import { type FC } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button, type ButtonProps } from "@mui/material";
 
-const SignInButton: FC<ButtonProps> = (props) => {
+const SignInLinkButton: FC<ButtonProps> = (props) => {
   return (
     <Button
       component={Link}
@@ -16,4 +16,4 @@ const SignInButton: FC<ButtonProps> = (props) => {
   );
 };
 
-export default SignInButton;
+export default SignInLinkButton;

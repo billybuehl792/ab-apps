@@ -2,8 +2,9 @@ import { type ComponentProps, type FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { orderBy } from "firebase/firestore";
 import { Delete, Edit } from "@mui/icons-material";
-import { clientCollection } from "@/firebase/collections";
-import { firestoreMutations } from "@/firebase/mutations";
+
+import clients from "@/lib/collections/firebase/clients";
+import useClients from "@/hooks/firebase/useClients";
 import PaginatedList from "@/components/lists/PaginatedList";
 import ClientCard from "@/containers/cards/ClientCard";
 
@@ -22,12 +23,12 @@ const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
 }) => {
   /** Values */
 
-  const { remove } = firestoreMutations.useClientMutations();
+  const { archive } = useClients();
   const navigate = useNavigate();
 
   return (
     <PaginatedList
-      collection={clientCollection}
+      collection={clients}
       constraints={[orderBy("first_name")]}
       renderItem={(client) => (
         <ClientCard
@@ -48,7 +49,7 @@ const ClientPaginatedList: FC<ClientPaginatedListProps> = ({
               id: "delete",
               label: "Delete",
               icon: <Delete />,
-              onClick: () => remove.mutate(client.id),
+              onClick: () => archive.mutate(client.id),
             },
           ]}
           onClick={() => navigate({ to: `/clients/${client.id}` })}

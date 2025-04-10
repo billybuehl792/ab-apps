@@ -5,9 +5,10 @@ import {
   useState,
 } from "react";
 import { signOut as _signOut } from "firebase/auth";
-import { EstimateCalculatorContext } from "../context/EstimateCalculatorContext";
-import { firestoreQueries } from "@/firebase/queries";
 import { orderBy } from "firebase/firestore";
+
+import { getMaterialList } from "@/lib/queries/firebase/materials";
+import EstimateCalculatorContext from "../context/EstimateCalculatorContext";
 
 const EstimateCalculatorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [materialModal, setMaterialModal] = useState<
@@ -16,9 +17,7 @@ const EstimateCalculatorProvider: FC<PropsWithChildren> = ({ children }) => {
 
   /** Values */
 
-  const queryOptions = firestoreQueries.getMaterialList(
-    orderBy("value", "desc")
-  );
+  const queryOptions = getMaterialList(orderBy("value", "desc"));
 
   return (
     <EstimateCalculatorContext.Provider

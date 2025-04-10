@@ -2,8 +2,9 @@ import { type ComponentProps, type FC } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { orderBy } from "firebase/firestore";
 import { Delete, Edit } from "@mui/icons-material";
-import { clientCollection } from "@/firebase/collections";
-import { firestoreMutations } from "@/firebase/mutations";
+
+import clients from "@/lib/collections/firebase/clients";
+import useClients from "@/hooks/firebase/useClients";
 import InfiniteList from "@/components/lists/InfiniteList";
 import ClientCard from "@/containers/cards/ClientCard";
 
@@ -22,14 +23,14 @@ const ClientInfiniteList: FC<ClientInfiniteListProps> = ({
 }) => {
   /** Values */
 
-  const { remove } = firestoreMutations.useClientMutations();
+  const { archive } = useClients();
   const navigate = useNavigate();
 
   /** Callbacks */
 
   return (
     <InfiniteList
-      collection={clientCollection}
+      collection={clients}
       constraints={[orderBy("first_name")]}
       renderItem={(client) => (
         <ClientCard
@@ -50,7 +51,7 @@ const ClientInfiniteList: FC<ClientInfiniteListProps> = ({
               id: "delete",
               label: "Delete",
               icon: <Delete />,
-              onClick: () => remove.mutate(client.id),
+              onClick: () => archive.mutate(client.id),
             },
           ]}
           onClick={() => navigate({ to: `/clients/${client.id}` })}

@@ -1,7 +1,8 @@
 import { type ComponentProps, type FC } from "react";
 import { useLocation } from "@tanstack/react-router";
 import { Construction, Groups, Home, PersonAdd } from "@mui/icons-material";
-import { useAuth } from "@/context/AuthContext";
+
+import useAuth from "@/hooks/auth/useAuth";
 import NestedList from "@/components/lists/NestedList";
 
 const NavigationList: FC<Partial<ComponentProps<typeof NestedList>>> = (

@@ -1,6 +1,8 @@
 import { type QueryDocumentSnapshot } from "firebase/firestore";
 
-export type Client = Pick<QueryDocumentSnapshot, "id"> & ClientData;
+type DocumentBase = Pick<QueryDocumentSnapshot, "id">;
+
+export type Client = DocumentBase & ClientData;
 export interface ClientData {
   first_name: string;
   last_name: string;
@@ -9,7 +11,7 @@ export interface ClientData {
   address: string;
 }
 
-export type Material = Pick<QueryDocumentSnapshot, "id"> & MaterialData;
+export type Material = DocumentBase & MaterialData;
 export interface MaterialData {
   label: string;
   value: number;

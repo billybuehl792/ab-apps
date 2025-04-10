@@ -1,7 +1,7 @@
 import { type ReactNode, type FormEventHandler } from "react";
 import { type FieldValues, useFormContext } from "react-hook-form";
 import { Button, Fade, Stack, type StackProps } from "@mui/material";
-import { firebaseUtils } from "@/firebase/utils";
+import { getErrorMessage } from "@/lib/utils/error";
 
 interface FormProps<T extends FieldValues>
   extends Omit<StackProps<"form">, "onSubmit">,
@@ -50,7 +50,7 @@ const Form = <T extends FieldValues>({
       await onSubmitProp?.(formData);
     } catch (error) {
       methods.setError("root", {
-        message: firebaseUtils.getErrorMessage(error as Error),
+        message: getErrorMessage(error as Error),
       });
     }
   });

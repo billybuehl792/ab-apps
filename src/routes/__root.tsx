@@ -3,7 +3,8 @@ import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { type QueryClient } from "@tanstack/react-query";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Box, useMediaQuery } from "@mui/material";
-import { AuthContext } from "@/context/AuthContext";
+
+import AuthContext from "@/context/AuthContext";
 import AppBar from "@/containers/layout/AppBar";
 import NavigationPanel from "@/containers/layout/NavigationPanel";
 import { APP_BAR_HEIGHT } from "@/constants/layout";

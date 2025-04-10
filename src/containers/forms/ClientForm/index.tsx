@@ -7,7 +7,7 @@ import ClientFormLastNameField from "./fields/ClientFormLastNameField";
 import ClientFormEmailField from "./fields/ClientFormEmailField";
 import ClientFormAddressField from "./fields/ClientFormAddressField";
 import ClientFormPhoneField from "./fields/ClientFormPhoneField";
-import type { ClientData } from "@/firebase/types";
+import type { ClientData } from "@/types/firebase";
 
 type ClientFormProps = ComponentProps<typeof Form<ClientData>> &
   UseFormProps<ClientData>;

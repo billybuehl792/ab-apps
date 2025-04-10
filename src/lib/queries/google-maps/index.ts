@@ -9,7 +9,7 @@ type Granularity =
   | "ROUTE"
   | "OTHER";
 
-const validateAddress = (address: string) =>
+export const validateAddress = (address: string) =>
   queryOptions({
     queryKey: ["validateAddress", address] as const,
     queryFn: async ({ queryKey: [_, address] }) => {
@@ -36,5 +36,3 @@ const validateAddress = (address: string) =>
       return isComplete && isValid;
     },
   });
-
-export const mapsQueries = { validateAddress };

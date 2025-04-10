@@ -1,8 +1,9 @@
 import { type ComponentProps, type FC } from "react";
 import { Box, type BoxProps, Drawer, type DrawerProps } from "@mui/material";
+
 import NavigationList from "@/containers/lists/NavigationList";
-import { sxUtils } from "@/utils/sx";
 import { APP_BAR_HEIGHT, DESKTOP_SIDE_PANEL_WIDTH } from "@/constants/layout";
+import { sxAsArray } from "@/lib/utils/sx";
 
 interface NavigationPanelProps extends DrawerProps {
   slotProps?: {
@@ -30,7 +31,7 @@ const NavigationPanel: FC<NavigationPanelProps> = ({
             width: DESKTOP_SIDE_PANEL_WIDTH,
           },
         },
-        ...sxUtils.asArray(props?.sx),
+        ...sxAsArray(props?.sx),
       ]}
     >
       <Box

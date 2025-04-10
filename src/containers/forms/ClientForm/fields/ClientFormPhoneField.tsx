@@ -5,7 +5,7 @@ import {
   MuiTelInput,
   type MuiTelInputProps,
 } from "mui-tel-input";
-import type { ClientData } from "@/firebase/types";
+import type { ClientData } from "@/types/firebase";
 
 const ClientFormPhoneField: FC<MuiTelInputProps> = (props) => {
   /** Values */
