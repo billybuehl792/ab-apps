@@ -10,6 +10,8 @@ export const getErrorMessage = (error: Error): string => {
 const getFirebaseErrorMessage = (error: FirebaseError): string => {
   if (error.code === FirebaseErrorCode.INVALID_CREDENTIAL)
     return "Invalid credentials";
+  else if (error.code === FirebaseErrorCode.WRONG_PASSWORD)
+    return "Incorrect password";
   else if (error.code === FirebaseErrorCode.MULTI_FACTOR_AUTH_REQUIRED)
     return "Multi-factor authentication required";
   else if (error.code === FirebaseErrorCode.MISSING_PASSWORD)

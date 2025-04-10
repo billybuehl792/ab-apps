@@ -1,26 +1,25 @@
-import { type ReactNode, type FormEventHandler } from "react";
-import { type FieldValues, useFormContext } from "react-hook-form";
-import { Button, Fade, Stack, type StackProps } from "@mui/material";
+import { type FormEventHandler, type ComponentProps } from "react";
+import { type FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
+import { FormHelperText, Stack, type StackProps } from "@mui/material";
+
+import FormActions from "./FormActions";
 import { getErrorMessage } from "@/lib/utils/error";
 
-interface FormProps<T extends FieldValues>
-  extends Omit<StackProps<"form">, "onSubmit">,
+interface FormProps<T extends FieldValues, R = void>
+  extends Omit<StackProps<"form">, "onSubmit" | "onError">,
     Pick<
-      FormActionsProps,
+      ComponentProps<typeof FormActions>,
       "submitLabel" | "resetLabel" | "disableReset" | "resetAsCancel"
     > {
-  onSubmit?: (data: T) => Promise<void>;
+  methods: UseFormReturn<T, unknown, T>;
+  showRootError?: boolean;
+  onSubmit?: (data: T) => Promise<R | undefined>;
+  onSuccess?: (res: Awaited<R>) => void;
+  onError?: (error: Error) => void;
   slotProps?: {
     fieldset?: StackProps;
-    actions?: Partial<FormActionsProps>;
+    actions?: Partial<ComponentProps<typeof FormActions>>;
   };
-}
-
-interface FormActionsProps extends StackProps {
-  submitLabel?: ReactNode;
-  resetLabel?: ReactNode;
-  disableReset?: boolean;
-  resetAsCancel?: boolean;
 }
 
 /**
@@ -28,30 +27,33 @@ interface FormActionsProps extends StackProps {
  * that provides a form structure with a submit and reset button.
  * It uses the `useFormContext` hook to access the form methods and state.
  */
-const Form = <T extends FieldValues>({
+const Form = <T extends FieldValues, R = void>({
+  methods,
   children,
   submitLabel,
   resetLabel,
   disableReset,
   resetAsCancel,
+  showRootError,
   onSubmit: onSubmitProp,
+  onSuccess,
+  onError,
   onReset: onResetProp,
   slotProps: { fieldset: fieldsetProps, actions: actionsProps } = {},
   ...props
-}: FormProps<T>) => {
-  /** Values */
-
-  const methods = useFormContext<T>();
-
+}: FormProps<T, R>) => {
   /** Callbacks */
 
   const onSubmit = methods.handleSubmit(async (formData) => {
     try {
-      await onSubmitProp?.(formData);
+      const res = await onSubmitProp?.(formData);
+      if (res) onSuccess?.(res);
     } catch (error) {
       methods.setError("root", {
         message: getErrorMessage(error as Error),
       });
+
+      onError?.(error as Error);
     }
   });
 
@@ -63,58 +65,31 @@ const Form = <T extends FieldValues>({
   };
 
   return (
-    <Stack
-      component="form"
-      spacing={2}
-      onSubmit={onSubmit}
-      onReset={onReset}
-      {...props}
-    >
-      <Stack component="fieldset" spacing={2} {...fieldsetProps}>
-        {children}
+    <FormProvider {...methods}>
+      <Stack
+        component="form"
+        spacing={2}
+        onSubmit={onSubmit}
+        onReset={onReset}
+        {...props}
+      >
+        <Stack component="fieldset" spacing={2} {...fieldsetProps}>
+          {children}
+          {showRootError && !!methods.formState.errors.root && (
+            <FormHelperText error>
+              {methods.formState.errors.root.message}
+            </FormHelperText>
+          )}
+        </Stack>
+        <FormActions
+          submitLabel={submitLabel}
+          resetLabel={resetLabel}
+          disableReset={disableReset}
+          resetAsCancel={resetAsCancel}
+          {...actionsProps}
+        />
       </Stack>
-      <FormActions
-        submitLabel={submitLabel}
-        resetLabel={resetLabel}
-        disableReset={disableReset}
-        resetAsCancel={resetAsCancel}
-        {...actionsProps}
-      />
-    </Stack>
-  );
-};
-
-const FormActions = ({
-  resetAsCancel,
-  submitLabel = "Submit",
-  resetLabel = resetAsCancel ? "Cancel" : "Reset",
-  disableReset,
-  ...props
-}: FormActionsProps) => {
-  /** Values */
-
-  const {
-    formState: { disabled, isDirty, isSubmitting },
-  } = useFormContext();
-
-  return (
-    <Stack direction="row" spacing={1} justifyContent="flex-end" {...props}>
-      {!disableReset && (
-        <Fade in={isDirty || resetAsCancel}>
-          <Button
-            type="reset"
-            variant="text"
-            color="error"
-            disabled={isSubmitting || disabled}
-          >
-            {resetLabel}
-          </Button>
-        </Fade>
-      )}
-      <Button type="submit" loading={isSubmitting} disabled={disabled}>
-        {submitLabel}
-      </Button>
-    </Stack>
+    </FormProvider>
   );
 };
 

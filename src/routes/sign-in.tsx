@@ -1,10 +1,12 @@
-import { useId, useState } from "react";
+import { ComponentProps, useId, useState } from "react";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { Button, Stack, TextField, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import {
+  ApplicationVerifier,
   MultiFactorError,
   MultiFactorResolver,
   PhoneAuthProvider,
+  PhoneMultiFactorInfo,
 } from "firebase/auth";
 import type { FirebaseError } from "firebase/app";
 
@@ -12,6 +14,7 @@ import useRecaptchaVerifier from "@/hooks/auth/useRecaptchaVerifier";
 import useAuth from "@/hooks/auth/useAuth";
 import SignInForm from "@/containers/forms/SignInForm";
 import { FirebaseErrorCode } from "@/types/enums/firebase";
+import VerificationCodeForm from "@/containers/forms/VerificationCodeForm";
 
 export const Route = createFileRoute("/sign-in")({
   component: RouteComponent,
@@ -24,9 +27,13 @@ export const Route = createFileRoute("/sign-in")({
 });
 
 function RouteComponent() {
-  const [verificationId, setVerificationId] = useState("");
-  const [verificationString, setVerificationString] = useState("");
-  const [resolver, setResolver] = useState<MultiFactorResolver | null>(null);
+  const [multiFactorData, setMultiFactorData] = useState<{
+    resolver: MultiFactorResolver;
+    verificationId: string;
+    multiFactorHint: PhoneMultiFactorInfo;
+  } | null>(null);
+
+  useState<PhoneMultiFactorInfo | null>(null);
 
   /** Values */
 
@@ -40,60 +47,78 @@ function RouteComponent() {
 
   /** Callbacks */
 
-  const onError = async (error: FirebaseError) => {
-    if (
-      error.code === FirebaseErrorCode.MULTI_FACTOR_AUTH_REQUIRED &&
-      recaptchaVerifier
-    )
-      await sendMultiFactorVerification?.mutateAsync(
-        {
-          verifier: recaptchaVerifier,
-          error: error as MultiFactorError,
-        },
-        {
-          onSuccess: ({ resolver, verificationId }) => {
-            setResolver(resolver);
-            setVerificationId(verificationId);
-          },
-        }
-      );
+  const onSignIn: ComponentProps<typeof SignInForm>["onSubmit"] = async (
+    formData
+  ) => {
+    try {
+      return await signIn?.mutateAsync(formData);
+    } catch (error) {
+      const isMultiFactorError =
+        (error as FirebaseError).code ===
+        FirebaseErrorCode.MULTI_FACTOR_AUTH_REQUIRED;
+
+      if (isMultiFactorError && recaptchaVerifier)
+        await onMultiFactorError(recaptchaVerifier, error as MultiFactorError);
+      else throw error;
+    }
   };
 
-  const handleVerify = () => {
-    if (!resolver) return;
-    verifyMultiFactorPhoneCode?.mutate(
+  const onMultiFactorError = async (
+    recaptchaVerifier: ApplicationVerifier,
+    error: FirebaseError
+  ) => {
+    await sendMultiFactorVerification?.mutateAsync(
       {
-        resolver,
-        credential: PhoneAuthProvider.credential(
-          verificationId,
-          verificationString
-        ),
+        verifier: recaptchaVerifier,
+        error: error as MultiFactorError,
       },
-      { onSuccess: () => navigate({ to: redirect || "/", replace: true }) }
+      { onSuccess: (data) => setMultiFactorData(data) }
     );
   };
 
-  return (
-    <Stack spacing={0.5} p={2}>
-      <Typography variant="h6">Sign In</Typography>
-      <SignInForm
-        onSubmit={async (formData) => {
-          await signIn?.mutateAsync(formData, {
-            onSuccess: () => navigate({ to: redirect || "/", replace: true }),
-            onError: (error) => onError(error as FirebaseError),
-          });
-        }}
-        slotProps={{ signInButton: { id: signInId } }}
-      />
+  const onVerifyMultiFactorPhoneCode: ComponentProps<
+    typeof VerificationCodeForm
+  >["onSubmit"] = async (formData) => {
+    if (!multiFactorData) return;
+    return await verifyMultiFactorPhoneCode?.mutateAsync({
+      resolver: multiFactorData.resolver,
+      credential: PhoneAuthProvider.credential(
+        multiFactorData.verificationId,
+        formData.code
+      ),
+    });
+  };
 
-      <Stack spacing={1}>
-        <TextField
-          placeholder="verify"
-          value={verificationString}
-          onChange={(event) => setVerificationString(event.target.value)}
+  const onSuccess = () => navigate({ to: redirect || "/", replace: true });
+
+  return (
+    <Stack spacing={2} p={2}>
+      <Typography variant="h6">Sign In</Typography>
+      {multiFactorData ? (
+        <Stack spacing={2}>
+          <Typography variant="body1">
+            Code sent to {multiFactorData.multiFactorHint.phoneNumber}
+          </Typography>
+          <VerificationCodeForm
+            onSubmit={onVerifyMultiFactorPhoneCode}
+            onSuccess={onSuccess}
+          />
+        </Stack>
+      ) : (
+        <SignInForm
+          disableReset
+          submitLabel="Sign In"
+          onSubmit={onSignIn}
+          onSuccess={onSuccess}
+          slotProps={{
+            actions: {
+              slotProps: {
+                submitButton: { id: signInId },
+              },
+            },
+          }}
         />
-        <Button onClick={handleVerify}>Verify</Button>
-      </Stack>
+      )}
     </Stack>
   );
 }

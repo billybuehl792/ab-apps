@@ -1,103 +1,28 @@
-import { type FC } from "react";
+import { ComponentProps, type FC } from "react";
 import { useForm, type UseFormProps } from "react-hook-form";
-import {
-  Button,
-  type ButtonProps,
-  Card,
-  CardContent,
-  FormHelperText,
-  Stack,
-  type StackProps,
-} from "@mui/material";
+import type { UserCredential } from "firebase/auth";
 
-import PasswordField from "@/components/fields/PasswordField";
-import EmailField from "@/components/fields/EmailField";
-import { RegexPattern } from "@/lib/utils/regex";
-import { getErrorMessage } from "@/lib/utils/error";
+import type { SignInFormValues } from "./types";
+import SignInFormPasswordField from "./fields/SignInFormPasswordField";
+import SignInFormEmailField from "./fields/SignInFormEmailField";
+import Form from "@/components/forms/Form";
 
-type FormValues = { email: string; password: string };
+type SignInFormProps = Omit<
+  ComponentProps<typeof Form<SignInFormValues, UserCredential>>,
+  "methods"
+> &
+  UseFormProps<SignInFormValues>;
 
-interface SignInFormProps
-  extends Omit<StackProps<"form">, "onSubmit">,
-    UseFormProps<FormValues> {
-  slotProps?: { signInButton?: ButtonProps };
-  onSubmit: (data: FormValues) => Promise<void>;
-}
-
-const SignInForm: FC<SignInFormProps> = ({
-  onSubmit: onSubmitProp,
-  slotProps: { signInButton: signInButtonProps } = {},
-  ...props
-}) => {
+const SignInForm: FC<SignInFormProps> = (props) => {
   /** Values */
 
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors, disabled, isSubmitting },
-  } = useForm<FormValues>(props);
-
-  /** Callbacks */
-
-  const onSubmit = handleSubmit(async (formData) => {
-    try {
-      await onSubmitProp(formData);
-    } catch (error) {
-      setError("root", {
-        message: getErrorMessage(error as Error),
-      });
-    }
-  });
+  const methods = useForm<SignInFormValues>(props);
 
   return (
-    <Stack component="form" spacing={1} onSubmit={onSubmit} {...props}>
-      <Card>
-        <CardContent component={Stack} spacing={2}>
-          <Stack component="fieldset" spacing={2}>
-            <EmailField
-              fullWidth
-              autoComplete="email"
-              error={Boolean(errors.email)}
-              helperText={errors.email?.message}
-              {...register("email", {
-                required: "Email is required",
-                maxLength: { value: 128, message: "Email is too long" },
-                pattern: {
-                  value: RegexPattern.EMAIL,
-                  message: "Invalid email",
-                },
-              })}
-            />
-            <PasswordField
-              fullWidth
-              autoComplete="current-password"
-              error={Boolean(errors.password)}
-              helperText={errors.password?.message}
-              {...register("password", {
-                required: "Password is required",
-                minLength: { value: 8, message: "Password is too short" },
-                maxLength: { value: 128, message: "Password is too long" },
-              })}
-            />
-          </Stack>
-          {!!errors.root && (
-            <FormHelperText error>{errors.root.message}</FormHelperText>
-          )}
-        </CardContent>
-      </Card>
-
-      <Stack direction="row" justifyContent="flex-end">
-        <Button
-          type="submit"
-          loading={isSubmitting}
-          disabled={disabled}
-          {...signInButtonProps}
-        >
-          Sign In
-        </Button>
-      </Stack>
-    </Stack>
+    <Form methods={methods} showRootError {...props}>
+      <SignInFormEmailField fullWidth />
+      <SignInFormPasswordField fullWidth />
+    </Form>
   );
 };
 
