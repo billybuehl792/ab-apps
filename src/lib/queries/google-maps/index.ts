@@ -14,7 +14,7 @@ export const validateAddress = (address: string) =>
     queryKey: ["validateAddress", address] as const,
     queryFn: async ({ queryKey: [_, address] }) => {
       const response = await fetch(
-        `https://addressvalidation.googleapis.com/v1:validateAddress?key=${import.meta.env.VITE_PUBLIC_GOOGLE_MAPS_API_KEY}`,
+        `https://addressvalidation.googleapis.com/v1:validateAddress?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

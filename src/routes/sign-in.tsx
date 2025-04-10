@@ -33,8 +33,6 @@ function RouteComponent() {
     multiFactorHint: PhoneMultiFactorInfo;
   } | null>(null);
 
-  useState<PhoneMultiFactorInfo | null>(null);
-
   /** Values */
 
   const { redirect } = Route.useSearch();
