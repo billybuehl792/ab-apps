@@ -1,7 +1,6 @@
 - Write component tests
 - Figure out how to recover deleted data from firebase
 - User permissions
-- Multi-factor auth
 
 - Fix Nested List
 - Page maxWidth
