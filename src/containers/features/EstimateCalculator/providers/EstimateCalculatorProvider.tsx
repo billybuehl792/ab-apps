@@ -2,13 +2,14 @@ import {
   type ContextType,
   type FC,
   type PropsWithChildren,
+  useMemo,
   useState,
 } from "react";
 import { signOut as _signOut } from "firebase/auth";
 import { orderBy } from "firebase/firestore";
 
-import { getMaterialList } from "@/lib/queries/firebase/materials";
 import EstimateCalculatorContext from "../context/EstimateCalculatorContext";
+import { getMaterialList } from "@/lib/queries/firebase/materials";
 
 const EstimateCalculatorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [materialModal, setMaterialModal] = useState<
@@ -20,16 +21,20 @@ const EstimateCalculatorProvider: FC<PropsWithChildren> = ({ children }) => {
   const queryOptions = getMaterialList(orderBy("value", "desc"));
 
   return (
-    <EstimateCalculatorContext.Provider
-      value={{
-        queryOptions,
-        materialModal,
-        setMaterialModal: (open, material) =>
-          setMaterialModal({ open, material: material ?? null }),
-      }}
+    <EstimateCalculatorContext
+      value={useMemo(
+        () => ({
+          queryOptions,
+          materialModal,
+          setMaterialModal: (open, material) => {
+            setMaterialModal({ open, material: material ?? null });
+          },
+        }),
+        [queryOptions, materialModal, setMaterialModal]
+      )}
     >
       {children}
-    </EstimateCalculatorContext.Provider>
+    </EstimateCalculatorContext>
   );
 };
 

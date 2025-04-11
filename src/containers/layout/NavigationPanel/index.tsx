@@ -1,9 +1,10 @@
-import { type ComponentProps, type FC } from "react";
+import { type ComponentProps } from "react";
 import { Box, type BoxProps, Drawer, type DrawerProps } from "@mui/material";
 
 import NavigationList from "@/containers/lists/NavigationList";
 import { APP_BAR_HEIGHT, DESKTOP_SIDE_PANEL_WIDTH } from "@/constants/layout";
-import { sxAsArray } from "@/lib/utils/sx";
+import { sxAsArray } from "@/utils/sx";
+import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface NavigationPanelProps extends DrawerProps {
   slotProps?: {
@@ -12,10 +13,10 @@ interface NavigationPanelProps extends DrawerProps {
   } & DrawerProps["slotProps"];
 }
 
-const NavigationPanel: FC<NavigationPanelProps> = ({
-  slotProps: { nav: navProps, list: listProps, ...slotProps } = {},
+const NavigationPanel = ({
+  slotProps: { nav: navProps, list: listProps, ...slotProps } = EMPTY_OBJECT,
   ...props
-}) => {
+}: NavigationPanelProps) => {
   return (
     <Drawer
       variant="permanent"

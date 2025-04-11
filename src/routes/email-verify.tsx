@@ -11,9 +11,9 @@ export const Route = createFileRoute("/email-verify")({
     redirect: (search.redirect as string) || undefined,
   }),
   beforeLoad: ({ context, search }) => {
-    if (!context.auth.user) throw redirect({ to: "/sign-in" });
+    if (!context.auth.user) redirect({ to: "/sign-in", throw: true });
     else if (context.auth.user.emailVerified)
-      throw redirect({ to: search.redirect || "/", replace: true });
+      redirect({ to: search.redirect || "/", replace: true, throw: true });
   },
 });
 

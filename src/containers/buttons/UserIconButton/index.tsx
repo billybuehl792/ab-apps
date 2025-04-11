@@ -1,13 +1,13 @@
-import { type FC, type ComponentProps } from "react";
+import { type ComponentProps } from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { Avatar } from "@mui/material";
 
 import useAuth from "@/hooks/auth/useAuth";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 
-const UserIconButton: FC<
-  Partial<ComponentProps<typeof MenuOptionsIconButton>>
-> = (props) => {
+const UserIconButton = (
+  props: Partial<ComponentProps<typeof MenuOptionsIconButton>>
+) => {
   /** Values */
 
   const { user, signOut } = useAuth();
@@ -16,21 +16,32 @@ const UserIconButton: FC<
 
   const userName = user?.displayName ?? user?.email ?? "user";
 
+  /** Callbacks */
+
+  const handleSignIn = async () => {
+    await navigate({ to: "/sign-in" });
+  };
+
+  const handleSignOut = async () => {
+    await signOut?.mutateAsync(undefined, {
+      onSuccess: () => void router.invalidate(),
+    });
+  };
+
+  /** Options */
+
   const options: MenuOption[] = [
     {
       id: "signIn",
       label: "Sign In",
       render: !user,
-      onClick: () => navigate({ to: "/sign-in" }),
+      onClick: handleSignIn,
     },
     {
       id: "signOut",
       label: "Sign Out",
       render: !!user,
-      onClick: async () =>
-        await signOut?.mutateAsync(undefined, {
-          onSuccess: () => router.invalidate(),
-        }),
+      onClick: handleSignOut,
     },
   ];
 

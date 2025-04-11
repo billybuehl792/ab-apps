@@ -39,6 +39,7 @@ function RouteComponent() {
   /** Mutations */
 
   const { update } = useClients();
+
   return (
     <Stack spacing={1}>
       <Stack direction="row" spacing={1} alignItems="center">
@@ -48,7 +49,10 @@ function RouteComponent() {
         {!edit && (
           <EditIconButton
             onClick={() =>
-              navigate({ to: `/clients/${client.id}`, search: { edit: true } })
+              void navigate({
+                to: `/clients/${client.id}`,
+                search: { edit: true },
+              })
             }
           />
         )}
@@ -63,11 +67,11 @@ function RouteComponent() {
             await update.mutateAsync(
               { id: client.id, ...formData },
               {
-                onSuccess: () => navigate({ to: `/clients/${client.id}` }),
+                onSuccess: () => void navigate({ to: `/clients/${client.id}` }),
               }
             );
           }}
-          onReset={() => navigate({ to: `/clients/${client.id}` })}
+          onReset={() => void navigate({ to: `/clients/${client.id}` })}
         />
       ) : (
         <Card>

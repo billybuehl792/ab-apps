@@ -31,7 +31,7 @@ function RouteComponent() {
         <Box
           component="main"
           style={{
-            height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
+            height: `calc(100vh - ${String(APP_BAR_HEIGHT)}px)`,
             marginTop: APP_BAR_HEIGHT,
             flexGrow: 1,
           }}

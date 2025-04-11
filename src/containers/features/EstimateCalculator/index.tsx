@@ -1,4 +1,3 @@
-import { type FC } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Stack, type StackProps } from "@mui/material";
 
@@ -11,7 +10,7 @@ import EstimateCalculatorMaterialFormDialog from "./components/modals/EstimateCa
 import { ESTIMATE_CALCULATOR_DEFAULT_VALUES } from "@/containers/features/EstimateCalculator/constants";
 import type { EstimateCalculatorValues } from "./types";
 
-const EstimateCalculator: FC<StackProps> = (props) => {
+const EstimateCalculator = (props: StackProps) => {
   /** Values */
 
   const methods = useForm<EstimateCalculatorValues>({

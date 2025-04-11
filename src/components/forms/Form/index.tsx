@@ -3,9 +3,10 @@ import { type FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
 import { FormHelperText, Stack, type StackProps } from "@mui/material";
 
 import FormActions from "./FormActions";
-import { getErrorMessage } from "@/lib/utils/error";
+import { getErrorMessage } from "@/utils/error";
+import { EMPTY_OBJECT } from "@/constants/utility";
 
-interface FormProps<T extends FieldValues, R = void>
+interface FormProps<T extends FieldValues = FieldValues, R = void>
   extends Omit<StackProps<"form">, "onSubmit" | "onError">,
     Pick<
       ComponentProps<typeof FormActions>,
@@ -27,7 +28,7 @@ interface FormProps<T extends FieldValues, R = void>
  * that provides a form structure with a submit and reset button.
  * It uses the `useFormContext` hook to access the form methods and state.
  */
-const Form = <T extends FieldValues, R = void>({
+const Form = <T extends FieldValues = FieldValues, R = void>({
   methods,
   children,
   submitLabel,
@@ -39,7 +40,7 @@ const Form = <T extends FieldValues, R = void>({
   onSuccess,
   onError,
   onReset: onResetProp,
-  slotProps: { fieldset: fieldsetProps, actions: actionsProps } = {},
+  slotProps: { fieldset: fieldsetProps, actions: actionsProps } = EMPTY_OBJECT,
   ...props
 }: FormProps<T, R>) => {
   /** Callbacks */

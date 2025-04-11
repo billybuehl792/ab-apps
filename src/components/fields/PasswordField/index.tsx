@@ -1,14 +1,27 @@
-import { type FC, useState } from "react";
+import { useState } from "react";
 import {
   IconButton,
+  type IconButtonProps,
   InputAdornment,
   TextField,
   type TextFieldProps,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-const PasswordField: FC<TextFieldProps> = (props) => {
+const PasswordField = (props: TextFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
+
+  /** Callbacks */
+
+  const handleTogglePasswordVisibility: IconButtonProps["onClick"] = () => {
+    setShowPassword((show) => !show);
+  };
+
+  const handleIconButtonMouseEvent: IconButtonProps["onMouseDown"] = (
+    event
+  ) => {
+    event.preventDefault();
+  };
 
   return (
     <TextField
@@ -23,9 +36,9 @@ const PasswordField: FC<TextFieldProps> = (props) => {
                   showPassword ? "hide the password" : "display the password"
                 }
                 disabled={props.disabled}
-                onClick={() => setShowPassword((show) => !show)}
-                onMouseDown={(event) => event.preventDefault()}
-                onMouseUp={(event) => event.preventDefault()}
+                onMouseDown={handleIconButtonMouseEvent}
+                onMouseUp={handleIconButtonMouseEvent}
+                onClick={handleTogglePasswordVisibility}
                 edge="end"
               >
                 {showPassword ? <VisibilityOff /> : <Visibility />}

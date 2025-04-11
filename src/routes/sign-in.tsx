@@ -13,13 +13,13 @@ import type { FirebaseError } from "firebase/app";
 import useRecaptchaVerifier from "@/hooks/auth/useRecaptchaVerifier";
 import useAuth from "@/hooks/auth/useAuth";
 import SignInForm from "@/containers/forms/SignInForm";
-import { FirebaseErrorCode } from "@/types/enums/firebase";
 import VerificationCodeForm from "@/containers/forms/VerificationCodeForm";
+import { isMultiFactorError } from "@/utils/error";
 
 export const Route = createFileRoute("/sign-in")({
   component: RouteComponent,
-  beforeLoad: async ({ context }) => {
-    if (context.auth.user) throw redirect({ to: "/" });
+  beforeLoad: ({ context }) => {
+    if (context.auth.user) redirect({ to: "/", throw: true });
   },
   validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
     redirect: (search.redirect as string) || undefined,
@@ -51,11 +51,7 @@ function RouteComponent() {
     try {
       return await signIn?.mutateAsync(formData);
     } catch (error) {
-      const isMultiFactorError =
-        (error as FirebaseError).code ===
-        FirebaseErrorCode.MULTI_FACTOR_AUTH_REQUIRED;
-
-      if (isMultiFactorError && recaptchaVerifier)
+      if (isMultiFactorError(error) && recaptchaVerifier)
         await onMultiFactorError(recaptchaVerifier, error as MultiFactorError);
       else throw error;
     }
@@ -70,7 +66,11 @@ function RouteComponent() {
         verifier: recaptchaVerifier,
         error: error as MultiFactorError,
       },
-      { onSuccess: (data) => setMultiFactorData(data) }
+      {
+        onSuccess: (data) => {
+          setMultiFactorData(data);
+        },
+      }
     );
   };
 
@@ -78,6 +78,7 @@ function RouteComponent() {
     typeof VerificationCodeForm
   >["onSubmit"] = async (formData) => {
     if (!multiFactorData) return;
+
     return await verifyMultiFactorPhoneCode?.mutateAsync({
       resolver: multiFactorData.resolver,
       credential: PhoneAuthProvider.credential(
@@ -87,7 +88,7 @@ function RouteComponent() {
     });
   };
 
-  const onSuccess = () => navigate({ to: redirect || "/", replace: true });
+  const onSuccess = () => void navigate({ to: redirect || "/", replace: true });
 
   return (
     <Stack spacing={2} p={2}>

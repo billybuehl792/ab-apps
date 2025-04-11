@@ -1,4 +1,4 @@
-import { type ReactNode, type FC } from "react";
+import { type ReactNode } from "react";
 import {
   Button,
   Fade,
@@ -7,6 +7,7 @@ import {
   type StackProps,
 } from "@mui/material";
 import { useFormContext } from "react-hook-form";
+import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface FormActionsProps extends StackProps {
   submitLabel?: ReactNode;
@@ -19,7 +20,7 @@ interface FormActionsProps extends StackProps {
   };
 }
 
-const FormActions: FC<FormActionsProps> = ({
+const FormActions = ({
   resetAsCancel,
   submitLabel = "Submit",
   resetLabel = resetAsCancel ? "Cancel" : "Reset",
@@ -27,9 +28,9 @@ const FormActions: FC<FormActionsProps> = ({
   slotProps: {
     resetButton: resetButtonProps,
     submitButton: submitButtonProps,
-  } = {},
+  } = EMPTY_OBJECT,
   ...props
-}) => {
+}: FormActionsProps) => {
   /** Values */
 
   const {

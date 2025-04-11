@@ -26,11 +26,11 @@ const SignInFormPasswordField: FC<ComponentProps<typeof PasswordField>> = (
         required: "Password is required",
         minLength: {
           value: MIN_LENGTH,
-          message: `Min length is ${MIN_LENGTH}`,
+          message: `Min length is ${String(MIN_LENGTH)}`,
         },
         maxLength: {
           value: MAX_LENGTH,
-          message: `Max length is ${MAX_LENGTH}`,
+          message: `Max length is ${String(MAX_LENGTH)}`,
         },
       })}
       {...props}

@@ -23,7 +23,7 @@ const ClientFormFirstNameField: FC<TextFieldProps> = (props) => {
         required: "First name is required",
         maxLength: {
           value: MAX_LENGTH,
-          message: `Max length is ${MAX_LENGTH}`,
+          message: `Max length is ${String(MAX_LENGTH)}`,
         },
       })}
       {...props}

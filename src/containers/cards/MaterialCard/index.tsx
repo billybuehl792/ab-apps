@@ -1,4 +1,4 @@
-import { type ReactNode, useState, type FC, type MouseEvent } from "react";
+import { type ReactNode, useState, type MouseEvent } from "react";
 import {
   Card,
   CardActionArea,
@@ -11,7 +11,8 @@ import {
 } from "@mui/material";
 
 import MenuOptionsMenu from "@/components/modals/MenuOptionsMenu";
-import { sxAsArray } from "@/lib/utils/sx";
+import { sxAsArray } from "@/utils/sx";
+import { EMPTY_OBJECT } from "@/constants/utility";
 import type { Material } from "@/types/firebase";
 
 interface MaterialCardProps extends Omit<CardProps, "onClick"> {
@@ -26,7 +27,7 @@ interface MaterialCardProps extends Omit<CardProps, "onClick"> {
   onClick?: (event: MouseEvent<HTMLButtonElement>, material: Material) => void;
 }
 
-const MaterialCard: FC<MaterialCardProps> = ({
+const MaterialCard = ({
   material,
   disabled,
   options: optionsProp,
@@ -35,9 +36,9 @@ const MaterialCard: FC<MaterialCardProps> = ({
   slotProps: {
     cardActionArea: cardActionAreaProps,
     cardContent: cardContentProps,
-  } = {},
+  } = EMPTY_OBJECT,
   ...props
-}) => {
+}: MaterialCardProps) => {
   const [optionsAnchorEl, setOptionsAnchorEl] = useState<HTMLElement | null>(
     null
   );
@@ -102,7 +103,9 @@ const MaterialCard: FC<MaterialCardProps> = ({
           anchorOrigin={{ horizontal: "center", vertical: "center" }}
           transformOrigin={{ horizontal: "right", vertical: "bottom" }}
           options={options}
-          onClose={() => setOptionsAnchorEl(null)}
+          onClose={() => {
+            setOptionsAnchorEl(null);
+          }}
         />
       )}
     </Card>

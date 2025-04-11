@@ -1,4 +1,4 @@
-import { useEffect, useState, type FC } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
 import {
   IconButton,
@@ -17,7 +17,7 @@ import UserIconButton from "@/containers/buttons/UserIconButton";
 import SignInLinkButton from "@/containers/buttons/SignInLinkButton";
 import NavigationDrawer from "@/containers/modals/NavigationDrawer";
 
-const AppBar: FC<MUIAppBarProps> = (props) => {
+const AppBar = (props: MUIAppBarProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   /** Values */
@@ -54,7 +54,9 @@ const AppBar: FC<MUIAppBarProps> = (props) => {
             {isMobile && (
               <IconButton
                 color="inherit"
-                onClick={() => setMenuOpen(!menuOpen)}
+                onClick={() => {
+                  setMenuOpen(!menuOpen);
+                }}
               >
                 <Menu />
               </IconButton>
@@ -81,7 +83,12 @@ const AppBar: FC<MUIAppBarProps> = (props) => {
 
       {/* Modals */}
       {isMobile && (
-        <NavigationDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
+        <NavigationDrawer
+          open={menuOpen}
+          onClose={() => {
+            setMenuOpen(false);
+          }}
+        />
       )}
     </MUIAppBar>
   );

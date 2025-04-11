@@ -1,11 +1,8 @@
-import {
-  type ReactNode,
-  type FC,
-  type MouseEvent,
-  type TouchEvent,
-} from "react";
+import { type ReactNode } from "react";
 import { IconButton, type IconButtonProps } from "@mui/material";
 import { Add } from "@mui/icons-material";
+
+const DEFAULT_ICON = <Add />;
 
 interface AddIconButtonProps extends IconButtonProps {
   icon?: ReactNode;
@@ -14,23 +11,32 @@ interface AddIconButtonProps extends IconButtonProps {
 /**
  * This component renders an `IconButton` with an `Add` icon.
  */
-const AddIconButton: FC<AddIconButtonProps> = ({
-  size,
-  icon = <Add fontSize={size} />,
-  onClick,
+const AddIconButton = ({
+  icon = DEFAULT_ICON,
+  onClick: onClickProp,
   ...props
-}) => {
+}: AddIconButtonProps) => {
+  /** Callbacks */
+
+  const onMouseDown: IconButtonProps["onMouseDown"] = (event) => {
+    event.stopPropagation();
+  };
+
+  const onTouchStart: IconButtonProps["onTouchStart"] = (event) => {
+    event.stopPropagation();
+  };
+
+  const onClick: IconButtonProps["onClick"] = (event) => {
+    event.stopPropagation();
+    onClickProp?.(event);
+  };
+
   return (
     <IconButton
       component="span"
-      onMouseDown={(event: MouseEvent) => event.stopPropagation()}
-      onTouchStart={(event: TouchEvent) => event.stopPropagation()}
-      onClick={(
-        event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
-      ) => {
-        event.stopPropagation();
-        onClick?.(event);
-      }}
+      onMouseDown={onMouseDown}
+      onTouchStart={onTouchStart}
+      onClick={onClick}
       {...props}
     >
       {icon}

@@ -1,27 +1,37 @@
-import { type FC } from "react";
 import { TextField, type TextFieldProps } from "@mui/material";
 
-const IntegerField: FC<TextFieldProps> = (props) => {
+/**
+ * This component renders a `TextField` with a type of `number` and
+ * restricts the input to only allow numeric values.
+ */
+const IntegerField = (props: TextFieldProps) => {
+  /** Callbacks */
+
+  const onKeyDown: TextFieldProps["onKeyDown"] = (event) => {
+    if (
+      ["Backspace", "Delete", "Tab", "Escape", "Enter", "-"].includes(event.key)
+    )
+      return;
+    else if (isNaN(Number(event.key))) event.preventDefault();
+  };
+
   return (
     <TextField
       type="number"
       placeholder="0"
-      onKeyDown={(event) => {
-        if (["Backspace", "Delete", "Tab", "Escape", "-"].includes(event.key))
-          return;
-        else if (isNaN(Number(event.key))) event.preventDefault();
-      }}
+      onKeyDown={onKeyDown}
       {...props}
       slotProps={{
-        ...props?.slotProps,
+        ...props.slotProps,
         input: {
           inputProps: {
             inputMode: "numeric",
             pattern: "[0-9]*",
             step: "1",
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            ...props?.slotProps?.input?.inputProps,
+            ...(typeof props.slotProps?.input === "object" &&
+            "inputProps" in props.slotProps.input
+              ? props.slotProps.input.inputProps
+              : {}),
           },
         },
       }}

@@ -1,4 +1,4 @@
-import { type ReactNode, type FC } from "react";
+import { type ComponentProps, type ReactNode } from "react";
 import {
   type DrawerProps,
   Stack,
@@ -13,12 +13,20 @@ interface DrawerHeaderProps extends Omit<StackProps, "title"> {
   onClose?: DrawerProps["onClose"];
 }
 
-const DrawerHeader: FC<DrawerHeaderProps> = ({
+const DrawerHeader = ({
   title,
   endContent,
-  onClose,
+  onClose: onCloseProp,
   ...props
-}) => {
+}: DrawerHeaderProps) => {
+  /** Callbacks */
+
+  const onClose: ComponentProps<typeof CloseIconButton>["onClick"] = (
+    event
+  ) => {
+    onCloseProp?.(event, "escapeKeyDown");
+  };
+
   return (
     <Stack
       direction="row"
@@ -35,7 +43,7 @@ const DrawerHeader: FC<DrawerHeaderProps> = ({
         ) : (
           title
         ))}
-      {!!onClose && (
+      {!!onCloseProp && (
         <Stack
           direction="row"
           flexGrow={1}
@@ -43,9 +51,7 @@ const DrawerHeader: FC<DrawerHeaderProps> = ({
           justifyContent="end"
         >
           {endContent}
-          <CloseIconButton
-            onClick={(event) => onClose(event, "escapeKeyDown")}
-          />
+          <CloseIconButton onClick={onClose} />
         </Stack>
       )}
     </Stack>

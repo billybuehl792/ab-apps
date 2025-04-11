@@ -14,7 +14,7 @@ declare global {
     disabled?: boolean;
     tooltip?: string;
     disableCloseOnSelect?: boolean;
-    onClick: (event: MouseEvent, id: string) => void;
+    onClick: (event: MouseEvent, id: string) => void | Promise<void>;
   }
 
   interface ListItem {

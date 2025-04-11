@@ -1,13 +1,6 @@
-import { useContext } from "react";
+import { use } from "react";
 import EstimateCalculatorContext from "../context/EstimateCalculatorContext";
 
-const useEstimateCalculator = () => {
-  const context = useContext(EstimateCalculatorContext);
-  if (!context)
-    throw new Error(
-      "useEstimateCalculator must be used within an EstimateCalculatorProvider"
-    );
-  return context;
-};
+const useEstimateCalculator = () => use(EstimateCalculatorContext);
 
 export default useEstimateCalculator;

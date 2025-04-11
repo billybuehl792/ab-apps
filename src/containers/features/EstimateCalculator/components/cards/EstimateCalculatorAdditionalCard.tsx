@@ -1,4 +1,3 @@
-import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   Card,
@@ -14,7 +13,7 @@ import type { EstimateCalculatorValues } from "../../types";
 const MIN = 0;
 const MAX = 10_000;
 
-const EstimateCalculatorAdditionalCard: FC<CardProps> = (props) => {
+const EstimateCalculatorAdditionalCard = (props: CardProps) => {
   /** Values */
 
   const {
@@ -40,8 +39,14 @@ const EstimateCalculatorAdditionalCard: FC<CardProps> = (props) => {
           error={!!errors.additional}
           sx={{ width: 120 }}
           {...register("additional", {
-            min: { value: MIN, message: `Value cannot be less than ${MIN}` },
-            max: { value: MAX, message: `Value cannot be greater than ${MAX}` },
+            min: {
+              value: MIN,
+              message: `Value cannot be less than ${String(MIN)}`,
+            },
+            max: {
+              value: MAX,
+              message: `Value cannot be greater than ${String(MAX)}`,
+            },
             setValueAs: (value) => Math.min(Math.max(+value, MIN), MAX),
           })}
         />

@@ -1,5 +1,5 @@
 import "reset-css/reset.css";
-import "./lib/utils/string";
+import "./utils/string";
 
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
@@ -23,11 +23,13 @@ export const router = createRouter({
       user: null,
       loading: true,
     },
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     queryClient: null!,
   },
   defaultNotFoundComponent: () => "Page not found :(",
 });
 
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);

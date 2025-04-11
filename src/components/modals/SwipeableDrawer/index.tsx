@@ -1,4 +1,4 @@
-import { type ReactNode, type ComponentProps, type FC } from "react";
+import { type ReactNode, type ComponentProps } from "react";
 import {
   Box,
   type BoxProps,
@@ -9,7 +9,8 @@ import {
 } from "@mui/material";
 
 import DrawerHeader from "../DrawerHeader";
-import { sxAsArray } from "@/lib/utils/sx";
+import { sxAsArray } from "@/utils/sx";
+import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface SwipeableDrawerProps
   extends Omit<
@@ -26,7 +27,7 @@ interface SwipeableDrawerProps
   } & MUISwipeableDrawerProps["slotProps"];
 }
 
-const Puller: FC<BoxProps> = (props) => (
+const Puller = (props: BoxProps) => (
   <Box
     {...props}
     sx={[
@@ -47,15 +48,19 @@ const Puller: FC<BoxProps> = (props) => (
  * This component is a wrapper around the MUI SwipeableDrawer component.
  * It provides a bottom drawer with a puller and customizable styles.
  */
-const SwipeableDrawer: FC<SwipeableDrawerProps> = ({
+const SwipeableDrawer = ({
   title,
   children,
   fullHeight,
   onOpen,
   onClose,
-  slotProps: { puller: pullerProps, header: headerProps, ...slotProps } = {},
+  slotProps: {
+    puller: pullerProps,
+    header: headerProps,
+    ...slotProps
+  } = EMPTY_OBJECT,
   ...props
-}) => {
+}: SwipeableDrawerProps) => {
   /** Values */
 
   const isMobile = useMediaQuery("(hover: none)");
@@ -69,7 +74,9 @@ const SwipeableDrawer: FC<SwipeableDrawerProps> = ({
       slotProps={{
         ...slotProps,
         paper: {
-          ...slotProps?.paper,
+          ...(typeof slotProps.paper === "object"
+            ? slotProps.paper
+            : EMPTY_OBJECT),
           sx: [
             isMobile && {
               borderTopLeftRadius: 16,

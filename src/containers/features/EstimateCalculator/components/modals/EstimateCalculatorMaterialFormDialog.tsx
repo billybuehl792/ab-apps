@@ -1,12 +1,12 @@
-import { type ComponentProps, type FC } from "react";
+import { type ComponentProps } from "react";
 
 import MaterialFormDialog from "@/containers/modals/MaterialFormDialog";
 import useMaterials from "@/hooks/firebase/useMaterials";
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 
-const EstimateCalculatorMaterialFormDialog: FC<
-  Partial<ComponentProps<typeof MaterialFormDialog>>
-> = (props) => {
+const EstimateCalculatorMaterialFormDialog = (
+  props: Partial<ComponentProps<typeof MaterialFormDialog>>
+) => {
   /** Values */
 
   const { materialModal, setMaterialModal } = useEstimateCalculator();
@@ -17,9 +17,13 @@ const EstimateCalculatorMaterialFormDialog: FC<
 
   /** Callbacks */
 
-  const onClose = () => setMaterialModal(false, materialModal.material);
+  const onClose = () => {
+    setMaterialModal(false, materialModal.material);
+  };
 
-  const onTransitionExited = () => setMaterialModal(false);
+  const onTransitionExited = () => {
+    setMaterialModal(false);
+  };
 
   return (
     <MaterialFormDialog
