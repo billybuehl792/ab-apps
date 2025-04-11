@@ -22,7 +22,7 @@ const MaterialFormDescriptionField: FC<TextFieldProps> = (props) => {
       {...register("description", {
         maxLength: {
           value: MAX_LENGTH,
-          message: `Max length is ${MAX_LENGTH}`,
+          message: `Max length is ${String(MAX_LENGTH)}`,
         },
       })}
       {...props}

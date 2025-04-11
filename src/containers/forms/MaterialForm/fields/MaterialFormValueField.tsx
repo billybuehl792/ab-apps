@@ -23,8 +23,8 @@ const MaterialFormValueField: FC<ComponentProps<typeof DollarField>> = (
       helperText={errors.value?.message}
       {...register("value", {
         required: "Cost is required",
-        min: { value: MIN, message: `Min value is ${MIN}` },
-        max: { value: MAX, message: `Max value is ${MAX}` },
+        min: { value: MIN, message: `Min value is ${String(MIN)}` },
+        max: { value: MAX, message: `Max value is ${String(MAX)}` },
         setValueAs: (value) => Math.min(Math.max(+value, MIN), MAX),
       })}
       {...props}

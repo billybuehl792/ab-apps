@@ -1,4 +1,4 @@
-import { type FC, type MouseEvent } from "react";
+import { type MouseEvent } from "react";
 import {
   Card,
   CardActionArea,
@@ -11,7 +11,8 @@ import {
 } from "@mui/material";
 
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
-import { sxAsArray } from "@/lib/utils/sx";
+import { sxAsArray } from "@/utils/sx";
+import { EMPTY_OBJECT } from "@/constants/utility";
 import type { Client } from "@/types/firebase";
 
 interface ClientCardProps extends Omit<CardProps, "onClick"> {
@@ -25,7 +26,7 @@ interface ClientCardProps extends Omit<CardProps, "onClick"> {
   };
 }
 
-const ClientCard: FC<ClientCardProps> = ({
+const ClientCard = ({
   client,
   disabled,
   options: optionsProp,
@@ -33,9 +34,9 @@ const ClientCard: FC<ClientCardProps> = ({
   slotProps: {
     cardActionArea: cardActionAreaProps,
     cardContent: cardContentProps,
-  } = {},
+  } = EMPTY_OBJECT,
   ...props
-}) => {
+}: ClientCardProps) => {
   /** Values */
 
   const options =

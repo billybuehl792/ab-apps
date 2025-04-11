@@ -19,6 +19,9 @@ import {
   TablePagination,
   type TablePaginationProps,
 } from "@mui/material";
+import { EMPTY_ARRAY, EMPTY_OBJECT } from "@/constants/utility";
+
+const DEFAULT_ROWS_PER_PAGE_OPTIONS = [10, 20, 30];
 
 interface PaginatedListProps<T extends DocumentData = DocumentData>
   extends StackProps {
@@ -42,15 +45,19 @@ interface PaginatedListProps<T extends DocumentData = DocumentData>
  */
 const PaginatedList = <T extends DocumentData = DocumentData>({
   collection,
-  constraints = [],
-  rowsPerPageOptions = [10, 20, 30],
+  constraints = EMPTY_ARRAY,
+  rowsPerPageOptions = DEFAULT_ROWS_PER_PAGE_OPTIONS,
   renderItem,
-  slotProps: { pagination: paginationProps, skeleton: skeletonProps } = {},
+  slotProps: {
+    pagination: paginationProps,
+    skeleton: skeletonProps,
+  } = EMPTY_OBJECT,
   ...props
 }: PaginatedListProps<T>): ReactNode => {
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0] ?? 10);
-  const [lastDocs, setLastDocs] = useState<QueryDocumentSnapshot[]>([]);
+  const [lastDocs, setLastDocs] =
+    useState<QueryDocumentSnapshot[]>(EMPTY_ARRAY);
 
   /** Queries */
 
@@ -70,7 +77,9 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
       ...[
         ...constraints,
         limit(rowsPerPage),
-        ...(lastDocs.length ? [startAfter(lastDocs[lastDocs.length - 1])] : []),
+        ...(lastDocs.length
+          ? [startAfter(lastDocs[lastDocs.length - 1])]
+          : EMPTY_ARRAY),
       ],
     ] as const,
     queryFn: ({ queryKey: [_, ...constraints] }) =>
@@ -107,9 +116,9 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
       {countQuery.isLoading || listQuery.isLoading
         ? Array(skeletonCount)
             .fill(null)
-            .map((_, index) => (
+            .map(() => (
               <Skeleton
-                key={index}
+                key={crypto.randomUUID()}
                 height={82}
                 variant="rounded"
                 {...skeletonProps}
@@ -129,7 +138,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
           countQuery.isLoading ? (
             <Skeleton variant="rounded" width={52} />
           ) : (
-            `${from} - ${to} of ${count}`
+            `${String(from)} - ${String(to)} of ${String(count)}`
           )
         }
         onPageChange={onPageChange}

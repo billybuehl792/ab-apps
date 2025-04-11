@@ -1,4 +1,3 @@
-import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   Card,
@@ -10,7 +9,7 @@ import {
 } from "@mui/material";
 import type { EstimateCalculatorValues } from "../types";
 
-const EstimateCalculatorHeader: FC<GridProps> = (props) => {
+const EstimateCalculatorHeader = (props: GridProps) => {
   /** Values */
 
   const { watch } = useFormContext<EstimateCalculatorValues>();

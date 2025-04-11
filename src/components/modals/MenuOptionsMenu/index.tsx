@@ -1,12 +1,13 @@
 import { type ComponentProps, type FC } from "react";
 import { Menu, type MenuProps } from "@mui/material";
 import MenuOptionsList from "@/components/lists/MenuOptionsList";
+import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface MenuOptionsMenuProps extends Omit<MenuProps, "slotProps"> {
   options: MenuOption[];
   disableCloseOnSelect?: boolean;
   slotProps?: {
-    list?: ComponentProps<typeof MenuOptionsList>;
+    list?: Partial<ComponentProps<typeof MenuOptionsList>>;
   } & MenuProps["slotProps"];
 }
 
@@ -17,18 +18,32 @@ const MenuOptionsMenu: FC<MenuOptionsMenuProps> = ({
   options,
   disableCloseOnSelect,
   onClose,
-  slotProps: { list: listProps, ...slotProps } = {},
+  slotProps: { list: listProps, ...slotProps } = EMPTY_OBJECT,
   ...props
-}) => {
+}: MenuOptionsMenuProps) => {
+  /** Callbacks */
+
+  const onMouseDown: MenuProps["onMouseDown"] = (event) => {
+    event.stopPropagation();
+  };
+
+  const onTouchStart: MenuProps["onTouchStart"] = (event) => {
+    event.stopPropagation();
+  };
+
+  const onClick: MenuProps["onClick"] = (event) => {
+    event.stopPropagation();
+  };
+
   return (
     <Menu
       id="menu"
       component="div"
       aria-hidden={false}
       disableAutoFocusItem
-      onClick={(event) => event.stopPropagation()}
-      onMouseDown={(event) => event.stopPropagation()}
-      onTouchStart={(event) => event.stopPropagation()}
+      onMouseDown={onMouseDown}
+      onTouchStart={onTouchStart}
+      onClick={onClick}
       onClose={onClose}
       slotProps={{
         list: { component: "div", disablePadding: true },
@@ -40,12 +55,12 @@ const MenuOptionsMenu: FC<MenuOptionsMenuProps> = ({
         options={options.map((option) => ({
           ...option,
           onClick: (event) => {
-            option.onClick?.(event, option.id);
+            void option.onClick(event, option.id);
             if (!disableCloseOnSelect && !option.disableCloseOnSelect)
               onClose?.(event, "backdropClick");
           },
         }))}
-        {...listProps}
+        {...(typeof listProps === "object" ? listProps : EMPTY_OBJECT)}
       />
     </Menu>
   );

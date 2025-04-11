@@ -1,4 +1,3 @@
-import { type FC } from "react";
 import { Link, useLocation, useMatches } from "@tanstack/react-router";
 import {
   Breadcrumbs as MUIBreadcrumbs,
@@ -11,7 +10,7 @@ interface BreadcrumbsProps extends MUIBreadcrumbsProps {
   showRootCrumb?: boolean;
 }
 
-const Breadcrumbs: FC<BreadcrumbsProps> = ({ showRootCrumb, ...props }) => {
+const Breadcrumbs = ({ showRootCrumb, ...props }: BreadcrumbsProps) => {
   /** Values */
 
   const { pathname } = useLocation();

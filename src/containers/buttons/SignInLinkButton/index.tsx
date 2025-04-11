@@ -1,8 +1,7 @@
-import { type FC } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button, type ButtonProps } from "@mui/material";
 
-const SignInLinkButton: FC<ButtonProps> = (props) => {
+const SignInLinkButton = (props: ButtonProps) => {
   return (
     <Button
       component={Link}

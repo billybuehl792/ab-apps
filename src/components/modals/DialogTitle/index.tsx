@@ -32,7 +32,9 @@ const DialogTitle: FC<DialogTitleProps> = ({
       {label || children}
       {!!onClose && (
         <CloseIconButton
-          onClick={(event) => onClose?.(event, "backdropClick")}
+          onClick={(event) => {
+            onClose(event, "backdropClick");
+          }}
         />
       )}
     </MUIDialogTitle>

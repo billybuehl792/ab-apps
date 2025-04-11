@@ -20,6 +20,8 @@ import {
   type StackProps,
 } from "@mui/material";
 
+import { EMPTY_ARRAY, EMPTY_OBJECT } from "@/constants/utility";
+
 interface InfiniteListProps<T extends DocumentData = DocumentData>
   extends StackProps {
   collection: CollectionReference<T>;
@@ -43,13 +45,13 @@ interface InfiniteListProps<T extends DocumentData = DocumentData>
  */
 const InfiniteList = <T extends DocumentData = DocumentData>({
   collection,
-  constraints = [],
+  constraints = EMPTY_ARRAY,
   pageSize = 10,
   renderItem,
   slotProps: {
     loadMoreButton: loadMoreButtonProps,
     skeleton: skeletonProps,
-  } = {},
+  } = EMPTY_OBJECT,
   ...props
 }: InfiniteListProps<T>): ReactNode => {
   /** Queries */
@@ -69,7 +71,7 @@ const InfiniteList = <T extends DocumentData = DocumentData>({
         query(
           collection,
           ...constraints,
-          ...(pageParam?.id ? [startAfter(pageParam)] : [])
+          ...(pageParam.id ? [startAfter(pageParam)] : [])
         )
       ),
     getNextPageParam: (lastPage, pages) =>
@@ -89,9 +91,9 @@ const InfiniteList = <T extends DocumentData = DocumentData>({
         listQuery.isFetchingNextPage) &&
         Array(pageSize)
           .fill(null)
-          .map((_, index) => (
+          .map(() => (
             <Skeleton
-              key={index}
+              key={crypto.randomUUID()}
               height={82}
               variant="rounded"
               {...skeletonProps}
@@ -101,7 +103,9 @@ const InfiniteList = <T extends DocumentData = DocumentData>({
       {listQuery.hasNextPage && (
         <Button
           loading={listQuery.isFetchingNextPage}
-          onClick={() => listQuery.fetchNextPage()}
+          onClick={() => {
+            void listQuery.fetchNextPage();
+          }}
           {...loadMoreButtonProps}
         >
           Load More

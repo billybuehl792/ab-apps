@@ -7,11 +7,16 @@ export const Route = createFileRoute("/estimate-calculator")({
   component: RouteComponent,
   beforeLoad: ({ context, location }) => {
     if (!context.auth.user)
-      throw redirect({ to: "/sign-in", search: { redirect: location.href } });
+      redirect({
+        to: "/sign-in",
+        search: { redirect: location.href },
+        throw: true,
+      });
     else if (!context.auth.user.emailVerified)
-      throw redirect({
+      redirect({
         to: "/email-verify",
         search: { redirect: location.href },
+        throw: true,
       });
   },
 });

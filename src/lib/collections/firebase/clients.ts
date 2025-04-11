@@ -1,8 +1,8 @@
 import { collection } from "firebase/firestore";
 
-import { db } from "@/lib/config/firebase";
-import type { ClientData } from "@/types/firebase";
+import { db } from "@/config/firebase";
 import { FirebaseCollectionId } from "@/types/enums/firebase";
+import type { ClientData } from "@/types/firebase";
 
 export default collection(
   db,

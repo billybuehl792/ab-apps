@@ -1,8 +1,9 @@
-import { type ComponentProps, type FC } from "react";
+import { type ComponentProps } from "react";
 
 import NavigationList from "@/containers/lists/NavigationList";
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
 import { APP_TITLE } from "@/constants/layout";
+import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface NavigationDrawerProps extends ComponentProps<typeof SwipeableDrawer> {
   slotProps?: {
@@ -10,11 +11,11 @@ interface NavigationDrawerProps extends ComponentProps<typeof SwipeableDrawer> {
   } & ComponentProps<typeof SwipeableDrawer>["slotProps"];
 }
 
-const NavigationDrawer: FC<NavigationDrawerProps> = ({
+const NavigationDrawer = ({
   onClose,
-  slotProps: { nav: navProps, ...slotProps } = {},
+  slotProps: { nav: navProps, ...slotProps } = EMPTY_OBJECT,
   ...props
-}) => {
+}: NavigationDrawerProps) => {
   return (
     <SwipeableDrawer
       title={APP_TITLE}

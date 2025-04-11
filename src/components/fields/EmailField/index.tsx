@@ -1,7 +1,6 @@
-import { type FC } from "react";
 import { TextField, type TextFieldProps } from "@mui/material";
 
-const EmailField: FC<TextFieldProps> = (props) => {
+const EmailField = (props: TextFieldProps) => {
   return <TextField label="Email" type="email" {...props} />;
 };
 

@@ -12,11 +12,17 @@ function RouteComponent() {
 
   const navigate = useNavigate();
 
+  /** Callbacks */
+
+  const handleCreateClient = () => {
+    void navigate({ to: "/clients/create" });
+  };
+
   return (
     <Stack spacing={1}>
       <Stack direction="row" spacing={0.5} alignItems="center" width="100%">
         <Typography variant="h6">Clients</Typography>
-        <AddIconButton onClick={() => navigate({ to: "/clients/create" })} />
+        <AddIconButton onClick={handleCreateClient} />
       </Stack>
       <ClientPaginatedList />
     </Stack>

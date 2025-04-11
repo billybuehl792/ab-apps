@@ -1,4 +1,4 @@
-import { type ComponentProps, useState, type FC, useEffect } from "react";
+import { type ComponentProps, useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   Collapse,
@@ -16,7 +16,8 @@ import {
 } from "@mui/material";
 
 import ExpandIconButton from "@/components/buttons/ExpandIconButton";
-import { sxAsArray } from "@/lib/utils/sx";
+import { sxAsArray } from "@/utils/sx";
+import { EMPTY_ARRAY, EMPTY_OBJECT } from "@/constants/utility";
 
 interface NestedListProps extends ListProps {
   items: ListItem[];
@@ -29,17 +30,16 @@ interface NestedListItemProps extends ListItemProps {
   item: ListItem;
   indent?: number;
   slotProps?: {
-    button: ListItemButtonProps;
+    button?: ListItemButtonProps;
     icon?: ListItemIconProps;
     text?: ListItemTextProps;
   } & ListItemProps["slotProps"];
 }
-
-const NestedList: FC<NestedListProps> = ({
+const NestedList = ({
   items,
-  slotProps: { item: itemProps } = {},
+  slotProps: { item: itemProps } = EMPTY_OBJECT,
   ...props
-}) => {
+}: NestedListProps) => {
   return (
     <List disablePadding dense {...props}>
       {items
@@ -51,7 +51,7 @@ const NestedList: FC<NestedListProps> = ({
   );
 };
 
-const NestedListItem: FC<NestedListItemProps> = ({
+const NestedListItem = ({
   item,
   indent = 2,
   slotProps: {
@@ -59,9 +59,9 @@ const NestedListItem: FC<NestedListItemProps> = ({
     icon: iconProps,
     text: textProps,
     ...slotProps
-  } = {},
+  } = EMPTY_OBJECT,
   ...props
-}) => {
+}: NestedListItemProps) => {
   const [expanded, setExpanded] = useState(false);
 
   /** Values */
@@ -83,7 +83,9 @@ const NestedListItem: FC<NestedListItemProps> = ({
           secondaryAction: (
             <ExpandIconButton
               expanded={item.expanded || expanded}
-              onChange={(value) => setExpanded(value)}
+              onChange={(value) => {
+                setExpanded(value);
+              }}
             />
           ),
         })}
@@ -94,11 +96,11 @@ const NestedListItem: FC<NestedListItemProps> = ({
           selected={item.selected}
           disabled={item.disabled}
           {...(!!item.to && { component: Link, to: item.to })}
-          onClick={(event) => item?.onClick?.(event, item.id)}
+          onClick={(event) => item.onClick?.(event, item.id)}
           {...buttonProps}
           sx={[{ pl: indent }, ...sxAsArray(buttonProps?.sx)]}
         >
-          {!!item?.icon && (
+          {!!item.icon && (
             <ListItemIcon
               {...iconProps}
               sx={[{ minWidth: 36 }, ...sxAsArray(iconProps?.sx)]}
@@ -122,7 +124,7 @@ const NestedListItem: FC<NestedListItemProps> = ({
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <NestedList
             component="div"
-            items={item.items ?? []}
+            items={item.items ?? EMPTY_ARRAY}
             slotProps={{ item: { indent: indent + 2 } }}
           />
         </Collapse>

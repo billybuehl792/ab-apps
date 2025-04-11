@@ -1,4 +1,4 @@
-import { useEffect, useMemo, type ComponentProps, type FC } from "react";
+import { useEffect, useMemo, type ComponentProps } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Button, Skeleton, Stack, type StackProps } from "@mui/material";
@@ -10,6 +10,7 @@ import EstimateCalculatorMaterialCard from "../components/cards/EstimateCalculat
 import EstimateCalculatorTaxCard from "../components/cards/EstimateCalculatorTaxCard";
 import EstimateCalculatorAdditionalCard from "../components/cards/EstimateCalculatorAdditionalCard";
 import type { EstimateCalculatorValues } from "../types";
+import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface EstimateCalculatorFieldArrayProps extends StackProps {
   slotProps?: {
@@ -17,10 +18,10 @@ interface EstimateCalculatorFieldArrayProps extends StackProps {
   };
 }
 
-const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArrayProps> = ({
-  slotProps: { card: cardProps } = {},
+const EstimateCalculatorFieldArray = ({
+  slotProps: { card: cardProps } = EMPTY_OBJECT,
   ...props
-}) => {
+}: EstimateCalculatorFieldArrayProps) => {
   /** Values */
 
   const { queryOptions, setMaterialModal } = useEstimateCalculator();
@@ -76,8 +77,12 @@ const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArrayProps> = ({
         {materialsQuery.isLoading
           ? Array(10)
               .fill(null)
-              .map((_, index) => (
-                <Skeleton key={index} variant="rounded" height={72} />
+              .map(() => (
+                <Skeleton
+                  key={crypto.randomUUID()}
+                  variant="rounded"
+                  height={72}
+                />
               ))
           : fieldArray.fields.map(
               ({ fieldId: _fieldId, ...material }, index) => (
@@ -97,7 +102,9 @@ const EstimateCalculatorFieldArray: FC<EstimateCalculatorFieldArrayProps> = ({
         <Button
           variant="text"
           startIcon={<Add />}
-          onClick={() => setMaterialModal(true, null)}
+          onClick={() => {
+            setMaterialModal(true, null);
+          }}
         >
           Material
         </Button>

@@ -1,6 +1,8 @@
-import { type ComponentProps, type FC } from "react";
+import { type ComponentProps } from "react";
+
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
 import MenuOptionsList from "@/components/lists/MenuOptionsList";
+import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface MenuOptionsDrawerProps
   extends Omit<Partial<ComponentProps<typeof SwipeableDrawer>>, "slotProps"> {
@@ -15,20 +17,20 @@ interface MenuOptionsDrawerProps
 /**
  * This component renders a `SwipeableDrawer` with a list of selectable options.
  */
-const MenuOptionsDrawer: FC<MenuOptionsDrawerProps> = ({
+const MenuOptionsDrawer = ({
   options,
   disableCloseOnSelect,
   onClose,
-  slotProps: { list: listProps, ...slotProps } = {},
+  slotProps: { list: listProps, ...slotProps } = EMPTY_OBJECT,
   ...props
-}) => {
+}: MenuOptionsDrawerProps) => {
   return (
     <SwipeableDrawer onClose={onClose} slotProps={slotProps} {...props}>
       <MenuOptionsList
         options={options.map((option) => ({
           ...option,
           onClick: (event) => {
-            option.onClick?.(event, option.id);
+            void option.onClick(event, option.id);
             if (!disableCloseOnSelect && !option.disableCloseOnSelect)
               onClose?.(event);
           },

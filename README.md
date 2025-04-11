@@ -1,54 +1,116 @@
-# React + TypeScript + Vite
+# 🚀 Company Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the official frontend codebase for the **[AB Apps]** web application, built using **Vite** and **React**. It is intended **only for internal use** by the development team working on this project.
 
-Currently, two official plugins are available:
+> ⚠️ **Note:** This repository is **not** a boilerplate or template for general use. Please do not clone or reuse outside of the project context.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🧱 Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Framework:** [React](https://reactjs.org/)
+- **Build Tool:** [Vite](https://vitejs.dev/)
+- **Language:** TypeScript
+- **Styling:** MaterialUI
+- **Routing:** Tanstack Router
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+---
+
+## 🛠️ Getting Started
+
+### Prerequisites
+
+- Node.js (version X.X.X or higher)
+- npm or yarn
+
+### Installation
+
+```bash
+# Clone the repo (internal only)
+git clone git@github.com:billybuehl792/ab-apps.git
+
+# Navigate into the project
+cd ab-apps
+
+# Install dependencies
+npm install
+# or
+yarn
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Running Locally
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm run dev
+# or
+yarn dev
 ```
+
+The app will start on `http://localhost:5173/` (or another available port).
+
+---
+
+## 🧪 Scripts
+
+| Command            | Description                   |
+| ------------------ | ----------------------------- |
+| `dev`              | Start local dev server        |
+| `build`            | Build for production          |
+| `preview`          | Preview production build      |
+| `lint`             | Run linter                    |
+| `test`             | Run test suite                |
+| `emulators:start`  | Run firebase emulators        |
+| `emulators:export` | Export firebase emulator data |
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── components/    # Reusable React components
+├── config/        # Client side configuration
+├── constants/     # Variables used throughout app
+├── containers/    # Feature components
+├── context/       # Context files
+├── hooks/         # Custom hooks
+├── lib/           # API or external services
+├── routes/        # Route-based components
+├── App.tsx        # Root component
+├── main.tsx       # Entry point
+```
+
+---
+
+## 🔐 Environment Variables
+
+Environment-specific variables should be defined in `.env`, `.env.local`, `.env.production`, etc. files:
+
+```
+VITE_FIREBASE_API_KEY
+VITE_FIREBASE_APP_ID
+VITE_FIREBASE_AUTH_DOMAIN
+VITE_FIREBASE_MEASUREMENT_ID
+VITE_FIREBASE_MESSAGING_SENDER_ID
+VITE_FIREBASE_PROJECT_ID
+VITE_FIREBASE_STORAGE_BUCKET
+VITE_RECAPTCHA_SITE_KEY
+VITE_GOOGLE_MAPS_API_KEY
+
+```
+
+> Never commit `.env` files with sensitive data to the repo.
+
+---
+
+## 👥 Contributors
+
+This project is maintained by me. For questions or onboarding support, contact me.
+
+---
+
+## 📄 License
+
+This project is proprietary and confidential. All rights reserved © AB Apps 2023.
+
+---

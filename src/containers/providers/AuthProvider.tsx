@@ -1,8 +1,8 @@
 import {
-  type ContextType,
   type FC,
   type PropsWithChildren,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -24,12 +24,11 @@ import { useSnackbar } from "notistack";
 import { CircularProgress } from "@mui/material";
 
 import AuthContext from "@/context/AuthContext";
-import { auth } from "@/lib/config/firebase";
-import { getErrorMessage } from "@/lib/utils/error";
+import { auth } from "@/config/firebase";
+import { getErrorMessage } from "@/utils/error";
 
 const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [user, setUser] =
-    useState<ContextType<typeof AuthContext>["user"]>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   /** Values */
@@ -140,19 +139,30 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        signIn,
-        signOut,
-        sendEmailVerification,
-        sendMultiFactorVerification,
-        verifyMultiFactorPhoneCode,
-      }}
+    <AuthContext
+      value={useMemo(
+        () => ({
+          user,
+          loading,
+          signIn,
+          signOut,
+          sendEmailVerification,
+          sendMultiFactorVerification,
+          verifyMultiFactorPhoneCode,
+        }),
+        [
+          user,
+          loading,
+          signIn,
+          signOut,
+          sendEmailVerification,
+          sendMultiFactorVerification,
+          verifyMultiFactorPhoneCode,
+        ]
+      )}
     >
       {loading ? <CircularProgress /> : children}
-    </AuthContext.Provider>
+    </AuthContext>
   );
 };
 

@@ -4,7 +4,7 @@ String.prototype.toCapitalized = function () {
   return this.charAt(0).toUpperCase() + this.slice(1);
 };
 String.prototype.toPhone = function () {
-  const cleaned = ("" + this).replace(/\D/g, "");
+  const cleaned = String(this).replace(/\D/g, "");
   const matches = cleaned.match(RegexPattern.PHONE);
   if (matches) {
     const intlCode = matches[1] ? `+${matches[1]} ` : "";

@@ -1,17 +1,13 @@
-import {
-  type ReactNode,
-  type FC,
-  useState,
-  type MouseEvent,
-  type TouchEvent,
-  type ComponentProps,
-} from "react";
+import { type ReactNode, type FC, useState, type ComponentProps } from "react";
 import { IconButton, type IconButtonProps } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 import MenuOptionsMenu from "@/components/modals/MenuOptionsMenu";
-import { sxAsArray } from "@/lib/utils/sx";
+import { sxAsArray } from "@/utils/sx";
+import { EMPTY_OBJECT } from "@/constants/utility";
 
-interface MenuOptionsIconButtonProps extends IconButtonProps {
+const DEFAULT_ICON = <MoreVert />;
+
+interface MenuOptionsIconButtonProps extends IconButtonProps<"span"> {
   options: MenuOption[];
   icon?: ReactNode;
   slotProps?: {
@@ -24,43 +20,58 @@ interface MenuOptionsIconButtonProps extends IconButtonProps {
  */
 const MenuOptionsIconButton: FC<MenuOptionsIconButtonProps> = ({
   options,
-  icon = <MoreVert />,
-  onClick,
-  slotProps: { menu: menuProps } = {},
+  icon = DEFAULT_ICON,
+  onClick: onClickProp,
+  slotProps: { menu: menuProps } = EMPTY_OBJECT,
   ...props
-}) => {
+}: MenuOptionsIconButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  /** Values */
+
+  const includeMenu = !onClickProp;
+
   /** Callbacks */
+
+  const onMouseDown: IconButtonProps["onMouseDown"] = (event) => {
+    event.stopPropagation();
+  };
+
+  const onTouchStart: IconButtonProps["onTouchStart"] = (event) => {
+    event.stopPropagation();
+  };
+
+  const onClick: IconButtonProps["onClick"] = (event) => {
+    event.stopPropagation();
+    if (includeMenu) setAnchorEl(event.currentTarget);
+    else onClickProp(event);
+  };
+
+  const onMenuClose: ComponentProps<typeof MenuOptionsMenu>["onClose"] = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <>
       <IconButton
         component="span"
-        onMouseDown={(event: MouseEvent) => event.stopPropagation()}
-        onTouchStart={(event: TouchEvent) => event.stopPropagation()}
-        onClick={(
-          event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
-        ) => {
-          event.stopPropagation();
-
-          if (onClick) onClick(event);
-          else setAnchorEl(event.currentTarget);
-        }}
+        onMouseDown={onMouseDown}
+        onTouchStart={onTouchStart}
+        onClick={onClick}
         {...props}
         sx={[
-          { visibility: anchorEl ? "visible !important" : undefined },
+          { visibility: anchorEl ? "visible !important" : "initial" },
           ...sxAsArray(props?.sx),
         ]}
       >
         {icon}
       </IconButton>
-      {!onClick && (
+      {includeMenu && (
         <MenuOptionsMenu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           options={options}
-          onClose={() => setAnchorEl(null)}
+          onClose={onMenuClose}
           {...menuProps}
         />
       )}

@@ -1,4 +1,4 @@
-import { ComponentProps, type FC } from "react";
+import { type ComponentProps } from "react";
 import { useFormContext } from "react-hook-form";
 import { Delete, Edit } from "@mui/icons-material";
 
@@ -11,9 +11,11 @@ import type { EstimateCalculatorValues } from "../../types";
 const MIN = 0;
 const MAX = 10_000;
 
-const EstimateCalculatorMaterialCard: FC<
-  ComponentProps<typeof MaterialCard> & { index: number }
-> = ({ material, index, ...props }) => {
+const EstimateCalculatorMaterialCard = ({
+  material,
+  index,
+  ...props
+}: ComponentProps<typeof MaterialCard> & { index: number }) => {
   /** Mutations */
 
   const { archive } = useMaterials();
@@ -31,13 +33,17 @@ const EstimateCalculatorMaterialCard: FC<
       id: "edit",
       label: "Edit",
       icon: <Edit />,
-      onClick: () => setMaterialModal(true, material),
+      onClick: () => {
+        setMaterialModal(true, material);
+      },
     },
     {
       id: "delete",
       label: "Delete",
       icon: <Delete />,
-      onClick: () => archive.mutate(material.id),
+      onClick: () => {
+        archive.mutate(material.id);
+      },
     },
   ];
 
@@ -49,11 +55,14 @@ const EstimateCalculatorMaterialCard: FC<
         <IntegerField
           size="small"
           error={!!errors.materials?.[index]?.count}
-          onClick={(event) => event.stopPropagation()}
+          onClick={(event) => {
+            event.stopPropagation();
+          }}
           sx={{ width: 100 }}
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           {...register(`materials.${index}.count`, {
-            min: { value: MIN, message: `Min value is ${MIN}` },
-            max: { value: MAX, message: `Max value is ${MAX}` },
+            min: { value: MIN, message: `Min value is ${String(MIN)}` },
+            max: { value: MAX, message: `Max value is ${String(MAX)}` },
             setValueAs: (value) => Math.min(Math.max(+value, MIN), MAX),
           })}
         />
