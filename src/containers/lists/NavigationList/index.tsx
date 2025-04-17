@@ -1,6 +1,12 @@
 import { type ComponentProps } from "react";
 import { useLocation } from "@tanstack/react-router";
-import { Construction, Groups, Home, PersonAdd } from "@mui/icons-material";
+import {
+  Construction,
+  Groups,
+  Home,
+  Person,
+  PersonAdd,
+} from "@mui/icons-material";
 
 import useAuth from "@/hooks/auth/useAuth";
 import NestedList from "@/components/lists/NestedList";
@@ -48,6 +54,14 @@ const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
       disabled: !user?.emailVerified,
       selected: pathname === "/estimate-calculator",
       icon: <Construction />,
+    },
+    {
+      id: "profile",
+      label: "Profile",
+      to: "/profile",
+      render: Boolean(user),
+      selected: pathname === "/profile",
+      icon: <Person />,
     },
   ];
 

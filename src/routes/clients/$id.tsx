@@ -1,3 +1,4 @@
+import { type ComponentProps } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
   Card,
@@ -40,6 +41,24 @@ function RouteComponent() {
 
   const { update } = useClients();
 
+  /** Callbacks */
+
+  const onSubmit: ComponentProps<typeof ClientForm>["onSubmit"] = async (
+    data
+  ) => {
+    await update.mutateAsync(
+      { id: client.id, ...data },
+      {
+        onSuccess: () => {
+          handleNavigateToClient(client.id);
+        },
+      }
+    );
+  };
+
+  const handleNavigateToClient = (id: Client["id"], edit?: boolean) =>
+    void navigate({ to: `/clients/${id}`, search: { edit } });
+
   return (
     <Stack spacing={1}>
       <Stack direction="row" spacing={1} alignItems="center">
@@ -48,12 +67,9 @@ function RouteComponent() {
         </Typography>
         {!edit && (
           <EditIconButton
-            onClick={() =>
-              void navigate({
-                to: `/clients/${client.id}`,
-                search: { edit: true },
-              })
-            }
+            onClick={() => {
+              handleNavigateToClient(client.id, true);
+            }}
           />
         )}
       </Stack>
@@ -63,14 +79,7 @@ function RouteComponent() {
           values={client}
           submitLabel="Update"
           resetAsCancel
-          onSubmit={async (formData) => {
-            await update.mutateAsync(
-              { id: client.id, ...formData },
-              {
-                onSuccess: () => void navigate({ to: `/clients/${client.id}` }),
-              }
-            );
-          }}
+          onSubmit={onSubmit}
           onReset={() => void navigate({ to: `/clients/${client.id}` })}
         />
       ) : (

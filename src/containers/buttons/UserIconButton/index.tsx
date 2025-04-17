@@ -1,6 +1,7 @@
 import { type ComponentProps } from "react";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { Avatar } from "@mui/material";
+import { Login, Logout, Person } from "@mui/icons-material";
 
 import useAuth from "@/hooks/auth/useAuth";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
@@ -15,39 +16,40 @@ const UserIconButton = (
   const router = useRouter();
 
   const userName = user?.displayName ?? user?.email ?? "user";
-
-  /** Callbacks */
-
-  const handleSignIn = async () => {
-    await navigate({ to: "/sign-in" });
-  };
-
-  const handleSignOut = async () => {
-    await signOut?.mutateAsync(undefined, {
-      onSuccess: () => void router.invalidate(),
-    });
-  };
+  const isAuthenticated = !!user;
 
   /** Options */
 
-  const options: MenuOption[] = [
+  const unauthenticatedOptions: MenuOption[] = [
     {
       id: "signIn",
       label: "Sign In",
-      render: !user,
-      onClick: handleSignIn,
+      icon: <Login />,
+      onClick: () => void navigate({ to: "/sign-in" }),
+    },
+  ];
+
+  const authenticatedOptions: MenuOption[] = [
+    {
+      id: "profile",
+      label: "Profile",
+      icon: <Person />,
+      onClick: () => void navigate({ to: "/profile" }),
     },
     {
       id: "signOut",
       label: "Sign Out",
-      render: !!user,
-      onClick: handleSignOut,
+      icon: <Logout />,
+      onClick: () =>
+        void signOut?.mutateAsync(undefined, {
+          onSuccess: () => void router.invalidate(),
+        }),
     },
   ];
 
   return (
     <MenuOptionsIconButton
-      options={options}
+      options={isAuthenticated ? authenticatedOptions : unauthenticatedOptions}
       icon={<Avatar alt={userName} src={user?.photoURL || ""} />}
       {...props}
     />
