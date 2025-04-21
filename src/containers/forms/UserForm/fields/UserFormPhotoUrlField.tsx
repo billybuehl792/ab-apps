@@ -47,7 +47,9 @@ const UserFormPhotoUrlField = (props: StackProps) => {
             />
           </Stack>
           {!!errors.photoURL && (
-            <FormHelperText error>{errors.photoURL.message}</FormHelperText>
+            <FormHelperText error sx={{ textAlign: "center" }}>
+              {errors.photoURL.message}
+            </FormHelperText>
           )}
         </Stack>
       )}
