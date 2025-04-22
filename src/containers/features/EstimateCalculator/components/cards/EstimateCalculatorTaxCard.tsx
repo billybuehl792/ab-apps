@@ -1,5 +1,3 @@
-import { type FC } from "react";
-import { useFormContext } from "react-hook-form";
 import {
   Card,
   CardContent,
@@ -8,18 +6,19 @@ import {
   type CardProps,
 } from "@mui/material";
 import PercentField from "@/components/fields/PercentField";
-import type { EstimateCalculatorValues } from "../../types";
+import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 
 const MIN = 0;
 const MAX = 100;
 
-const EstimateCalculatorTaxCard: FC<CardProps> = (props) => {
+const EstimateCalculatorTaxCard = (props: CardProps) => {
   /** Values */
 
+  const { methods } = useEstimateCalculator();
   const {
     formState: { errors },
     register,
-  } = useFormContext<EstimateCalculatorValues>();
+  } = methods;
 
   return (
     <Card {...props}>

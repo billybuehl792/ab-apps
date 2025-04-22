@@ -1,4 +1,3 @@
-import { useFormContext } from "react-hook-form";
 import {
   Card,
   CardContent,
@@ -7,35 +6,29 @@ import {
   Typography,
   type Grid2Props as GridProps,
 } from "@mui/material";
-import type { EstimateCalculatorValues } from "../types";
+import useEstimateCalculator from "../hooks/useEstimateCalculator";
 
 const EstimateCalculatorHeader = (props: GridProps) => {
   /** Values */
 
-  const { watch } = useFormContext<EstimateCalculatorValues>();
+  const {
+    methods: { watch },
+  } = useEstimateCalculator();
 
   const fieldArray = watch("materials");
-  const tax = watch("tax") || 0;
-  const additional = watch("additional") || 0;
+  const tax = watch("tax");
+  const additional = watch("additional");
 
-  const materialTotal = fieldArray.reduce((acc, { value, count }) => {
-    return acc + value * (Number(count) || 0);
-  }, 0);
-  const subtotal = materialTotal + additional;
+  const materialTotal = fieldArray.reduce(
+    (acc, { value, count }) => acc + value * (count ?? 0),
+    0
+  );
+  const subtotal = materialTotal + (additional ?? 0);
   const total = subtotal + (subtotal * tax) / 100;
 
-  const subtotalUSD = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(subtotal);
-  const totalUSD = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(total);
-
   const items = [
-    { label: "subtotal", value: subtotalUSD },
-    { label: "total", value: totalUSD },
+    { label: "subtotal", value: subtotal.toUSD() },
+    { label: "total", value: total.toUSD() },
   ];
 
   return (

@@ -1,12 +1,10 @@
 import { type ComponentProps } from "react";
-import { useFormContext } from "react-hook-form";
 import { Delete, Edit } from "@mui/icons-material";
 
 import useMaterials from "@/hooks/firebase/useMaterials";
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 import MaterialCard from "@/containers/cards/MaterialCard";
 import IntegerField from "@/components/fields/IntegerField";
-import type { EstimateCalculatorValues } from "../../types";
 
 const MIN = 0;
 const MAX = 10_000;
@@ -22,11 +20,13 @@ const EstimateCalculatorMaterialCard = ({
 
   /** Values */
 
-  const { setMaterialModal } = useEstimateCalculator();
   const {
-    formState: { errors },
-    register,
-  } = useFormContext<EstimateCalculatorValues>();
+    methods: {
+      formState: { errors },
+      register,
+    },
+    setMaterialModal,
+  } = useEstimateCalculator();
 
   const options: MenuOption[] = [
     {

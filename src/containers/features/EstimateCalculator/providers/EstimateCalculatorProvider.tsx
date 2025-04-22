@@ -10,6 +10,9 @@ import { orderBy } from "firebase/firestore";
 
 import EstimateCalculatorContext from "../context/EstimateCalculatorContext";
 import { getMaterialList } from "@/lib/queries/firebase/materials";
+import { useForm } from "react-hook-form";
+import { EstimateCalculatorValues } from "../types";
+import { ESTIMATE_CALCULATOR_DEFAULT_VALUES } from "../constants";
 
 const EstimateCalculatorProvider: FC<PropsWithChildren> = ({ children }) => {
   const [materialModal, setMaterialModal] = useState<
@@ -19,18 +22,22 @@ const EstimateCalculatorProvider: FC<PropsWithChildren> = ({ children }) => {
   /** Values */
 
   const queryOptions = getMaterialList(orderBy("value", "desc"));
+  const methods = useForm<EstimateCalculatorValues>({
+    defaultValues: ESTIMATE_CALCULATOR_DEFAULT_VALUES,
+  });
 
   return (
     <EstimateCalculatorContext
       value={useMemo(
         () => ({
           queryOptions,
+          methods,
           materialModal,
           setMaterialModal: (open, material) => {
             setMaterialModal({ open, material: material ?? null });
           },
         }),
-        [queryOptions, materialModal, setMaterialModal]
+        [queryOptions, methods, materialModal, setMaterialModal]
       )}
     >
       {children}

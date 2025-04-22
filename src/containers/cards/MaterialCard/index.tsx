@@ -48,11 +48,6 @@ const MaterialCard = ({
   const options =
     typeof optionsProp === "function" ? optionsProp(material) : optionsProp;
 
-  const cost = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(material.value);
-
   /** Callbacks */
 
   const onClick: CardActionAreaProps["onClick"] = (event) => {
@@ -68,6 +63,7 @@ const MaterialCard = ({
         {...cardActionAreaProps}
         sx={[
           { cursor: !!options || onClickProp ? "pointer" : "default" },
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           ...sxAsArray(cardActionAreaProps?.sx),
         ]}
       >
@@ -90,7 +86,7 @@ const MaterialCard = ({
             </Typography>
           </Stack>
           <Typography variant="body2" noWrap>
-            {cost}
+            {material.value.toUSD()}
           </Typography>
           {endContent}
         </CardContent>

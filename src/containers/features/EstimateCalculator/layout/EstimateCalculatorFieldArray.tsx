@@ -1,6 +1,6 @@
 import { useEffect, useMemo, type ComponentProps } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
 import { Button, Skeleton, Stack, type StackProps } from "@mui/material";
 import { Add } from "@mui/icons-material";
 
@@ -24,7 +24,7 @@ const EstimateCalculatorFieldArray = ({
 }: EstimateCalculatorFieldArrayProps) => {
   /** Values */
 
-  const { queryOptions, setMaterialModal } = useEstimateCalculator();
+  const { queryOptions, methods, setMaterialModal } = useEstimateCalculator();
 
   /** Queries */
 
@@ -41,8 +41,7 @@ const EstimateCalculatorFieldArray = ({
 
   /** Form */
 
-  const { control, setValue, getValues, reset } =
-    useFormContext<EstimateCalculatorValues>();
+  const { control, setValue, getValues, reset } = methods;
   const fieldArray = useFieldArray<
     EstimateCalculatorValues,
     "materials",
@@ -72,7 +71,7 @@ const EstimateCalculatorFieldArray = ({
   }, [materials, setValue, getValues, reset]);
 
   return (
-    <Stack component="form" spacing={1} {...props}>
+    <Stack spacing={1} {...props}>
       <Stack component="fieldset" spacing={0.5}>
         {materialsQuery.isLoading
           ? Array(10)
