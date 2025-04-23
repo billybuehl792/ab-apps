@@ -51,6 +51,7 @@ const UserIconButton = (
     <MenuOptionsIconButton
       options={isAuthenticated ? authenticatedOptions : unauthenticatedOptions}
       icon={<Avatar alt={userName} src={user?.photoURL || ""} />}
+      slotProps={{ menu: { title: "Account" } }}
       {...props}
     />
   );

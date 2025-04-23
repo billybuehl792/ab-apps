@@ -1,9 +1,8 @@
 import { type ReactNode, useState, type ComponentProps } from "react";
-import { IconButton, useMediaQuery, type IconButtonProps } from "@mui/material";
+import { IconButton, type IconButtonProps } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 
-import MenuOptionsMenu from "@/components/modals/MenuOptionsMenu";
-import MenuOptionsDrawer from "@/components/modals/MenuOptionsDrawer";
+import MenuOptionsModal from "@/components/modals/MenuOptionsModal";
 import { EMPTY_OBJECT } from "@/constants/utility";
 
 const DEFAULT_ICON = <MoreVert />;
@@ -12,8 +11,7 @@ interface MenuOptionsIconButtonProps extends IconButtonProps<"span"> {
   options: MenuOption[];
   icon?: ReactNode;
   slotProps?: {
-    drawer?: Partial<ComponentProps<typeof MenuOptionsDrawer>>;
-    menu?: Partial<ComponentProps<typeof MenuOptionsMenu>>;
+    menu?: Partial<ComponentProps<typeof MenuOptionsModal>>;
   };
 }
 
@@ -24,14 +22,13 @@ const MenuOptionsIconButton = ({
   options,
   icon = DEFAULT_ICON,
   onClick: onClickProp,
-  slotProps: { drawer: drawerProps, menu: menuProps } = EMPTY_OBJECT,
+  slotProps: { menu: menuProps } = EMPTY_OBJECT,
   ...props
 }: MenuOptionsIconButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   /** Values */
 
-  const isMobile = useMediaQuery("(pointer: coarse)");
   const includeMenu = !onClickProp;
 
   /** Callbacks */
@@ -65,23 +62,15 @@ const MenuOptionsIconButton = ({
       >
         {icon}
       </IconButton>
-      {includeMenu &&
-        (isMobile ? (
-          <MenuOptionsDrawer
-            open={Boolean(anchorEl)}
-            options={options}
-            onClose={onMenuClose}
-            {...drawerProps}
-          />
-        ) : (
-          <MenuOptionsMenu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            options={options}
-            onClose={onMenuClose}
-            {...menuProps}
-          />
-        ))}
+      {includeMenu && (
+        <MenuOptionsModal
+          open={Boolean(anchorEl)}
+          anchorEl={anchorEl}
+          options={options}
+          onClose={onMenuClose}
+          {...menuProps}
+        />
+      )}
     </>
   );
 };
