@@ -16,12 +16,13 @@ const EstimateCalculatorNameField = (props: TextFieldProps) => {
 
   return (
     <TextField
-      placeholder="First Name"
+      placeholder="Name"
+      size="small"
       error={Boolean(errors.name)}
       helperText={errors.name?.message}
       fullWidth
       {...register("name", {
-        required: "First name is required",
+        required: "Name is required",
         maxLength: {
           value: MAX_LENGTH,
           message: `Max length is ${String(MAX_LENGTH)}`,

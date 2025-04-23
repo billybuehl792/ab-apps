@@ -1,11 +1,11 @@
 import { type ComponentProps } from "react";
 
-import MaterialFormDialog from "@/containers/modals/MaterialFormDialog";
 import useMaterials from "@/hooks/firebase/useMaterials";
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
+import MaterialFormDrawer from "@/containers/modals/MaterialFormDrawer";
 
-const EstimateCalculatorMaterialFormDialog = (
-  props: Partial<ComponentProps<typeof MaterialFormDialog>>
+const EstimateCalculatorMaterialFormDrawer = (
+  props: Partial<ComponentProps<typeof MaterialFormDrawer>>
 ) => {
   /** Values */
 
@@ -26,16 +26,17 @@ const EstimateCalculatorMaterialFormDialog = (
   };
 
   return (
-    <MaterialFormDialog
+    <MaterialFormDrawer
       open={materialModal.open}
-      label={materialModal.material?.label ?? "Create Material"}
+      title={materialModal.material?.label ?? "Create Material"}
+      fullHeight
       onClose={onClose}
       onTransitionExited={onTransitionExited}
       slotProps={{
         form: {
-          values: materialModal.material ?? undefined,
           submitLabel: materialModal.material ? "Update" : "Create",
-          disableReset: !materialModal.material,
+          resetAsCancel: true,
+          values: materialModal.material ?? undefined,
           onSubmit: async (formData) => {
             if (materialModal.material)
               await update.mutateAsync({
@@ -46,6 +47,7 @@ const EstimateCalculatorMaterialFormDialog = (
 
             onClose();
           },
+          onReset: onClose,
         },
       }}
       {...props}
@@ -53,4 +55,4 @@ const EstimateCalculatorMaterialFormDialog = (
   );
 };
 
-export default EstimateCalculatorMaterialFormDialog;
+export default EstimateCalculatorMaterialFormDrawer;

@@ -1,8 +1,9 @@
-import { type ReactNode, type FC, useState, type ComponentProps } from "react";
-import { IconButton, type IconButtonProps } from "@mui/material";
+import { type ReactNode, useState, type ComponentProps } from "react";
+import { IconButton, useMediaQuery, type IconButtonProps } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
+
 import MenuOptionsMenu from "@/components/modals/MenuOptionsMenu";
-import { sxAsArray } from "@/utils/sx";
+import MenuOptionsDrawer from "@/components/modals/MenuOptionsDrawer";
 import { EMPTY_OBJECT } from "@/constants/utility";
 
 const DEFAULT_ICON = <MoreVert />;
@@ -18,7 +19,7 @@ interface MenuOptionsIconButtonProps extends IconButtonProps<"span"> {
 /**
  * This component renders an `IconButton` with a menu that contains a list of options.
  */
-const MenuOptionsIconButton: FC<MenuOptionsIconButtonProps> = ({
+const MenuOptionsIconButton = ({
   options,
   icon = DEFAULT_ICON,
   onClick: onClickProp,
@@ -29,6 +30,7 @@ const MenuOptionsIconButton: FC<MenuOptionsIconButtonProps> = ({
 
   /** Values */
 
+  const isMobile = useMediaQuery("(pointer: coarse)");
   const includeMenu = !onClickProp;
 
   /** Callbacks */
@@ -47,7 +49,7 @@ const MenuOptionsIconButton: FC<MenuOptionsIconButtonProps> = ({
     else onClickProp(event);
   };
 
-  const onMenuClose: ComponentProps<typeof MenuOptionsMenu>["onClose"] = () => {
+  const onMenuClose = () => {
     setAnchorEl(null);
   };
 
@@ -59,22 +61,25 @@ const MenuOptionsIconButton: FC<MenuOptionsIconButtonProps> = ({
         onTouchStart={onTouchStart}
         onClick={onClick}
         {...props}
-        sx={[
-          { visibility: anchorEl ? "visible !important" : "initial" },
-          ...sxAsArray(props?.sx),
-        ]}
       >
         {icon}
       </IconButton>
-      {includeMenu && (
-        <MenuOptionsMenu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          options={options}
-          onClose={onMenuClose}
-          {...menuProps}
-        />
-      )}
+      {includeMenu &&
+        (isMobile ? (
+          <MenuOptionsDrawer
+            open={Boolean(anchorEl)}
+            options={options}
+            onClose={onMenuClose}
+          />
+        ) : (
+          <MenuOptionsMenu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            options={options}
+            onClose={onMenuClose}
+            {...menuProps}
+          />
+        ))}
     </>
   );
 };

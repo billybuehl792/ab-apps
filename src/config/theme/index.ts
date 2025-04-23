@@ -35,6 +35,16 @@ export const theme = createTheme({
         variant: "outlined",
       },
     },
+    MuiCardContent: {
+      styleOverrides: {
+        root: {
+          padding: 16,
+          "&:last-child": {
+            paddingBottom: 16,
+          },
+        },
+      },
+    },
     MuiDialogContent: {
       defaultProps: { dividers: true },
     },

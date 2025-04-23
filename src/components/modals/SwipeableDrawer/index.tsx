@@ -18,6 +18,7 @@ interface SwipeableDrawerProps
     "title" | "onOpen" | "onClose" | "slotProps"
   > {
   title?: ReactNode;
+  hideHeader?: boolean;
   fullHeight?: boolean;
   onOpen?: MUISwipeableDrawerProps["onOpen"];
   onClose?: MUISwipeableDrawerProps["onClose"];
@@ -39,7 +40,8 @@ const Puller = (props: BoxProps) => (
         mt: 1,
         mb: 0.25,
       },
-      ...sxAsArray(props?.sx),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      ...sxAsArray(props.sx),
     ]}
   />
 );
@@ -49,9 +51,11 @@ const Puller = (props: BoxProps) => (
  * It provides a bottom drawer with a puller and customizable styles.
  */
 const SwipeableDrawer = ({
+  anchor = "bottom",
   title,
   children,
   fullHeight,
+  hideHeader,
   onOpen,
   onClose,
   slotProps: {
@@ -63,11 +67,11 @@ const SwipeableDrawer = ({
 }: SwipeableDrawerProps) => {
   /** Values */
 
-  const isMobile = useMediaQuery("(hover: none)");
+  const isMobile = useMediaQuery("(pointer: coarse)");
 
   return (
     <MUISwipeableDrawer
-      anchor="bottom"
+      anchor={anchor}
       onOpen={(event) => onOpen?.(event)}
       onClose={(event) => onClose?.(event)}
       ModalProps={{ keepMounted: false }}
@@ -82,7 +86,9 @@ const SwipeableDrawer = ({
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
             },
-            { height: fullHeight ? "95vh" : "auto" },
+            anchor === "bottom" && {
+              height: fullHeight ? "95vh" : "auto",
+            },
           ],
         },
       }}
@@ -93,7 +99,7 @@ const SwipeableDrawer = ({
           <Puller {...pullerProps} />
         </Stack>
       )}
-      {Boolean(title) && (
+      {!hideHeader && (
         <DrawerHeader title={title} onClose={onClose} {...headerProps} />
       )}
       {children}

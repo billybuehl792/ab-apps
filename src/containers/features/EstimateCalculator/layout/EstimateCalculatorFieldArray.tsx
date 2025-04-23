@@ -1,16 +1,16 @@
 import { useEffect, useMemo, type ComponentProps } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useFieldArray } from "react-hook-form";
-import { Button, Skeleton, Stack, type StackProps } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Skeleton, Stack, type StackProps } from "@mui/material";
 
 import useEstimateCalculator from "../hooks/useEstimateCalculator";
-import { ESTIMATE_CALCULATOR_DEFAULT_VALUES } from "@/containers/features/EstimateCalculator/constants";
 import EstimateCalculatorMaterialCard from "../components/cards/EstimateCalculatorMaterialCard";
 import EstimateCalculatorTaxCard from "../components/cards/EstimateCalculatorTaxCard";
 import EstimateCalculatorAdditionalCard from "../components/cards/EstimateCalculatorAdditionalCard";
-import type { EstimateCalculatorValues } from "../types";
+import EstimateCalculatorAddMaterialButton from "../components/buttons/EstimateCalculatorAddMaterialButton";
+import { ESTIMATE_CALCULATOR_DEFAULT_VALUES } from "@/containers/features/EstimateCalculator/constants";
 import { EMPTY_OBJECT } from "@/constants/utility";
+import type { EstimateCalculatorValues } from "../types";
 
 interface EstimateCalculatorFieldArrayProps extends StackProps {
   slotProps?: {
@@ -24,7 +24,7 @@ const EstimateCalculatorFieldArray = ({
 }: EstimateCalculatorFieldArrayProps) => {
   /** Values */
 
-  const { queryOptions, methods, setMaterialModal } = useEstimateCalculator();
+  const { queryOptions, methods } = useEstimateCalculator();
 
   /** Queries */
 
@@ -98,15 +98,7 @@ const EstimateCalculatorFieldArray = ({
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end">
-        <Button
-          variant="text"
-          startIcon={<Add />}
-          onClick={() => {
-            setMaterialModal(true, null);
-          }}
-        >
-          Material
-        </Button>
+        <EstimateCalculatorAddMaterialButton />
       </Stack>
     </Stack>
   );

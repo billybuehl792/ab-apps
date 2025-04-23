@@ -34,6 +34,7 @@ const EstimateCalculatorAddressField = (
       render={({ field, formState: { errors } }) => (
         <AddressField
           label=""
+          size="small"
           placeholder="Address"
           error={Boolean(errors.address)}
           helperText={errors.address?.message}
