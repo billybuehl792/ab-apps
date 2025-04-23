@@ -1,4 +1,4 @@
-import { type ComponentProps } from "react";
+import { type ReactNode, type ComponentProps } from "react";
 
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
 import MenuOptionsList from "@/components/lists/MenuOptionsList";
@@ -6,6 +6,7 @@ import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface MenuOptionsDrawerProps
   extends Omit<Partial<ComponentProps<typeof SwipeableDrawer>>, "slotProps"> {
+  title?: ReactNode;
   options: MenuOption[];
   fullHeight?: boolean;
   disableCloseOnSelect?: boolean;
@@ -20,6 +21,7 @@ interface MenuOptionsDrawerProps
 const MenuOptionsDrawer = ({
   options,
   disableCloseOnSelect,
+  title = "Options",
   onClose,
   slotProps: { list: listProps, ...slotProps } = EMPTY_OBJECT,
   ...props
@@ -36,7 +38,7 @@ const MenuOptionsDrawer = ({
 
   return (
     <SwipeableDrawer
-      title="Options"
+      title={title}
       onMouseDown={onMouseDown}
       onClick={onClick}
       onClose={onClose}

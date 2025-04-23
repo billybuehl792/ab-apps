@@ -37,12 +37,7 @@ const FormActions = ({
   } = useFormContext();
 
   return (
-    <Stack
-      direction="row-reverse"
-      spacing={1}
-      justifyContent="flex-end"
-      {...props}
-    >
+    <Stack direction="row-reverse" spacing={1} {...props}>
       <Button
         type="submit"
         loading={isSubmitting}

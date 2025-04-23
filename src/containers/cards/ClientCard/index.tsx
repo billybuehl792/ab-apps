@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
-import { sxAsArray } from "@/utils/sx";
 import { EMPTY_OBJECT } from "@/constants/utility";
 import type { Client } from "@/types/firebase";
 
@@ -30,7 +29,7 @@ const ClientCard = ({
   client,
   disabled,
   options: optionsProp,
-  onClick,
+  onClick: onClickProp,
   slotProps: {
     cardActionArea: cardActionAreaProps,
     cardContent: cardContentProps,
@@ -39,21 +38,23 @@ const ClientCard = ({
 }: ClientCardProps) => {
   /** Values */
 
+  const fullName = `${client.first_name} ${client.last_name}`;
+
   const options =
     typeof optionsProp === "function" ? optionsProp(client) : optionsProp;
+
+  /** Callbacks */
+
+  const onClick: CardActionAreaProps["onClick"] = (event) => {
+    onClickProp?.(event, client);
+  };
 
   return (
     <Card {...props}>
       <CardActionArea
         disabled={disabled}
-        onClick={(event) => onClick?.(event, client)}
-        disableTouchRipple={!onClick}
+        onClick={onClick}
         {...cardActionAreaProps}
-        sx={[
-          { cursor: onClick ? "pointer" : "default" },
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          ...sxAsArray(cardActionAreaProps?.sx),
-        ]}
       >
         <CardContent
           component={Stack}
@@ -64,13 +65,15 @@ const ClientCard = ({
         >
           <Stack spacing={0.75} overflow="hidden">
             <Typography variant="body2" fontWeight="bold" noWrap>
-              {`${client.first_name} ${client.last_name}`}
+              {fullName}
             </Typography>
             <Typography variant="subtitle2" noWrap>
               {client.address}
             </Typography>
           </Stack>
-          {!!options && <MenuOptionsIconButton options={options} />}
+          {!!options && (
+            <MenuOptionsIconButton title={fullName} options={options} />
+          )}
         </CardContent>
       </CardActionArea>
     </Card>
