@@ -1,17 +1,19 @@
 import { type ComponentProps } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 
 import { validateAddress } from "@/lib/queries/google-maps";
 import AddressField from "@/components/fields/AddressField";
-import type { ClientData } from "@/types/firebase";
+import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 
-const ClientFormAddressField = (
+const EstimateCalculatorAddressField = (
   props: Partial<ComponentProps<typeof AddressField>>
 ) => {
   /** Values */
 
-  const { control } = useFormContext<ClientData>();
+  const {
+    methods: { control },
+  } = useEstimateCalculator();
   const queryClient = useQueryClient();
 
   return (
@@ -31,6 +33,9 @@ const ClientFormAddressField = (
       }}
       render={({ field, formState: { errors } }) => (
         <AddressField
+          label=""
+          size="small"
+          placeholder="Address"
           error={Boolean(errors.address)}
           helperText={errors.address?.message}
           {...field}
@@ -41,4 +46,4 @@ const ClientFormAddressField = (
   );
 };
 
-export default ClientFormAddressField;
+export default EstimateCalculatorAddressField;

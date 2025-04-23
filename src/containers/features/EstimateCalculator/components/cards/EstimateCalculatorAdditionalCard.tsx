@@ -1,4 +1,3 @@
-import { useFormContext } from "react-hook-form";
 import {
   Card,
   CardContent,
@@ -7,20 +6,9 @@ import {
   type CardProps,
 } from "@mui/material";
 
-import DollarField from "@/components/fields/DollarField";
-import type { EstimateCalculatorValues } from "../../types";
-
-const MIN = 0;
-const MAX = 10_000;
+import EstimateCalculatorAdditionalField from "../fields/EstimateCalculatorAdditionalField";
 
 const EstimateCalculatorAdditionalCard = (props: CardProps) => {
-  /** Values */
-
-  const {
-    formState: { errors },
-    register,
-  } = useFormContext<EstimateCalculatorValues>();
-
   return (
     <Card {...props}>
       <CardContent
@@ -34,22 +22,7 @@ const EstimateCalculatorAdditionalCard = (props: CardProps) => {
         <Typography variant="body1" noWrap>
           Additional Costs
         </Typography>
-        <DollarField
-          size="small"
-          error={!!errors.additional}
-          sx={{ width: 120 }}
-          {...register("additional", {
-            min: {
-              value: MIN,
-              message: `Value cannot be less than ${String(MIN)}`,
-            },
-            max: {
-              value: MAX,
-              message: `Value cannot be greater than ${String(MAX)}`,
-            },
-            setValueAs: (value) => Math.min(Math.max(+value, MIN), MAX),
-          })}
-        />
+        <EstimateCalculatorAdditionalField />
       </CardContent>
     </Card>
   );

@@ -1,5 +1,6 @@
-import { type ComponentProps, type FC } from "react";
+import { type ComponentProps } from "react";
 import { Menu, type MenuProps } from "@mui/material";
+
 import MenuOptionsList from "@/components/lists/MenuOptionsList";
 import { EMPTY_OBJECT } from "@/constants/utility";
 
@@ -14,7 +15,7 @@ interface MenuOptionsMenuProps extends Omit<MenuProps, "slotProps"> {
 /**
  * This component renders a `Menu` with a list of selectable options.
  */
-const MenuOptionsMenu: FC<MenuOptionsMenuProps> = ({
+const MenuOptionsMenu = ({
   options,
   disableCloseOnSelect,
   onClose,

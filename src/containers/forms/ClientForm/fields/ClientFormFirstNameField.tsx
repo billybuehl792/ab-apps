@@ -1,11 +1,10 @@
-import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { TextField, type TextFieldProps } from "@mui/material";
 import type { ClientData } from "@/types/firebase";
 
 const MAX_LENGTH = 32;
 
-const ClientFormFirstNameField: FC<TextFieldProps> = (props) => {
+const ClientFormFirstNameField = (props: TextFieldProps) => {
   /** Values */
 
   const {

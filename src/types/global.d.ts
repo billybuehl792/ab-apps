@@ -73,4 +73,14 @@ declare global {
      */
     truncate(length?: number, append?: string): string;
   }
+
+  interface Number {
+    /**
+     * Converts a string to 'USD Case', formatting it as a currency string in USD.
+     *
+     * @param string - The input string to be converted to USD case.
+     * @returns A new string formatted as a currency in USD.
+     */
+    toUSD(): string;
+  }
 }

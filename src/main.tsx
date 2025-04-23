@@ -1,5 +1,6 @@
 import "reset-css/reset.css";
 import "./utils/string";
+import "./utils/number";
 
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
