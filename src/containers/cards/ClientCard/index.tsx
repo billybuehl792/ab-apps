@@ -51,6 +51,7 @@ const ClientCard = ({
         {...cardActionAreaProps}
         sx={[
           { cursor: onClick ? "pointer" : "default" },
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           ...sxAsArray(cardActionAreaProps?.sx),
         ]}
       >

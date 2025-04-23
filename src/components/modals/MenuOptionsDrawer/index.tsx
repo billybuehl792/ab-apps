@@ -24,8 +24,25 @@ const MenuOptionsDrawer = ({
   slotProps: { list: listProps, ...slotProps } = EMPTY_OBJECT,
   ...props
 }: MenuOptionsDrawerProps) => {
+  /** Callbacks */
+
+  const onMouseDown: MenuOptionsDrawerProps["onMouseDown"] = (event) => {
+    event.stopPropagation();
+  };
+
+  const onClick: MenuOptionsDrawerProps["onClick"] = (event) => {
+    event.stopPropagation();
+  };
+
   return (
-    <SwipeableDrawer onClose={onClose} slotProps={slotProps} {...props}>
+    <SwipeableDrawer
+      title="Options"
+      onMouseDown={onMouseDown}
+      onClick={onClick}
+      onClose={onClose}
+      slotProps={slotProps}
+      {...props}
+    >
       <MenuOptionsList
         options={options.map((option) => ({
           ...option,

@@ -1,15 +1,10 @@
 import { type ComponentProps } from "react";
-import { useFormContext } from "react-hook-form";
 import { Delete, Edit } from "@mui/icons-material";
 
 import useMaterials from "@/hooks/firebase/useMaterials";
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 import MaterialCard from "@/containers/cards/MaterialCard";
-import IntegerField from "@/components/fields/IntegerField";
-import type { EstimateCalculatorValues } from "../../types";
-
-const MIN = 0;
-const MAX = 10_000;
+import EstimateCalculatorCountField from "../fields/EstimateCalculatorCountField";
 
 const EstimateCalculatorMaterialCard = ({
   material,
@@ -23,10 +18,6 @@ const EstimateCalculatorMaterialCard = ({
   /** Values */
 
   const { setMaterialModal } = useEstimateCalculator();
-  const {
-    formState: { errors },
-    register,
-  } = useFormContext<EstimateCalculatorValues>();
 
   const options: MenuOption[] = [
     {
@@ -51,22 +42,7 @@ const EstimateCalculatorMaterialCard = ({
     <MaterialCard
       material={material}
       options={options}
-      endContent={
-        <IntegerField
-          size="small"
-          error={!!errors.materials?.[index]?.count}
-          onClick={(event) => {
-            event.stopPropagation();
-          }}
-          sx={{ width: 100 }}
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          {...register(`materials.${index}.count`, {
-            min: { value: MIN, message: `Min value is ${String(MIN)}` },
-            max: { value: MAX, message: `Max value is ${String(MAX)}` },
-            setValueAs: (value) => Math.min(Math.max(+value, MIN), MAX),
-          })}
-        />
-      }
+      endContent={<EstimateCalculatorCountField index={index} />}
       {...props}
     />
   );

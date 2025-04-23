@@ -8,12 +8,14 @@ import {
   type CardProps,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 
 import MenuOptionsMenu from "@/components/modals/MenuOptionsMenu";
 import { sxAsArray } from "@/utils/sx";
 import { EMPTY_OBJECT } from "@/constants/utility";
 import type { Material } from "@/types/firebase";
+import MenuOptionsDrawer from "@/components/modals/MenuOptionsDrawer";
 
 interface MaterialCardProps extends Omit<CardProps, "onClick"> {
   material: Material;
@@ -45,13 +47,9 @@ const MaterialCard = ({
 
   /** Values */
 
+  const isMobile = useMediaQuery("(pointer: coarse)");
   const options =
     typeof optionsProp === "function" ? optionsProp(material) : optionsProp;
-
-  const cost = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(material.value);
 
   /** Callbacks */
 
@@ -68,6 +66,7 @@ const MaterialCard = ({
         {...cardActionAreaProps}
         sx={[
           { cursor: !!options || onClickProp ? "pointer" : "default" },
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           ...sxAsArray(cardActionAreaProps?.sx),
         ]}
       >
@@ -90,24 +89,34 @@ const MaterialCard = ({
             </Typography>
           </Stack>
           <Typography variant="body2" noWrap>
-            {cost}
+            {material.value.toUSD()}
           </Typography>
           {endContent}
         </CardContent>
       </CardActionArea>
 
-      {!!options && (
-        <MenuOptionsMenu
-          open={Boolean(optionsAnchorEl)}
-          anchorEl={optionsAnchorEl}
-          anchorOrigin={{ horizontal: "center", vertical: "center" }}
-          transformOrigin={{ horizontal: "right", vertical: "bottom" }}
-          options={options}
-          onClose={() => {
-            setOptionsAnchorEl(null);
-          }}
-        />
-      )}
+      {!!options &&
+        (isMobile ? (
+          <MenuOptionsDrawer
+            title={material.label}
+            open={Boolean(optionsAnchorEl)}
+            options={options}
+            onClose={() => {
+              setOptionsAnchorEl(null);
+            }}
+          />
+        ) : (
+          <MenuOptionsMenu
+            open={Boolean(optionsAnchorEl)}
+            anchorEl={optionsAnchorEl}
+            anchorOrigin={{ horizontal: "center", vertical: "center" }}
+            transformOrigin={{ horizontal: "right", vertical: "bottom" }}
+            options={options}
+            onClose={() => {
+              setOptionsAnchorEl(null);
+            }}
+          />
+        ))}
     </Card>
   );
 };

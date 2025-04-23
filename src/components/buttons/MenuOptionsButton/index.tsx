@@ -1,16 +1,17 @@
-import { type ReactNode, useState, type ComponentProps } from "react";
-import { IconButton, useMediaQuery, type IconButtonProps } from "@mui/material";
-import { MoreVert } from "@mui/icons-material";
+import { useState, type ComponentProps } from "react";
+import {
+  type ButtonProps,
+  useMediaQuery,
+  type IconButtonProps,
+  Button,
+} from "@mui/material";
 
 import MenuOptionsMenu from "@/components/modals/MenuOptionsMenu";
 import MenuOptionsDrawer from "@/components/modals/MenuOptionsDrawer";
 import { EMPTY_OBJECT } from "@/constants/utility";
 
-const DEFAULT_ICON = <MoreVert />;
-
-interface MenuOptionsIconButtonProps extends IconButtonProps<"span"> {
+interface MenuOptionsButtonProps extends ButtonProps {
   options: MenuOption[];
-  icon?: ReactNode;
   slotProps?: {
     drawer?: Partial<ComponentProps<typeof MenuOptionsDrawer>>;
     menu?: Partial<ComponentProps<typeof MenuOptionsMenu>>;
@@ -18,15 +19,14 @@ interface MenuOptionsIconButtonProps extends IconButtonProps<"span"> {
 }
 
 /**
- * This component renders an `IconButton` with a menu or drawer containing a list of options.
+ * This component renders a `Button` with a menu or drawer containing a list of options.
  */
-const MenuOptionsIconButton = ({
+const MenuOptionsButton = ({
   options,
-  icon = DEFAULT_ICON,
   onClick: onClickProp,
   slotProps: { drawer: drawerProps, menu: menuProps } = EMPTY_OBJECT,
   ...props
-}: MenuOptionsIconButtonProps) => {
+}: MenuOptionsButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   /** Values */
@@ -56,15 +56,12 @@ const MenuOptionsIconButton = ({
 
   return (
     <>
-      <IconButton
-        component="span"
+      <Button
         onMouseDown={onMouseDown}
         onTouchStart={onTouchStart}
         onClick={onClick}
         {...props}
-      >
-        {icon}
-      </IconButton>
+      />
       {includeMenu &&
         (isMobile ? (
           <MenuOptionsDrawer
@@ -86,4 +83,4 @@ const MenuOptionsIconButton = ({
   );
 };
 
-export default MenuOptionsIconButton;
+export default MenuOptionsButton;

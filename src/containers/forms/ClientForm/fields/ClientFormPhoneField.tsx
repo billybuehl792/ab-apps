@@ -1,4 +1,3 @@
-import { type FC } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import {
   matchIsValidTel,
@@ -7,7 +6,7 @@ import {
 } from "mui-tel-input";
 import type { ClientData } from "@/types/firebase";
 
-const ClientFormPhoneField: FC<MuiTelInputProps> = (props) => {
+const ClientFormPhoneField = (props: MuiTelInputProps) => {
   /** Values */
 
   const { control } = useFormContext<ClientData>();
@@ -32,7 +31,7 @@ const ClientFormPhoneField: FC<MuiTelInputProps> = (props) => {
           {...fieldProps}
           label="Phone"
           inputRef={ref}
-          value={value ?? ""}
+          value={value}
           helperText={errors.phone?.message}
           error={Boolean(errors.phone)}
           defaultCountry="US"

@@ -1,26 +1,30 @@
-import { useFormContext } from "react-hook-form";
-import { Stack, type StackProps, TextField } from "@mui/material";
-import type { EstimateCalculatorValues } from "../types";
+import { type ComponentProps } from "react";
+import { Stack, type StackProps } from "@mui/material";
 
-const EstimateCalculatorMeta = (props: StackProps) => {
-  /** Values */
+import EstimateCalculatorNameField from "../components/fields/EstimateCalculatorNameField";
+import EstimateCalculatorAddressField from "../components/fields/EstimateCalculatorAddressField";
+import { EMPTY_OBJECT } from "@/constants/utility";
 
-  const { register } = useFormContext<EstimateCalculatorValues>();
+interface EstimateCalculatorMetaProps extends StackProps {
+  slotProps?: {
+    nameField?: Partial<ComponentProps<typeof EstimateCalculatorNameField>>;
+    addressField?: Partial<
+      ComponentProps<typeof EstimateCalculatorAddressField>
+    >;
+  };
+}
 
+const EstimateCalculatorMeta = ({
+  slotProps: {
+    nameField: nameFieldProps,
+    addressField: addressFieldProps,
+  } = EMPTY_OBJECT,
+  ...props
+}: EstimateCalculatorMetaProps) => {
   return (
     <Stack spacing={1} {...props}>
-      <TextField
-        placeholder="Customer Name"
-        size="small"
-        fullWidth
-        {...register("name")}
-      />
-      <TextField
-        placeholder="Address"
-        size="small"
-        fullWidth
-        {...register("address")}
-      />
+      <EstimateCalculatorNameField {...nameFieldProps} />
+      <EstimateCalculatorAddressField {...addressFieldProps} />
     </Stack>
   );
 };

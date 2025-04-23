@@ -1,35 +1,43 @@
-import { useFormContext } from "react-hook-form";
-import { Button, ButtonGroup, Stack, type StackProps } from "@mui/material";
+import { type ComponentProps } from "react";
+import {
+  ButtonGroup,
+  type ButtonGroupProps,
+  Stack,
+  type StackProps,
+} from "@mui/material";
 
-import { sxAsArray } from "@/utils/sx";
-import type { EstimateCalculatorValues } from "../types";
+import EstimateCalculatorResetButton from "../components/buttons/EstimateCalculatorResetButton";
+import EstimateCalculatorExportButton from "../components/buttons/EstimateCalculatorExportButton";
+import { EMPTY_OBJECT } from "@/constants/utility";
 
-const EstimateCalculatorFooter = (props: StackProps) => {
-  /** Values */
+interface EstimateCalculatorFooterProps extends StackProps {
+  slotProps?: {
+    buttonGroup?: ButtonGroupProps;
+    exportButton?: Partial<
+      ComponentProps<typeof EstimateCalculatorExportButton>
+    >;
+    resetButton?: Partial<ComponentProps<typeof EstimateCalculatorResetButton>>;
+  };
+}
 
-  const { reset } = useFormContext<EstimateCalculatorValues>();
-
+const EstimateCalculatorFooter = ({
+  slotProps: {
+    buttonGroup: buttonGroupProps,
+    exportButton: exportButtonProps,
+    resetButton: resetButtonProps,
+  } = EMPTY_OBJECT,
+  ...props
+}: EstimateCalculatorFooterProps) => {
   return (
-    <Stack
-      {...props}
-      sx={[
-        { bgcolor: ({ palette }) => palette.background.default },
-        ...sxAsArray(props?.sx),
-      ]}
-    >
-      <ButtonGroup variant="outlined" size="large" fullWidth>
-        <Button
-          type="reset"
-          color="error"
-          onClick={() => {
-            reset();
-          }}
-        >
-          Reset
-        </Button>
-        <Button variant="contained" color="primary">
-          Export
-        </Button>
+    <Stack {...props}>
+      <ButtonGroup
+        variant="outlined"
+        size="large"
+        fullWidth
+        {...buttonGroupProps}
+      >
+        <EstimateCalculatorResetButton {...resetButtonProps} />
+        <EstimateCalculatorExportButton {...exportButtonProps} />
       </ButtonGroup>
     </Stack>
   );

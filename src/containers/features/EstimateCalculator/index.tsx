@@ -1,56 +1,93 @@
-import { FormProvider, useForm } from "react-hook-form";
+import { type ComponentProps } from "react";
 import { Stack, type StackProps } from "@mui/material";
 
 import EstimateCalculatorProvider from "./providers/EstimateCalculatorProvider";
-import EstimateCalculatorHeader from "./layout/EstimateCalculatorHeader";
+import EstimateCalculatorOutput from "./layout/EstimateCalculatorOutput";
 import EstimateCalculatorFieldArray from "./layout/EstimateCalculatorFieldArray";
 import EstimateCalculatorMeta from "./layout/EstimateCalculatorMeta";
 import EstimateCalculatorFooter from "./layout/EstimateCalculatorFooter";
-import EstimateCalculatorMaterialFormDialog from "./components/modals/EstimateCalculatorMaterialFormDialog";
-import { ESTIMATE_CALCULATOR_DEFAULT_VALUES } from "@/containers/features/EstimateCalculator/constants";
-import type { EstimateCalculatorValues } from "./types";
+import EstimateCalculatorMaterialFormDrawer from "./components/modals/EstimateCalculatorMaterialFormDrawer";
+import { EMPTY_OBJECT } from "@/constants/utility";
 
-const EstimateCalculator = (props: StackProps) => {
-  /** Values */
+interface EstimateCalculatorProps extends StackProps<"form"> {
+  slotProps?: {
+    fieldArray?: Partial<ComponentProps<typeof EstimateCalculatorFieldArray>>;
+    footer?: Partial<ComponentProps<typeof EstimateCalculatorFooter>>;
+    header?: StackProps;
+    materialFormDrawer?: Partial<
+      ComponentProps<typeof EstimateCalculatorMaterialFormDrawer>
+    >;
+    meta?: Partial<ComponentProps<typeof EstimateCalculatorMeta>>;
+    output?: Partial<ComponentProps<typeof EstimateCalculatorOutput>>;
+  };
+}
 
-  const methods = useForm<EstimateCalculatorValues>({
-    mode: "all",
-    defaultValues: ESTIMATE_CALCULATOR_DEFAULT_VALUES,
-    ...props,
-  });
+const EstimateCalculator = ({
+  slotProps: {
+    fieldArray: fieldArrayProps,
+    footer: footerProps,
+    header: headerProps,
+    materialFormDrawer: materialFormDrawerProps,
+    meta: metaProps,
+    output: outputProps,
+  } = EMPTY_OBJECT,
+  ...props
+}: EstimateCalculatorProps) => {
+  /** Callbacks */
+
+  const onSubmit: EstimateCalculatorProps["onSubmit"] = (event) => {
+    event.preventDefault();
+  };
+
+  const onReset: EstimateCalculatorProps["onReset"] = (event) => {
+    event.preventDefault();
+  };
 
   return (
-    <FormProvider {...methods}>
-      <EstimateCalculatorProvider>
-        <>
-          <Stack sx={{ position: "relative", overflow: "auto", flexGrow: 1 }}>
-            <Stack
-              spacing={1}
-              sx={{
-                position: "sticky",
-                top: 0,
-                zIndex: 1,
-                p: 2,
-                pb: 0,
-                bgcolor: ({ palette }) => palette.background.default,
-              }}
-            >
-              <EstimateCalculatorHeader />
-              <EstimateCalculatorMeta />
-            </Stack>
+    <EstimateCalculatorProvider>
+      <Stack
+        component="form"
+        position="relative"
+        overflow="auto"
+        flexGrow={1}
+        onSubmit={onSubmit}
+        onReset={onReset}
+        {...props}
+      >
+        <Stack
+          position="sticky"
+          top={0}
+          zIndex={1}
+          spacing={1}
+          padding={2}
+          paddingBottom={0}
+          bgcolor={({ palette }) => palette.background.default}
+          {...headerProps}
+        >
+          <EstimateCalculatorMeta {...metaProps} />
+          <EstimateCalculatorOutput {...outputProps} />
+        </Stack>
 
-            <EstimateCalculatorFieldArray sx={{ flexGrow: 1, px: 2, py: 1 }} />
+        <EstimateCalculatorFieldArray
+          flexGrow={1}
+          px={2}
+          py={1}
+          {...fieldArrayProps}
+        />
 
-            <EstimateCalculatorFooter
-              sx={{ position: "sticky", bottom: 0, p: 2, pt: 0 }}
-            />
-          </Stack>
+        <EstimateCalculatorFooter
+          position="sticky"
+          bottom={0}
+          padding={2}
+          paddingTop={0}
+          bgcolor={({ palette }) => palette.background.default}
+          {...footerProps}
+        />
+      </Stack>
 
-          {/* Modals */}
-          <EstimateCalculatorMaterialFormDialog />
-        </>
-      </EstimateCalculatorProvider>
-    </FormProvider>
+      {/* Modals */}
+      <EstimateCalculatorMaterialFormDrawer {...materialFormDrawerProps} />
+    </EstimateCalculatorProvider>
   );
 };
 

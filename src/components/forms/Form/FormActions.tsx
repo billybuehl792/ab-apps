@@ -1,7 +1,6 @@
 import { type ReactNode } from "react";
 import {
   Button,
-  Fade,
   Stack,
   type ButtonProps,
   type StackProps,
@@ -38,20 +37,12 @@ const FormActions = ({
   } = useFormContext();
 
   return (
-    <Stack direction="row" spacing={1} justifyContent="flex-end" {...props}>
-      {!disableReset && (
-        <Fade in={isDirty || resetAsCancel}>
-          <Button
-            type="reset"
-            variant="text"
-            color="error"
-            disabled={isSubmitting || disabled}
-            {...resetButtonProps}
-          >
-            {resetLabel}
-          </Button>
-        </Fade>
-      )}
+    <Stack
+      direction="row-reverse"
+      spacing={1}
+      justifyContent="flex-end"
+      {...props}
+    >
       <Button
         type="submit"
         loading={isSubmitting}
@@ -60,6 +51,17 @@ const FormActions = ({
       >
         {submitLabel}
       </Button>
+      {!disableReset && (
+        <Button
+          type="reset"
+          variant="text"
+          color="error"
+          disabled={isSubmitting || disabled || (!resetAsCancel && !isDirty)}
+          {...resetButtonProps}
+        >
+          {resetLabel}
+        </Button>
+      )}
     </Stack>
   );
 };

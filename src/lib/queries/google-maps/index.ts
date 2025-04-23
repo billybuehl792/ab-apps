@@ -36,12 +36,8 @@ export const validateAddress = (address: string) =>
         }
       );
       const data = (await response.json()) as AddressValidationResponse;
-
       const isComplete = Boolean(data.result?.verdict?.addressComplete);
-      const isValid = ["PREMISE", "PREMISE_PROXIMITY"].includes(
-        data.result?.verdict?.inputGranularity as Granularity
-      );
 
-      return isComplete && isValid;
+      return isComplete;
     },
   });
