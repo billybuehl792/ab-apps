@@ -72,11 +72,19 @@ const SwipeableDrawer = ({
   return (
     <MUISwipeableDrawer
       anchor={anchor}
+      disableSwipeToOpen
       onOpen={(event) => onOpen?.(event)}
       onClose={(event) => onClose?.(event)}
       ModalProps={{ keepMounted: false }}
       slotProps={{
         ...slotProps,
+        transition: {
+          mountOnEnter: true,
+          unmountOnExit: true,
+          ...(typeof slotProps.transition === "object"
+            ? slotProps.transition
+            : EMPTY_OBJECT),
+        },
         paper: {
           ...(typeof slotProps.paper === "object"
             ? slotProps.paper

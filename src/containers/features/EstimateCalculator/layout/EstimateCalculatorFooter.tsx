@@ -29,7 +29,7 @@ const EstimateCalculatorFooter = ({
   ...props
 }: EstimateCalculatorFooterProps) => {
   return (
-    <Stack bgcolor={({ palette }) => palette.background.default} {...props}>
+    <Stack {...props}>
       <ButtonGroup
         variant="outlined"
         size="large"

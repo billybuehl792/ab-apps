@@ -3,7 +3,7 @@ import { Grid2 as Grid, type Grid2Props as GridProps } from "@mui/material";
 import useEstimateCalculator from "../hooks/useEstimateCalculator";
 import EstimateCalculatorHeaderCard from "../components/cards/EstimateCalculatorHeaderCard";
 
-const EstimateCalculatorHeader = (props: GridProps) => {
+const EstimateCalculatorOutput = (props: GridProps) => {
   /** Values */
 
   const {
@@ -39,4 +39,4 @@ const EstimateCalculatorHeader = (props: GridProps) => {
   );
 };
 
-export default EstimateCalculatorHeader;
+export default EstimateCalculatorOutput;

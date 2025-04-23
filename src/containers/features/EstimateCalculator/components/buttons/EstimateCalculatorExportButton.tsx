@@ -1,11 +1,16 @@
-import { Button, type ButtonProps } from "@mui/material";
+import { type ComponentProps, useState } from "react";
+import { IosShare, PictureAsPdf } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
 
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
-import { delay } from "@/utils/queries";
+import MenuOptionsButton from "@/components/buttons/MenuOptionsButton";
 import { createEstimateCalculatorDoc } from "../../utils";
 
-const EstimateCalculatorExportButton = (props: ButtonProps) => {
+const EstimateCalculatorExportButton = (
+  props: Partial<ComponentProps<typeof MenuOptionsButton>>
+) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   /** Values */
 
   const {
@@ -15,25 +20,36 @@ const EstimateCalculatorExportButton = (props: ButtonProps) => {
 
   /** Callbacks */
 
-  const onSubmit = handleSubmit(async (data, event) => {
-    event?.preventDefault();
+  const handleShareDocument = handleSubmit(async (formData) => {
+    setIsLoading(true);
 
     try {
-      const doc = createEstimateCalculatorDoc(data);
-      await delay(300);
-
-      doc.output("dataurlnewwindow", {
-        filename: `${data.name}.pdf`,
+      const doc = createEstimateCalculatorDoc(formData);
+      const blob = doc.output("blob");
+      const fileName = `${formData.name}.pdf`;
+      const file = new File([blob], fileName, { type: "application/pdf" });
+      await navigator.share({
+        title: fileName,
+        text: "Check this out!",
+        files: [file],
       });
+    } catch (error) {
+      if ((error as Error).name !== "AbortError")
+        enqueueSnackbar(
+          "Something went wrong while attempting to export file",
+          { variant: "error" }
+        );
+    } finally {
+      setIsLoading(false);
+    }
+  });
 
-      // doc.output("blob");
-
-      // const file = new File([blob], fileName, { type: "application/pdf" });
-      // await navigator.share({
-      //   title: fileName,
-      //   text: "Check this out!",
-      //   files: [file],
-      // });
+  const handleViewDocument = handleSubmit((formData) => {
+    try {
+      const doc = createEstimateCalculatorDoc(formData);
+      doc.output("dataurlnewwindow", {
+        filename: `${formData.name}.pdf`,
+      });
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") return;
       enqueueSnackbar("Something went wrong while attempting to export file", {
@@ -43,16 +59,40 @@ const EstimateCalculatorExportButton = (props: ButtonProps) => {
     }
   });
 
+  /** Options */
+
+  const options: MenuOption[] = [
+    {
+      id: "view",
+      label: "View Document",
+      icon: <PictureAsPdf />,
+      onClick: handleViewDocument,
+    },
+    {
+      id: "share",
+      label: "Share",
+      icon: <IosShare />,
+      onClick: handleShareDocument,
+    },
+  ];
+
   return (
-    <Button
+    <MenuOptionsButton
       type="submit"
       variant="contained"
       color="primary"
-      onClick={(event) => void onSubmit(event)}
+      options={options}
+      loading={isLoading}
+      slotProps={{
+        menu: {
+          anchorOrigin: { vertical: "top", horizontal: "center" },
+          transformOrigin: { vertical: "bottom", horizontal: "center" },
+        },
+      }}
       {...props}
     >
       Export
-    </Button>
+    </MenuOptionsButton>
   );
 };
 
