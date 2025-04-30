@@ -1,107 +1,160 @@
-import { useRef } from "react";
+import { type ComponentProps, useEffect, useRef } from "react";
 import {
   Autocomplete,
-  type AutocompleteProps,
-  useJsApiLoader,
-  type Libraries,
-} from "@react-google-maps/api";
-import { type ControllerRenderProps } from "react-hook-form";
-import { IconButton, TextField, type TextFieldProps } from "@mui/material";
-import { Close } from "@mui/icons-material";
+  CircularProgress,
+  TextField,
+  type TextFieldProps,
+  type UseAutocompleteProps,
+} from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
+import { useSnackbar } from "notistack";
+import { useDebounce } from "use-debounce";
 
+import useGoogleMaps from "@/hooks/google-maps/useGoogleMaps";
+import AddressMenuItem from "@/components/menu-items/AddressMenuItem";
 import { getBoundsFromLatLng } from "@/utils/maps";
 import { DEFAULT_LAT_LNG } from "@/constants/maps";
+import { EMPTY_OBJECT } from "@/constants/utility";
+import type { Address } from "@/types/firebase";
 
-const LIBRARIES: Libraries = ["places"];
-const TYPES = ["address"];
+const DEFAULT_BOUNDS = getBoundsFromLatLng(DEFAULT_LAT_LNG, 50);
 
-const DEFAULT_BOUNDS = getBoundsFromLatLng(
-  DEFAULT_LAT_LNG.lat,
-  DEFAULT_LAT_LNG.lng,
-  50
-);
-
-interface FieldProps extends Omit<TextFieldProps<"standard">, "onChange"> {
-  onChange: ControllerRenderProps["onChange"];
-}
-
-interface AddressFieldProps extends FieldProps {
-  options?: google.maps.places.AutocompleteOptions;
-  bounds?: google.maps.LatLngBoundsLiteral;
-  onChange: ControllerRenderProps["onChange"];
-  onPlaceChanged?: (place: google.maps.places.PlaceResult) => void;
+interface AddressFieldProps
+  extends Omit<UseAutocompleteProps<Address, false, false, false>, "options">,
+    Pick<
+      TextFieldProps,
+      "label" | "placeholder" | "variant" | "error" | "helperText" | "size"
+    > {
+  slotProps?: {
+    textField?: TextFieldProps;
+    option?: Partial<ComponentProps<typeof AddressMenuItem>>;
+  };
 }
 
 const AddressField = ({
-  ref,
-  bounds = DEFAULT_BOUNDS,
-  options,
-  value,
-  onChange,
-  onPlaceChanged: onPlaceChangedProp,
-  slotProps,
+  label = "Address",
+  placeholder = "Search for an address",
+  variant = "outlined",
+  size,
+  error,
+  helperText,
+  slotProps: { textField: textFieldProps, option: optionProps } = EMPTY_OBJECT,
   ...props
 }: AddressFieldProps) => {
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const [inputValue, setInputValue] = useDebounce("", 500);
+
+  // https://developers.google.com/maps/documentation/javascript/place-autocomplete-data
+  const autocompleteSessionTokenRef = useRef<
+    google.maps.places.AutocompleteSessionToken | undefined
+  >(undefined);
 
   /** Values */
 
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string,
-    libraries: LIBRARIES,
+  const { places } = useGoogleMaps();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const autocompleteSuggestionsQuery = useQuery({
+    queryKey: ["autocompleteSuggestions", inputValue] as const,
+    staleTime: 1000 * 60, // 1 minute
+    queryFn: async ({ queryKey: [_, inputValue] }) => {
+      if (!places) throw new Error("Google Places Library not loaded");
+
+      const { suggestions } =
+        await places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
+          input: inputValue,
+          locationRestriction: DEFAULT_BOUNDS,
+          origin: DEFAULT_LAT_LNG,
+          includedPrimaryTypes: ["street_address"], // https://developers.google.com/maps/documentation/places/web-service/place-types
+          language: "en-US",
+          region: "us",
+          sessionToken: autocompleteSessionTokenRef.current,
+        });
+
+      return suggestions.map(
+        ({ placePrediction }): Address => ({
+          place_id: placePrediction?.placeId ?? "",
+          primary_text: placePrediction?.mainText?.text ?? "",
+          secondary_text: placePrediction?.secondaryText?.text ?? "",
+          text: placePrediction?.text.text ?? "",
+        })
+      );
+    },
+    enabled: !!places && !!inputValue.trim(),
   });
 
-  const Field = (
-    <TextField
-      inputRef={ref}
-      value={value ?? ""}
-      label="Address"
-      fullWidth
-      onChange={onChange}
-      slotProps={{
-        ...slotProps,
-        input: {
-          endAdornment: value ? (
-            <IconButton
-              onClick={() => {
-                onChange("");
-              }}
-            >
-              <Close />
-            </IconButton>
-          ) : undefined,
-          ...(typeof slotProps?.input === "object" ? slotProps.input : {}),
-        },
-      }}
-      {...props}
-    />
-  );
+  /** Effects */
 
-  /** Callbacks */
+  useEffect(() => {
+    if (places && !autocompleteSessionTokenRef.current)
+      autocompleteSessionTokenRef.current =
+        new places.AutocompleteSessionToken();
+  }, [places]);
 
-  const onLoad: Autocomplete["props"]["onLoad"] = (map) => {
-    autocompleteRef.current = map;
-  };
+  useEffect(() => {
+    if (autocompleteSuggestionsQuery.isError)
+      enqueueSnackbar("Could not load autocomplete suggestions", {
+        variant: "error",
+      });
+  }, [autocompleteSuggestionsQuery.isError, enqueueSnackbar]);
 
-  const onPlaceChanged: AutocompleteProps["onPlaceChanged"] = () => {
-    const place = autocompleteRef.current?.getPlace();
-    if (place) onPlaceChangedProp?.(place);
-    onChange(place?.formatted_address || "");
-  };
+  useEffect(() => {
+    if (props.value) setInputValue(props.value.text);
+  }, [props.value, setInputValue]);
 
-  if (!isLoaded) return Field;
   return (
     <Autocomplete
-      types={TYPES}
-      bounds={bounds}
-      options={{ types: TYPES, bounds, strictBounds: true, ...options }}
-      restrictions={{ country: "US" }}
-      onLoad={onLoad}
-      onPlaceChanged={onPlaceChanged}
-    >
-      {Field}
-    </Autocomplete>
+      options={autocompleteSuggestionsQuery.data ?? []}
+      noOptionsText={
+        !places
+          ? "Could not load Google Places Library"
+          : autocompleteSuggestionsQuery.isLoading
+            ? "Searching..."
+            : "No results found"
+      }
+      getOptionKey={(option) => option.place_id}
+      getOptionLabel={(option) => option.text}
+      onInputChange={(_event, value) => {
+        setInputValue(value);
+      }}
+      disableClearable={!inputValue}
+      renderInput={(params) => (
+        <TextField
+          label={label}
+          placeholder={placeholder}
+          variant={variant}
+          error={error}
+          helperText={helperText}
+          {...textFieldProps}
+          {...params}
+          size={size}
+          slotProps={{
+            input: {
+              ...(typeof textFieldProps?.slotProps?.input === "object"
+                ? textFieldProps.slotProps.input
+                : EMPTY_OBJECT),
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {autocompleteSuggestionsQuery.isLoading ? (
+                    <CircularProgress color="inherit" size={16} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            },
+          }}
+        />
+      )}
+      renderOption={(props, option) => (
+        <AddressMenuItem
+          {...props}
+          key={option.place_id}
+          value={option}
+          {...optionProps}
+        />
+      )}
+      {...props}
+    />
   );
 };
 

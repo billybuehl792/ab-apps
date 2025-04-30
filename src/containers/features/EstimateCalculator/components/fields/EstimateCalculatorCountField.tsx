@@ -22,6 +22,7 @@ const EstimateCalculatorCountField = ({
   return (
     <IntegerField
       size="small"
+      placeholder="0"
       error={!!errors.materials?.[index]?.count}
       onClick={(event) => {
         event.stopPropagation();

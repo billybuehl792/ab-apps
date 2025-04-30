@@ -1,15 +1,14 @@
 import { Controller, useFormContext } from "react-hook-form";
-import {
-  matchIsValidTel,
-  MuiTelInput,
-  type MuiTelInputProps,
-} from "mui-tel-input";
-import type { ClientData } from "@/types/firebase";
 
-const ClientFormPhoneField = (props: MuiTelInputProps) => {
+import type { ClientFormValues } from "../types";
+import PhoneField from "@/components/fields/PhoneField";
+import { ComponentProps } from "react";
+import { RegexPattern } from "@/utils/regex";
+
+const ClientFormPhoneField = (props: ComponentProps<typeof PhoneField>) => {
   /** Values */
 
-  const { control } = useFormContext<ClientData>();
+  const { control } = useFormContext<ClientFormValues>();
 
   return (
     <Controller
@@ -19,26 +18,15 @@ const ClientFormPhoneField = (props: MuiTelInputProps) => {
         required: "Phone number is required",
         validate: {
           isTel: (value) =>
-            matchIsValidTel(value, { onlyCountries: ["US"] }) ||
-            "Must be a valid phone number",
+            !!value.match(RegexPattern.PHONE) || "Must be a valid phone number",
         },
       }}
-      render={({
-        field: { ref, value, ...fieldProps },
-        formState: { errors },
-      }) => (
-        <MuiTelInput
-          {...fieldProps}
-          label="Phone"
-          inputRef={ref}
-          value={value}
-          helperText={errors.phone?.message}
+      render={({ field, formState: { errors } }) => (
+        <PhoneField
           error={Boolean(errors.phone)}
-          defaultCountry="US"
-          onlyCountries={["US"]}
-          disableDropdown
+          helperText={errors.phone?.message}
           {...props}
-          forceCallingCode
+          {...field}
         />
       )}
     />

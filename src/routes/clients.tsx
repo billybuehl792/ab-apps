@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { Stack } from "@mui/material";
 
-import Breadcrumbs from "@/containers/lists/Breadcrumbs";
+import NavigationBreadcrumbs from "@/containers/lists/NavigationBreadcrumbs";
 
 export const Route = createFileRoute("/clients")({
   component: RouteComponent,
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/clients")({
 function RouteComponent() {
   return (
     <Stack spacing={1} p={2}>
-      <Breadcrumbs />
+      <NavigationBreadcrumbs />
       <Outlet />
     </Stack>
   );

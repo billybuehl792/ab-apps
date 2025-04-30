@@ -18,7 +18,7 @@ interface ClientCardProps extends Omit<CardProps, "onClick"> {
   client: Client;
   disabled?: boolean;
   options?: MenuOption[] | ((client: Client) => MenuOption[]);
-  onClick?: (event: MouseEvent<HTMLButtonElement>, client: Client) => void;
+  onClick?: (client: Client, event: MouseEvent<HTMLButtonElement>) => void;
   slotProps?: {
     cardActionArea?: CardActionAreaProps;
     cardContent?: CardContentProps;
@@ -46,7 +46,7 @@ const ClientCard = ({
   /** Callbacks */
 
   const onClick: CardActionAreaProps["onClick"] = (event) => {
-    onClickProp?.(event, client);
+    onClickProp?.(client, event);
   };
 
   return (
@@ -68,7 +68,7 @@ const ClientCard = ({
               {fullName}
             </Typography>
             <Typography variant="subtitle2" noWrap>
-              {client.address}
+              {client.address.text}
             </Typography>
           </Stack>
           {!!options && (

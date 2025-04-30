@@ -39,7 +39,6 @@ const PasswordField = (props: TextFieldProps) => {
                 onMouseDown={handleIconButtonMouseEvent}
                 onMouseUp={handleIconButtonMouseEvent}
                 onClick={handleTogglePasswordVisibility}
-                edge="end"
               >
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>

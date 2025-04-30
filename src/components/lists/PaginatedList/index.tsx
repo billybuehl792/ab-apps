@@ -1,4 +1,4 @@
-import { type ReactNode, useState } from "react";
+import { ComponentProps, type ReactNode, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   getCountFromServer,
@@ -20,6 +20,8 @@ import {
   type TablePaginationProps,
 } from "@mui/material";
 import { EMPTY_ARRAY, EMPTY_OBJECT } from "@/constants/utility";
+import StatusWrapper from "@/components/layout/StatusWrapper";
+import EmptyState from "@/components/layout/EmptyState";
 
 const DEFAULT_ROWS_PER_PAGE_OPTIONS = [10, 20, 30];
 
@@ -32,6 +34,8 @@ interface PaginatedListProps<T extends DocumentData = DocumentData>
   slotProps?: {
     pagination?: TablePaginationProps;
     skeleton?: SkeletonProps;
+    statusWrapper?: ComponentProps<typeof StatusWrapper>;
+    emptyState?: ComponentProps<typeof EmptyState>;
   };
 }
 
@@ -51,6 +55,8 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
   slotProps: {
     pagination: paginationProps,
     skeleton: skeletonProps,
+    statusWrapper: statusWrapperProps,
+    emptyState: emptyStateProps,
   } = EMPTY_OBJECT,
   ...props
 }: PaginatedListProps<T>): ReactNode => {
@@ -113,38 +119,49 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
 
   return (
     <Stack spacing={1} {...props}>
-      {countQuery.isLoading || listQuery.isLoading
-        ? Array(skeletonCount)
-            .fill(null)
-            .map(() => (
-              <Skeleton
-                key={crypto.randomUUID()}
-                height={82}
-                variant="rounded"
-                {...skeletonProps}
-              />
-            ))
-        : listQuery.data?.docs.map((doc) =>
-            renderItem({ id: doc.id, ...doc.data() })
-          )}
-      <TablePagination
-        component="div"
-        count={count}
-        page={currentPage}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={rowsPerPageOptions}
-        disabled={countQuery.isLoading || listQuery.isLoading}
-        labelDisplayedRows={({ from, to, count }) =>
-          countQuery.isLoading ? (
-            <Skeleton variant="rounded" width={52} />
-          ) : (
-            `${String(from)} - ${String(to)} of ${String(count)}`
-          )
+      <StatusWrapper
+        error={
+          countQuery.error ||
+          listQuery.error ||
+          (!countQuery.isLoading && !count && (
+            <EmptyState {...emptyStateProps} />
+          ))
         }
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-        {...paginationProps}
-      />
+        {...statusWrapperProps}
+      >
+        {countQuery.isLoading || listQuery.isLoading
+          ? Array(skeletonCount)
+              .fill(null)
+              .map(() => (
+                <Skeleton
+                  key={crypto.randomUUID()}
+                  height={82}
+                  variant="rounded"
+                  {...skeletonProps}
+                />
+              ))
+          : listQuery.data?.docs.map((doc) =>
+              renderItem({ id: doc.id, ...doc.data() })
+            )}
+        <TablePagination
+          component="div"
+          count={count}
+          page={currentPage}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={rowsPerPageOptions}
+          disabled={countQuery.isLoading || listQuery.isLoading}
+          labelDisplayedRows={({ from, to, count }) =>
+            countQuery.isLoading ? (
+              <Skeleton variant="rounded" width={52} />
+            ) : (
+              `${String(from)} - ${String(to)} of ${String(count)}`
+            )
+          }
+          onPageChange={onPageChange}
+          onRowsPerPageChange={onRowsPerPageChange}
+          {...paginationProps}
+        />
+      </StatusWrapper>
     </Stack>
   );
 };

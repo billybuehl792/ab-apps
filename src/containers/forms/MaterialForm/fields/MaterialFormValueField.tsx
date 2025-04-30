@@ -1,27 +1,23 @@
-import { type ComponentProps, type FC } from "react";
+import { type ComponentProps } from "react";
 import { useFormContext } from "react-hook-form";
+
 import DollarField from "@/components/fields/DollarField";
-import type { MaterialData } from "@/types/firebase";
+import type { MaterialFormValues } from "../types";
 
 const MIN = 0;
 const MAX = 10_000;
 
-const MaterialFormValueField: FC<ComponentProps<typeof DollarField>> = (
-  props
-) => {
+const MaterialFormValueField = (props: ComponentProps<typeof DollarField>) => {
   /** Values */
 
-  const {
-    formState: { errors },
-    register,
-  } = useFormContext<MaterialData>();
+  const methods = useFormContext<MaterialFormValues>();
 
   return (
     <DollarField
       label="Cost / Unit"
-      error={!!errors.value}
-      helperText={errors.value?.message}
-      {...register("value", {
+      error={!!methods.formState.errors.value}
+      helperText={methods.formState.errors.value?.message}
+      {...methods.register("value", {
         required: "Cost is required",
         min: { value: MIN, message: `Min value is ${String(MIN)}` },
         max: { value: MAX, message: `Max value is ${String(MAX)}` },

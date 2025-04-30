@@ -1,6 +1,6 @@
 import { type FC, type ComponentProps } from "react";
 import { useForm, type UseFormProps } from "react-hook-form";
-import { Card, CardContent, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 
 import Form from "@/components/forms/Form";
 import ClientFormFirstNameField from "./fields/ClientFormFirstNameField";
@@ -8,38 +8,34 @@ import ClientFormLastNameField from "./fields/ClientFormLastNameField";
 import ClientFormEmailField from "./fields/ClientFormEmailField";
 import ClientFormAddressField from "./fields/ClientFormAddressField";
 import ClientFormPhoneField from "./fields/ClientFormPhoneField";
-import type { ClientData } from "@/types/firebase";
+import { CLIENT_FORM_DEFAULT_VALUES } from "./constants";
+import type { ClientFormValues } from "./types";
 
 type ClientFormProps = Omit<
-  ComponentProps<typeof Form<ClientData>>,
+  ComponentProps<typeof Form<ClientFormValues>>,
   "methods"
 > &
-  UseFormProps<ClientData>;
+  UseFormProps<ClientFormValues>;
 
-const ClientForm: FC<ClientFormProps> = ({ slotProps, ...props }) => {
+const ClientForm: FC<ClientFormProps> = (props) => {
   /** Values */
 
-  const methods = useForm<ClientData>({
+  const methods = useForm<ClientFormValues>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
+    defaultValues: CLIENT_FORM_DEFAULT_VALUES,
     ...props,
   });
 
   return (
-    <Form
-      methods={methods}
-      slotProps={{ fieldset: { component: Card }, ...slotProps }}
-      {...props}
-    >
-      <CardContent component={Stack} spacing={2}>
-        <Stack direction="row" spacing={2}>
-          <ClientFormFirstNameField />
-          <ClientFormLastNameField />
-        </Stack>
-        <ClientFormEmailField />
-        <ClientFormAddressField />
-        <ClientFormPhoneField />
-      </CardContent>
+    <Form methods={methods} {...props}>
+      <Stack direction="row" spacing={2}>
+        <ClientFormFirstNameField />
+        <ClientFormLastNameField />
+      </Stack>
+      <ClientFormEmailField />
+      <ClientFormAddressField />
+      <ClientFormPhoneField />
     </Form>
   );
 };

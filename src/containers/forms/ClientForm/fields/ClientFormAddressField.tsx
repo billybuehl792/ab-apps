@@ -1,40 +1,30 @@
 import { type ComponentProps } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { validateAddress } from "@/lib/queries/google-maps";
 import AddressField from "@/components/fields/AddressField";
-import type { ClientData } from "@/types/firebase";
+import type { ClientFormValues } from "../types";
 
 const ClientFormAddressField = (
   props: Partial<ComponentProps<typeof AddressField>>
 ) => {
   /** Values */
 
-  const { control } = useFormContext<ClientData>();
-  const queryClient = useQueryClient();
+  const { control } = useFormContext<ClientFormValues>();
 
   return (
     <Controller
       name="address"
       control={control}
-      rules={{
-        required: "Address is required",
-        validate: {
-          isAddress: async (value) => {
-            const isValid = await queryClient.fetchQuery(
-              validateAddress(value)
-            );
-            return isValid || "Must be a valid address";
-          },
-        },
-      }}
-      render={({ field, formState: { errors } }) => (
+      rules={{ required: "Address is required" }}
+      render={({ field: { onChange, ...field }, formState: { errors } }) => (
         <AddressField
           error={Boolean(errors.address)}
           helperText={errors.address?.message}
-          {...field}
           {...props}
+          {...field}
+          onChange={(_, value) => {
+            onChange(value);
+          }}
         />
       )}
     />
