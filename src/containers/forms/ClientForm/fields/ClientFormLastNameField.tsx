@@ -1,6 +1,7 @@
 import { useFormContext } from "react-hook-form";
 import { TextField, type TextFieldProps } from "@mui/material";
-import type { ClientData } from "@/types/firebase";
+
+import type { ClientFormValues } from "../types";
 
 const MAX_LENGTH = 32;
 
@@ -10,7 +11,7 @@ const ClientFormLastNameField = (props: TextFieldProps) => {
   const {
     formState: { errors },
     register,
-  } = useFormContext<ClientData>();
+  } = useFormContext<ClientFormValues>();
 
   return (
     <TextField

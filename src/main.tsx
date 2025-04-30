@@ -1,14 +1,15 @@
-import "reset-css/reset.css";
-import "./utils/string";
-import "./utils/number";
+import App from "./App";
 
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { createRouter } from "@tanstack/react-router";
 
 import { routeTree } from "./routeTree.gen";
-import App from "./App";
-import Providers from "./containers/providers";
+import Providers from "./providers";
+
+import "reset-css/reset.css";
+import "./utils/string";
+import "./utils/number";
 
 declare module "@tanstack/react-router" {
   interface Register {

@@ -1,25 +1,21 @@
-import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { TextField, type TextFieldProps } from "@mui/material";
-import type { MaterialData } from "@/types/firebase";
+import type { MaterialFormValues } from "../types";
 
 const MAX_LENGTH = 128;
 
-const MaterialFormDescriptionField: FC<TextFieldProps> = (props) => {
+const MaterialFormDescriptionField = (props: TextFieldProps) => {
   /** Values */
 
-  const {
-    formState: { errors },
-    register,
-  } = useFormContext<MaterialData>();
+  const methods = useFormContext<MaterialFormValues>();
 
   return (
     <TextField
       label="Description"
       fullWidth
-      error={!!errors.description}
-      helperText={errors.description?.message}
-      {...register("description", {
+      error={!!methods.formState.errors.description}
+      helperText={methods.formState.errors.description?.message}
+      {...methods.register("description", {
         maxLength: {
           value: MAX_LENGTH,
           message: `Max length is ${String(MAX_LENGTH)}`,

@@ -19,6 +19,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@firebase/app-check": "^0.8.12",
+    "@googlemaps/js-api-loader": "^1.16.8",
     "@mui/icons-material": "^6.4.8",
     "@mui/material": "^6.4.8",
     "@react-google-maps/api": "^2.20.6",
@@ -27,15 +28,14 @@
     "firebase": "^11.4.0",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
-    "mui-tel-input": "^8.0.1",
     "notistack": "^3.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.54.2",
     "reset-css": "^5.0.2",
-    "use-long-press": "^3.3.0",
-    "uuid": "^11.1.0"
+    "use-debounce": "^10.0.4",
+    "use-long-press": "^3.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
@@ -44,6 +44,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/google.maps": "^3.58.1",
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",

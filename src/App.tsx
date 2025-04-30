@@ -1,11 +1,10 @@
-import { type FC } from "react";
 import { RouterProvider } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { router } from "./main";
 import useAuth from "./hooks/auth/useAuth";
 
-const App: FC = () => {
+const App = () => {
   /** Values */
 
   const auth = useAuth();

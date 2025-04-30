@@ -28,7 +28,7 @@ const getFirebaseErrorMessage = (error: FirebaseError) => {
   }
 };
 
-export const isMultiFactorError = (error: unknown) => {
+export const isMfaError = (error: unknown) => {
   return (
     (error as FirebaseError).code ===
     (FirebaseErrorCode.MULTI_FACTOR_AUTH_REQUIRED as string)

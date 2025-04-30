@@ -43,21 +43,14 @@ function RouteComponent() {
 
   /** Callbacks */
 
-  const onSubmit: ComponentProps<typeof ClientForm>["onSubmit"] = async (
-    data
-  ) => {
-    await update.mutateAsync(
-      { id: client.id, ...data },
-      {
-        onSuccess: () => {
-          handleNavigateToClient(client.id);
-        },
-      }
-    );
-  };
+  const onSubmit: ComponentProps<typeof ClientForm>["onSubmit"] = (data) =>
+    update.mutateAsync({ id: client.id, ...data });
 
-  const handleNavigateToClient = (id: Client["id"], edit?: boolean) =>
-    void navigate({ to: `/clients/${id}`, search: { edit } });
+  const onSuccess: ComponentProps<typeof ClientForm>["onSuccess"] = () =>
+    void navigate({ to: `/clients/${client.id}` });
+
+  const onCancel: ComponentProps<typeof ClientForm>["onReset"] = () =>
+    void navigate({ to: `/clients/${client.id}` });
 
   return (
     <Stack spacing={1}>
@@ -68,7 +61,10 @@ function RouteComponent() {
         {!edit && (
           <EditIconButton
             onClick={() => {
-              handleNavigateToClient(client.id, true);
+              void navigate({
+                to: `/clients/${client.id}`,
+                search: { edit: true },
+              });
             }}
           />
         )}
@@ -77,16 +73,18 @@ function RouteComponent() {
       {edit ? (
         <ClientForm
           values={client}
-          submitLabel="Update"
-          resetAsCancel
+          slotProps={{
+            actions: { submitLabel: "Update", resetAsCancel: true },
+          }}
           onSubmit={onSubmit}
-          onReset={() => void navigate({ to: `/clients/${client.id}` })}
+          onSuccess={onSuccess}
+          onReset={onCancel}
         />
       ) : (
         <Card>
           <CardContent>
             <Stack spacing={1}>
-              <Typography variant="body2">{client.address}</Typography>
+              <Typography variant="body2">{client.address.text}</Typography>
               <Typography variant="body2">{client.email}</Typography>
               <Typography variant="body2">{client.phone.toPhone()}</Typography>
             </Stack>

@@ -1,25 +1,21 @@
-import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { TextField, type TextFieldProps } from "@mui/material";
-import type { MaterialData } from "@/types/firebase";
+import type { MaterialFormValues } from "../types";
 
 const MAX_LENGTH = 128;
 
-const MaterialFormTitleField: FC<TextFieldProps> = (props) => {
+const MaterialFormTitleField = (props: TextFieldProps) => {
   /** Values */
 
-  const {
-    formState: { errors },
-    register,
-  } = useFormContext<MaterialData>();
+  const methods = useFormContext<MaterialFormValues>();
 
   return (
     <TextField
       label="Title"
       fullWidth
-      error={!!errors.label}
-      helperText={errors.label?.message}
-      {...register("label", {
+      error={!!methods.formState.errors.label}
+      helperText={methods.formState.errors.label?.message}
+      {...methods.register("label", {
         required: "Title is required",
         maxLength: {
           value: MAX_LENGTH,

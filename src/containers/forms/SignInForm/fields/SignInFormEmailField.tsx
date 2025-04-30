@@ -1,18 +1,19 @@
-import { type ComponentProps, type FC } from "react";
+import { type ComponentProps } from "react";
 import { useFormContext } from "react-hook-form";
+
 import EmailField from "@/components/fields/EmailField";
 import { RegexPattern } from "@/utils/regex";
-import type { ClientData } from "@/types/firebase";
+import type { SignInFormValues } from "../types";
 
 const MAX_LENGTH = 128;
 
-const SignInFormEmailField: FC<ComponentProps<typeof EmailField>> = (props) => {
+const SignInFormEmailField = (props: ComponentProps<typeof EmailField>) => {
   /** Values */
 
   const {
     formState: { errors },
     register,
-  } = useFormContext<ClientData>();
+  } = useFormContext<SignInFormValues>();
 
   return (
     <EmailField

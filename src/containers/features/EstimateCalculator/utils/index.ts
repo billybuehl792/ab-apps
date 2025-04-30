@@ -22,7 +22,7 @@ export const createEstimateCalculatorDoc = (data: EstimateCalculatorValues) => {
   autoTable(doc, {
     headStyles: { fillColor: theme.palette.primary.main },
     head: [["Customer Information"]],
-    body: [[data.name], [data.address]],
+    body: [[data.name], [data.address.text]],
   });
 
   // Materials

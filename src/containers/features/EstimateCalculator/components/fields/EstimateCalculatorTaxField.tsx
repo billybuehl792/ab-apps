@@ -21,6 +21,7 @@ const EstimateCalculatorTaxField = (
   return (
     <PercentField
       size="small"
+      placeholder="0"
       error={!!errors.tax}
       sx={{ width: 110 }}
       {...register("tax", {

@@ -1,6 +1,5 @@
 import { type FC, type ComponentProps } from "react";
 import { useForm, type UseFormProps } from "react-hook-form";
-import { Card, CardContent, Divider, Stack } from "@mui/material";
 
 import Form from "@/components/forms/Form";
 import UserFormPhotoUrlField from "./fields/UserFormPhotoUrlField";
@@ -13,7 +12,7 @@ type UserFormProps = Omit<
 > &
   UseFormProps<UserFormValues>;
 
-const UserForm: FC<UserFormProps> = ({ slotProps, ...props }) => {
+const UserForm: FC<UserFormProps> = (props) => {
   /** Values */
 
   const methods = useForm<UserFormValues>({
@@ -23,19 +22,9 @@ const UserForm: FC<UserFormProps> = ({ slotProps, ...props }) => {
   });
 
   return (
-    <Form
-      methods={methods}
-      slotProps={{ fieldset: { component: Card }, ...slotProps }}
-      {...props}
-    >
-      <CardContent
-        component={Stack}
-        spacing={2}
-        divider={<Divider variant="inset" />}
-      >
-        <UserFormPhotoUrlField />
-        <UserFormDisplayNameField />
-      </CardContent>
+    <Form methods={methods} {...props}>
+      <UserFormPhotoUrlField />
+      <UserFormDisplayNameField />
     </Form>
   );
 };

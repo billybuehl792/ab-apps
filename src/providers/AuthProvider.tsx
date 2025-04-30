@@ -1,10 +1,4 @@
-import {
-  type FC,
-  type PropsWithChildren,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { type PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
   signInWithEmailAndPassword,
@@ -25,9 +19,9 @@ import { CircularProgress } from "@mui/material";
 
 import AuthContext from "@/context/AuthContext";
 import { auth } from "@/config/firebase";
-import { getErrorMessage } from "@/utils/error";
+import { getErrorMessage, isMfaError } from "@/utils/error";
 
-const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
+const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -47,7 +41,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       }),
     onError: (error) =>
       enqueueSnackbar(getErrorMessage(error), {
-        variant: "error",
+        variant: isMfaError(error) ? "default" : "error",
       }),
   });
 
