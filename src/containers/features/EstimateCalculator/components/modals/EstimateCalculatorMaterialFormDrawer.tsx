@@ -34,9 +34,13 @@ const EstimateCalculatorMaterialFormDrawer = (
       onTransitionExited={onTransitionExited}
       slotProps={{
         form: {
-          submitLabel: materialModal.material ? "Update" : "Create",
-          resetAsCancel: true,
           values: materialModal.material ?? undefined,
+          slotProps: {
+            actions: {
+              submitLabel: materialModal.material ? "Update" : "Create",
+              resetAsCancel: true,
+            },
+          },
           onSubmit: async (formData) => {
             if (materialModal.material)
               await update.mutateAsync({

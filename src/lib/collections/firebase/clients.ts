@@ -9,11 +9,11 @@ export default collection(
   FirebaseCollectionId.CLIENTS
 ).withConverter<ClientData>({
   toFirestore: (client: ClientData) => ({
-    first_name: client.first_name.trim(),
-    last_name: client.last_name.trim(),
-    email: client.email.trim(),
-    phone: client.phone.trim(),
-    address: client.address.trim(),
+    first_name: String(client.first_name).trim(),
+    last_name: String(client.last_name).trim(),
+    email: String(client.email).trim(),
+    phone: String(client.phone).toPhone(),
+    address: client.address,
   }),
   fromFirestore: (snapshot, options): ClientData =>
     snapshot.data(options) as ClientData,

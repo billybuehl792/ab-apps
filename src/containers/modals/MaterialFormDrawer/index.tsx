@@ -31,6 +31,7 @@ const MaterialFormDrawer = ({
         overflow="auto"
         flexGrow={1}
         minWidth={400}
+        onSubmit={() => null}
         {...formProps}
         slotProps={{
           fieldset: { flexGrow: 1, p: 2, ...formProps?.slotProps?.fieldset },

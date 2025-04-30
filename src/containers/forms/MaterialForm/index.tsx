@@ -7,20 +7,26 @@ import Form from "@/components/forms/Form";
 import MaterialFormValueField from "./fields/MaterialFormValueField";
 import MaterialFormTitleField from "./fields/MaterialFormTitleField";
 import MaterialFormDescriptionField from "./fields/MaterialFormDescriptionField";
-import type { MaterialData } from "@/types/firebase";
+import { MATERIAL_FORM_DEFAULT_VALUES } from "./constants";
+import type { MaterialFormValues } from "./types";
 
 type MaterialFormProps = Omit<
-  ComponentProps<typeof Form<MaterialData>>,
+  ComponentProps<typeof Form<MaterialFormValues>>,
   "methods"
 > &
-  UseFormProps<MaterialData>;
+  UseFormProps<MaterialFormValues>;
 
 const MaterialForm = (props: MaterialFormProps) => {
   const [showMoreEnabled, setShowMoreEnabled] = useState(false);
 
   /** Values */
 
-  const methods = useForm<MaterialData>(props);
+  const methods = useForm<MaterialFormValues>({
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
+    defaultValues: MATERIAL_FORM_DEFAULT_VALUES,
+    ...props,
+  });
 
   return (
     <Form methods={methods} {...props}>

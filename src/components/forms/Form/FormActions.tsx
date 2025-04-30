@@ -6,6 +6,7 @@ import {
   type StackProps,
 } from "@mui/material";
 import { useFormContext } from "react-hook-form";
+
 import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface FormActionsProps extends StackProps {
@@ -32,16 +33,14 @@ const FormActions = ({
 }: FormActionsProps) => {
   /** Values */
 
-  const {
-    formState: { disabled, isDirty, isSubmitting },
-  } = useFormContext();
+  const { formState } = useFormContext();
 
   return (
     <Stack direction="row-reverse" spacing={1} {...props}>
       <Button
         type="submit"
-        loading={isSubmitting}
-        disabled={disabled}
+        loading={formState.isSubmitting}
+        disabled={formState.disabled}
         {...submitButtonProps}
       >
         {submitLabel}
@@ -51,7 +50,11 @@ const FormActions = ({
           type="reset"
           variant="text"
           color="error"
-          disabled={isSubmitting || disabled || (!resetAsCancel && !isDirty)}
+          disabled={
+            formState.isSubmitting ||
+            formState.disabled ||
+            (!resetAsCancel && !formState.isDirty)
+          }
           {...resetButtonProps}
         >
           {resetLabel}

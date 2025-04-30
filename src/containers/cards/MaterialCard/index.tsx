@@ -26,7 +26,7 @@ interface MaterialCardProps extends Omit<CardProps, "onClick"> {
     cardActionArea?: CardActionAreaProps;
     cardContent?: CardContentProps;
   };
-  onClick?: (event: MouseEvent<HTMLButtonElement>, material: Material) => void;
+  onClick?: (material: Material, event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 const MaterialCard = ({
@@ -54,7 +54,7 @@ const MaterialCard = ({
   /** Callbacks */
 
   const onClick: CardActionAreaProps["onClick"] = (event) => {
-    if (onClickProp) onClickProp(event, material);
+    if (onClickProp) onClickProp(material, event);
     else if (options) setOptionsAnchorEl(event.currentTarget);
   };
 

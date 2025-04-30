@@ -1,16 +1,19 @@
 import { Link, useLocation, useMatches } from "@tanstack/react-router";
 import {
-  Breadcrumbs as MUIBreadcrumbs,
+  Breadcrumbs,
   Link as MUILink,
   Typography,
-  type BreadcrumbsProps as MUIBreadcrumbsProps,
+  type BreadcrumbsProps,
 } from "@mui/material";
 
-interface BreadcrumbsProps extends MUIBreadcrumbsProps {
+interface NavigationBreadcrumbsProps extends BreadcrumbsProps {
   showRootCrumb?: boolean;
 }
 
-const Breadcrumbs = ({ showRootCrumb, ...props }: BreadcrumbsProps) => {
+const NavigationBreadcrumbs = ({
+  showRootCrumb,
+  ...props
+}: NavigationBreadcrumbsProps) => {
   /** Values */
 
   const { pathname } = useLocation();
@@ -25,7 +28,7 @@ const Breadcrumbs = ({ showRootCrumb, ...props }: BreadcrumbsProps) => {
 
   if (crumbs.length <= 1 && !showRootCrumb) return;
   return (
-    <MUIBreadcrumbs {...props}>
+    <Breadcrumbs {...props}>
       {crumbs.map((crumb) =>
         crumb.href === pathname ? (
           <Typography key={crumb.href}>{crumb.label}</Typography>
@@ -40,8 +43,8 @@ const Breadcrumbs = ({ showRootCrumb, ...props }: BreadcrumbsProps) => {
           </MUILink>
         )
       )}
-    </MUIBreadcrumbs>
+    </Breadcrumbs>
   );
 };
 
-export default Breadcrumbs;
+export default NavigationBreadcrumbs;

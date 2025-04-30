@@ -21,6 +21,7 @@ const EstimateCalculatorAdditionalField = (
   return (
     <DollarField
       size="small"
+      placeholder="0"
       error={!!errors.additional}
       sx={{ width: 120 }}
       {...props}

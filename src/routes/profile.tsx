@@ -57,11 +57,11 @@ function RouteComponent() {
   return (
     <Stack p={2}>
       <UserForm
-        submitLabel="Update"
         values={{
           displayName: user?.displayName ?? "",
           photoURL: user?.photoURL ?? "",
         }}
+        slotProps={{ actions: { submitLabel: "Update" } }}
         onSubmit={onSubmit}
       />
     </Stack>

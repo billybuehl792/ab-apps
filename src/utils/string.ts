@@ -6,12 +6,9 @@ String.prototype.toCapitalized = function () {
 String.prototype.toPhone = function () {
   const cleaned = String(this).replace(/\D/g, "");
   const matches = cleaned.match(RegexPattern.PHONE);
-  if (matches) {
-    const intlCode = matches[1] ? `+${matches[1]} ` : "";
-    return `${intlCode}(${matches[2]}) ${matches[3]}-${matches[4]}`;
-  }
-
-  return "Invalid phone number";
+  return matches
+    ? `(${matches[2]}) ${matches[3]}-${matches[4]}`
+    : "Invalid phone number";
 };
 String.prototype.toTitleCase = function (): string {
   return this.replace(
