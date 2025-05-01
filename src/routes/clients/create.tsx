@@ -23,12 +23,16 @@ function RouteComponent() {
       onSuccess: ({ id }) => void navigate({ to: `/clients/${id}` }),
     });
 
+  const onCancel: ComponentProps<typeof ClientForm>["onReset"] = () =>
+    void navigate({ to: "/clients" });
+
   return (
     <Stack spacing={1}>
       <Typography variant="h6">Create Client</Typography>
       <ClientForm
-        slotProps={{ actions: { disableReset: true, submitLabel: "Create" } }}
+        slotProps={{ actions: { resetAsCancel: true, submitLabel: "Create" } }}
         onSubmit={onSubmit}
+        onReset={onCancel}
       />
     </Stack>
   );

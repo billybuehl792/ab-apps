@@ -1,17 +1,24 @@
 import { Link, useLocation, useMatches } from "@tanstack/react-router";
 import {
   Breadcrumbs,
-  Link as MUILink,
-  Typography,
+  LinkProps as MuiLinkProps,
+  Link as MuiLink,
   type BreadcrumbsProps,
 } from "@mui/material";
 
-interface NavigationBreadcrumbsProps extends BreadcrumbsProps {
-  showRootCrumb?: boolean;
+import { EMPTY_OBJECT } from "@/constants/utility";
+
+interface NavigationBreadcrumbsProps
+  extends Omit<BreadcrumbsProps, "slotProps"> {
+  hideRootCrumb?: boolean;
+  slotProps?: {
+    crumb?: MuiLinkProps;
+  } & BreadcrumbsProps["slotProps"];
 }
 
 const NavigationBreadcrumbs = ({
-  showRootCrumb,
+  hideRootCrumb,
+  slotProps: { crumb: crumbProps, ...slotProps } = EMPTY_OBJECT,
   ...props
 }: NavigationBreadcrumbsProps) => {
   /** Values */
@@ -26,23 +33,22 @@ const NavigationBreadcrumbs = ({
       label: loaderData?.crumb,
     }));
 
-  if (crumbs.length <= 1 && !showRootCrumb) return;
+  if (hideRootCrumb && crumbs.length <= 1) return;
   return (
-    <Breadcrumbs {...props}>
-      {crumbs.map((crumb) =>
-        crumb.href === pathname ? (
-          <Typography key={crumb.href}>{crumb.label}</Typography>
-        ) : (
-          <MUILink
-            key={crumb.href}
-            component={Link}
-            to={crumb.href}
-            underline="none"
-          >
-            {crumb.label}
-          </MUILink>
-        )
-      )}
+    <Breadcrumbs slotProps={slotProps} {...props}>
+      {crumbs.map((crumb) => (
+        <MuiLink
+          key={crumb.href}
+          component={Link}
+          to={crumb.href}
+          underline="none"
+          color={pathname === crumb.href ? "textPrimary" : "inherit"}
+          disabled={pathname === crumb.href}
+          {...crumbProps}
+        >
+          {crumb.label}
+        </MuiLink>
+      ))}
     </Breadcrumbs>
   );
 };

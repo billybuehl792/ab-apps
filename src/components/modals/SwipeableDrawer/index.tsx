@@ -2,9 +2,9 @@ import { type ReactNode, type ComponentProps } from "react";
 import {
   Box,
   type BoxProps,
-  SwipeableDrawer as MUISwipeableDrawer,
+  SwipeableDrawer as MuiSwipeableDrawer,
   Stack,
-  type SwipeableDrawerProps as MUISwipeableDrawerProps,
+  type SwipeableDrawerProps as MuiSwipeableDrawerProps,
   useMediaQuery,
 } from "@mui/material";
 
@@ -14,18 +14,18 @@ import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface SwipeableDrawerProps
   extends Omit<
-    MUISwipeableDrawerProps,
+    MuiSwipeableDrawerProps,
     "title" | "onOpen" | "onClose" | "slotProps"
   > {
   title?: ReactNode;
   hideHeader?: boolean;
   fullHeight?: boolean;
-  onOpen?: MUISwipeableDrawerProps["onOpen"];
-  onClose?: MUISwipeableDrawerProps["onClose"];
+  onOpen?: MuiSwipeableDrawerProps["onOpen"];
+  onClose?: MuiSwipeableDrawerProps["onClose"];
   slotProps?: {
     puller?: ComponentProps<typeof Puller>;
     header?: ComponentProps<typeof DrawerHeader>;
-  } & MUISwipeableDrawerProps["slotProps"];
+  } & MuiSwipeableDrawerProps["slotProps"];
 }
 
 const Puller = (props: BoxProps) => (
@@ -47,7 +47,7 @@ const Puller = (props: BoxProps) => (
 );
 
 /**
- * This component is a wrapper around the MUI SwipeableDrawer component.
+ * This component is a wrapper around the Mui SwipeableDrawer component.
  * It provides a bottom drawer with a puller and customizable styles.
  */
 const SwipeableDrawer = ({
@@ -70,7 +70,7 @@ const SwipeableDrawer = ({
   const isMobile = useMediaQuery("(pointer: coarse)");
 
   return (
-    <MUISwipeableDrawer
+    <MuiSwipeableDrawer
       anchor={anchor}
       disableSwipeToOpen
       onOpen={(event) => onOpen?.(event)}
@@ -109,7 +109,7 @@ const SwipeableDrawer = ({
         <DrawerHeader title={title} onClose={onClose} {...headerProps} />
       )}
       {children}
-    </MUISwipeableDrawer>
+    </MuiSwipeableDrawer>
   );
 };
 
