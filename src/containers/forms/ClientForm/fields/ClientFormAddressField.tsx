@@ -18,6 +18,7 @@ const ClientFormAddressField = (
       rules={{ required: "Address is required" }}
       render={({ field: { onChange, ...field }, formState: { errors } }) => (
         <AddressField
+          label="Address"
           error={Boolean(errors.address)}
           helperText={errors.address?.message}
           {...props}

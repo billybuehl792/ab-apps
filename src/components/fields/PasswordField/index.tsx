@@ -25,9 +25,10 @@ const PasswordField = (props: TextFieldProps) => {
 
   return (
     <TextField
-      label="Password"
       type={showPassword ? "text" : "password"}
+      {...props}
       slotProps={{
+        ...props.slotProps,
         input: {
           endAdornment: (
             <InputAdornment position="end">
@@ -44,9 +45,10 @@ const PasswordField = (props: TextFieldProps) => {
               </IconButton>
             </InputAdornment>
           ),
+          ...(typeof props.slotProps?.input === "object" &&
+            props.slotProps.input),
         },
       }}
-      {...props}
     />
   );
 };
