@@ -20,6 +20,7 @@ interface MenuOptionsIconButtonProps extends IconButtonProps<"span"> {
  */
 const MenuOptionsIconButton = ({
   options,
+  title = "Options",
   icon = DEFAULT_ICON,
   onClick: onClickProp,
   slotProps: { menu: menuProps } = EMPTY_OBJECT,
@@ -64,6 +65,7 @@ const MenuOptionsIconButton = ({
       </IconButton>
       {includeMenu && (
         <MenuOptionsModal
+          title={title}
           open={Boolean(anchorEl)}
           anchorEl={anchorEl}
           options={options}

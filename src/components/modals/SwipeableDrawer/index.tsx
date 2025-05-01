@@ -86,9 +86,7 @@ const SwipeableDrawer = ({
             : EMPTY_OBJECT),
         },
         paper: {
-          ...(typeof slotProps.paper === "object"
-            ? slotProps.paper
-            : EMPTY_OBJECT),
+          ...(typeof slotProps.paper === "object" && slotProps.paper),
           sx: [
             isMobile && {
               borderTopLeftRadius: 16,
