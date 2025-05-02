@@ -81,9 +81,7 @@ const SwipeableDrawer = ({
         transition: {
           mountOnEnter: true,
           unmountOnExit: true,
-          ...(typeof slotProps.transition === "object"
-            ? slotProps.transition
-            : EMPTY_OBJECT),
+          ...(typeof slotProps.transition === "object" && slotProps.transition),
         },
         paper: {
           ...(typeof slotProps.paper === "object" && slotProps.paper),
