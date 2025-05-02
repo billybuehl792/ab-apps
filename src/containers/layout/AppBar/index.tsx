@@ -2,22 +2,22 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
 import {
   IconButton,
-  AppBar as MUIAppBar,
+  AppBar as MuiAppBar,
   Stack,
   Toolbar,
   Typography,
   useMediaQuery,
-  type AppBarProps as MUIAppBarProps,
+  type AppBarProps as MuiAppBarProps,
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 
 import useAuth from "@/hooks/auth/useAuth";
 import { APP_TITLE, APP_BAR_HEIGHT } from "@/constants/layout";
 import UserIconButton from "@/containers/buttons/UserIconButton";
-import SignInLinkButton from "@/containers/buttons/SignInLinkButton";
+import SignInLink from "@/containers/links/SignInLink";
 import NavigationDrawer from "@/containers/modals/NavigationDrawer";
 
-const AppBar = (props: MUIAppBarProps) => {
+const AppBar = (props: MuiAppBarProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   /** Values */
@@ -36,7 +36,7 @@ const AppBar = (props: MUIAppBarProps) => {
   }, [location]);
 
   return (
-    <MUIAppBar
+    <MuiAppBar
       {...props}
       sx={{
         height: APP_BAR_HEIGHT,
@@ -77,7 +77,7 @@ const AppBar = (props: MUIAppBarProps) => {
             </Typography>
           </Stack>
 
-          {auth.user ? <UserIconButton /> : <SignInLinkButton />}
+          {auth.user ? <UserIconButton /> : <SignInLink color="white" />}
         </Stack>
       </Toolbar>
 
@@ -90,7 +90,7 @@ const AppBar = (props: MUIAppBarProps) => {
           }}
         />
       )}
-    </MUIAppBar>
+    </MuiAppBar>
   );
 };
 

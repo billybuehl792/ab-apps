@@ -32,7 +32,7 @@ interface AddressFieldProps
 }
 
 const AddressField = ({
-  label = "Address",
+  label,
   placeholder = "Search for an address",
   variant = "outlined",
   size,

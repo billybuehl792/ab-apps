@@ -20,7 +20,6 @@ const EstimateCalculatorAddressField = (
       rules={{ required: "Address is required" }}
       render={({ field: { onChange, ...field }, formState: { errors } }) => (
         <AddressField
-          label=""
           size="small"
           placeholder="Address"
           error={Boolean(errors.address)}

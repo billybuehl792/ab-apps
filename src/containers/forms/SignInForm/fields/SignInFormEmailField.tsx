@@ -17,6 +17,7 @@ const SignInFormEmailField = (props: ComponentProps<typeof EmailField>) => {
 
   return (
     <EmailField
+      label="Email"
       autoComplete="email"
       error={Boolean(errors.email)}
       helperText={errors.email?.message}

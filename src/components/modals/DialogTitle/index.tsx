@@ -1,20 +1,20 @@
 import { type ReactNode, type FC } from "react";
 import {
   type DialogProps,
-  DialogTitle as MUIDialogTitle,
+  DialogTitle as MuiDialogTitle,
   Stack,
-  type DialogTitleProps as MUIDialogTitleProps,
+  type DialogTitleProps as MuiDialogTitleProps,
 } from "@mui/material";
 import CloseIconButton from "@/components/buttons/CloseIconButton";
 
-interface DialogTitleProps extends MUIDialogTitleProps {
+interface DialogTitleProps extends MuiDialogTitleProps {
   label?: ReactNode;
   onClose?: DialogProps["onClose"];
 }
 
 /**
  * This component renders a `DialogTitle` with a close button.
- * It is a wrapper around the MUI `DialogTitle` component.
+ * It is a wrapper around the Mui `DialogTitle` component.
  */
 const DialogTitle: FC<DialogTitleProps> = ({
   label,
@@ -23,7 +23,7 @@ const DialogTitle: FC<DialogTitleProps> = ({
   ...props
 }) => {
   return (
-    <MUIDialogTitle
+    <MuiDialogTitle
       component={Stack}
       direction="row"
       justifyContent="space-between"
@@ -37,7 +37,7 @@ const DialogTitle: FC<DialogTitleProps> = ({
           }}
         />
       )}
-    </MUIDialogTitle>
+    </MuiDialogTitle>
   );
 };
 
