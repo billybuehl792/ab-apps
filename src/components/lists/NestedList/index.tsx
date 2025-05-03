@@ -98,11 +98,13 @@ const NestedListItem = ({
           {...(!!item.to && { component: Link, to: item.to })}
           onClick={(event) => item.onClick?.(event, item.id)}
           {...buttonProps}
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           sx={[{ pl: indent }, ...sxAsArray(buttonProps?.sx)]}
         >
           {!!item.icon && (
             <ListItemIcon
               {...iconProps}
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               sx={[{ minWidth: 36 }, ...sxAsArray(iconProps?.sx)]}
             >
               {item.icon}

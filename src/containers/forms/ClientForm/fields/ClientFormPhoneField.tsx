@@ -23,6 +23,7 @@ const ClientFormPhoneField = (props: ComponentProps<typeof PhoneField>) => {
       }}
       render={({ field, formState: { errors } }) => (
         <PhoneField
+          label="Phone"
           error={Boolean(errors.phone)}
           helperText={errors.phone?.message}
           {...props}

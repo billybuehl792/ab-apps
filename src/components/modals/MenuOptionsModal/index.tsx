@@ -37,10 +37,9 @@ const MenuOptionsModal = ({
 
   return isMobile ? (
     <MenuOptionsDrawer
+      title={title}
       open={open}
       options={options}
-      title={title}
-      fullHeight
       disableCloseOnSelect={disableCloseOnSelect}
       onClose={onClose}
       {...drawerProps}

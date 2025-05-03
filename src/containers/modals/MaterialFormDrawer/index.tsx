@@ -1,9 +1,9 @@
 import { type ComponentProps } from "react";
+import { useMediaQuery } from "@mui/material";
 
 import MaterialForm from "@/containers/forms/MaterialForm";
 import { EMPTY_OBJECT } from "@/constants/utility";
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
-import { useMediaQuery } from "@mui/material";
 
 interface MaterialFormDrawerProps
   extends Omit<ComponentProps<typeof SwipeableDrawer>, "slotProps"> {
@@ -43,6 +43,11 @@ const MaterialFormDrawer = ({
             bgcolor: ({ palette }) => palette.background.paper,
             zIndex: 1,
             ...formProps?.slotProps?.actions,
+            slotProps: {
+              submitButton: { size: "large" },
+              resetButton: { size: "large" },
+              ...formProps?.slotProps?.actions?.slotProps,
+            },
           },
         }}
       />

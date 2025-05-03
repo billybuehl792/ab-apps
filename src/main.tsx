@@ -3,6 +3,7 @@ import App from "./App";
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { createRouter } from "@tanstack/react-router";
+import * as Sentry from "@sentry/react";
 
 import { routeTree } from "./routeTree.gen";
 import Providers from "./providers";
@@ -16,6 +17,19 @@ declare module "@tanstack/react-router" {
     router: typeof router;
   }
 }
+
+Sentry.init({
+  dsn: import.meta.env.VITE_SENTRY_DSN as string,
+  environment: import.meta.env.MODE,
+  enabled: import.meta.env.MODE === "production",
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.browserProfilingIntegration(),
+    Sentry.replayIntegration(),
+  ],
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1.0,
+});
 
 export const router = createRouter({
   routeTree,
