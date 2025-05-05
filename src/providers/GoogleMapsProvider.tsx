@@ -15,12 +15,8 @@ const GoogleMapsProvider = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     const handleLoad = async () => {
-      try {
-        const places = await loader.importLibrary("places");
-        setPlaces(places);
-      } catch (error) {
-        console.error("Error loading Google Maps Places library", error);
-      }
+      const places = await loader.importLibrary("places");
+      setPlaces(places);
     };
 
     void handleLoad();
