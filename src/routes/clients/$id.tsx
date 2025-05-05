@@ -1,17 +1,13 @@
 import { type ComponentProps } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import {
-  Card,
-  CardContent,
-  CircularProgress,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Skeleton, Stack, Typography } from "@mui/material";
 import ClientForm from "@/containers/forms/ClientForm";
 
 import useClients from "@/hooks/firebase/useClients";
 import { getClient } from "@/lib/queries/firebase/clients";
 import EditIconButton from "@/components/buttons/EditIconButton";
+import ClientDetailCard from "@/containers/cards/ClientDetailCard";
+import ErrorCard from "@/components/cards/ErrorCard";
 import type { Client } from "@/types/firebase";
 
 export const Route = createFileRoute("/clients/$id")({
@@ -19,14 +15,21 @@ export const Route = createFileRoute("/clients/$id")({
   validateSearch: (search: Record<string, unknown>): { edit?: boolean } => ({
     edit: Boolean(search.edit) || undefined,
   }),
-  loader: async ({ context: { queryClient }, params }) => {
-    const clientSnapshot = await queryClient.fetchQuery(getClient(params.id));
+  loader: async ({ context, params }) => {
+    const clientSnapshot = await context.queryClient.fetchQuery(
+      getClient(params.id)
+    );
     const client: Client = { id: clientSnapshot.id, ...clientSnapshot.data() };
 
     return { client, crumb: `${client.first_name} ${client.last_name}` };
   },
-  pendingComponent: () => <CircularProgress />,
-  errorComponent: ({ error }) => <Stack>{error.message}</Stack>,
+  pendingComponent: () => (
+    <Stack spacing={1}>
+      <Skeleton variant="rounded" height={32} />
+      <Skeleton variant="rounded" height={108} />
+    </Stack>
+  ),
+  errorComponent: ({ error }) => <ErrorCard error={error} />,
 });
 
 function RouteComponent() {
@@ -81,15 +84,7 @@ function RouteComponent() {
           onReset={onCancel}
         />
       ) : (
-        <Card>
-          <CardContent>
-            <Stack spacing={1}>
-              <Typography variant="body2">{client.address.text}</Typography>
-              <Typography variant="body2">{client.email}</Typography>
-              <Typography variant="body2">{client.phone.toPhone()}</Typography>
-            </Stack>
-          </CardContent>
-        </Card>
+        <ClientDetailCard client={client} />
       )}
     </Stack>
   );

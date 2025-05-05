@@ -28,11 +28,11 @@ const Providers = ({ children }: PropsWithChildren) => {
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <GoogleMapsProvider>
-            <ThemeProvider theme={theme}>{children}</ThemeProvider>
-          </GoogleMapsProvider>
-        </AuthProvider>
+        <GoogleMapsProvider>
+          <ThemeProvider theme={theme}>
+            <AuthProvider>{children}</AuthProvider>
+          </ThemeProvider>
+        </GoogleMapsProvider>
       </QueryClientProvider>
     </SnackbarProvider>
   );
