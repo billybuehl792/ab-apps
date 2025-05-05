@@ -23,7 +23,7 @@ const EstimateCalculatorAdditionalField = (
       size="small"
       placeholder="0"
       error={!!errors.additional}
-      sx={{ width: 120 }}
+      sx={{ width: 120, flexShrink: 0 }}
       {...props}
       {...register("additional", {
         min: {
