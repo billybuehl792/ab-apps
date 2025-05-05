@@ -72,7 +72,7 @@ const EstimateCalculatorFieldArray = ({
 
   return (
     <Stack spacing={1} {...props}>
-      <Stack component="fieldset" spacing={0.5}>
+      <Stack spacing={0.5}>
         {materialsQuery.isLoading
           ? Array(10)
               .fill(null)

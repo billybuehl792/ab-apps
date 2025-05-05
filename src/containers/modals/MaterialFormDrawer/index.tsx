@@ -30,7 +30,7 @@ const MaterialFormDrawer = ({
       <MaterialForm
         overflow="auto"
         flexGrow={1}
-        minWidth={400}
+        minWidth={isMd ? 400 : undefined}
         onSubmit={() => null}
         {...formProps}
         slotProps={{
