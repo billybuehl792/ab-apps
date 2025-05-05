@@ -27,7 +27,7 @@ const EstimateCalculatorCountField = ({
       onClick={(event) => {
         event.stopPropagation();
       }}
-      sx={{ width: 100 }}
+      sx={{ width: 100, flexShrink: 0 }}
       {...props}
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       {...register(`materials.${index}.count`, {

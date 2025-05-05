@@ -69,7 +69,7 @@ const Form = <T extends FieldValues = FieldValues, R = unknown, E = Error>({
         onReset={onReset}
         {...props}
       >
-        <Stack component="fieldset" spacing={2} {...fieldsetProps}>
+        <Stack spacing={2} {...fieldsetProps}>
           {children}
           {showRootError && !!methods.formState.errors.root && (
             <FormHelperText error>

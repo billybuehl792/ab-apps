@@ -74,17 +74,9 @@ const MaterialCard = ({
           alignItems="center"
           {...cardContentProps}
         >
-          <Stack
-            direction="row"
-            spacing={1}
-            flexGrow={1}
-            alignItems="center"
-            justifyItems="flex-start"
-          >
-            <Typography variant="body1" noWrap>
-              {material.label.toTitleCase()}
-            </Typography>
-          </Stack>
+          <Typography variant="body1" flexGrow={1} noWrap>
+            {material.label.toTitleCase()}
+          </Typography>
           <Typography variant="body2" noWrap>
             {material.value.toUSD()}
           </Typography>

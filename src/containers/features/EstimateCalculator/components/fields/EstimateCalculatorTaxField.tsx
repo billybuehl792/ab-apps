@@ -23,7 +23,7 @@ const EstimateCalculatorTaxField = (
       size="small"
       placeholder="0"
       error={!!errors.tax}
-      sx={{ width: 110 }}
+      sx={{ width: 110, flexShrink: 0 }}
       {...register("tax", {
         min: {
           value: MIN,
