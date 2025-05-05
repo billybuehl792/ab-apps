@@ -15,8 +15,8 @@ import {
   type PhoneAuthCredential,
 } from "firebase/auth";
 import { useSnackbar } from "notistack";
-import { CircularProgress } from "@mui/material";
 
+import AppLoadingState from "@/containers/layout/AppLoadingState";
 import AuthContext from "@/context/AuthContext";
 import { auth } from "@/config/firebase";
 import { getErrorMessage, isMfaError } from "@/utils/error";
@@ -155,7 +155,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
         ]
       )}
     >
-      {loading ? <CircularProgress /> : children}
+      {loading ? <AppLoadingState /> : children}
     </AuthContext>
   );
 };
