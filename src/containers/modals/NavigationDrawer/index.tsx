@@ -19,6 +19,7 @@ const NavigationDrawer = ({
   return (
     <SwipeableDrawer
       title={APP_TITLE}
+      fullHeight
       onClose={onClose}
       slotProps={slotProps}
       {...props}

@@ -56,12 +56,12 @@ const useMaterials = () => {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [materials.id] });
-      enqueueSnackbar("Material archived", {
+      enqueueSnackbar("Material deleted", {
         variant: "success",
       });
     },
     onError: () =>
-      enqueueSnackbar("Error archiving material", {
+      enqueueSnackbar("Error deleting material", {
         variant: "error",
       }),
   });
