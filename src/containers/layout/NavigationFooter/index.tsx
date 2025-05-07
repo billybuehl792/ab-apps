@@ -56,7 +56,7 @@ const NavigationFooter = (props: PaperProps) => {
       square
       {...props}
     >
-      <BottomNavigation value={value}>
+      <BottomNavigation value={value} sx={{ height: "100%" }}>
         {actions.map((action) => (
           <BottomNavigationAction
             key={action.id}

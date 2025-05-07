@@ -29,6 +29,7 @@ declare global {
     icon?: ReactNode;
     selected?: boolean;
     disabled?: boolean;
+    confirm?: boolean | string;
     tooltip?: string;
     disableCloseOnSelect?: boolean;
     onClick: (event: MouseEvent, id: string) => void | Promise<void>;

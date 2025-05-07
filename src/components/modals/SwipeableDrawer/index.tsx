@@ -6,6 +6,7 @@ import {
   Stack,
   type SwipeableDrawerProps as MuiSwipeableDrawerProps,
   useMediaQuery,
+  type StackProps,
 } from "@mui/material";
 
 import DrawerHeader from "../DrawerHeader";
@@ -25,6 +26,7 @@ interface SwipeableDrawerProps
   slotProps?: {
     puller?: ComponentProps<typeof Puller>;
     header?: ComponentProps<typeof DrawerHeader>;
+    content?: StackProps;
   } & MuiSwipeableDrawerProps["slotProps"];
 }
 
@@ -61,6 +63,7 @@ const SwipeableDrawer = ({
   slotProps: {
     puller: pullerProps,
     header: headerProps,
+    content: contentProps,
     ...slotProps
   } = EMPTY_OBJECT,
   ...props
@@ -106,7 +109,9 @@ const SwipeableDrawer = ({
       {!hideHeader && (
         <DrawerHeader title={title} onClose={onClose} {...headerProps} />
       )}
-      {children}
+      <Stack overflow="auto" flexGrow={1} pb={4} {...contentProps}>
+        {children}
+      </Stack>
     </MuiSwipeableDrawer>
   );
 };
