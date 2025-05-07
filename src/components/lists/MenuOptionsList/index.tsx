@@ -1,23 +1,13 @@
-import {
-  ListItemIcon,
-  type ListItemIconProps,
-  ListItemText,
-  type ListItemTextProps,
-  MenuItem,
-  type MenuItemProps,
-  MenuList,
-  type MenuListProps,
-} from "@mui/material";
+import { type ComponentProps } from "react";
+import { MenuList, type MenuListProps } from "@mui/material";
 
+import MenuOptionMenuItem from "@/components/menu-items/MenuOptionMenuItem";
 import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface MenuOptionsListProps extends MenuListProps {
   options: MenuOption[];
   slotProps?: {
-    menuItem?: {
-      text?: ListItemTextProps;
-      icon?: ListItemIconProps;
-    } & MenuItemProps;
+    menuItem?: Partial<ComponentProps<typeof MenuOptionMenuItem>>;
   };
 }
 
@@ -26,28 +16,19 @@ interface MenuOptionsListProps extends MenuListProps {
  */
 const MenuOptionsList = ({
   options,
-  slotProps: {
-    menuItem: { text: textProps, icon: iconProps, ...itemProps } = {},
-  } = EMPTY_OBJECT,
+  slotProps: { menuItem: menuItemProps } = EMPTY_OBJECT,
   ...props
 }: MenuOptionsListProps) => {
   return (
     <MenuList {...props}>
       {options
         .filter(({ render }) => render !== false)
-        .map((item) => (
-          <MenuItem
-            key={item.id}
-            onClick={(event) => {
-              void item.onClick(event, item.id);
-            }}
-            {...itemProps}
-          >
-            {!!item.icon && (
-              <ListItemIcon {...iconProps}>{item.icon}</ListItemIcon>
-            )}
-            <ListItemText {...textProps}>{item.label}</ListItemText>
-          </MenuItem>
+        .map((option) => (
+          <MenuOptionMenuItem
+            key={option.id}
+            option={option}
+            {...menuItemProps}
+          />
         ))}
     </MenuList>
   );

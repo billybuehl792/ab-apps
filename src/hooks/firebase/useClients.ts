@@ -52,12 +52,12 @@ const useClients = () => {
     },
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: [clients.id] });
-      enqueueSnackbar("Client archived", {
+      enqueueSnackbar("Client deleted", {
         variant: "success",
       });
     },
     onError: () =>
-      enqueueSnackbar("Error archiving client", {
+      enqueueSnackbar("Error deleting client", {
         variant: "error",
       }),
   });

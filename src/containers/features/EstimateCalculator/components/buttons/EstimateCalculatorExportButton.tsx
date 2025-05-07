@@ -1,5 +1,5 @@
 import { type ComponentProps } from "react";
-import { IosShare } from "@mui/icons-material";
+import { SaveAlt } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
 import { Button } from "@mui/material";
 
@@ -36,7 +36,7 @@ const EstimateCalculatorExportButton = (
     <Button
       type="submit"
       variant="contained"
-      startIcon={<IosShare />}
+      startIcon={<SaveAlt />}
       color="primary"
       onClick={() => void handleSaveDocument()}
       {...props}
