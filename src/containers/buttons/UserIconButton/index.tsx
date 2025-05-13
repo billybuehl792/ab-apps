@@ -34,7 +34,7 @@ const UserIconButton = (
       id: "profile",
       label: "Profile",
       icon: <Person />,
-      onClick: () => void navigate({ to: "/profile" }),
+      onClick: () => void navigate({ to: "/app/profile" }),
     },
     {
       id: "signOut",

@@ -10,7 +10,7 @@ import ClientDetailCard from "@/containers/cards/ClientDetailCard";
 import ErrorCard from "@/components/cards/ErrorCard";
 import type { Client } from "@/types/firebase";
 
-export const Route = createFileRoute("/clients/$id")({
+export const Route = createFileRoute("/app/clients/$id")({
   component: RouteComponent,
   validateSearch: (search: Record<string, unknown>): { edit?: boolean } => ({
     edit: Boolean(search.edit) || undefined,
@@ -50,10 +50,10 @@ function RouteComponent() {
     update.mutateAsync({ id: client.id, ...data });
 
   const onSuccess: ComponentProps<typeof ClientForm>["onSuccess"] = () =>
-    void navigate({ to: `/clients/${client.id}` });
+    void navigate({ to: `/app/clients/${client.id}` });
 
   const onCancel: ComponentProps<typeof ClientForm>["onReset"] = () =>
-    void navigate({ to: `/clients/${client.id}` });
+    void navigate({ to: `/app/clients/${client.id}` });
 
   return (
     <Stack spacing={1}>
@@ -65,7 +65,7 @@ function RouteComponent() {
           <EditIconButton
             onClick={() => {
               void navigate({
-                to: `/clients/${client.id}`,
+                to: `/app/clients/${client.id}`,
                 search: { edit: true },
               });
             }}

@@ -1,11 +1,10 @@
+import { StrictMode } from "react";
+import router from "./router";
 import App from "./App";
 
-import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { createRouter } from "@tanstack/react-router";
 import * as Sentry from "@sentry/react";
 
-import { routeTree } from "./routeTree.gen";
 import Providers from "./providers";
 
 import "reset-css/reset.css";
@@ -29,20 +28,6 @@ Sentry.init({
   ],
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
-});
-
-export const router = createRouter({
-  routeTree,
-  defaultPendingMs: 0,
-  context: {
-    auth: {
-      user: null,
-      loading: true,
-    },
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    queryClient: null!,
-  },
-  defaultNotFoundComponent: () => "Page not found :(",
 });
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

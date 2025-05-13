@@ -20,22 +20,22 @@ const NavigationFooter = (props: PaperProps) => {
     {
       id: "home",
       label: "Dashboard",
-      to: "/",
-      selected: pathname === "/",
+      to: "/app",
+      selected: pathname === "/app",
       icon: <Home />,
     },
     {
       id: "clients",
       label: "Clients",
-      to: "/clients",
-      selected: pathname.startsWith("/clients"),
+      to: "/app/clients",
+      selected: pathname.startsWith("/app/clients"),
       icon: <Groups />,
     },
     {
       id: "profile",
       label: "Profile",
-      to: "/profile",
-      selected: pathname.startsWith("/profile"),
+      to: "/app/profile",
+      selected: pathname.startsWith("/app/profile"),
       icon: (
         <Avatar
           alt={user?.displayName ?? user?.email ?? "user"}
