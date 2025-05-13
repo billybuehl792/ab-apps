@@ -12,14 +12,16 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SignInImport } from './routes/sign-in'
-import { Route as ProfileImport } from './routes/profile'
-import { Route as EstimateCalculatorImport } from './routes/estimate-calculator'
 import { Route as EmailVerifyImport } from './routes/email-verify'
-import { Route as ClientsImport } from './routes/clients'
+import { Route as AppImport } from './routes/app'
 import { Route as IndexImport } from './routes/index'
-import { Route as ClientsIndexImport } from './routes/clients/index'
-import { Route as ClientsCreateImport } from './routes/clients/create'
-import { Route as ClientsIdImport } from './routes/clients/$id'
+import { Route as AppIndexImport } from './routes/app/index'
+import { Route as AppProfileImport } from './routes/app/profile'
+import { Route as AppEstimateCalculatorImport } from './routes/app/estimate-calculator'
+import { Route as AppClientsImport } from './routes/app/clients'
+import { Route as AppClientsIndexImport } from './routes/app/clients/index'
+import { Route as AppClientsCreateImport } from './routes/app/clients/create'
+import { Route as AppClientsIdImport } from './routes/app/clients/$id'
 
 // Create/Update Routes
 
@@ -29,27 +31,15 @@ const SignInRoute = SignInImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ProfileRoute = ProfileImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const EstimateCalculatorRoute = EstimateCalculatorImport.update({
-  id: '/estimate-calculator',
-  path: '/estimate-calculator',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const EmailVerifyRoute = EmailVerifyImport.update({
   id: '/email-verify',
   path: '/email-verify',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ClientsRoute = ClientsImport.update({
-  id: '/clients',
-  path: '/clients',
+const AppRoute = AppImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -59,22 +49,46 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ClientsIndexRoute = ClientsIndexImport.update({
+const AppIndexRoute = AppIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => ClientsRoute,
+  getParentRoute: () => AppRoute,
 } as any)
 
-const ClientsCreateRoute = ClientsCreateImport.update({
+const AppProfileRoute = AppProfileImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+
+const AppEstimateCalculatorRoute = AppEstimateCalculatorImport.update({
+  id: '/estimate-calculator',
+  path: '/estimate-calculator',
+  getParentRoute: () => AppRoute,
+} as any)
+
+const AppClientsRoute = AppClientsImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => AppRoute,
+} as any)
+
+const AppClientsIndexRoute = AppClientsIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppClientsRoute,
+} as any)
+
+const AppClientsCreateRoute = AppClientsCreateImport.update({
   id: '/create',
   path: '/create',
-  getParentRoute: () => ClientsRoute,
+  getParentRoute: () => AppClientsRoute,
 } as any)
 
-const ClientsIdRoute = ClientsIdImport.update({
+const AppClientsIdRoute = AppClientsIdImport.update({
   id: '/$id',
   path: '/$id',
-  getParentRoute: () => ClientsRoute,
+  getParentRoute: () => AppClientsRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -88,11 +102,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/clients': {
-      id: '/clients'
-      path: '/clients'
-      fullPath: '/clients'
-      preLoaderRoute: typeof ClientsImport
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppImport
       parentRoute: typeof rootRoute
     }
     '/email-verify': {
@@ -102,20 +116,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmailVerifyImport
       parentRoute: typeof rootRoute
     }
-    '/estimate-calculator': {
-      id: '/estimate-calculator'
-      path: '/estimate-calculator'
-      fullPath: '/estimate-calculator'
-      preLoaderRoute: typeof EstimateCalculatorImport
-      parentRoute: typeof rootRoute
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileImport
-      parentRoute: typeof rootRoute
-    }
     '/sign-in': {
       id: '/sign-in'
       path: '/sign-in'
@@ -123,134 +123,185 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInImport
       parentRoute: typeof rootRoute
     }
-    '/clients/$id': {
-      id: '/clients/$id'
-      path: '/$id'
-      fullPath: '/clients/$id'
-      preLoaderRoute: typeof ClientsIdImport
-      parentRoute: typeof ClientsImport
+    '/app/clients': {
+      id: '/app/clients'
+      path: '/clients'
+      fullPath: '/app/clients'
+      preLoaderRoute: typeof AppClientsImport
+      parentRoute: typeof AppImport
     }
-    '/clients/create': {
-      id: '/clients/create'
-      path: '/create'
-      fullPath: '/clients/create'
-      preLoaderRoute: typeof ClientsCreateImport
-      parentRoute: typeof ClientsImport
+    '/app/estimate-calculator': {
+      id: '/app/estimate-calculator'
+      path: '/estimate-calculator'
+      fullPath: '/app/estimate-calculator'
+      preLoaderRoute: typeof AppEstimateCalculatorImport
+      parentRoute: typeof AppImport
     }
-    '/clients/': {
-      id: '/clients/'
+    '/app/profile': {
+      id: '/app/profile'
+      path: '/profile'
+      fullPath: '/app/profile'
+      preLoaderRoute: typeof AppProfileImport
+      parentRoute: typeof AppImport
+    }
+    '/app/': {
+      id: '/app/'
       path: '/'
-      fullPath: '/clients/'
-      preLoaderRoute: typeof ClientsIndexImport
-      parentRoute: typeof ClientsImport
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexImport
+      parentRoute: typeof AppImport
+    }
+    '/app/clients/$id': {
+      id: '/app/clients/$id'
+      path: '/$id'
+      fullPath: '/app/clients/$id'
+      preLoaderRoute: typeof AppClientsIdImport
+      parentRoute: typeof AppClientsImport
+    }
+    '/app/clients/create': {
+      id: '/app/clients/create'
+      path: '/create'
+      fullPath: '/app/clients/create'
+      preLoaderRoute: typeof AppClientsCreateImport
+      parentRoute: typeof AppClientsImport
+    }
+    '/app/clients/': {
+      id: '/app/clients/'
+      path: '/'
+      fullPath: '/app/clients/'
+      preLoaderRoute: typeof AppClientsIndexImport
+      parentRoute: typeof AppClientsImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface ClientsRouteChildren {
-  ClientsIdRoute: typeof ClientsIdRoute
-  ClientsCreateRoute: typeof ClientsCreateRoute
-  ClientsIndexRoute: typeof ClientsIndexRoute
+interface AppClientsRouteChildren {
+  AppClientsIdRoute: typeof AppClientsIdRoute
+  AppClientsCreateRoute: typeof AppClientsCreateRoute
+  AppClientsIndexRoute: typeof AppClientsIndexRoute
 }
 
-const ClientsRouteChildren: ClientsRouteChildren = {
-  ClientsIdRoute: ClientsIdRoute,
-  ClientsCreateRoute: ClientsCreateRoute,
-  ClientsIndexRoute: ClientsIndexRoute,
+const AppClientsRouteChildren: AppClientsRouteChildren = {
+  AppClientsIdRoute: AppClientsIdRoute,
+  AppClientsCreateRoute: AppClientsCreateRoute,
+  AppClientsIndexRoute: AppClientsIndexRoute,
 }
 
-const ClientsRouteWithChildren =
-  ClientsRoute._addFileChildren(ClientsRouteChildren)
+const AppClientsRouteWithChildren = AppClientsRoute._addFileChildren(
+  AppClientsRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppClientsRoute: typeof AppClientsRouteWithChildren
+  AppEstimateCalculatorRoute: typeof AppEstimateCalculatorRoute
+  AppProfileRoute: typeof AppProfileRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppClientsRoute: AppClientsRouteWithChildren,
+  AppEstimateCalculatorRoute: AppEstimateCalculatorRoute,
+  AppProfileRoute: AppProfileRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/clients': typeof ClientsRouteWithChildren
+  '/app': typeof AppRouteWithChildren
   '/email-verify': typeof EmailVerifyRoute
-  '/estimate-calculator': typeof EstimateCalculatorRoute
-  '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
-  '/clients/$id': typeof ClientsIdRoute
-  '/clients/create': typeof ClientsCreateRoute
-  '/clients/': typeof ClientsIndexRoute
+  '/app/clients': typeof AppClientsRouteWithChildren
+  '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/': typeof AppIndexRoute
+  '/app/clients/$id': typeof AppClientsIdRoute
+  '/app/clients/create': typeof AppClientsCreateRoute
+  '/app/clients/': typeof AppClientsIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/email-verify': typeof EmailVerifyRoute
-  '/estimate-calculator': typeof EstimateCalculatorRoute
-  '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
-  '/clients/$id': typeof ClientsIdRoute
-  '/clients/create': typeof ClientsCreateRoute
-  '/clients': typeof ClientsIndexRoute
+  '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app': typeof AppIndexRoute
+  '/app/clients/$id': typeof AppClientsIdRoute
+  '/app/clients/create': typeof AppClientsCreateRoute
+  '/app/clients': typeof AppClientsIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/clients': typeof ClientsRouteWithChildren
+  '/app': typeof AppRouteWithChildren
   '/email-verify': typeof EmailVerifyRoute
-  '/estimate-calculator': typeof EstimateCalculatorRoute
-  '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
-  '/clients/$id': typeof ClientsIdRoute
-  '/clients/create': typeof ClientsCreateRoute
-  '/clients/': typeof ClientsIndexRoute
+  '/app/clients': typeof AppClientsRouteWithChildren
+  '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
+  '/app/profile': typeof AppProfileRoute
+  '/app/': typeof AppIndexRoute
+  '/app/clients/$id': typeof AppClientsIdRoute
+  '/app/clients/create': typeof AppClientsCreateRoute
+  '/app/clients/': typeof AppClientsIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/clients'
+    | '/app'
     | '/email-verify'
-    | '/estimate-calculator'
-    | '/profile'
     | '/sign-in'
-    | '/clients/$id'
-    | '/clients/create'
-    | '/clients/'
+    | '/app/clients'
+    | '/app/estimate-calculator'
+    | '/app/profile'
+    | '/app/'
+    | '/app/clients/$id'
+    | '/app/clients/create'
+    | '/app/clients/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/email-verify'
-    | '/estimate-calculator'
-    | '/profile'
     | '/sign-in'
-    | '/clients/$id'
-    | '/clients/create'
-    | '/clients'
+    | '/app/estimate-calculator'
+    | '/app/profile'
+    | '/app'
+    | '/app/clients/$id'
+    | '/app/clients/create'
+    | '/app/clients'
   id:
     | '__root__'
     | '/'
-    | '/clients'
+    | '/app'
     | '/email-verify'
-    | '/estimate-calculator'
-    | '/profile'
     | '/sign-in'
-    | '/clients/$id'
-    | '/clients/create'
-    | '/clients/'
+    | '/app/clients'
+    | '/app/estimate-calculator'
+    | '/app/profile'
+    | '/app/'
+    | '/app/clients/$id'
+    | '/app/clients/create'
+    | '/app/clients/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ClientsRoute: typeof ClientsRouteWithChildren
+  AppRoute: typeof AppRouteWithChildren
   EmailVerifyRoute: typeof EmailVerifyRoute
-  EstimateCalculatorRoute: typeof EstimateCalculatorRoute
-  ProfileRoute: typeof ProfileRoute
   SignInRoute: typeof SignInRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ClientsRoute: ClientsRouteWithChildren,
+  AppRoute: AppRouteWithChildren,
   EmailVerifyRoute: EmailVerifyRoute,
-  EstimateCalculatorRoute: EstimateCalculatorRoute,
-  ProfileRoute: ProfileRoute,
   SignInRoute: SignInRoute,
 }
 
@@ -265,47 +316,61 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/clients",
+        "/app",
         "/email-verify",
-        "/estimate-calculator",
-        "/profile",
         "/sign-in"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/clients": {
-      "filePath": "clients.tsx",
+    "/app": {
+      "filePath": "app.tsx",
       "children": [
-        "/clients/$id",
-        "/clients/create",
-        "/clients/"
+        "/app/clients",
+        "/app/estimate-calculator",
+        "/app/profile",
+        "/app/"
       ]
     },
     "/email-verify": {
       "filePath": "email-verify.tsx"
     },
-    "/estimate-calculator": {
-      "filePath": "estimate-calculator.tsx"
-    },
-    "/profile": {
-      "filePath": "profile.tsx"
-    },
     "/sign-in": {
       "filePath": "sign-in.tsx"
     },
-    "/clients/$id": {
-      "filePath": "clients/$id.tsx",
-      "parent": "/clients"
+    "/app/clients": {
+      "filePath": "app/clients.tsx",
+      "parent": "/app",
+      "children": [
+        "/app/clients/$id",
+        "/app/clients/create",
+        "/app/clients/"
+      ]
     },
-    "/clients/create": {
-      "filePath": "clients/create.tsx",
-      "parent": "/clients"
+    "/app/estimate-calculator": {
+      "filePath": "app/estimate-calculator.tsx",
+      "parent": "/app"
     },
-    "/clients/": {
-      "filePath": "clients/index.tsx",
-      "parent": "/clients"
+    "/app/profile": {
+      "filePath": "app/profile.tsx",
+      "parent": "/app"
+    },
+    "/app/": {
+      "filePath": "app/index.tsx",
+      "parent": "/app"
+    },
+    "/app/clients/$id": {
+      "filePath": "app/clients/$id.tsx",
+      "parent": "/app/clients"
+    },
+    "/app/clients/create": {
+      "filePath": "app/clients/create.tsx",
+      "parent": "/app/clients"
+    },
+    "/app/clients/": {
+      "filePath": "app/clients/index.tsx",
+      "parent": "/app/clients"
     }
   }
 }

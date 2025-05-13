@@ -1,5 +1,5 @@
 import { type ComponentProps } from "react";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Stack } from "@mui/material";
 
 import useAuth from "@/hooks/auth/useAuth";
@@ -14,16 +14,8 @@ import {
 } from "firebase/storage";
 import { storage } from "@/config/firebase";
 
-export const Route = createFileRoute("/profile")({
+export const Route = createFileRoute("/app/profile")({
   component: RouteComponent,
-  beforeLoad: ({ context, location }) => {
-    if (!context.auth.user)
-      redirect({
-        to: "/sign-in",
-        search: { redirect: location.href },
-        throw: true,
-      });
-  },
 });
 
 function RouteComponent() {

@@ -97,8 +97,6 @@ const AuthWorkflow = ({ onSuccess, ...props }: AuthWorkflowProps) => {
     );
   };
 
-  if (user)
-    return <Typography variant="h6">Welcome {user.displayName}!</Typography>;
   return (
     <Stack spacing={2} {...props}>
       <Breadcrumbs>
@@ -126,6 +124,7 @@ const AuthWorkflow = ({ onSuccess, ...props }: AuthWorkflowProps) => {
         </>
       ) : (
         <SignInForm
+          disabled={Boolean(user)}
           slotProps={{
             actions: {
               slotProps: {

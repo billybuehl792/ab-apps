@@ -6,7 +6,7 @@ import ClientPaginatedList from "@/containers/lists/ClientPaginatedList";
 import CreateClientLink from "@/containers/links/CreateClientLink";
 import type { Client } from "@/types/firebase";
 
-export const Route = createFileRoute("/clients/")({
+export const Route = createFileRoute("/app/clients/")({
   component: RouteComponent,
 });
 
@@ -19,11 +19,11 @@ function RouteComponent() {
   /** Callbacks */
 
   const handleNavigateClient = (client: Client) =>
-    void navigate({ to: `/clients/${client.id}` });
+    void navigate({ to: `/app/clients/${client.id}` });
 
   const handleEditClient = (client: Client) =>
     void navigate({
-      to: `/clients/${client.id}`,
+      to: `/app/clients/${client.id}`,
       search: { edit: true },
     });
 
