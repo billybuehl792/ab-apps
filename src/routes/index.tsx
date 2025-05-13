@@ -1,21 +1,18 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Card, CardContent, Stack, Typography } from "@mui/material";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  component: RouteComponent,
+  beforeLoad: () => {
+    redirect({ to: "/app", throw: true });
+  },
 });
 
-function Index() {
+function RouteComponent() {
   return (
-    <Stack component="section" p={2}>
-      <Card>
-        <CardContent component={Stack} spacing={1}>
-          <Typography variant="h5">Welcome to Home Page</Typography>
-          <Typography variant="body2">
-            App is currently under construction
-          </Typography>
-        </CardContent>
-      </Card>
-    </Stack>
+    <>
+      <Outlet />
+      <TanStackRouterDevtools />
+    </>
   );
 }

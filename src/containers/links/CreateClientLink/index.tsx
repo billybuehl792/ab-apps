@@ -11,7 +11,7 @@ const CreateClientLink = (props: MuiLinkProps) => {
   return (
     <MuiLink
       component={Link}
-      to="/clients/create"
+      to="/app/clients/create"
       color="primary"
       underline="none"
       {...props}

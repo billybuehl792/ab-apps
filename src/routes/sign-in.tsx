@@ -1,17 +1,21 @@
-import { type ComponentProps } from "react";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { Stack } from "@mui/material";
+import { Card, CardContent, Paper } from "@mui/material";
 
 import AuthWorkflow from "@/containers/workflows/AuthWorkflow";
 
 export const Route = createFileRoute("/sign-in")({
   component: RouteComponent,
-  beforeLoad: ({ context }) => {
-    if (context.auth.user) redirect({ to: "/", throw: true });
-  },
   validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
     redirect: (search.redirect as string) || undefined,
   }),
+  beforeLoad: ({ context, search }) => {
+    if (context.auth.user) {
+      if (!context.auth.user.emailVerified)
+        redirect({ to: "/email-verify", search, replace: true, throw: true });
+      else
+        redirect({ to: search.redirect ?? "/app", replace: true, throw: true });
+    }
+  },
 });
 
 function RouteComponent() {
@@ -22,13 +26,31 @@ function RouteComponent() {
 
   /** Callbacks */
 
-  const handleSignInSuccess: ComponentProps<
-    typeof AuthWorkflow
-  >["onSuccess"] = () => void navigate({ to: redirect || "/", replace: true });
+  const handleSignInSuccess = () =>
+    void navigate({ to: redirect || "/", replace: true });
 
   return (
-    <Stack p={2}>
-      <AuthWorkflow onSuccess={handleSignInSuccess} />
-    </Stack>
+    <Paper
+      square
+      elevation={0}
+      sx={{
+        position: "absolute",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        p: 4,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        bgcolor: ({ palette }) => palette.primary.main,
+      }}
+    >
+      <Card sx={{ flexGrow: 1, maxWidth: 600 }}>
+        <CardContent>
+          <AuthWorkflow onSuccess={handleSignInSuccess} />
+        </CardContent>
+      </Card>
+    </Paper>
   );
 }

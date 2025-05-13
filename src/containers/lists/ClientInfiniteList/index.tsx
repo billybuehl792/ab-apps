@@ -44,7 +44,7 @@ const ClientInfiniteList = ({
               icon: <Edit />,
               onClick: () =>
                 navigate({
-                  to: `/clients/${client.id}`,
+                  to: `/app/clients/${client.id}`,
                   search: { edit: true },
                 }),
             },
@@ -60,7 +60,7 @@ const ClientInfiniteList = ({
             },
           ]}
           onClick={() => {
-            void navigate({ to: `/clients/${client.id}` });
+            void navigate({ to: `/app/clients/${client.id}` });
           }}
           {...cardProps}
         />
