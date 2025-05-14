@@ -1,12 +1,13 @@
 import { type ComponentProps } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Skeleton, Stack, Typography } from "@mui/material";
-import ClientForm from "@/containers/forms/ClientForm";
+import { Edit, EditOff } from "@mui/icons-material";
 
 import useClients from "@/hooks/firebase/useClients";
 import { getClient } from "@/lib/queries/firebase/clients";
 import EditIconButton from "@/components/buttons/EditIconButton";
 import ClientDetailCard from "@/containers/cards/ClientDetailCard";
+import ClientForm from "@/containers/forms/ClientForm";
 import ErrorCard from "@/components/cards/ErrorCard";
 import type { Client } from "@/types/firebase";
 
@@ -61,16 +62,15 @@ function RouteComponent() {
         <Typography variant="h6" noWrap>
           {`${client.first_name} ${client.last_name}`}
         </Typography>
-        {!edit && (
-          <EditIconButton
-            onClick={() => {
-              void navigate({
-                to: `/app/clients/${client.id}`,
-                search: { edit: true },
-              });
-            }}
-          />
-        )}
+        <EditIconButton
+          icon={edit ? <EditOff /> : <Edit />}
+          onClick={() => {
+            void navigate({
+              to: `/app/clients/${client.id}`,
+              search: { edit: !edit },
+            });
+          }}
+        />
       </Stack>
 
       {edit ? (

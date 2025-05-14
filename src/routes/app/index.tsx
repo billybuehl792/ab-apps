@@ -1,4 +1,6 @@
-import { Card, CardContent, Stack, Typography } from "@mui/material";
+import ClientOverviewCard from "@/containers/cards/ClientOverviewCard";
+import EstimateCalculatorOverviewCard from "@/containers/cards/EstimateCalculatorOverviewCard";
+import { Grid2 as Grid, Stack, Typography } from "@mui/material";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/app/")({
@@ -7,15 +9,19 @@ export const Route = createFileRoute("/app/")({
 
 function RouteComponent() {
   return (
-    <Stack p={2}>
-      <Card>
-        <CardContent>
-          <Typography variant="h6">Welcome to AB Apps</Typography>
-          <Typography variant="body2">
-            App is currently under construction
-          </Typography>
-        </CardContent>
-      </Card>
+    <Stack spacing={1} p={2}>
+      <Typography variant="h6">Overview</Typography>
+      <Grid container spacing={1}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <ClientOverviewCard />
+        </Grid>
+      </Grid>
+      <Typography variant="h6">Apps</Typography>
+      <Grid container spacing={1}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
+          <EstimateCalculatorOverviewCard />
+        </Grid>
+      </Grid>
     </Stack>
   );
 }
