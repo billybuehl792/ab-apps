@@ -2,10 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes, minimum-scale=0.9, maximum-scale=1, interactive-widget=resizes-content, viewport-fit=cover"
+    />
     <meta name="description" content="Utility Apps" />
     <meta name="background-color" content="#fff" />
-    <meta name="theme-color" content="##2b4277" />
+    <meta name="theme-color" content="#2b4277" />
     <title>AB Apps</title>
     <link
       rel="icon"
@@ -25,7 +28,14 @@
       href="/icons/apple-touch-icon.png"
     />
   </head>
-  <body style="margin: 0; padding: 0">
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      scrollbar-width: thin;
+      scrollbar-color: #2b4277 #fff;
+    "
+  >
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -12,6 +12,7 @@ import {
 import DrawerHeader from "../DrawerHeader";
 import { sxAsArray } from "@/utils/sx";
 import { EMPTY_OBJECT } from "@/constants/utility";
+import { APP_BOTTOM_SAFE_AREA_HEIGHT } from "@/constants/layout";
 
 interface SwipeableDrawerProps
   extends Omit<
@@ -109,7 +110,12 @@ const SwipeableDrawer = ({
       {!hideHeader && (
         <DrawerHeader title={title} onClose={onClose} {...headerProps} />
       )}
-      <Stack overflow="auto" flexGrow={1} pb={4} {...contentProps}>
+      <Stack
+        overflow="auto"
+        flexGrow={1}
+        pb={isMobile ? APP_BOTTOM_SAFE_AREA_HEIGHT / 8 : 0}
+        {...contentProps}
+      >
         {children}
       </Stack>
     </MuiSwipeableDrawer>

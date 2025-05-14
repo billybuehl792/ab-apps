@@ -6,23 +6,17 @@ import NavigationFooter from "@/containers/layout/NavigationFooter";
 import AppBar from "@/containers/layout/AppBar";
 import {
   APP_BAR_HEIGHT,
+  APP_BOTTOM_SAFE_AREA_HEIGHT,
   APP_FOOTER_HEIGHT,
   APP_SIDE_PANEL_WIDTH,
 } from "@/constants/layout";
 
 export const Route = createFileRoute("/app")({
   component: RouteComponent,
-  beforeLoad: ({ context }) => {
-    if (!context.auth.user)
+  beforeLoad: ({ context, location }) => {
+    if (!context.auth.user || !context.auth.user.emailVerified)
       redirect({
         to: "/sign-in",
-        search: { redirect: location.href },
-        replace: true,
-        throw: true,
-      });
-    else if (!context.auth.user.emailVerified)
-      redirect({
-        to: "/email-verify",
         search: { redirect: location.href },
         replace: true,
         throw: true,
@@ -34,6 +28,7 @@ function RouteComponent() {
   /** Values */
 
   const isDesktop = useMediaQuery(({ breakpoints }) => breakpoints.up("sm"));
+  const isMobile = useMediaQuery("(pointer: coarse)");
 
   return (
     <>
@@ -41,7 +36,11 @@ function RouteComponent() {
         component="main"
         position="absolute"
         top={APP_BAR_HEIGHT}
-        bottom={isDesktop ? 0 : APP_FOOTER_HEIGHT}
+        bottom={
+          isDesktop
+            ? 0
+            : APP_FOOTER_HEIGHT + (isMobile ? APP_BOTTOM_SAFE_AREA_HEIGHT : 0)
+        }
         left={isDesktop ? APP_SIDE_PANEL_WIDTH : 0}
         right={0}
         overflow="auto"
@@ -75,6 +74,7 @@ function RouteComponent() {
             left: 0,
             right: 0,
             height: APP_FOOTER_HEIGHT,
+            pb: isMobile ? APP_BOTTOM_SAFE_AREA_HEIGHT / 8 : 0,
             zIndex: ({ zIndex }) => zIndex.appBar,
           }}
         />
