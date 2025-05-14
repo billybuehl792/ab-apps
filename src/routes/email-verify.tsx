@@ -58,7 +58,7 @@ function RouteComponent() {
       right={0}
       bgcolor={({ palette }) => palette.primary.main}
     >
-      <Card sx={{ flexGrow: 1, maxWidth: 500 }}>
+      <Card sx={{ flexGrow: 1, maxWidth: 500, m: 2 }}>
         <Stack component={CardContent} spacing={2}>
           <Typography variant="h5">Email Verification Required</Typography>
           <Typography variant="body2">
