@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "host": "vite --host",
     "preview": "vite preview",
+    "preview:host": "vite preview --host",
     "test": "vitest",
     "prepare": "husky"
   },

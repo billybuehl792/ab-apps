@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
-import { Card, CardContent, Paper } from "@mui/material";
+import { Box, Card, CardContent } from "@mui/material";
 
 import AuthWorkflow from "@/containers/workflows/AuthWorkflow";
 
@@ -30,27 +30,23 @@ function RouteComponent() {
     void navigate({ to: redirect || "/", replace: true });
 
   return (
-    <Paper
-      square
-      elevation={0}
-      sx={{
-        position: "absolute",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        p: 4,
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        bgcolor: ({ palette }) => palette.primary.main,
-      }}
+    <Box
+      component="main"
+      position="absolute"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      top={0}
+      bottom={0}
+      left={0}
+      right={0}
+      bgcolor={({ palette }) => palette.primary.main}
     >
-      <Card sx={{ flexGrow: 1, maxWidth: 600 }}>
+      <Card sx={{ flexGrow: 1, maxWidth: 600, m: 2 }}>
         <CardContent>
           <AuthWorkflow onSuccess={handleSignInSuccess} />
         </CardContent>
       </Card>
-    </Paper>
+    </Box>
   );
 }
