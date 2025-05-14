@@ -1,13 +1,6 @@
 import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Card,
-  CardContent,
-  Link,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardContent, Link, Stack, Typography } from "@mui/material";
 import { Check } from "@mui/icons-material";
 
 import useAuth from "@/hooks/auth/useAuth";
@@ -53,23 +46,19 @@ function RouteComponent() {
   };
 
   return (
-    <Paper
-      square
-      elevation={0}
-      sx={{
-        position: "absolute",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        p: 4,
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        bgcolor: ({ palette }) => palette.primary.main,
-      }}
+    <Box
+      component="main"
+      position="absolute"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      top={0}
+      bottom={0}
+      left={0}
+      right={0}
+      bgcolor={({ palette }) => palette.primary.main}
     >
-      <Card sx={{ flexGrow: 1, maxWidth: 500 }}>
+      <Card sx={{ flexGrow: 1, maxWidth: 500, m: 2 }}>
         <Stack component={CardContent} spacing={2}>
           <Typography variant="h5">Email Verification Required</Typography>
           <Typography variant="body2">
@@ -94,6 +83,6 @@ function RouteComponent() {
           </Stack>
         </Stack>
       </Card>
-    </Paper>
+    </Box>
   );
 }

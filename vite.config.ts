@@ -38,10 +38,13 @@ export default defineConfig(({ mode }) => {
           enabled: true,
         },
         manifest: {
+          name: "AB Apps",
+          short_name: "AB Apps",
+          description: "Utility Apps and Tools",
+          display: "standalone",
+          start_url: "/",
           background_color: theme.palette.primary.contrastText,
           theme_color: theme.palette.primary.main,
-          display: "standalone",
-          description: "Utility AB Apps",
           icons: [
             {
               src: "/icons/android-chrome-192x192.png",
@@ -60,6 +63,7 @@ export default defineConfig(({ mode }) => {
         org: env.SENTRY_ORG,
         project: env.SENTRY_PROJECT,
         disable: mode !== "production",
+        telemetry: false,
 
         // Auth tokens can be obtained from https://sentry.io/orgredirect/organizations/:orgslug/settings/auth-tokens/
         authToken: env.SENTRY_AUTH_TOKEN,
