@@ -10,6 +10,7 @@ import ClientDetailCard from "@/containers/cards/ClientDetailCard";
 import ClientForm from "@/containers/forms/ClientForm";
 import ErrorCard from "@/components/cards/ErrorCard";
 import type { Client } from "@/types/firebase";
+import DeleteIconButton from "@/components/buttons/DeleteIconButton";
 
 export const Route = createFileRoute("/app/clients/$id")({
   component: RouteComponent,
@@ -41,9 +42,11 @@ function RouteComponent() {
 
   const navigate = useNavigate();
 
+  const clientFullName = `${client.first_name} ${client.last_name}`;
+
   /** Mutations */
 
-  const { update } = useClients();
+  const { update, archive } = useClients();
 
   /** Callbacks */
 
@@ -56,21 +59,41 @@ function RouteComponent() {
   const onCancel: ComponentProps<typeof ClientForm>["onReset"] = () =>
     void navigate({ to: `/app/clients/${client.id}` });
 
+  const handleEditToggle = () => {
+    void navigate({
+      to: `/app/clients/${client.id}`,
+      search: { edit: !edit },
+    });
+  };
+
+  const handleDelete = () => {
+    archive.mutate(client.id, {
+      onSuccess: () => {
+        void navigate({ to: "/app/clients" });
+      },
+    });
+  };
+
   return (
     <Stack spacing={1}>
       <Stack direction="row" spacing={1} alignItems="center">
         <Typography variant="h6" noWrap>
-          {`${client.first_name} ${client.last_name}`}
+          {clientFullName}
         </Typography>
         <EditIconButton
           icon={edit ? <EditOff /> : <Edit />}
-          onClick={() => {
-            void navigate({
-              to: `/app/clients/${client.id}`,
-              search: { edit: !edit },
-            });
-          }}
+          onClick={handleEditToggle}
         />
+        <Stack direction="row" flexGrow={1} justifyContent="flex-end">
+          <DeleteIconButton
+            disabled={archive.isPending}
+            confirm={{
+              title: `Delete ${clientFullName}?`,
+              description: `Are you sure you want to delete ${clientFullName}? This action is irreversible.`,
+            }}
+            onClick={handleDelete}
+          />
+        </Stack>
       </Stack>
 
       {edit ? (

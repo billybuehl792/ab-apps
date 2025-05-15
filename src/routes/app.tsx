@@ -14,7 +14,7 @@ import {
 export const Route = createFileRoute("/app")({
   component: RouteComponent,
   beforeLoad: ({ context, location }) => {
-    if (!context.auth.user || !context.auth.user.emailVerified)
+    if (!context.auth.user)
       redirect({
         to: "/sign-in",
         search: { redirect: location.href },

@@ -22,8 +22,8 @@ const ClientOverviewCard = (props: CardProps) => {
   /** Queries */
 
   const clientCountQuery = useQuery({
-    queryKey: [clients.id, "count"] as const,
-    queryFn: ({ queryKey: [_, __] }) => getCountFromServer(query(clients)),
+    queryKey: [clients.path, "count"] as const,
+    queryFn: () => getCountFromServer(query(clients)),
   });
 
   /** Callbacks */

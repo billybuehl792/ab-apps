@@ -4,7 +4,8 @@ import {
   getDoc,
   getDocs,
   query,
-  QueryConstraint,
+  type QueryDocumentSnapshot,
+  type QueryConstraint,
 } from "firebase/firestore";
 
 import clients from "@/lib/collections/firebase/clients";
@@ -16,7 +17,7 @@ export const getClientList = (...constraints: QueryConstraint[]) =>
       getDocs(query(clients, ...constraints)),
   });
 
-export const getClient = (id: string) =>
+export const getClient = (id: QueryDocumentSnapshot["id"]) =>
   queryOptions({
     queryKey: [clients.path, id] as const,
     queryFn: async ({ queryKey: [_, id] }) => {

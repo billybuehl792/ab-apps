@@ -12,14 +12,14 @@ const useMaterials = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const create = useMutation({
-    mutationKey: [materials.id, "create"],
+    mutationKey: [materials.path, "create"],
     mutationFn: (data: MaterialData) =>
       addDoc(materials, {
         ...data,
-        value: +Number(data.value).toFixed(2),
+        value: Number(data.value.toFixed(2)),
       }),
     onSuccess: async (_, data) => {
-      await queryClient.invalidateQueries({ queryKey: [materials.id] });
+      await queryClient.invalidateQueries({ queryKey: [materials.path] });
       enqueueSnackbar(`'${data.label}' material created`, {
         variant: "success",
       });
@@ -31,13 +31,13 @@ const useMaterials = () => {
   });
 
   const update = useMutation({
-    mutationKey: [materials.id, "update"],
+    mutationKey: [materials.path, "update"],
     mutationFn: async ({ id, ...data }: Material) => {
       const docRef = doc(materials, id);
       await setDoc(docRef, data);
     },
     onSuccess: async (_, data) => {
-      await queryClient.invalidateQueries({ queryKey: [materials.id] });
+      await queryClient.invalidateQueries({ queryKey: [materials.path] });
       enqueueSnackbar(`'${data.label}' material updated`, {
         variant: "success",
       });
@@ -49,13 +49,13 @@ const useMaterials = () => {
   });
 
   const archive = useMutation({
-    mutationKey: [materials.id, "archive"],
+    mutationKey: [materials.path, "archive"],
     mutationFn: async (data: Material["id"]) => {
       const docRef = doc(materials, data);
       await deleteDoc(docRef);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [materials.id] });
+      await queryClient.invalidateQueries({ queryKey: [materials.path] });
       enqueueSnackbar("Material deleted", {
         variant: "success",
       });

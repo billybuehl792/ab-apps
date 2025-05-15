@@ -40,7 +40,6 @@ const MenuOptionsModal = ({
       title={title}
       open={open}
       options={options}
-      fullHeight
       disableCloseOnSelect={disableCloseOnSelect}
       onClose={onClose}
       {...drawerProps}
