@@ -12,13 +12,12 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as SignInImport } from './routes/sign-in'
-import { Route as EmailVerifyImport } from './routes/email-verify'
 import { Route as AppImport } from './routes/app'
 import { Route as IndexImport } from './routes/index'
 import { Route as AppIndexImport } from './routes/app/index'
-import { Route as AppProfileImport } from './routes/app/profile'
 import { Route as AppEstimateCalculatorImport } from './routes/app/estimate-calculator'
 import { Route as AppClientsImport } from './routes/app/clients'
+import { Route as AppAccountImport } from './routes/app/account'
 import { Route as AppClientsIndexImport } from './routes/app/clients/index'
 import { Route as AppClientsCreateImport } from './routes/app/clients/create'
 import { Route as AppClientsIdImport } from './routes/app/clients/$id'
@@ -28,12 +27,6 @@ import { Route as AppClientsIdImport } from './routes/app/clients/$id'
 const SignInRoute = SignInImport.update({
   id: '/sign-in',
   path: '/sign-in',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const EmailVerifyRoute = EmailVerifyImport.update({
-  id: '/email-verify',
-  path: '/email-verify',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -55,12 +48,6 @@ const AppIndexRoute = AppIndexImport.update({
   getParentRoute: () => AppRoute,
 } as any)
 
-const AppProfileRoute = AppProfileImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AppRoute,
-} as any)
-
 const AppEstimateCalculatorRoute = AppEstimateCalculatorImport.update({
   id: '/estimate-calculator',
   path: '/estimate-calculator',
@@ -70,6 +57,12 @@ const AppEstimateCalculatorRoute = AppEstimateCalculatorImport.update({
 const AppClientsRoute = AppClientsImport.update({
   id: '/clients',
   path: '/clients',
+  getParentRoute: () => AppRoute,
+} as any)
+
+const AppAccountRoute = AppAccountImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -109,19 +102,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppImport
       parentRoute: typeof rootRoute
     }
-    '/email-verify': {
-      id: '/email-verify'
-      path: '/email-verify'
-      fullPath: '/email-verify'
-      preLoaderRoute: typeof EmailVerifyImport
-      parentRoute: typeof rootRoute
-    }
     '/sign-in': {
       id: '/sign-in'
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof SignInImport
       parentRoute: typeof rootRoute
+    }
+    '/app/account': {
+      id: '/app/account'
+      path: '/account'
+      fullPath: '/app/account'
+      preLoaderRoute: typeof AppAccountImport
+      parentRoute: typeof AppImport
     }
     '/app/clients': {
       id: '/app/clients'
@@ -135,13 +128,6 @@ declare module '@tanstack/react-router' {
       path: '/estimate-calculator'
       fullPath: '/app/estimate-calculator'
       preLoaderRoute: typeof AppEstimateCalculatorImport
-      parentRoute: typeof AppImport
-    }
-    '/app/profile': {
-      id: '/app/profile'
-      path: '/profile'
-      fullPath: '/app/profile'
-      preLoaderRoute: typeof AppProfileImport
       parentRoute: typeof AppImport
     }
     '/app/': {
@@ -194,16 +180,16 @@ const AppClientsRouteWithChildren = AppClientsRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppAccountRoute: typeof AppAccountRoute
   AppClientsRoute: typeof AppClientsRouteWithChildren
   AppEstimateCalculatorRoute: typeof AppEstimateCalculatorRoute
-  AppProfileRoute: typeof AppProfileRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAccountRoute: AppAccountRoute,
   AppClientsRoute: AppClientsRouteWithChildren,
   AppEstimateCalculatorRoute: AppEstimateCalculatorRoute,
-  AppProfileRoute: AppProfileRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
@@ -212,11 +198,10 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
-  '/email-verify': typeof EmailVerifyRoute
   '/sign-in': typeof SignInRoute
+  '/app/account': typeof AppAccountRoute
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
-  '/app/profile': typeof AppProfileRoute
   '/app/': typeof AppIndexRoute
   '/app/clients/$id': typeof AppClientsIdRoute
   '/app/clients/create': typeof AppClientsCreateRoute
@@ -225,10 +210,9 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/email-verify': typeof EmailVerifyRoute
   '/sign-in': typeof SignInRoute
+  '/app/account': typeof AppAccountRoute
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
-  '/app/profile': typeof AppProfileRoute
   '/app': typeof AppIndexRoute
   '/app/clients/$id': typeof AppClientsIdRoute
   '/app/clients/create': typeof AppClientsCreateRoute
@@ -239,11 +223,10 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
-  '/email-verify': typeof EmailVerifyRoute
   '/sign-in': typeof SignInRoute
+  '/app/account': typeof AppAccountRoute
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
-  '/app/profile': typeof AppProfileRoute
   '/app/': typeof AppIndexRoute
   '/app/clients/$id': typeof AppClientsIdRoute
   '/app/clients/create': typeof AppClientsCreateRoute
@@ -255,11 +238,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
-    | '/email-verify'
     | '/sign-in'
+    | '/app/account'
     | '/app/clients'
     | '/app/estimate-calculator'
-    | '/app/profile'
     | '/app/'
     | '/app/clients/$id'
     | '/app/clients/create'
@@ -267,10 +249,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/email-verify'
     | '/sign-in'
+    | '/app/account'
     | '/app/estimate-calculator'
-    | '/app/profile'
     | '/app'
     | '/app/clients/$id'
     | '/app/clients/create'
@@ -279,11 +260,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
-    | '/email-verify'
     | '/sign-in'
+    | '/app/account'
     | '/app/clients'
     | '/app/estimate-calculator'
-    | '/app/profile'
     | '/app/'
     | '/app/clients/$id'
     | '/app/clients/create'
@@ -294,14 +274,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
-  EmailVerifyRoute: typeof EmailVerifyRoute
   SignInRoute: typeof SignInRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
-  EmailVerifyRoute: EmailVerifyRoute,
   SignInRoute: SignInRoute,
 }
 
@@ -317,7 +295,6 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/app",
-        "/email-verify",
         "/sign-in"
       ]
     },
@@ -327,17 +304,18 @@ export const routeTree = rootRoute
     "/app": {
       "filePath": "app.tsx",
       "children": [
+        "/app/account",
         "/app/clients",
         "/app/estimate-calculator",
-        "/app/profile",
         "/app/"
       ]
     },
-    "/email-verify": {
-      "filePath": "email-verify.tsx"
-    },
     "/sign-in": {
       "filePath": "sign-in.tsx"
+    },
+    "/app/account": {
+      "filePath": "app/account.tsx",
+      "parent": "/app"
     },
     "/app/clients": {
       "filePath": "app/clients.tsx",
@@ -350,10 +328,6 @@ export const routeTree = rootRoute
     },
     "/app/estimate-calculator": {
       "filePath": "app/estimate-calculator.tsx",
-      "parent": "/app"
-    },
-    "/app/profile": {
-      "filePath": "app/profile.tsx",
       "parent": "/app"
     },
     "/app/": {

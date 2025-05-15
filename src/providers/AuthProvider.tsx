@@ -58,8 +58,11 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   });
 
   const sendEmailVerification = useMutation({
-    mutationKey: ["sendEmailVerification"],
-    mutationFn: (user: User) => _sendEmailVerification(user),
+    mutationKey: ["sendEmailVerification", user?.uid],
+    mutationFn: async () => {
+      if (!user) throw new Error("User not found");
+      await _sendEmailVerification(user);
+    },
     onSuccess: () =>
       enqueueSnackbar("Email verification link sent", { variant: "success" }),
     onError: (error) =>

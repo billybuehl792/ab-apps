@@ -19,7 +19,7 @@ interface AuthContextValue {
     { email: string; password: string }
   >;
   signOut?: UseMutationResult<void, Error, void>;
-  sendEmailVerification?: UseMutationResult<void, Error, User>;
+  sendEmailVerification?: UseMutationResult<void, Error, void>;
   sendMultiFactorVerification?: UseMutationResult<
     {
       resolver: MultiFactorResolver;
