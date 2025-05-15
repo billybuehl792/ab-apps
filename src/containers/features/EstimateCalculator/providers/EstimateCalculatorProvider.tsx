@@ -5,7 +5,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { signOut as _signOut } from "firebase/auth";
 import { orderBy } from "firebase/firestore";
 
 import EstimateCalculatorContext from "../context/EstimateCalculatorContext";

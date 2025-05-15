@@ -12,10 +12,10 @@ const useClients = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const create = useMutation({
-    mutationKey: [clients.id, "create"],
+    mutationKey: [clients.path, "create"],
     mutationFn: (data: ClientData) => addDoc(clients, data),
     onSuccess: (_, data) => {
-      void queryClient.invalidateQueries({ queryKey: [clients.id] });
+      void queryClient.invalidateQueries({ queryKey: [clients.path] });
       enqueueSnackbar(`'${data.first_name} ${data.last_name}' client created`, {
         variant: "success",
       });
@@ -27,13 +27,13 @@ const useClients = () => {
   });
 
   const update = useMutation({
-    mutationKey: [clients.id, "update"],
+    mutationKey: [clients.path, "update"],
     mutationFn: async ({ id, ...data }: Client) => {
       const docRef = doc(clients, id);
       await setDoc(docRef, { ...data });
     },
     onSuccess: (_, data) => {
-      void queryClient.invalidateQueries({ queryKey: [clients.id] });
+      void queryClient.invalidateQueries({ queryKey: [clients.path] });
       enqueueSnackbar(`'${data.first_name} ${data.last_name}' client updated`, {
         variant: "success",
       });
@@ -45,13 +45,13 @@ const useClients = () => {
   });
 
   const archive = useMutation({
-    mutationKey: [clients.id, "archive"],
+    mutationKey: [clients.path, "archive"],
     mutationFn: async (data: Client["id"]) => {
       const docRef = doc(clients, data);
       await deleteDoc(docRef);
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: [clients.id] });
+      void queryClient.invalidateQueries({ queryKey: [clients.path] });
       enqueueSnackbar("Client deleted", {
         variant: "success",
       });

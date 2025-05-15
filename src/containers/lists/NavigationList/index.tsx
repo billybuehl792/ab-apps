@@ -53,11 +53,11 @@ const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
       icon: <Construction />,
     },
     {
-      id: "profile",
-      label: "Profile",
-      to: "/app/profile",
+      id: "account",
+      label: "Account",
+      to: "/app/account",
       render: Boolean(user),
-      selected: pathname === "/app/profile",
+      selected: pathname === "/app/account",
       icon: <Person />,
     },
   ];

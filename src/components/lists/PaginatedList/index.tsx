@@ -1,4 +1,4 @@
-import { ComponentProps, type ReactNode, useState } from "react";
+import { type ComponentProps, type ReactNode, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   getCountFromServer,
@@ -19,9 +19,10 @@ import {
   TablePagination,
   type TablePaginationProps,
 } from "@mui/material";
-import { EMPTY_ARRAY, EMPTY_OBJECT } from "@/constants/utility";
+
 import StatusWrapper from "@/components/layout/StatusWrapper";
 import EmptyState from "@/components/layout/EmptyState";
+import { EMPTY_ARRAY, EMPTY_OBJECT } from "@/constants/utility";
 
 const DEFAULT_ROWS_PER_PAGE_OPTIONS = [10, 20, 30];
 
@@ -68,7 +69,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
   /** Queries */
 
   const countQuery = useQuery({
-    queryKey: [collection.id, "count", ...constraints] as const,
+    queryKey: [collection.path, "count", ...constraints] as const,
     queryFn: ({ queryKey: [_, __, ...constraints] }) =>
       getCountFromServer(query(collection, ...constraints)),
   });
@@ -79,7 +80,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
 
   const listQuery = useQuery({
     queryKey: [
-      collection.id,
+      collection.path,
       ...[
         ...constraints,
         limit(rowsPerPage),
