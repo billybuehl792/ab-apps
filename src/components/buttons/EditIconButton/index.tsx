@@ -1,18 +1,15 @@
-import { type ReactNode } from "react";
 import { IconButton, type IconButtonProps } from "@mui/material";
-import { Edit } from "@mui/icons-material";
-
-const DEFAULT_ICON = <Edit />;
+import { Edit, EditOff } from "@mui/icons-material";
 
 interface EditIconButtonProps extends IconButtonProps {
-  icon?: ReactNode;
+  active?: boolean;
 }
 
 /**
  * This component renders an `IconButton` with an `Edit` icon.
  */
 const EditIconButton = ({
-  icon = DEFAULT_ICON,
+  active,
   onClick: onClickProp,
   ...props
 }: EditIconButtonProps) => {
@@ -39,7 +36,11 @@ const EditIconButton = ({
       onClick={onClick}
       {...props}
     >
-      {icon}
+      {active ? (
+        <EditOff fontSize={props.size} />
+      ) : (
+        <Edit fontSize={props.size} />
+      )}
     </IconButton>
   );
 };

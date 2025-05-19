@@ -38,7 +38,7 @@ const UserIconButton = (
   return (
     <MenuOptionsIconButton
       options={options}
-      icon={<Avatar alt={userName} src={user?.photoURL || ""} />}
+      icon={<Avatar src={user?.photoURL ?? ""} />}
       slotProps={{ menu: { title: userName } }}
       {...props}
     />
