@@ -1,17 +1,24 @@
-import { type User } from "firebase/auth";
+import { useNavigate } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import { signOut, type User } from "firebase/auth";
 import {
+  Button,
   Card,
+  CardActions,
   CardContent,
   type CardProps,
   Stack,
   Typography,
 } from "@mui/material";
+import { useSnackbar } from "notistack";
 
+import { auth } from "@/config/firebase";
 import UserDetailCardPhotoUrlIconButton from "@/containers/cards/UserDetailCard/buttons/UserDetailCardPhotoUrlIconButton";
 import UserDetailCardDisplayName from "./layout/UserDetailCardDisplayName";
 import UserDetailCardEmail from "./layout/UserDetailCardEmail";
 import UserDetailCardLastSignIn from "./layout/UserDetailCardLastSignIn";
 import UserDetailCardMemberSince from "./layout/UserDetailCardMemberSince";
+import { Logout } from "@mui/icons-material";
 
 interface UserDetailCardProps extends CardProps {
   user: User;
@@ -19,6 +26,9 @@ interface UserDetailCardProps extends CardProps {
 
 const UserDetailCard = ({ user, ...props }: UserDetailCardProps) => {
   /** Values */
+
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   const items = [
     {
@@ -38,6 +48,26 @@ const UserDetailCard = ({ user, ...props }: UserDetailCardProps) => {
       value: <UserDetailCardLastSignIn user={user} />,
     },
   ];
+
+  /** Mutations */
+
+  const signOutMutation = useMutation({
+    mutationKey: ["signOut"],
+    mutationFn: () => signOut(auth),
+    onSuccess: () => {
+      enqueueSnackbar("Signed Out", { variant: "success" });
+      void navigate({ to: "/sign-in" });
+    },
+    onError: () => {
+      enqueueSnackbar("Failed to Sign Out", { variant: "error" });
+    },
+  });
+
+  /** Callbacks */
+
+  const handleSignOut = () => {
+    signOutMutation.mutate();
+  };
 
   return (
     <Card {...props}>
@@ -78,6 +108,16 @@ const UserDetailCard = ({ user, ...props }: UserDetailCardProps) => {
             ))}
         </Stack>
       </CardContent>
+      <CardActions sx={{ justifyContent: "end" }}>
+        <Button
+          variant="text"
+          size="small"
+          startIcon={<Logout />}
+          onClick={handleSignOut}
+        >
+          Sign Out
+        </Button>
+      </CardActions>
     </Card>
   );
 };

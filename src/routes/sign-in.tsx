@@ -1,7 +1,7 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Box, Card, CardContent } from "@mui/material";
 
-import AuthWorkflow from "@/containers/workflows/AuthWorkflow";
+import AuthWorkflow from "@/containers/features/AuthWorkflow";
 
 export const Route = createFileRoute("/sign-in")({
   component: RouteComponent,
@@ -22,8 +22,9 @@ function RouteComponent() {
 
   /** Callbacks */
 
-  const handleSignInSuccess = () =>
+  const handleSignInSuccess = () => {
     void navigate({ to: redirect || "/", replace: true });
+  };
 
   return (
     <Box
