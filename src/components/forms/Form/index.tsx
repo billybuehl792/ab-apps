@@ -15,7 +15,7 @@ interface FormProps<T extends FieldValues = FieldValues, R = unknown, E = Error>
   methods: UseFormReturn<T, unknown, T>;
   showRootError?: boolean;
   onSubmit: (data: T) => R | Promise<R>;
-  onSuccess?: (res?: R) => void | Promise<void>;
+  onSuccess?: (res: R) => void | Promise<void>;
   onError?: (error: E) => void | Promise<void>;
   slotProps?: {
     fieldset?: StackProps;

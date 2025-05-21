@@ -6,16 +6,12 @@ import {
   type AppBarProps as MuiAppBarProps,
 } from "@mui/material";
 
-import useAuth from "@/hooks/auth/useAuth";
 import UserIconButton from "@/containers/buttons/UserIconButton";
-import SignInLink from "@/containers/links/SignInLink";
 import AppLogoLink from "@/containers/links/AppLogoLink";
 import NavigationMenuIconButton from "@/containers/buttons/NavigationMenuIconButton";
 
 const AppBar = (props: MuiAppBarProps) => {
   /** Values */
-
-  const auth = useAuth();
 
   const isDesktop = useMediaQuery(({ breakpoints }) => breakpoints.up("sm"));
 
@@ -32,7 +28,7 @@ const AppBar = (props: MuiAppBarProps) => {
             {!isDesktop && <NavigationMenuIconButton />}
             <AppLogoLink />
           </Stack>
-          {auth.user ? <UserIconButton /> : <SignInLink color="white" />}
+          <UserIconButton />
         </Stack>
       </Toolbar>
     </MuiAppBar>
