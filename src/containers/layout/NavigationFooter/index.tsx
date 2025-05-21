@@ -38,9 +38,8 @@ const NavigationFooter = (props: PaperProps) => {
       selected: pathname.startsWith("/app/account"),
       icon: (
         <Avatar
-          alt={user?.displayName ?? user?.email ?? "user"}
           src={user?.photoURL || ""}
-          sx={{ width: 20, height: 20 }}
+          sx={{ width: 20, height: 20, fontSize: ".75rem" }}
         />
       ),
     },

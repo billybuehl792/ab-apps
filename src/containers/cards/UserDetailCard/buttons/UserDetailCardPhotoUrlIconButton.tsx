@@ -1,5 +1,15 @@
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { type User, updateProfile } from "firebase/auth";
+import {
+  getDownloadURL,
+  ref,
+  StorageError,
+  StorageReference,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { useDropzone } from "react-dropzone";
+import { useSnackbar } from "notistack";
 import {
   Avatar,
   Box,
@@ -8,53 +18,35 @@ import {
   IconButton,
   Skeleton,
 } from "@mui/material";
-import {
-  getDownloadURL,
-  ref,
-  StorageError,
-  StorageReference,
-  uploadBytesResumable,
-} from "firebase/storage";
 
 import { storage } from "@/config/firebase";
-import { useSnackbar } from "notistack";
-import { type User, updateProfile } from "firebase/auth";
 import { getFileUploadMetadata } from "@/utils/file";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
-import useAuth from "@/hooks/auth/useAuth";
 
-interface UserAvatarUploadIconButtonProps extends BoxProps {
+interface UserDetailCardPhotoUrlIconButtonProps extends BoxProps {
   user: User;
   disabled?: boolean;
   size?: number;
 }
 
-const UserAvatarUploadIconButton = ({
+const UserDetailCardPhotoUrlIconButton = ({
   user,
-  disabled: disabledProp,
+  disabled,
   size = 60,
   ...props
-}: UserAvatarUploadIconButtonProps) => {
+}: UserDetailCardPhotoUrlIconButtonProps) => {
   const [uploadProgress, setUploadProgress] = useState(1);
 
   /** Values */
 
-  const { user: currentUser } = useAuth();
-
   const { enqueueSnackbar } = useSnackbar();
-  const router = useRouter();
-
-  const disabled = disabledProp || currentUser?.uid !== user.uid;
 
   /** Mutations */
 
-  const updateUserAvatar = useMutation({
+  const updateUserPhotoUrl = useMutation({
     mutationKey: ["updateUserAvatar", user.uid],
     mutationFn: async (data: StorageReference) => {
       const photoURL = await getDownloadURL(data);
       await updateProfile(user, { photoURL });
-      await router.invalidate();
     },
     onSuccess: () => {
       enqueueSnackbar("Avatar updated", { variant: "success" });
@@ -67,7 +59,7 @@ const UserAvatarUploadIconButton = ({
   /** Callbacks */
 
   const handleUploadSuccess = (data: StorageReference) => {
-    updateUserAvatar.mutate(data);
+    updateUserPhotoUrl.mutate(data);
     setUploadProgress(1);
   };
 
@@ -171,4 +163,4 @@ const UserAvatarUploadIconButton = ({
   );
 };
 
-export default UserAvatarUploadIconButton;
+export default UserDetailCardPhotoUrlIconButton;

@@ -10,6 +10,7 @@ import Providers from "./providers";
 import "reset-css/reset.css";
 import "./utils/string";
 import "./utils/number";
+import "./utils/dayjs";
 
 declare module "@tanstack/react-router" {
   interface Register {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ApplicationVerifier, RecaptchaVerifier } from "@firebase/auth";
+import { type ApplicationVerifier, RecaptchaVerifier } from "@firebase/auth";
 import { auth } from "@/config/firebase";
 
 const useRecaptchaVerifier = (containerId: string) => {

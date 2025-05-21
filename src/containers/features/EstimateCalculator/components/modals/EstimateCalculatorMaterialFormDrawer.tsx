@@ -22,7 +22,7 @@ const EstimateCalculatorMaterialFormDrawer = (
   };
 
   const onTransitionExited = () => {
-    setMaterialModal(false);
+    setMaterialModal(false, null);
   };
 
   return (

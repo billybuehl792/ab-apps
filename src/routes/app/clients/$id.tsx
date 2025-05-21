@@ -1,7 +1,6 @@
 import { type ComponentProps } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Skeleton, Stack, Typography } from "@mui/material";
-import { Edit, EditOff } from "@mui/icons-material";
 
 import useClients from "@/hooks/firebase/useClients";
 import { getClient } from "@/lib/queries/firebase/clients";
@@ -80,10 +79,7 @@ function RouteComponent() {
         <Typography variant="h6" noWrap>
           {clientFullName}
         </Typography>
-        <EditIconButton
-          icon={edit ? <EditOff /> : <Edit />}
-          onClick={handleEditToggle}
-        />
+        <EditIconButton active={edit} onClick={handleEditToggle} />
         <Stack direction="row" flexGrow={1} justifyContent="flex-end">
           <DeleteIconButton
             disabled={archive.isPending}

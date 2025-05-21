@@ -1,6 +1,9 @@
-import { type ComponentProps } from "react";
+import { useState, type ComponentProps } from "react";
 import { Stack, type StackProps } from "@mui/material";
+import { orderBy } from "firebase/firestore";
+import { useForm } from "react-hook-form";
 
+import { getMaterialList } from "@/lib/queries/firebase/materials";
 import EstimateCalculatorProvider from "./providers/EstimateCalculatorProvider";
 import EstimateCalculatorOutput from "./layout/EstimateCalculatorOutput";
 import EstimateCalculatorFieldArray from "./layout/EstimateCalculatorFieldArray";
@@ -8,6 +11,11 @@ import EstimateCalculatorMeta from "./layout/EstimateCalculatorMeta";
 import EstimateCalculatorFooter from "./layout/EstimateCalculatorFooter";
 import EstimateCalculatorMaterialFormDrawer from "./components/modals/EstimateCalculatorMaterialFormDrawer";
 import { EMPTY_OBJECT } from "@/constants/utility";
+import { ESTIMATE_CALCULATOR_DEFAULT_VALUES } from "./constants";
+import type {
+  EstimateCalculatorContextValue,
+  EstimateCalculatorValues,
+} from "./types";
 
 interface EstimateCalculatorProps extends StackProps<"form"> {
   slotProps?: {
@@ -33,6 +41,17 @@ const EstimateCalculator = ({
   } = EMPTY_OBJECT,
   ...props
 }: EstimateCalculatorProps) => {
+  const [materialModal, setMaterialModal] = useState<
+    EstimateCalculatorContextValue["materialModal"]
+  >({ open: false, material: null });
+
+  /** Values */
+
+  const queryOptions = getMaterialList(orderBy("value", "desc"));
+  const methods = useForm<EstimateCalculatorValues>({
+    defaultValues: ESTIMATE_CALCULATOR_DEFAULT_VALUES,
+  });
+
   /** Callbacks */
 
   const onSubmit: EstimateCalculatorProps["onSubmit"] = (event) => {
@@ -44,7 +63,16 @@ const EstimateCalculator = ({
   };
 
   return (
-    <EstimateCalculatorProvider>
+    <EstimateCalculatorProvider
+      value={{
+        queryOptions,
+        methods,
+        materialModal,
+        setMaterialModal: (open, material) => {
+          setMaterialModal({ open, material: material ?? null });
+        },
+      }}
+    >
       <Stack
         component="form"
         position="relative"

@@ -1,8 +1,12 @@
 import { type ComponentProps } from "react";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
 import { Avatar } from "@mui/material";
 import { Logout, Person } from "@mui/icons-material";
+import { useSnackbar } from "notistack";
 
+import { auth } from "@/config/firebase";
 import useAuth from "@/hooks/auth/useAuth";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 
@@ -11,11 +15,29 @@ const UserIconButton = (
 ) => {
   /** Values */
 
-  const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+  const { user } = useAuth();
 
   const userName = user?.displayName ?? user?.email ?? "User";
+
+  /** Mutations */
+
+  const signOutMutation = useMutation({
+    mutationKey: ["signOut"],
+    mutationFn: () => signOut(auth),
+    onSuccess: () => {
+      enqueueSnackbar("Signed out", { variant: "success" });
+      void navigate({ to: "/sign-in" });
+    },
+    onError: (error) => {
+      enqueueSnackbar(`Error signing out: ${error.message}`, {
+        variant: "error",
+      });
+    },
+  });
+
+  /** Options */
 
   const options: MenuOption[] = [
     {
@@ -28,17 +50,16 @@ const UserIconButton = (
       id: "signOut",
       label: "Sign Out",
       icon: <Logout />,
-      onClick: () =>
-        void signOut?.mutateAsync(undefined, {
-          onSuccess: () => void router.invalidate(),
-        }),
+      onClick: () => {
+        signOutMutation.mutate();
+      },
     },
   ];
 
   return (
     <MenuOptionsIconButton
       options={options}
-      icon={<Avatar alt={userName} src={user?.photoURL || ""} />}
+      icon={<Avatar src={user?.photoURL ?? ""} />}
       slotProps={{ menu: { title: userName } }}
       {...props}
     />

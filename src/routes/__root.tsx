@@ -4,6 +4,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { type QueryClient } from "@tanstack/react-query";
 
 import AuthContext from "@/context/AuthContext";
+import StatusWrapper from "@/components/layout/StatusWrapper";
 
 interface RouterContext {
   auth: ContextType<typeof AuthContext>;
@@ -13,7 +14,19 @@ interface RouterContext {
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RouteComponent,
-  errorComponent: () => "Something went wrong",
+  errorComponent: ({ error }) => (
+    <StatusWrapper
+      error={error}
+      slotProps={{
+        errorButton: {
+          children: "Reload Page",
+          onClick: () => {
+            location.reload();
+          },
+        },
+      }}
+    />
+  ),
 });
 
 function RouteComponent() {
