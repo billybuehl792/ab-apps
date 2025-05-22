@@ -7,7 +7,7 @@ import {
   type QueryConstraint,
 } from "firebase/firestore";
 
-import materials from "@/lib/collections/firebase/materials";
+import materials from "@/lib/collections/firebase/materialCollection";
 
 export const getMaterial = (id: string) =>
   queryOptions({

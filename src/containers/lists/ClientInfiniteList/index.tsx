@@ -3,7 +3,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { orderBy } from "firebase/firestore";
 import { Delete, Edit } from "@mui/icons-material";
 
-import clients from "@/lib/collections/firebase/clients";
+import clientCollection from "@/lib/collections/firebase/clientCollection";
 import useClients from "@/hooks/firebase/useClients";
 import InfiniteList from "@/components/lists/InfiniteList";
 import ClientCard from "@/containers/cards/ClientCard";
@@ -31,7 +31,7 @@ const ClientInfiniteList = ({
 
   return (
     <InfiniteList
-      collection={clients}
+      collection={clientCollection}
       constraints={[orderBy("first_name")]}
       renderItem={(client) => (
         <ClientCard

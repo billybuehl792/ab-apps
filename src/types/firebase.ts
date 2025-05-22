@@ -9,6 +9,7 @@ export interface ClientData {
   email: string;
   phone: string;
   address: Address;
+  archived: boolean;
 }
 
 export type Material = DocumentBase & MaterialData;

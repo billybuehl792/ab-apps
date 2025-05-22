@@ -14,6 +14,7 @@ export default collection(
     email: String(client.email).trim(),
     phone: String(client.phone).toPhone(),
     address: client.address,
+    archived: Boolean(client.archived),
   }),
   fromFirestore: (snapshot, options): ClientData =>
     snapshot.data(options) as ClientData,
