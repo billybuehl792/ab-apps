@@ -1,3 +1,4 @@
+import { useNavigate } from "@tanstack/react-router";
 import { type MouseEvent } from "react";
 import {
   Card,
@@ -9,16 +10,18 @@ import {
   type CardProps,
   type CardContentProps,
 } from "@mui/material";
+import { Delete, Edit, Restore } from "@mui/icons-material";
 
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 import { EMPTY_OBJECT } from "@/constants/utility";
 import type { Client } from "@/types/firebase";
+import useClients from "@/hooks/firebase/useClients";
 
 interface ClientCardProps extends Omit<CardProps, "onClick"> {
   client: Client;
   disabled?: boolean;
-  options?: MenuOption[] | ((client: Client) => MenuOption[]);
-  onClick?: (client: Client, event: MouseEvent<HTMLButtonElement>) => void;
+  options?: MenuOption[];
+  onClick?: (event: MouseEvent<HTMLButtonElement>, client: Client) => void;
   slotProps?: {
     cardActionArea?: CardActionAreaProps;
     cardContent?: CardContentProps;
@@ -27,7 +30,7 @@ interface ClientCardProps extends Omit<CardProps, "onClick"> {
 
 const ClientCard = ({
   client,
-  disabled,
+  disabled: disabledProp,
   options: optionsProp,
   onClick: onClickProp,
   slotProps: {
@@ -38,19 +41,58 @@ const ClientCard = ({
 }: ClientCardProps) => {
   /** Values */
 
-  const fullName = `${client.first_name} ${client.last_name}`;
+  const navigate = useNavigate();
+  const { archive } = useClients();
 
-  const options =
-    typeof optionsProp === "function" ? optionsProp(client) : optionsProp;
+  const fullName = `${client.first_name} ${client.last_name}`;
+  const disabled = disabledProp || archive.isPending;
 
   /** Callbacks */
 
   const onClick: CardActionAreaProps["onClick"] = (event) => {
-    onClickProp?.(client, event);
+    if (onClickProp) onClickProp(event, client);
+    else void navigate({ to: `/app/clients/${client.id}` });
   };
 
+  /** Options */
+
+  const options: MenuOption[] = optionsProp ?? [
+    {
+      id: "edit",
+      label: "Edit",
+      icon: <Edit />,
+      onClick: () => {
+        void navigate({
+          to: `/app/clients/${client.id}`,
+          search: { edit: true },
+        });
+      },
+    },
+    {
+      id: "archive",
+      render: !client.archived,
+      label: "Delete",
+      icon: <Delete />,
+      color: "error",
+      confirm:
+        "Are you sure you want to delete this client? This action cannot be undone.",
+      onClick: () => {
+        archive.mutate(client.id);
+      },
+    },
+    {
+      id: "unarchive",
+      render: client.archived,
+      label: "Restore",
+      icon: <Restore />,
+      onClick: () => {
+        archive.mutate(client.id);
+      },
+    },
+  ];
+
   return (
-    <Card {...props}>
+    <Card {...props} sx={{ opacity: client.archived ? 0.5 : 1 }}>
       <CardActionArea
         disabled={disabled}
         onClick={onClick}
@@ -71,7 +113,7 @@ const ClientCard = ({
               {client.address.text}
             </Typography>
           </Stack>
-          {!!options && (
+          {Boolean(options.length) && (
             <MenuOptionsIconButton title={fullName} options={options} />
           )}
         </CardContent>

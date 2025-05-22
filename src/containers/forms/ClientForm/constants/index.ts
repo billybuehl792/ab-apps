@@ -5,6 +5,7 @@ export const CLIENT_FORM_DEFAULT_VALUES: ClientData = {
   last_name: "",
   email: "",
   phone: "",
+  archived: false,
   address: {
     place_id: "",
     primary_text: "",

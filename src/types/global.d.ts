@@ -29,6 +29,7 @@ declare global {
     icon?: ReactNode;
     selected?: boolean;
     disabled?: boolean;
+    color?: "primary" | "secondary" | "error" | "warning" | "info" | "success";
     confirm?: boolean | string;
     tooltip?: string;
     disableCloseOnSelect?: boolean;

@@ -32,6 +32,7 @@ const EstimateCalculatorMaterialCard = ({
       id: "delete",
       label: "Delete",
       icon: <Delete />,
+      color: "error",
       confirm:
         "Are you sure you want to delete this material? This action cannot be undone.",
       onClick: () => {
