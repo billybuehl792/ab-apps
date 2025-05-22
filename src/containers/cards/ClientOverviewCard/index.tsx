@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Person } from "@mui/icons-material";
 
-import clients from "@/lib/collections/firebase/clients";
+import clientCollection from "@/lib/collections/firebase/clientCollection";
 
 const ClientOverviewCard = (props: CardProps) => {
   /** Values */
@@ -22,8 +22,8 @@ const ClientOverviewCard = (props: CardProps) => {
   /** Queries */
 
   const clientCountQuery = useQuery({
-    queryKey: [clients.path, "count"] as const,
-    queryFn: () => getCountFromServer(query(clients)),
+    queryKey: [clientCollection.path, "count"] as const,
+    queryFn: () => getCountFromServer(query(clientCollection)),
   });
 
   /** Callbacks */

@@ -47,7 +47,7 @@ const MenuOptionsMenu = ({
       onClick={onClick}
       onClose={onClose}
       slotProps={{
-        list: { component: "div", disablePadding: true },
+        list: { component: "div" },
         ...slotProps,
       }}
       {...props}
@@ -56,9 +56,10 @@ const MenuOptionsMenu = ({
         options={options.map((option) => ({
           ...option,
           onClick: (event) => {
-            void option.onClick(event, option.id);
             if (!disableCloseOnSelect && !option.disableCloseOnSelect)
               onClose?.(event, "backdropClick");
+
+            void option.onClick(event, option.id);
           },
         }))}
         {...(typeof listProps === "object" ? listProps : EMPTY_OBJECT)}

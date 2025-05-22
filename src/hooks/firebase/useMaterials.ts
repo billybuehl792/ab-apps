@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addDoc, deleteDoc, doc, setDoc } from "firebase/firestore";
 import { useSnackbar } from "notistack";
 
-import materials from "@/lib/collections/firebase/materials";
+import materials from "@/lib/collections/firebase/materialCollection";
 import type { Material, MaterialData } from "@/types/firebase";
 
 const useMaterials = () => {

@@ -1,15 +1,16 @@
 import { type ComponentProps } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Skeleton, Stack, Typography } from "@mui/material";
+import { Delete, Restore } from "@mui/icons-material";
 
 import useClients from "@/hooks/firebase/useClients";
 import { getClient } from "@/lib/queries/firebase/clients";
-import EditIconButton from "@/components/buttons/EditIconButton";
 import ClientDetailCard from "@/containers/cards/ClientDetailCard";
 import ClientForm from "@/containers/forms/ClientForm";
+import EditIconButton from "@/components/buttons/EditIconButton";
+import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 import ErrorCard from "@/components/cards/ErrorCard";
 import type { Client } from "@/types/firebase";
-import DeleteIconButton from "@/components/buttons/DeleteIconButton";
 
 export const Route = createFileRoute("/app/clients/$id")({
   component: RouteComponent,
@@ -65,13 +66,31 @@ function RouteComponent() {
     });
   };
 
-  const handleDelete = () => {
-    archive.mutate(client.id, {
-      onSuccess: () => {
-        void navigate({ to: "/app/clients" });
+  /** Options */
+
+  const options: MenuOption[] = [
+    {
+      id: "archive",
+      render: !client.archived,
+      label: "Delete",
+      icon: <Delete />,
+      color: "error",
+      confirm:
+        "Are you sure you want to delete this client? This action cannot be undone.",
+      onClick: () => {
+        archive.mutate(client.id);
       },
-    });
-  };
+    },
+    {
+      id: "unarchive",
+      render: client.archived,
+      label: "Restore",
+      icon: <Restore />,
+      onClick: () => {
+        archive.mutate(client.id);
+      },
+    },
+  ];
 
   return (
     <Stack spacing={1}>
@@ -81,14 +100,7 @@ function RouteComponent() {
         </Typography>
         <EditIconButton active={edit} onClick={handleEditToggle} />
         <Stack direction="row" flexGrow={1} justifyContent="flex-end">
-          <DeleteIconButton
-            disabled={archive.isPending}
-            confirm={{
-              title: `Delete ${clientFullName}?`,
-              description: `Are you sure you want to delete ${clientFullName}? This action is irreversible.`,
-            }}
-            onClick={handleDelete}
-          />
+          <MenuOptionsIconButton options={options} />
         </Stack>
       </Stack>
 

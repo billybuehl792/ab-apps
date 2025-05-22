@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addDoc, deleteDoc, doc, setDoc } from "firebase/firestore";
+import { addDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { useSnackbar } from "notistack";
 
-import clients from "@/lib/collections/firebase/clients";
+import clientCollection from "@/lib/collections/firebase/clientCollection";
 import type { Client, ClientData } from "@/types/firebase";
 
 const useClients = () => {
@@ -11,32 +11,32 @@ const useClients = () => {
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
 
+  /** Mutations */
+
   const create = useMutation({
-    mutationKey: [clients.path, "create"],
-    mutationFn: (data: ClientData) => addDoc(clients, data),
+    mutationKey: [clientCollection.path, "create"],
+    mutationFn: (data: ClientData) => addDoc(clientCollection, data),
     onSuccess: (_, data) => {
-      void queryClient.invalidateQueries({ queryKey: [clients.path] });
       enqueueSnackbar(`'${data.first_name} ${data.last_name}' client created`, {
         variant: "success",
       });
+      void queryClient.invalidateQueries({ queryKey: [clientCollection.path] });
     },
     onError: () =>
-      enqueueSnackbar("Error creating client", {
-        variant: "error",
-      }),
+      enqueueSnackbar("Error creating client", { variant: "error" }),
   });
 
   const update = useMutation({
-    mutationKey: [clients.path, "update"],
+    mutationKey: [clientCollection.path, "update"],
     mutationFn: async ({ id, ...data }: Client) => {
-      const docRef = doc(clients, id);
+      const docRef = doc(clientCollection, id);
       await setDoc(docRef, { ...data });
     },
     onSuccess: (_, data) => {
-      void queryClient.invalidateQueries({ queryKey: [clients.path] });
       enqueueSnackbar(`'${data.first_name} ${data.last_name}' client updated`, {
         variant: "success",
       });
+      void queryClient.invalidateQueries({ queryKey: [clientCollection.path] });
     },
     onError: () =>
       enqueueSnackbar("Error updating client", {
@@ -45,24 +45,34 @@ const useClients = () => {
   });
 
   const archive = useMutation({
-    mutationKey: [clients.path, "archive"],
-    mutationFn: async (data: Client["id"]) => {
-      const docRef = doc(clients, data);
-      await deleteDoc(docRef);
+    mutationKey: [clientCollection.path, "archive"],
+    mutationFn: async (id: Client["id"]) => {
+      const docRef = doc(clientCollection, id);
+      await updateDoc(docRef, { archived: true });
     },
     onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: [clients.path] });
-      enqueueSnackbar("Client deleted", {
-        variant: "success",
-      });
+      enqueueSnackbar("Client deleted", { variant: "success" });
+      void queryClient.invalidateQueries({ queryKey: [clientCollection.path] });
     },
     onError: () =>
-      enqueueSnackbar("Error deleting client", {
-        variant: "error",
-      }),
+      enqueueSnackbar("Error deleting client", { variant: "error" }),
   });
 
-  return { create, update, archive };
+  const unarchive = useMutation({
+    mutationKey: [clientCollection.path, "unarchive"],
+    mutationFn: async (id: Client["id"]) => {
+      const docRef = doc(clientCollection, id);
+      await updateDoc(docRef, { archived: false });
+    },
+    onSuccess: () => {
+      enqueueSnackbar("Client restored", { variant: "success" });
+      void queryClient.invalidateQueries({ queryKey: [clientCollection.path] });
+    },
+    onError: () =>
+      enqueueSnackbar("Error restoring client", { variant: "error" }),
+  });
+
+  return { create, update, archive, unarchive };
 };
 
 export default useClients;

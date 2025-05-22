@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 
 import ConfirmDialog from "@/components/modals/ConfirmDialog";
+import { sxAsArray } from "@/utils/sx";
 import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface MenuOptionMenuItemProps extends MenuItemProps {
@@ -31,20 +32,37 @@ const MenuOptionMenuItem = ({
 }: MenuOptionMenuItemProps) => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
+  /** Values */
+
+  const color = option.color ? `${option.color}.main` : undefined;
+
   /** Callbacks */
 
   const onClick: MenuItemProps["onClick"] = (event) => {
-    if (option.confirm) {
-      event.stopPropagation();
-      setConfirmDialogOpen(true);
-    } else void option.onClick(event, option.id);
+    if (option.confirm) setConfirmDialogOpen(true);
+    else void option.onClick(event, option.id);
   };
 
   return (
     <>
-      <MenuItem key={option.id} onClick={onClick} {...props}>
+      <MenuItem
+        disabled={option.disabled}
+        onClick={onClick}
+        {...props}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        sx={[{ color }, ...sxAsArray(props.sx)]}
+      >
         {!!option.icon && (
-          <ListItemIcon {...iconProps}>{option.icon}</ListItemIcon>
+          <ListItemIcon
+            {...iconProps}
+            sx={[
+              { svg: { color } },
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+              ...sxAsArray(iconProps?.sx),
+            ]}
+          >
+            {option.icon}
+          </ListItemIcon>
         )}
         <ListItemText {...textProps}>{option.label}</ListItemText>
       </MenuItem>

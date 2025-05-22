@@ -1,10 +1,11 @@
 import { type ComponentProps } from "react";
-import { orderBy } from "firebase/firestore";
+import { orderBy, where } from "firebase/firestore";
 import { Groups } from "@mui/icons-material";
 
-import clients from "@/lib/collections/firebase/clients";
+import clientCollection from "@/lib/collections/firebase/clientCollection";
 import PaginatedList from "@/components/lists/PaginatedList";
 import ClientCard from "@/containers/cards/ClientCard";
+import CreateClientLink from "@/containers/links/CreateClientLink";
 import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface ClientPaginatedListProps
@@ -22,8 +23,8 @@ const ClientPaginatedList = ({
 }: ClientPaginatedListProps) => {
   return (
     <PaginatedList
-      collection={clients}
-      constraints={[orderBy("first_name")]}
+      collection={clientCollection}
+      constraints={[orderBy("first_name"), where("archived", "!=", true)]}
       renderItem={(client) => (
         <ClientCard key={client.id} client={client} {...cardProps} />
       )}
@@ -32,6 +33,7 @@ const ClientPaginatedList = ({
         emptyState: {
           text: "No Clients",
           icon: <Groups fontSize="large" color="disabled" />,
+          children: <CreateClientLink />,
           ...slotProps.emptyState,
         },
       }}
