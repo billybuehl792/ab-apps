@@ -22,8 +22,8 @@ declare global {
         Partial<Record<Exclude<Keys, K>, undefined>>;
     }[Keys];
 
-  interface MenuOption {
-    id: string;
+  interface MenuOption<T = string> {
+    id: T;
     render?: boolean;
     label: string;
     icon?: ReactNode;
@@ -33,7 +33,7 @@ declare global {
     confirm?: boolean | string;
     tooltip?: string;
     disableCloseOnSelect?: boolean;
-    onClick: (event: MouseEvent, id: string) => void | Promise<void>;
+    onClick?: VoidFunction;
   }
 
   interface ListItem {

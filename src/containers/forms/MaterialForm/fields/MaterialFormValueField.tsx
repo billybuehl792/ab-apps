@@ -2,7 +2,7 @@ import { type ComponentProps } from "react";
 import { useFormContext } from "react-hook-form";
 
 import DollarField from "@/components/fields/DollarField";
-import type { MaterialFormValues } from "../types";
+import type { MaterialData } from "@/types/firebase";
 
 const MIN = 0;
 const MAX = 10_000;
@@ -10,7 +10,7 @@ const MAX = 10_000;
 const MaterialFormValueField = (props: ComponentProps<typeof DollarField>) => {
   /** Values */
 
-  const methods = useFormContext<MaterialFormValues>();
+  const methods = useFormContext<MaterialData>();
 
   return (
     <DollarField

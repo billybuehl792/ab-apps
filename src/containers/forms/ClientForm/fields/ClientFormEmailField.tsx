@@ -3,23 +3,20 @@ import { useFormContext } from "react-hook-form";
 
 import EmailField from "@/components/fields/EmailField";
 import { RegexPattern } from "@/utils/regex";
-import type { ClientFormValues } from "../types";
+import { ClientData } from "@/types/firebase";
 
 const MAX_LENGTH = 128;
 
 const ClientFormEmailField = (props: ComponentProps<typeof EmailField>) => {
   /** Values */
 
-  const {
-    formState: { errors },
-    register,
-  } = useFormContext<ClientFormValues>();
+  const { formState, register } = useFormContext<ClientData>();
 
   return (
     <EmailField
       label="Email"
-      error={Boolean(errors.email)}
-      helperText={errors.email?.message}
+      error={Boolean(formState.errors.email)}
+      helperText={formState.errors.email?.message}
       {...register("email", {
         required: "Email is required",
         maxLength: {

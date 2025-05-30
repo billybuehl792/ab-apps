@@ -1,27 +1,29 @@
 import { type ComponentProps } from "react";
 import { Menu, type MenuProps } from "@mui/material";
 
-import MenuOptionsList from "@/components/lists/MenuOptionsList";
+import MenuOptionList from "@/components/lists/MenuOptionList";
 import { EMPTY_OBJECT } from "@/constants/utility";
 
-interface MenuOptionsMenuProps extends Omit<MenuProps, "slotProps"> {
+interface MenuOptionListMenuProps
+  extends Omit<MenuProps, "slotProps" | "onClose"> {
   options: MenuOption[];
   disableCloseOnSelect?: boolean;
+  onClose?: VoidFunction;
   slotProps?: {
-    list?: Partial<ComponentProps<typeof MenuOptionsList>>;
+    list?: Partial<ComponentProps<typeof MenuOptionList>>;
   } & MenuProps["slotProps"];
 }
 
 /**
  * This component renders a `Menu` with a list of selectable options.
  */
-const MenuOptionsMenu = ({
+const MenuOptionListMenu = ({
   options,
   disableCloseOnSelect,
   onClose,
   slotProps: { list: listProps, ...slotProps } = EMPTY_OBJECT,
   ...props
-}: MenuOptionsMenuProps) => {
+}: MenuOptionListMenuProps) => {
   /** Callbacks */
 
   const onMouseDown: MenuProps["onMouseDown"] = (event) => {
@@ -52,14 +54,14 @@ const MenuOptionsMenu = ({
       }}
       {...props}
     >
-      <MenuOptionsList
+      <MenuOptionList
         options={options.map((option) => ({
           ...option,
-          onClick: (event) => {
+          onClick: () => {
             if (!disableCloseOnSelect && !option.disableCloseOnSelect)
-              onClose?.(event, "backdropClick");
+              onClose?.();
 
-            void option.onClick(event, option.id);
+            option.onClick?.();
           },
         }))}
         {...(typeof listProps === "object" ? listProps : EMPTY_OBJECT)}
@@ -68,4 +70,4 @@ const MenuOptionsMenu = ({
   );
 };
 
-export default MenuOptionsMenu;
+export default MenuOptionListMenu;

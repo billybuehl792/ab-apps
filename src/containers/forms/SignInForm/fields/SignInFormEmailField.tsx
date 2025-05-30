@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 
 import EmailField from "@/components/fields/EmailField";
 import { RegexPattern } from "@/utils/regex";
-import type { SignInFormValues } from "../types";
+import type { SignInFormValues } from "..";
 
 const MAX_LENGTH = 128;
 

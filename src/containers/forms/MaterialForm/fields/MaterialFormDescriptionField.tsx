@@ -1,13 +1,13 @@
 import { useFormContext } from "react-hook-form";
 import { TextField, type TextFieldProps } from "@mui/material";
-import type { MaterialFormValues } from "../types";
+import type { MaterialData } from "@/types/firebase";
 
 const MAX_LENGTH = 128;
 
 const MaterialFormDescriptionField = (props: TextFieldProps) => {
   /** Values */
 
-  const methods = useFormContext<MaterialFormValues>();
+  const methods = useFormContext<MaterialData>();
 
   return (
     <TextField

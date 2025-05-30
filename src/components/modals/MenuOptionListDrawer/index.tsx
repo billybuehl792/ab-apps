@@ -1,63 +1,58 @@
-import { type ReactNode, type ComponentProps } from "react";
+import { type ComponentProps } from "react";
 
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
-import MenuOptionsList from "@/components/lists/MenuOptionsList";
+import MenuOptionList from "@/components/lists/MenuOptionList";
 import { EMPTY_OBJECT } from "@/constants/utility";
+import { useMediaQuery } from "@mui/material";
+import { sxAsArray } from "@/utils/sx";
 
-interface MenuOptionsDrawerProps
+interface MenuOptionListDrawerProps
   extends Omit<Partial<ComponentProps<typeof SwipeableDrawer>>, "slotProps"> {
-  title?: ReactNode;
   options: MenuOption[];
-  fullHeight?: boolean;
   disableCloseOnSelect?: boolean;
   slotProps?: {
-    list?: ComponentProps<typeof MenuOptionsList>;
+    list?: Partial<ComponentProps<typeof MenuOptionList>>;
   } & ComponentProps<typeof SwipeableDrawer>["slotProps"];
 }
 
 /**
  * This component renders a `SwipeableDrawer` with a list of selectable options.
  */
-const MenuOptionsDrawer = ({
+const MenuOptionListDrawer = ({
   options,
   disableCloseOnSelect,
   title = "Options",
   onClose,
   slotProps: { list: listProps, ...slotProps } = EMPTY_OBJECT,
   ...props
-}: MenuOptionsDrawerProps) => {
-  /** Callbacks */
+}: MenuOptionListDrawerProps) => {
+  /** Values */
 
-  const onMouseDown: MenuOptionsDrawerProps["onMouseDown"] = (event) => {
-    event.stopPropagation();
-  };
-
-  const onClick: MenuOptionsDrawerProps["onClick"] = (event) => {
-    event.stopPropagation();
-  };
+  const isSm = useMediaQuery((theme) => theme.breakpoints.up("sm"));
 
   return (
     <SwipeableDrawer
       title={title}
-      onMouseDown={onMouseDown}
-      onClick={onClick}
+      anchor={isSm ? "right" : "bottom"}
       onClose={onClose}
       slotProps={slotProps}
       {...props}
     >
-      <MenuOptionsList
+      <MenuOptionList
         options={options.map((option) => ({
           ...option,
-          onClick: (event) => {
-            void option.onClick(event, option.id);
+          onClick: () => {
+            option.onClick?.();
             if (!disableCloseOnSelect && !option.disableCloseOnSelect)
-              onClose?.(event);
+              onClose?.();
           },
         }))}
         {...listProps}
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        sx={[{ minWidth: 300 }, ...sxAsArray(listProps?.sx)]}
       />
     </SwipeableDrawer>
   );
 };
 
-export default MenuOptionsDrawer;
+export default MenuOptionListDrawer;

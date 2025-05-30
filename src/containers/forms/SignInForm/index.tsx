@@ -5,8 +5,8 @@ import type { UserCredential } from "firebase/auth";
 import Form from "@/components/forms/Form";
 import SignInFormPasswordField from "./fields/SignInFormPasswordField";
 import SignInFormEmailField from "./fields/SignInFormEmailField";
-import { SIGN_IN_FORM_DEFAULT_VALUES } from "./constants";
-import type { SignInFormValues } from "./types";
+
+export type SignInFormValues = { email: string; password: string };
 
 type SignInFormProps = Omit<
   ComponentProps<typeof Form<SignInFormValues, UserCredential>>,
@@ -20,7 +20,10 @@ const SignInForm = (props: SignInFormProps) => {
   const methods = useForm<SignInFormValues>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
-    defaultValues: SIGN_IN_FORM_DEFAULT_VALUES,
+    defaultValues: {
+      email: "",
+      password: "",
+    },
     ...props,
   });
 

@@ -3,7 +3,7 @@ import { CircularProgress } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 
 import IntegerField from "@/components/fields/IntegerField";
-import type { VerificationCodeFormValues } from "../types";
+import type { VerificationCodeFormValues } from "..";
 
 const CODE_LENGTH = 6;
 

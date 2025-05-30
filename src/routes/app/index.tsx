@@ -9,7 +9,7 @@ export const Route = createFileRoute("/app/")({
 
 function RouteComponent() {
   return (
-    <Container maxWidth="md" disableGutters>
+    <Container maxWidth="lg" disableGutters>
       <Stack spacing={1} p={2}>
         <Typography variant="h6">Overview</Typography>
         <Grid container spacing={1}>

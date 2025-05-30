@@ -2,7 +2,7 @@ import { type ReactNode, useState, type ComponentProps } from "react";
 import { IconButton, type IconButtonProps } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 
-import MenuOptionsModal from "@/components/modals/MenuOptionsModal";
+import MenuOptionListModal from "@/components/modals/MenuOptionListModal";
 import { EMPTY_OBJECT } from "@/constants/utility";
 
 const DEFAULT_ICON = <MoreVert />;
@@ -11,7 +11,7 @@ interface MenuOptionsIconButtonProps extends IconButtonProps<"span"> {
   options: MenuOption[];
   icon?: ReactNode;
   slotProps?: {
-    menu?: Partial<ComponentProps<typeof MenuOptionsModal>>;
+    menu?: Partial<ComponentProps<typeof MenuOptionListModal>>;
   };
 }
 
@@ -64,7 +64,7 @@ const MenuOptionsIconButton = ({
         {icon}
       </IconButton>
       {includeMenu && (
-        <MenuOptionsModal
+        <MenuOptionListModal
           title={title}
           open={Boolean(anchorEl)}
           anchorEl={anchorEl}
