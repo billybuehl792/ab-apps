@@ -2,7 +2,7 @@ import { type ComponentProps } from "react";
 import { useFormContext } from "react-hook-form";
 
 import PasswordField from "@/components/fields/PasswordField";
-import type { SignInFormValues } from "../types";
+import type { SignInFormValues } from "..";
 
 const MAX_LENGTH = 128;
 const MIN_LENGTH = 12;
@@ -12,17 +12,14 @@ const SignInFormPasswordField = (
 ) => {
   /** Values */
 
-  const {
-    formState: { errors },
-    register,
-  } = useFormContext<SignInFormValues>();
+  const { formState, register } = useFormContext<SignInFormValues>();
 
   return (
     <PasswordField
       label="Password"
       autoComplete="current-password"
-      error={Boolean(errors.password)}
-      helperText={errors.password?.message}
+      error={Boolean(formState.errors.password)}
+      helperText={formState.errors.password?.message}
       {...register("password", {
         required: "Password is required",
         minLength: {

@@ -4,7 +4,10 @@ import { useForm, type UseFormProps } from "react-hook-form";
 import Form from "@/components/forms/Form";
 import VerificationCodeFormCodeField from "./fields/VerificationCodeFormCodeField";
 import type { UserCredential } from "firebase/auth";
-import type { VerificationCodeFormValues } from "./types";
+
+export type VerificationCodeFormValues = {
+  code: string;
+};
 
 type VerificationCodeFormProps = Omit<
   ComponentProps<typeof Form<VerificationCodeFormValues, UserCredential>>,

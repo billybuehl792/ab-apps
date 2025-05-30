@@ -1,28 +1,28 @@
-import { ReactEventHandler, type ReactNode, type ComponentProps } from "react";
+import { type ReactNode, type ComponentProps } from "react";
 import { useMediaQuery, type MenuProps } from "@mui/material";
 
-import MenuOptionsDrawer from "../MenuOptionsDrawer";
-import MenuOptionsMenu from "../MenuOptionsMenu";
+import MenuOptionListDrawer from "../MenuOptionListDrawer";
+import MenuOptionListMenu from "../MenuOptionListMenu";
 import { EMPTY_OBJECT } from "@/constants/utility";
 
-interface MenuOptionsModalProps {
+interface MenuOptionListModalProps {
   anchorEl?: MenuProps["anchorEl"];
   open: boolean;
   options: MenuOption[];
   disableCloseOnSelect?: boolean;
   title?: ReactNode;
-  onClose: ReactEventHandler<CloseEvent>;
+  onClose: VoidFunction;
   slotProps?: {
-    drawer?: Partial<ComponentProps<typeof MenuOptionsDrawer>>;
-    menu?: Partial<ComponentProps<typeof MenuOptionsMenu>>;
+    drawer?: Partial<ComponentProps<typeof MenuOptionListDrawer>>;
+    menu?: Partial<ComponentProps<typeof MenuOptionListMenu>>;
   };
 }
 
 /**
- * This component renders either `MenuOptionsMenu` (desktop) or a
- * `MenuOptionsDrawer` (mobile) with a list of selectable options.
+ * This component renders either `MenuOptionListMenu` (desktop) or a
+ * `MenuOptionListDrawer` (mobile) with a list of selectable options.
  */
-const MenuOptionsModal = ({
+const MenuOptionListModal = ({
   anchorEl,
   open,
   options,
@@ -30,13 +30,13 @@ const MenuOptionsModal = ({
   title = "Options",
   onClose,
   slotProps: { drawer: drawerProps, menu: menuProps } = EMPTY_OBJECT,
-}: MenuOptionsModalProps) => {
+}: MenuOptionListModalProps) => {
   /** Values */
 
-  const isMobile = useMediaQuery("(pointer: coarse)");
+  const isTouch = useMediaQuery("(pointer: coarse)");
 
-  return isMobile ? (
-    <MenuOptionsDrawer
+  return isTouch ? (
+    <MenuOptionListDrawer
       title={title}
       open={open}
       options={options}
@@ -45,7 +45,7 @@ const MenuOptionsModal = ({
       {...drawerProps}
     />
   ) : (
-    <MenuOptionsMenu
+    <MenuOptionListMenu
       anchorEl={anchorEl}
       open={Boolean(open)}
       options={options}
@@ -56,4 +56,4 @@ const MenuOptionsModal = ({
   );
 };
 
-export default MenuOptionsModal;
+export default MenuOptionListModal;

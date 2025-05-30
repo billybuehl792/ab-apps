@@ -1,5 +1,5 @@
+import { useState, type MouseEvent } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { type MouseEvent } from "react";
 import {
   Card,
   CardActionArea,
@@ -10,12 +10,12 @@ import {
   type CardProps,
   type CardContentProps,
 } from "@mui/material";
-import { Delete, Edit, Restore } from "@mui/icons-material";
+import { Delete, Edit, Info, Restore } from "@mui/icons-material";
 
-import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 import { EMPTY_OBJECT } from "@/constants/utility";
 import type { Client } from "@/types/firebase";
 import useClients from "@/hooks/firebase/useClients";
+import MenuOptionListDrawer from "@/components/modals/MenuOptionListDrawer";
 
 interface ClientCardProps extends Omit<CardProps, "onClick"> {
   client: Client;
@@ -39,6 +39,8 @@ const ClientCard = ({
   } = EMPTY_OBJECT,
   ...props
 }: ClientCardProps) => {
+  const [modalOpen, setModalOpen] = useState(false);
+
   /** Values */
 
   const navigate = useNavigate();
@@ -51,12 +53,24 @@ const ClientCard = ({
 
   const onClick: CardActionAreaProps["onClick"] = (event) => {
     if (onClickProp) onClickProp(event, client);
-    else void navigate({ to: `/app/clients/${client.id}` });
+    else handleToggleModalOpen();
+  };
+
+  const handleToggleModalOpen = () => {
+    setModalOpen((prev) => !prev);
   };
 
   /** Options */
 
   const options: MenuOption[] = optionsProp ?? [
+    {
+      id: "detail",
+      label: "Detail",
+      icon: <Info />,
+      onClick: () => {
+        void navigate({ to: `/app/clients/${client.id}` });
+      },
+    },
     {
       id: "edit",
       label: "Edit",
@@ -74,8 +88,7 @@ const ClientCard = ({
       label: "Delete",
       icon: <Delete />,
       color: "error",
-      confirm:
-        "Are you sure you want to delete this client? This action cannot be undone.",
+      confirm: `Are you sure you want to delete ${fullName}? This action cannot be undone.`,
       onClick: () => {
         archive.mutate(client.id);
       },
@@ -113,11 +126,18 @@ const ClientCard = ({
               {client.address.text}
             </Typography>
           </Stack>
-          {Boolean(options.length) && (
-            <MenuOptionsIconButton title={fullName} options={options} />
-          )}
         </CardContent>
       </CardActionArea>
+
+      {/* Modals */}
+      {Boolean(options.length) && (
+        <MenuOptionListDrawer
+          title={fullName}
+          options={options}
+          open={modalOpen}
+          onClose={handleToggleModalOpen}
+        />
+      )}
     </Card>
   );
 };

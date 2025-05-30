@@ -38,9 +38,9 @@ const MenuOptionMenuItem = ({
 
   /** Callbacks */
 
-  const onClick: MenuItemProps["onClick"] = (event) => {
+  const onClick: MenuItemProps["onClick"] = () => {
     if (option.confirm) setConfirmDialogOpen(true);
-    else void option.onClick(event, option.id);
+    else option.onClick?.();
   };
 
   return (
@@ -73,9 +73,7 @@ const MenuOptionMenuItem = ({
           description={
             typeof option.confirm === "string" ? option.confirm : undefined
           }
-          onConfirm={(event) => {
-            void option.onClick(event, option.id);
-          }}
+          onConfirm={option.onClick}
           onCancel={() => {
             setConfirmDialogOpen(false);
           }}

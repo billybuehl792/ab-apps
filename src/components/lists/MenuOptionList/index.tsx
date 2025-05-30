@@ -4,7 +4,7 @@ import { MenuList, type MenuListProps } from "@mui/material";
 import MenuOptionMenuItem from "@/components/menu-items/MenuOptionMenuItem";
 import { EMPTY_OBJECT } from "@/constants/utility";
 
-interface MenuOptionsListProps extends MenuListProps {
+interface MenuOptionListProps extends MenuListProps {
   options: MenuOption[];
   slotProps?: {
     menuItem?: Partial<ComponentProps<typeof MenuOptionMenuItem>>;
@@ -14,11 +14,11 @@ interface MenuOptionsListProps extends MenuListProps {
 /**
  * This component renders a `MenuList` with a list of selectable options.
  */
-const MenuOptionsList = ({
+const MenuOptionList = ({
   options,
   slotProps: { menuItem: menuItemProps } = EMPTY_OBJECT,
   ...props
-}: MenuOptionsListProps) => {
+}: MenuOptionListProps) => {
   return (
     <MenuList {...props}>
       {options
@@ -34,4 +34,4 @@ const MenuOptionsList = ({
   );
 };
 
-export default MenuOptionsList;
+export default MenuOptionList;
