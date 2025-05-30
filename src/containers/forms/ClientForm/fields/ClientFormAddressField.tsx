@@ -2,14 +2,14 @@ import { type ComponentProps } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import AddressField from "@/components/fields/AddressField";
-import type { ClientFormValues } from "../types";
+import type { ClientData } from "@/types/firebase";
 
 const ClientFormAddressField = (
   props: Partial<ComponentProps<typeof AddressField>>
 ) => {
   /** Values */
 
-  const { control } = useFormContext<ClientFormValues>();
+  const { control } = useFormContext<ClientData>();
 
   return (
     <Controller

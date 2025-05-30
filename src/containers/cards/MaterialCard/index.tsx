@@ -13,7 +13,7 @@ import {
 import { sxAsArray } from "@/utils/sx";
 import { EMPTY_OBJECT } from "@/constants/utility";
 import type { Material } from "@/types/firebase";
-import MenuOptionsModal from "@/components/modals/MenuOptionsModal";
+import MenuOptionListDrawer from "@/components/modals/MenuOptionListDrawer";
 
 interface MaterialCardProps extends Omit<CardProps, "onClick"> {
   material: Material;
@@ -39,9 +39,7 @@ const MaterialCard = ({
   } = EMPTY_OBJECT,
   ...props
 }: MaterialCardProps) => {
-  const [optionsAnchorEl, setOptionsAnchorEl] = useState<HTMLElement | null>(
-    null
-  );
+  const [modalOpen, setModalOpen] = useState(false);
 
   /** Values */
 
@@ -52,7 +50,11 @@ const MaterialCard = ({
 
   const onClick: CardActionAreaProps["onClick"] = (event) => {
     if (onClickProp) onClickProp(material, event);
-    else if (options) setOptionsAnchorEl(event.currentTarget);
+    else if (options) handleToggleModalOpen();
+  };
+
+  const handleToggleModalOpen = () => {
+    setModalOpen((prev) => !prev);
   };
 
   return (
@@ -84,21 +86,13 @@ const MaterialCard = ({
         </CardContent>
       </CardActionArea>
 
+      {/* Modals */}
       {!!options && (
-        <MenuOptionsModal
+        <MenuOptionListDrawer
           title={material.label}
           options={options}
-          open={Boolean(optionsAnchorEl)}
-          anchorEl={optionsAnchorEl}
-          slotProps={{
-            menu: {
-              anchorOrigin: { horizontal: "center", vertical: "center" },
-              transformOrigin: { horizontal: "right", vertical: "bottom" },
-            },
-          }}
-          onClose={() => {
-            setOptionsAnchorEl(null);
-          }}
+          open={modalOpen}
+          onClose={handleToggleModalOpen}
         />
       )}
     </Card>

@@ -22,8 +22,8 @@ interface SwipeableDrawerProps
   title?: ReactNode;
   hideHeader?: boolean;
   fullHeight?: boolean;
-  onOpen?: MuiSwipeableDrawerProps["onOpen"];
-  onClose?: MuiSwipeableDrawerProps["onClose"];
+  onOpen?: VoidFunction;
+  onClose?: VoidFunction;
   slotProps?: {
     puller?: ComponentProps<typeof Puller>;
     header?: ComponentProps<typeof DrawerHeader>;
@@ -54,7 +54,7 @@ const Puller = (props: BoxProps) => (
  * It provides a bottom drawer with a puller and customizable styles.
  */
 const SwipeableDrawer = ({
-  anchor = "bottom",
+  anchor: anchorProp = "bottom",
   title,
   children,
   fullHeight,
@@ -71,14 +71,16 @@ const SwipeableDrawer = ({
 }: SwipeableDrawerProps) => {
   /** Values */
 
-  const isMobile = useMediaQuery("(pointer: coarse)");
+  const isTouch = useMediaQuery("(pointer: coarse)");
+  const isSm = useMediaQuery((theme) => theme.breakpoints.up("sm"));
+  const anchor = isTouch || !isSm ? "bottom" : anchorProp;
 
   return (
     <MuiSwipeableDrawer
       anchor={anchor}
       disableSwipeToOpen
-      onOpen={(event) => onOpen?.(event)}
-      onClose={(event) => onClose?.(event)}
+      onOpen={() => onOpen?.()}
+      onClose={() => onClose?.()}
       ModalProps={{ keepMounted: false }}
       slotProps={{
         ...slotProps,
@@ -90,7 +92,7 @@ const SwipeableDrawer = ({
         paper: {
           ...(typeof slotProps.paper === "object" && slotProps.paper),
           sx: [
-            isMobile && {
+            isTouch && {
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
             },
@@ -102,7 +104,7 @@ const SwipeableDrawer = ({
       }}
       {...props}
     >
-      {isMobile && (
+      {isTouch && (
         <Stack direction="row" justifyContent="center">
           <Puller {...pullerProps} />
         </Stack>
@@ -113,7 +115,7 @@ const SwipeableDrawer = ({
       <Stack
         overflow="auto"
         flexGrow={1}
-        pb={isMobile ? APP_BOTTOM_SAFE_AREA_HEIGHT / 8 : 0}
+        pb={isTouch ? APP_BOTTOM_SAFE_AREA_HEIGHT / 8 : 0}
         {...contentProps}
       >
         {children}

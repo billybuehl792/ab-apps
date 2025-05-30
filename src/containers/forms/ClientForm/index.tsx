@@ -8,22 +8,33 @@ import ClientFormLastNameField from "./fields/ClientFormLastNameField";
 import ClientFormEmailField from "./fields/ClientFormEmailField";
 import ClientFormAddressField from "./fields/ClientFormAddressField";
 import ClientFormPhoneField from "./fields/ClientFormPhoneField";
-import { CLIENT_FORM_DEFAULT_VALUES } from "./constants";
-import type { ClientFormValues } from "./types";
+import type { ClientData } from "@/types/firebase";
 
 type ClientFormProps = Omit<
-  ComponentProps<typeof Form<ClientFormValues>>,
+  ComponentProps<typeof Form<ClientData>>,
   "methods"
 > &
-  UseFormProps<ClientFormValues>;
+  UseFormProps<ClientData>;
 
 const ClientForm: FC<ClientFormProps> = (props) => {
   /** Values */
 
-  const methods = useForm<ClientFormValues>({
+  const methods = useForm<ClientData>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
-    defaultValues: CLIENT_FORM_DEFAULT_VALUES,
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      archived: false,
+      address: {
+        place_id: "",
+        primary_text: "",
+        secondary_text: "",
+        text: "",
+      },
+    },
     ...props,
   });
 

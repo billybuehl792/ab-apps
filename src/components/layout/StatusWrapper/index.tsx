@@ -4,6 +4,7 @@ import {
   ButtonProps,
   CircularProgress,
   Stack,
+  Tooltip,
   Typography,
   type StackProps,
 } from "@mui/material";
@@ -48,13 +49,22 @@ const StatusWrapper = ({
         {typeof loading === "boolean" ? (
           (loadingIcon ?? <CircularProgress size="large" color="info" />)
         ) : typeof loading === "string" ? (
-          <Typography color="info">{loading}</Typography>
+          <Typography color="info" noWrap>
+            {loading}
+          </Typography>
         ) : (
           loading
         )}
       </Stack>
     );
-  else if (error)
+  else if (error) {
+    const errorMessage =
+      typeof error === "string"
+        ? error
+        : error instanceof Error
+          ? error.message
+          : "Something went wrong...";
+
     return (
       <Stack
         spacing={1}
@@ -69,13 +79,11 @@ const StatusWrapper = ({
         error instanceof Error ? (
           <>
             {errorIcon ?? <ErrorOutline fontSize="large" color="error" />}
-            <Typography color="error">
-              {typeof error === "string"
-                ? error
-                : error instanceof Error
-                  ? error.message
-                  : "Something went wrong..."}
-            </Typography>
+            <Tooltip title={errorMessage}>
+              <Typography color="error" noWrap>
+                {errorMessage}
+              </Typography>
+            </Tooltip>
           </>
         ) : (
           error
@@ -85,6 +93,7 @@ const StatusWrapper = ({
         )}
       </Stack>
     );
+  }
   return children;
 };
 

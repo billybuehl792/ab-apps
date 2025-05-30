@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
-import { Stack } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 
 import NavigationBreadcrumbs from "@/containers/lists/NavigationBreadcrumbs";
 import CreateClientLink from "@/containers/links/CreateClientLink";
@@ -15,12 +15,18 @@ function RouteComponent() {
   const { pathname } = useLocation();
 
   return (
-    <Stack spacing={1} p={2}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <NavigationBreadcrumbs />
-        {pathname === "/app/clients" && <CreateClientLink />}
+    <Container maxWidth="lg" disableGutters>
+      <Stack spacing={2} p={2}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <NavigationBreadcrumbs />
+          {pathname === "/app/clients" && <CreateClientLink />}
+        </Stack>
+        <Outlet />
       </Stack>
-      <Outlet />
-    </Stack>
+    </Container>
   );
 }

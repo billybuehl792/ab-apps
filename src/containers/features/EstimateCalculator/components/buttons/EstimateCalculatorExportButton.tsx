@@ -1,15 +1,11 @@
-import { type ComponentProps } from "react";
 import { SaveAlt } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
-import { Button } from "@mui/material";
+import { Button, type ButtonProps } from "@mui/material";
 
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
-import MenuOptionsButton from "@/components/buttons/MenuOptionsButton";
 import { createEstimateCalculatorDoc } from "../../utils";
 
-const EstimateCalculatorExportButton = (
-  props: Partial<ComponentProps<typeof MenuOptionsButton>>
-) => {
+const EstimateCalculatorExportButton = (props: ButtonProps) => {
   /** Values */
 
   const {
