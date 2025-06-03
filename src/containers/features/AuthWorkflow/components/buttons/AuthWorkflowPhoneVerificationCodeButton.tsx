@@ -60,21 +60,25 @@ const AuthWorkflowPhoneVerificationCodeButton = ({
     },
   });
 
+  /** Callbacks */
+
+  const handleSendPhoneVerificationCode = () => {
+    sendPhoneVerificationCodeMutation.mutate();
+  };
+
   return (
     <Button
       id={buttonId}
       startIcon={<Message />}
       loading={sendPhoneVerificationCodeMutation.isPending}
-      disabled={
-        sendPhoneVerificationCodeMutation.isSuccess ||
-        sendPhoneVerificationCodeMutation.isError
-      }
-      onClick={() => {
-        sendPhoneVerificationCodeMutation.mutate();
-      }}
+      color={sendPhoneVerificationCodeMutation.isError ? "error" : "primary"}
+      disabled={sendPhoneVerificationCodeMutation.isSuccess}
+      onClick={handleSendPhoneVerificationCode}
       {...props}
     >
-      Send verification code to {multiFactorHint.phoneNumber}
+      {sendPhoneVerificationCodeMutation.isError
+        ? "Error sending verification code"
+        : `Send verification code to ${multiFactorHint.phoneNumber}`}
     </Button>
   );
 };

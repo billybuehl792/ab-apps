@@ -23,6 +23,8 @@ const getFirebaseErrorMessage = (error: FirebaseError) => {
       return "Multi-factor authentication required";
     case FirebaseErrorCode.WRONG_PASSWORD:
       return "Wrong password";
+    case FirebaseErrorCode.TOO_MANY_ATTEMPTS:
+      return "Too many sign in attempts, please try again later";
     default:
       return error.message;
   }
