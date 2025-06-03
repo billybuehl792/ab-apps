@@ -19,7 +19,6 @@ const SignInForm = (props: SignInFormProps) => {
 
   const methods = useForm<SignInFormValues>({
     mode: "onSubmit",
-    reValidateMode: "onSubmit",
     defaultValues: {
       email: "",
       password: "",
