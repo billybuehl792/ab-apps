@@ -5,6 +5,7 @@ export enum FirebaseErrorCode {
   INVALID_VERIFICATION_ID = "auth/invalid-verification-id",
   MISSING_PASSWORD = "auth/missing-password",
   MULTI_FACTOR_AUTH_REQUIRED = "auth/multi-factor-auth-required",
+  TOO_MANY_ATTEMPTS = "auth/too-many-requests",
   WRONG_PASSWORD = "auth/wrong-password",
 }
 

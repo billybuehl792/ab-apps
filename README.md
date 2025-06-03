@@ -1,4 +1,4 @@
-# 🚀 Company Web App
+# 🚀 AB Apps
 
 This is the official frontend codebase for the **[AB Apps]** web application, built using **Vite** and **React**. It is intended **only for internal use** by the development team working on this project.
 
