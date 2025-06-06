@@ -1,13 +1,16 @@
 import { useId } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { PhoneAuthProvider, type PhoneMultiFactorInfo } from "firebase/auth";
-import { Button, type ButtonProps } from "@mui/material";
+import {
+  PhoneAuthProvider,
+  RecaptchaVerifier,
+  type PhoneMultiFactorInfo,
+} from "firebase/auth";
+import { Box, Button, type ButtonProps } from "@mui/material";
 import { Message } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
 
 import { auth } from "@/config/firebase";
 import useAuthWorkflow from "../../hooks/useAuthWorkflow";
-import useRecaptchaVerifier from "@/hooks/auth/useRecaptchaVerifier";
 
 interface AuthWorkflowPhoneVerificationCodeButtonProps extends ButtonProps {
   multiFactorHint: PhoneMultiFactorInfo;
@@ -19,17 +22,14 @@ const AuthWorkflowPhoneVerificationCodeButton = ({
 }: AuthWorkflowPhoneVerificationCodeButtonProps) => {
   /** Values */
 
+  const containerId = useId();
+  const phoneAuthProvider = new PhoneAuthProvider(auth);
   const {
     multiFactorResolver,
     setMultiFactorVerificationId,
     setMultiFactorHint,
   } = useAuthWorkflow();
-
-  const buttonId = useId();
-
   const { enqueueSnackbar } = useSnackbar();
-  const recaptchaVerifier = useRecaptchaVerifier(buttonId);
-  const phoneAuthProvider = new PhoneAuthProvider(auth);
 
   /** Mutations */
 
@@ -37,6 +37,9 @@ const AuthWorkflowPhoneVerificationCodeButton = ({
     mutationKey: ["sendPhoneVerificationCode"],
     mutationFn: async () => {
       if (!multiFactorResolver) throw new Error("No multi-factor resolver");
+      const recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
+        size: "invisible",
+      });
       return await phoneAuthProvider.verifyPhoneNumber(
         {
           multiFactorHint,
@@ -67,19 +70,18 @@ const AuthWorkflowPhoneVerificationCodeButton = ({
   };
 
   return (
-    <Button
-      id={buttonId}
-      startIcon={<Message />}
-      loading={sendPhoneVerificationCodeMutation.isPending}
-      color={sendPhoneVerificationCodeMutation.isError ? "error" : "primary"}
-      disabled={sendPhoneVerificationCodeMutation.isSuccess}
-      onClick={handleSendPhoneVerificationCode}
-      {...props}
-    >
-      {sendPhoneVerificationCodeMutation.isError
-        ? "Error sending verification code"
-        : `Send verification code to ${multiFactorHint.phoneNumber}`}
-    </Button>
+    <Box component="span" id={containerId}>
+      <Button
+        startIcon={<Message />}
+        fullWidth
+        loading={sendPhoneVerificationCodeMutation.isPending}
+        disabled={sendPhoneVerificationCodeMutation.isSuccess}
+        onClick={handleSendPhoneVerificationCode}
+        {...props}
+      >
+        Send verification code to {multiFactorHint.phoneNumber}
+      </Button>
+    </Box>
   );
 };
 
