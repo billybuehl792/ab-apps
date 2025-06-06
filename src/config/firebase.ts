@@ -4,10 +4,7 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
 import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
-import {
-  initializeAppCheck,
-  ReCaptchaEnterpriseProvider,
-} from "@firebase/app-check";
+import { initializeAppCheck, ReCaptchaV3Provider } from "@firebase/app-check";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -40,7 +37,7 @@ if (import.meta.env.DEV) {
 }
 
 initializeAppCheck(app, {
-  provider: new ReCaptchaEnterpriseProvider(
+  provider: new ReCaptchaV3Provider(
     import.meta.env.VITE_RECAPTCHA_SITE_KEY as string
   ),
   isTokenAutoRefreshEnabled: true,
