@@ -11,6 +11,9 @@ import { theme } from "./src/config/theme";
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   return {
+    server: {
+      host: "127.0.0.1",
+    },
     build: {
       sourcemap: true, // Source map generation must be turned on for Sentry
       chunkSizeWarningLimit: 1000,

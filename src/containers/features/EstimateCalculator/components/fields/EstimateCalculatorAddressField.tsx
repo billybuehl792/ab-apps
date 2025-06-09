@@ -21,6 +21,7 @@ const EstimateCalculatorAddressField = (
       render={({ field: { onChange, ...field }, formState: { errors } }) => (
         <AddressField
           size="small"
+          required
           placeholder="Address"
           error={Boolean(errors.address)}
           helperText={errors.address?.message}

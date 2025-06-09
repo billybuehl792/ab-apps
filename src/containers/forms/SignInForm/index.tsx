@@ -14,11 +14,12 @@ type SignInFormProps = Omit<
 > &
   UseFormProps<SignInFormValues>;
 
-const SignInForm = (props: SignInFormProps) => {
+const SignInForm = ({ onError, ...props }: SignInFormProps) => {
   /** Values */
 
   const methods = useForm<SignInFormValues>({
     mode: "onSubmit",
+    reValidateMode: "onSubmit",
     defaultValues: {
       email: "",
       password: "",
@@ -26,10 +27,18 @@ const SignInForm = (props: SignInFormProps) => {
     ...props,
   });
 
+  /** Callbacks */
+
+  const handleOnError: SignInFormProps["onError"] = (error) => {
+    methods.resetField("password", { keepError: true });
+    void onError?.(error);
+  };
+
   return (
     <Form
       methods={methods}
       showRootError
+      onError={handleOnError}
       {...props}
       slotProps={{
         ...props.slotProps,

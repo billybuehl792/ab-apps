@@ -1,11 +1,11 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
   PhoneAuthProvider,
   RecaptchaVerifier,
   type PhoneMultiFactorInfo,
 } from "firebase/auth";
-import { Box, Button, type ButtonProps } from "@mui/material";
+import { Box, Button, Stack, type ButtonProps } from "@mui/material";
 import { Message } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
 
@@ -20,6 +20,8 @@ const AuthWorkflowPhoneVerificationCodeButton = ({
   multiFactorHint,
   ...props
 }: AuthWorkflowPhoneVerificationCodeButtonProps) => {
+  const [recaptchaPending, setRecaptchaPending] = useState(false);
+
   /** Values */
 
   const containerId = useId();
@@ -35,17 +37,14 @@ const AuthWorkflowPhoneVerificationCodeButton = ({
 
   const sendPhoneVerificationCodeMutation = useMutation({
     mutationKey: ["sendPhoneVerificationCode"],
-    mutationFn: async () => {
+    mutationFn: async (verifier: RecaptchaVerifier) => {
       if (!multiFactorResolver) throw new Error("No multi-factor resolver");
-      const recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
-        size: "invisible",
-      });
       return await phoneAuthProvider.verifyPhoneNumber(
         {
           multiFactorHint,
           session: multiFactorResolver.session,
         },
-        recaptchaVerifier
+        verifier
       );
     },
     onSuccess: (verificationId) => {
@@ -65,23 +64,39 @@ const AuthWorkflowPhoneVerificationCodeButton = ({
 
   /** Callbacks */
 
-  const handleSendPhoneVerificationCode = () => {
-    sendPhoneVerificationCodeMutation.mutate();
+  const handleSendPhoneVerificationCode = async () => {
+    setRecaptchaPending(true);
+    const recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
+      callback: () => {
+        sendPhoneVerificationCodeMutation.mutate(recaptchaVerifier);
+        setRecaptchaPending(false);
+      },
+      "expired-callback": () => {
+        enqueueSnackbar("ReCAPTCHA expired, please try again", {
+          variant: "warning",
+        });
+        setRecaptchaPending(false);
+      },
+    });
+    await recaptchaVerifier.render();
   };
 
   return (
-    <Box component="span" id={containerId}>
+    <Stack spacing={1} alignItems="center">
       <Button
         startIcon={<Message />}
         fullWidth
-        loading={sendPhoneVerificationCodeMutation.isPending}
+        loading={
+          sendPhoneVerificationCodeMutation.isPending || recaptchaPending
+        }
         disabled={sendPhoneVerificationCodeMutation.isSuccess}
-        onClick={handleSendPhoneVerificationCode}
+        onClick={() => void handleSendPhoneVerificationCode()}
         {...props}
       >
         Send verification code to {multiFactorHint.phoneNumber}
       </Button>
-    </Box>
+      <Box id={containerId} />
+    </Stack>
   );
 };
 

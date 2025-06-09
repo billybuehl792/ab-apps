@@ -15,6 +15,7 @@ const ClientFormEmailField = (props: ComponentProps<typeof EmailField>) => {
   return (
     <EmailField
       label="Email"
+      required
       error={Boolean(formState.errors.email)}
       helperText={formState.errors.email?.message}
       {...register("email", {

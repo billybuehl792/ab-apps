@@ -17,6 +17,7 @@ const SignInFormPasswordField = (
   return (
     <PasswordField
       label="Password"
+      required
       autoComplete="current-password"
       error={Boolean(formState.errors.password)}
       helperText={formState.errors.password?.message}

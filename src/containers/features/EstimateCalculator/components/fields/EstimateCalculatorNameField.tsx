@@ -17,6 +17,7 @@ const EstimateCalculatorNameField = (props: TextFieldProps) => {
   return (
     <TextField
       placeholder="Name"
+      required
       size="small"
       error={Boolean(errors.name)}
       helperText={errors.name?.message}
