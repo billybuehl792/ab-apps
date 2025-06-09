@@ -15,6 +15,7 @@ const ClientFormLastNameField = (props: TextFieldProps) => {
   return (
     <TextField
       label="Last Name"
+      required
       error={Boolean(errors.last_name)}
       helperText={errors.last_name?.message}
       fullWidth

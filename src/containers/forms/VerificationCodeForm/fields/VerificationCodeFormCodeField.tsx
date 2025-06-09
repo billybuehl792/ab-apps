@@ -18,6 +18,7 @@ const VerificationCodeFormCodeField = (
     <IntegerField
       label="Verification Code"
       type="text"
+      required
       autoComplete="one-time-code"
       error={Boolean(methods.formState.errors.code)}
       helperText={methods.formState.errors.code?.message}

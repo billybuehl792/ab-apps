@@ -26,6 +26,7 @@ const UserDisplayNameForm = (props: UserDisplayNameFormProps) => {
     <Form methods={methods} {...props}>
       <TextField
         label="Display Name"
+        required
         error={Boolean(methods.formState.errors.displayName)}
         helperText={methods.formState.errors.displayName?.message}
         {...methods.register("displayName", {

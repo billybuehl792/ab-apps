@@ -23,7 +23,13 @@ interface AddressFieldProps
   extends Omit<UseAutocompleteProps<Address, false, false, false>, "options">,
     Pick<
       TextFieldProps,
-      "label" | "placeholder" | "variant" | "error" | "helperText" | "size"
+      | "label"
+      | "placeholder"
+      | "required"
+      | "variant"
+      | "error"
+      | "helperText"
+      | "size"
     > {
   slotProps?: {
     textField?: TextFieldProps;
@@ -36,6 +42,7 @@ const AddressField = ({
   placeholder = "Search for an address",
   variant = "outlined",
   size,
+  required,
   error,
   helperText,
   slotProps: { textField: textFieldProps, option: optionProps } = EMPTY_OBJECT,
@@ -122,6 +129,7 @@ const AddressField = ({
           label={label}
           placeholder={placeholder}
           variant={variant}
+          required={required}
           error={error}
           helperText={helperText}
           {...textFieldProps}
@@ -145,10 +153,10 @@ const AddressField = ({
           }}
         />
       )}
-      renderOption={(props, option) => (
+      renderOption={({ key: _key, ...props }, option) => (
         <AddressMenuItem
-          {...props}
           key={option.place_id}
+          {...props}
           value={option}
           {...optionProps}
         />

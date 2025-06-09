@@ -75,6 +75,7 @@ const EstimateCalculator = ({
     >
       <Stack
         component="form"
+        noValidate
         position="relative"
         overflow="auto"
         flexGrow={1}
