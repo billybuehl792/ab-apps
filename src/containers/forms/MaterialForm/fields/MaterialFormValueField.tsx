@@ -15,6 +15,7 @@ const MaterialFormValueField = (props: ComponentProps<typeof DollarField>) => {
   return (
     <DollarField
       label="Cost / Unit"
+      required
       error={!!methods.formState.errors.value}
       helperText={methods.formState.errors.value?.message}
       {...methods.register("value", {

@@ -33,13 +33,26 @@ const AuthWorkflowSignIn = () => {
           auth,
           error as MultiFactorError
         );
-
         setMultiFactorResolver(resolver);
       } else enqueueSnackbar(getErrorMessage(error), { variant: "error" });
     },
   });
 
-  return <SignInForm onSubmit={signInMutation.mutateAsync} />;
+  return (
+    <SignInForm
+      onSubmit={signInMutation.mutateAsync}
+      slotProps={{
+        actions: {
+          slotProps: {
+            submitButton: {
+              disabled: signInMutation.isSuccess,
+              loading: signInMutation.isPending,
+            },
+          },
+        },
+      }}
+    />
+  );
 };
 
 export default AuthWorkflowSignIn;

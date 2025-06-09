@@ -19,6 +19,7 @@ const ClientFormAddressField = (
       render={({ field: { onChange, ...field }, formState: { errors } }) => (
         <AddressField
           label="Address"
+          required
           error={Boolean(errors.address)}
           helperText={errors.address?.message}
           {...props}

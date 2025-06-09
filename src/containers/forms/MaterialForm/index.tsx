@@ -35,7 +35,6 @@ const MaterialForm = (props: MaterialFormProps) => {
     <Form methods={methods} {...props}>
       <MaterialFormTitleField />
       <MaterialFormValueField />
-
       <Stack direction="row" justifyContent="center">
         <Button
           size="small"
@@ -47,7 +46,6 @@ const MaterialForm = (props: MaterialFormProps) => {
           Show {showMoreEnabled ? "Less" : "More"}
         </Button>
       </Stack>
-
       <Collapse
         in={showMoreEnabled}
         sx={{

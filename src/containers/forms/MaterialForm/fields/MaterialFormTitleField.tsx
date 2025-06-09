@@ -13,6 +13,7 @@ const MaterialFormTitleField = (props: TextFieldProps) => {
     <TextField
       label="Title"
       fullWidth
+      required
       error={!!methods.formState.errors.label}
       helperText={methods.formState.errors.label?.message}
       {...methods.register("label", {
