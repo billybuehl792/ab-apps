@@ -21,6 +21,8 @@ const app = initializeApp({
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID as string,
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET as string,
 });
+
+// Firebase CLI docs: https://firebase.google.com/docs/cli#install-cli-mac-linux
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -29,7 +31,6 @@ const functions = getFunctions(app);
 
 if (import.meta.env.DEV) {
   self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-
   connectAuthEmulator(auth, "http://127.0.0.1:9099");
   connectFirestoreEmulator(db, "127.0.0.1", 8081);
   connectStorageEmulator(storage, "127.0.0.1", 9199);
