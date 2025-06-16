@@ -21,7 +21,6 @@ declare module "@tanstack/react-router" {
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN as string,
   environment: import.meta.env.MODE,
-  enabled: import.meta.env.MODE === "production",
   integrations: [
     Sentry.browserTracingIntegration(),
     Sentry.browserProfilingIntegration(),
@@ -34,7 +33,16 @@ Sentry.init({
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const rootElement = document.getElementById("root")!;
 if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
+  const root = ReactDOM.createRoot(rootElement, {
+    // Callback called when an error is thrown and not caught by an Error Boundary.
+    onUncaughtError: Sentry.reactErrorHandler((error, errorInfo) => {
+      console.warn("Uncaught error", error, errorInfo.componentStack);
+    }),
+    // Callback called when React catches an error in an Error Boundary.
+    onCaughtError: Sentry.reactErrorHandler(),
+    // Callback called when React automatically recovers from errors.
+    onRecoverableError: Sentry.reactErrorHandler(),
+  });
   root.render(
     <StrictMode>
       <Providers>
