@@ -8,192 +8,68 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppEstimateCalculatorRouteImport } from './routes/app/estimate-calculator'
+import { Route as AppClientsRouteImport } from './routes/app/clients'
+import { Route as AppAccountRouteImport } from './routes/app/account'
+import { Route as AppClientsIndexRouteImport } from './routes/app/clients/index'
+import { Route as AppClientsCreateRouteImport } from './routes/app/clients/create'
+import { Route as AppClientsIdRouteImport } from './routes/app/clients/$id'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as SignInImport } from './routes/sign-in'
-import { Route as AppImport } from './routes/app'
-import { Route as IndexImport } from './routes/index'
-import { Route as AppIndexImport } from './routes/app/index'
-import { Route as AppEstimateCalculatorImport } from './routes/app/estimate-calculator'
-import { Route as AppClientsImport } from './routes/app/clients'
-import { Route as AppAccountImport } from './routes/app/account'
-import { Route as AppClientsIndexImport } from './routes/app/clients/index'
-import { Route as AppClientsCreateImport } from './routes/app/clients/create'
-import { Route as AppClientsIdImport } from './routes/app/clients/$id'
-
-// Create/Update Routes
-
-const SignInRoute = SignInImport.update({
+const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AppRoute = AppImport.update({
+const AppRoute = AppRouteImport.update({
   id: '/app',
   path: '/app',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AppIndexRoute = AppIndexImport.update({
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
-
-const AppEstimateCalculatorRoute = AppEstimateCalculatorImport.update({
+const AppEstimateCalculatorRoute = AppEstimateCalculatorRouteImport.update({
   id: '/estimate-calculator',
   path: '/estimate-calculator',
   getParentRoute: () => AppRoute,
 } as any)
-
-const AppClientsRoute = AppClientsImport.update({
+const AppClientsRoute = AppClientsRouteImport.update({
   id: '/clients',
   path: '/clients',
   getParentRoute: () => AppRoute,
 } as any)
-
-const AppAccountRoute = AppAccountImport.update({
+const AppAccountRoute = AppAccountRouteImport.update({
   id: '/account',
   path: '/account',
   getParentRoute: () => AppRoute,
 } as any)
-
-const AppClientsIndexRoute = AppClientsIndexImport.update({
+const AppClientsIndexRoute = AppClientsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppClientsRoute,
 } as any)
-
-const AppClientsCreateRoute = AppClientsCreateImport.update({
+const AppClientsCreateRoute = AppClientsCreateRouteImport.update({
   id: '/create',
   path: '/create',
   getParentRoute: () => AppClientsRoute,
 } as any)
-
-const AppClientsIdRoute = AppClientsIdImport.update({
+const AppClientsIdRoute = AppClientsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => AppClientsRoute,
 } as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/app': {
-      id: '/app'
-      path: '/app'
-      fullPath: '/app'
-      preLoaderRoute: typeof AppImport
-      parentRoute: typeof rootRoute
-    }
-    '/sign-in': {
-      id: '/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
-      preLoaderRoute: typeof SignInImport
-      parentRoute: typeof rootRoute
-    }
-    '/app/account': {
-      id: '/app/account'
-      path: '/account'
-      fullPath: '/app/account'
-      preLoaderRoute: typeof AppAccountImport
-      parentRoute: typeof AppImport
-    }
-    '/app/clients': {
-      id: '/app/clients'
-      path: '/clients'
-      fullPath: '/app/clients'
-      preLoaderRoute: typeof AppClientsImport
-      parentRoute: typeof AppImport
-    }
-    '/app/estimate-calculator': {
-      id: '/app/estimate-calculator'
-      path: '/estimate-calculator'
-      fullPath: '/app/estimate-calculator'
-      preLoaderRoute: typeof AppEstimateCalculatorImport
-      parentRoute: typeof AppImport
-    }
-    '/app/': {
-      id: '/app/'
-      path: '/'
-      fullPath: '/app/'
-      preLoaderRoute: typeof AppIndexImport
-      parentRoute: typeof AppImport
-    }
-    '/app/clients/$id': {
-      id: '/app/clients/$id'
-      path: '/$id'
-      fullPath: '/app/clients/$id'
-      preLoaderRoute: typeof AppClientsIdImport
-      parentRoute: typeof AppClientsImport
-    }
-    '/app/clients/create': {
-      id: '/app/clients/create'
-      path: '/create'
-      fullPath: '/app/clients/create'
-      preLoaderRoute: typeof AppClientsCreateImport
-      parentRoute: typeof AppClientsImport
-    }
-    '/app/clients/': {
-      id: '/app/clients/'
-      path: '/'
-      fullPath: '/app/clients/'
-      preLoaderRoute: typeof AppClientsIndexImport
-      parentRoute: typeof AppClientsImport
-    }
-  }
-}
-
-// Create and export the route tree
-
-interface AppClientsRouteChildren {
-  AppClientsIdRoute: typeof AppClientsIdRoute
-  AppClientsCreateRoute: typeof AppClientsCreateRoute
-  AppClientsIndexRoute: typeof AppClientsIndexRoute
-}
-
-const AppClientsRouteChildren: AppClientsRouteChildren = {
-  AppClientsIdRoute: AppClientsIdRoute,
-  AppClientsCreateRoute: AppClientsCreateRoute,
-  AppClientsIndexRoute: AppClientsIndexRoute,
-}
-
-const AppClientsRouteWithChildren = AppClientsRoute._addFileChildren(
-  AppClientsRouteChildren,
-)
-
-interface AppRouteChildren {
-  AppAccountRoute: typeof AppAccountRoute
-  AppClientsRoute: typeof AppClientsRouteWithChildren
-  AppEstimateCalculatorRoute: typeof AppEstimateCalculatorRoute
-  AppIndexRoute: typeof AppIndexRoute
-}
-
-const AppRouteChildren: AppRouteChildren = {
-  AppAccountRoute: AppAccountRoute,
-  AppClientsRoute: AppClientsRouteWithChildren,
-  AppEstimateCalculatorRoute: AppEstimateCalculatorRoute,
-  AppIndexRoute: AppIndexRoute,
-}
-
-const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -207,7 +83,6 @@ export interface FileRoutesByFullPath {
   '/app/clients/create': typeof AppClientsCreateRoute
   '/app/clients/': typeof AppClientsIndexRoute
 }
-
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sign-in': typeof SignInRoute
@@ -218,9 +93,8 @@ export interface FileRoutesByTo {
   '/app/clients/create': typeof AppClientsCreateRoute
   '/app/clients': typeof AppClientsIndexRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
+  __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/sign-in': typeof SignInRoute
@@ -232,7 +106,6 @@ export interface FileRoutesById {
   '/app/clients/create': typeof AppClientsCreateRoute
   '/app/clients/': typeof AppClientsIndexRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -270,82 +143,124 @@ export interface FileRouteTypes {
     | '/app/clients/'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   SignInRoute: typeof SignInRoute
 }
 
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/estimate-calculator': {
+      id: '/app/estimate-calculator'
+      path: '/estimate-calculator'
+      fullPath: '/app/estimate-calculator'
+      preLoaderRoute: typeof AppEstimateCalculatorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/clients': {
+      id: '/app/clients'
+      path: '/clients'
+      fullPath: '/app/clients'
+      preLoaderRoute: typeof AppClientsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/account': {
+      id: '/app/account'
+      path: '/account'
+      fullPath: '/app/account'
+      preLoaderRoute: typeof AppAccountRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/clients/': {
+      id: '/app/clients/'
+      path: '/'
+      fullPath: '/app/clients/'
+      preLoaderRoute: typeof AppClientsIndexRouteImport
+      parentRoute: typeof AppClientsRoute
+    }
+    '/app/clients/create': {
+      id: '/app/clients/create'
+      path: '/create'
+      fullPath: '/app/clients/create'
+      preLoaderRoute: typeof AppClientsCreateRouteImport
+      parentRoute: typeof AppClientsRoute
+    }
+    '/app/clients/$id': {
+      id: '/app/clients/$id'
+      path: '/$id'
+      fullPath: '/app/clients/$id'
+      preLoaderRoute: typeof AppClientsIdRouteImport
+      parentRoute: typeof AppClientsRoute
+    }
+  }
+}
+
+interface AppClientsRouteChildren {
+  AppClientsIdRoute: typeof AppClientsIdRoute
+  AppClientsCreateRoute: typeof AppClientsCreateRoute
+  AppClientsIndexRoute: typeof AppClientsIndexRoute
+}
+
+const AppClientsRouteChildren: AppClientsRouteChildren = {
+  AppClientsIdRoute: AppClientsIdRoute,
+  AppClientsCreateRoute: AppClientsCreateRoute,
+  AppClientsIndexRoute: AppClientsIndexRoute,
+}
+
+const AppClientsRouteWithChildren = AppClientsRoute._addFileChildren(
+  AppClientsRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppAccountRoute: typeof AppAccountRoute
+  AppClientsRoute: typeof AppClientsRouteWithChildren
+  AppEstimateCalculatorRoute: typeof AppEstimateCalculatorRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAccountRoute: AppAccountRoute,
+  AppClientsRoute: AppClientsRouteWithChildren,
+  AppEstimateCalculatorRoute: AppEstimateCalculatorRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   SignInRoute: SignInRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/app",
-        "/sign-in"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/app": {
-      "filePath": "app.tsx",
-      "children": [
-        "/app/account",
-        "/app/clients",
-        "/app/estimate-calculator",
-        "/app/"
-      ]
-    },
-    "/sign-in": {
-      "filePath": "sign-in.tsx"
-    },
-    "/app/account": {
-      "filePath": "app/account.tsx",
-      "parent": "/app"
-    },
-    "/app/clients": {
-      "filePath": "app/clients.tsx",
-      "parent": "/app",
-      "children": [
-        "/app/clients/$id",
-        "/app/clients/create",
-        "/app/clients/"
-      ]
-    },
-    "/app/estimate-calculator": {
-      "filePath": "app/estimate-calculator.tsx",
-      "parent": "/app"
-    },
-    "/app/": {
-      "filePath": "app/index.tsx",
-      "parent": "/app"
-    },
-    "/app/clients/$id": {
-      "filePath": "app/clients/$id.tsx",
-      "parent": "/app/clients"
-    },
-    "/app/clients/create": {
-      "filePath": "app/clients/create.tsx",
-      "parent": "/app/clients"
-    },
-    "/app/clients/": {
-      "filePath": "app/clients/index.tsx",
-      "parent": "/app/clients"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
