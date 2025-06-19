@@ -14,6 +14,10 @@ import { sxAsArray } from "@/utils/sx";
 import { EMPTY_OBJECT } from "@/constants/utility";
 import { APP_BOTTOM_SAFE_AREA_HEIGHT } from "@/constants/layout";
 
+const iOS =
+  typeof navigator !== "undefined" &&
+  /iPad|iPhone|iPod/.test(navigator.userAgent);
+
 interface SwipeableDrawerProps
   extends Omit<
     MuiSwipeableDrawerProps,
@@ -79,6 +83,7 @@ const SwipeableDrawer = ({
     <MuiSwipeableDrawer
       anchor={anchor}
       disableSwipeToOpen
+      disableBackdropTransition={!iOS}
       onOpen={() => onOpen?.()}
       onClose={() => onClose?.()}
       ModalProps={{ keepMounted: false }}
