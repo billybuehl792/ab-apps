@@ -22,11 +22,9 @@ const ClientOverviewCard = (props: CardProps) => {
   /** Queries */
 
   const clientCountQuery = useQuery({
-    queryKey: [clientCollection.path, "count"] as const,
-    queryFn: () =>
-      getCountFromServer(
-        query(clientCollection, where("archived", "!=", true))
-      ),
+    queryKey: ["count", clientCollection] as const,
+    queryFn: ({ queryKey: [_, collection] }) =>
+      getCountFromServer(query(collection, where("archived", "!=", true))),
   });
 
   /** Callbacks */

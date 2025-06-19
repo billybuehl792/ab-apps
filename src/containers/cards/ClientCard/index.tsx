@@ -10,7 +10,7 @@ import {
   type CardProps,
   type CardContentProps,
 } from "@mui/material";
-import { Delete, Edit, Info, Restore } from "@mui/icons-material";
+import { Delete, Edit, Info, Person, Restore } from "@mui/icons-material";
 
 import { EMPTY_OBJECT } from "@/constants/utility";
 import type { Client } from "@/types/firebase";
@@ -44,7 +44,7 @@ const ClientCard = ({
   /** Values */
 
   const navigate = useNavigate();
-  const { archive } = useClients();
+  const { archive, unarchive } = useClients();
 
   const fullName = `${client.first_name} ${client.last_name}`;
   const disabled = disabledProp || archive.isPending;
@@ -99,7 +99,7 @@ const ClientCard = ({
       label: "Restore",
       icon: <Restore />,
       onClick: () => {
-        archive.mutate(client.id);
+        unarchive.mutate(client.id);
       },
     },
   ];
@@ -114,10 +114,11 @@ const ClientCard = ({
         <CardContent
           component={Stack}
           direction="row"
-          justifyContent="space-between"
+          spacing={2}
           alignItems="center"
           {...cardContentProps}
         >
+          <Person />
           <Stack spacing={0.75} overflow="hidden">
             <Typography variant="body2" fontWeight="bold" noWrap>
               {fullName}

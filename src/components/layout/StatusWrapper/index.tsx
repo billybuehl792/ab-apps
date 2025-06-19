@@ -1,7 +1,7 @@
-import { type JSX } from "react";
+import { type ComponentProps, type JSX } from "react";
 import {
   Button,
-  ButtonProps,
+  type ButtonProps,
   CircularProgress,
   Stack,
   Tooltip,
@@ -10,14 +10,17 @@ import {
 } from "@mui/material";
 import { ErrorOutline } from "@mui/icons-material";
 import { EMPTY_OBJECT } from "@/constants/utility";
+import EmptyState from "../EmptyState";
 
 interface StatusWrapperProps extends StackProps {
+  empty?: boolean | string | ComponentProps<typeof EmptyState>;
   error?: null | boolean | string | Error | JSX.Element;
   loading?: null | boolean | string | JSX.Element;
   errorIcon?: JSX.Element;
   loadingIcon?: JSX.Element;
   slotProps?: {
     errorButton?: ButtonProps;
+    emptyState?: ComponentProps<typeof EmptyState>;
   };
 }
 
@@ -25,27 +28,25 @@ interface StatusWrapperProps extends StackProps {
  * This component renders a wrapper for displaying status messages.
  * If the `loading` prop is truthy, it displays a loading spinner.
  * If the `error` prop is truthy, it displays an error message.
+ * If the `empty` prop is truthy, it displays an empty state.
  * Otherwise, it renders the children.
  */
 const StatusWrapper = ({
   children,
+  empty,
   error,
   loading,
   loadingIcon,
   errorIcon,
-  slotProps: { errorButton: errorButtonProps } = EMPTY_OBJECT,
+  slotProps: {
+    emptyState: emptyStateProps,
+    errorButton: errorButtonProps,
+  } = EMPTY_OBJECT,
   ...props
 }: StatusWrapperProps) => {
   if (loading)
     return (
-      <Stack
-        spacing={1}
-        flexGrow={1}
-        minHeight={250}
-        alignItems="center"
-        justifyContent="center"
-        {...props}
-      >
+      <StatusWrapperContainer {...props}>
         {typeof loading === "boolean" ? (
           (loadingIcon ?? <CircularProgress size="large" color="info" />)
         ) : typeof loading === "string" ? (
@@ -55,7 +56,7 @@ const StatusWrapper = ({
         ) : (
           loading
         )}
-      </Stack>
+      </StatusWrapperContainer>
     );
   else if (error) {
     const errorMessage =
@@ -66,14 +67,7 @@ const StatusWrapper = ({
           : "Something went wrong...";
 
     return (
-      <Stack
-        spacing={1}
-        flexGrow={1}
-        minHeight={250}
-        alignItems="center"
-        justifyContent="center"
-        {...props}
-      >
+      <StatusWrapperContainer {...props}>
         {typeof error === "boolean" ||
         typeof error === "string" ||
         error instanceof Error ? (
@@ -91,10 +85,33 @@ const StatusWrapper = ({
         {!!errorButtonProps && (
           <Button color="error" variant="outlined" {...errorButtonProps} />
         )}
-      </Stack>
+      </StatusWrapperContainer>
+    );
+  } else if (empty) {
+    return (
+      <StatusWrapperContainer {...props}>
+        <EmptyState
+          {...(typeof empty === "string" && { text: empty })}
+          {...(typeof empty === "object" && { ...empty })}
+          {...emptyStateProps}
+        />
+      </StatusWrapperContainer>
     );
   }
   return children;
+};
+
+const StatusWrapperContainer = (props: StackProps) => {
+  return (
+    <Stack
+      spacing={1}
+      flexGrow={1}
+      minHeight={250}
+      alignItems="center"
+      justifyContent="center"
+      {...props}
+    />
+  );
 };
 
 export default StatusWrapper;

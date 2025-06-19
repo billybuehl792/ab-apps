@@ -57,6 +57,7 @@ const SortAndFilterFormDrawer = ({
             position: "sticky",
             bottom: 0,
             px: 2,
+            pb: 2,
             bgcolor: ({ palette }) => palette.background.paper,
             zIndex: 1,
             slotProps: {

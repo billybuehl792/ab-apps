@@ -46,7 +46,7 @@ function RouteComponent() {
 
   /** Mutations */
 
-  const { update, archive } = useClients();
+  const { update, archive, unarchive } = useClients();
 
   /** Callbacks */
 
@@ -78,7 +78,9 @@ function RouteComponent() {
       confirm:
         "Are you sure you want to delete this client? This action cannot be undone.",
       onClick: () => {
-        archive.mutate(client.id);
+        archive.mutate(client.id, {
+          onSuccess: void navigate({ to: `/app/clients` }),
+        });
       },
     },
     {
@@ -87,7 +89,7 @@ function RouteComponent() {
       label: "Restore",
       icon: <Restore />,
       onClick: () => {
-        archive.mutate(client.id);
+        unarchive.mutate(client.id);
       },
     },
   ];
