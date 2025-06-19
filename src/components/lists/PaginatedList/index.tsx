@@ -19,9 +19,7 @@ import {
   TablePagination,
   type TablePaginationProps,
 } from "@mui/material";
-
 import StatusWrapper from "@/components/layout/StatusWrapper";
-import EmptyState from "@/components/layout/EmptyState";
 import { EMPTY_ARRAY, EMPTY_OBJECT } from "@/constants/utility";
 
 const DEFAULT_ROWS_PER_PAGE_OPTIONS = [10, 20, 30];
@@ -32,11 +30,11 @@ interface PaginatedListProps<T extends DocumentData = DocumentData>
   constraints?: QueryConstraint[];
   rowsPerPageOptions?: number[];
   renderItem: (item: T & Pick<QueryDocumentSnapshot, "id">) => ReactNode;
+  emptyState?: ComponentProps<typeof StatusWrapper>["empty"];
   slotProps?: {
     pagination?: TablePaginationProps;
     skeleton?: SkeletonProps;
     statusWrapper?: ComponentProps<typeof StatusWrapper>;
-    emptyState?: ComponentProps<typeof EmptyState>;
   };
 }
 
@@ -53,11 +51,11 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
   constraints = EMPTY_ARRAY,
   rowsPerPageOptions = DEFAULT_ROWS_PER_PAGE_OPTIONS,
   renderItem,
+  emptyState,
   slotProps: {
     pagination: paginationProps,
     skeleton: skeletonProps,
     statusWrapper: statusWrapperProps,
-    emptyState: emptyStateProps,
   } = EMPTY_OBJECT,
   ...props
 }: PaginatedListProps<T>): ReactNode => {
@@ -69,19 +67,15 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
   /** Queries */
 
   const countQuery = useQuery({
-    queryKey: [collection.path, "count", ...constraints] as const,
-    queryFn: ({ queryKey: [_, __, ...constraints] }) =>
+    queryKey: ["count", collection, constraints] as const,
+    queryFn: ({ queryKey: [_, collection, constraints] }) =>
       getCountFromServer(query(collection, ...constraints)),
   });
-  const count = countQuery.data?.data().count ?? 0;
-  const skeletonCount = countQuery.isLoading
-    ? rowsPerPage
-    : Math.min(rowsPerPage, count - currentPage * rowsPerPage);
-
   const listQuery = useQuery({
     queryKey: [
-      collection.path,
-      ...[
+      "list",
+      collection,
+      [
         ...constraints,
         limit(rowsPerPage),
         ...(lastDocs.length
@@ -89,9 +83,9 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
           : EMPTY_ARRAY),
       ],
     ] as const,
-    queryFn: ({ queryKey: [_, ...constraints] }) =>
+    queryFn: ({ queryKey: [_, collection, constraints] }) =>
       getDocs(query(collection, ...constraints)),
-    enabled: countQuery.isSuccess && count > 0,
+    enabled: countQuery.isSuccess && countQuery.data.data().count > 0,
   });
 
   /** Callbacks */
@@ -121,17 +115,12 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
   return (
     <Stack spacing={1} {...props}>
       <StatusWrapper
-        error={
-          countQuery.error ||
-          listQuery.error ||
-          (!countQuery.isLoading && !count && (
-            <EmptyState {...emptyStateProps} />
-          ))
-        }
+        error={countQuery.error || listQuery.error}
+        empty={countQuery.isSuccess && countQuery.data.data().count === 0}
         {...statusWrapperProps}
       >
         {countQuery.isLoading || listQuery.isLoading
-          ? Array(skeletonCount)
+          ? Array(rowsPerPage)
               .fill(null)
               .map(() => (
                 <Skeleton
@@ -146,7 +135,7 @@ const PaginatedList = <T extends DocumentData = DocumentData>({
             )}
         <TablePagination
           component="div"
-          count={count}
+          count={countQuery.data?.data().count ?? -1}
           page={currentPage}
           rowsPerPage={rowsPerPage}
           rowsPerPageOptions={rowsPerPageOptions}

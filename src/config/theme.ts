@@ -74,6 +74,13 @@ export const theme = createTheme({
       defaultProps: {
         variant: "outlined",
       },
+      styleOverrides: {
+        root: {
+          input: {
+            "::-webkit-search-cancel-button": { WebkitAppearance: "none" },
+          },
+        },
+      },
     },
     MuiToolbar: {
       styleOverrides: {
