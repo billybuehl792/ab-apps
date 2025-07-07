@@ -10,14 +10,12 @@ import {
   type AutocompleteProps,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import { searchClient } from "@/config/algolia";
-import clientCollection from "@/lib/collections/firebase/clientCollection";
+import useClients from "@/hooks/firebase/useClients";
 import ClientMenuItem from "@/containers/menu-items/ClientMenuItem";
 import type { ClientData } from "@/types/firebase";
 
-type Hit = ClientData & { objectID: string };
 type ClientSearchFieldProps = Omit<
-  AutocompleteProps<Hit, false, false, false>,
+  AutocompleteProps<ClientData & { objectID: string }, false, false, false>,
   "renderInput" | "options"
 >;
 
@@ -28,17 +26,11 @@ const ClientSearchField = (props: ClientSearchFieldProps) => {
   /** Values */
 
   const navigate = useNavigate();
+  const { queries } = useClients();
 
   /** Queries */
 
-  const query = useQuery({
-    queryKey: ["search", clientCollection, debouncedSearch] as const,
-    queryFn: async ({ queryKey: [_, collection, term] }) =>
-      searchClient.searchSingleIndex<ClientData & { objectID: string }>({
-        indexName: collection.id,
-        searchParams: { query: term, filters: "NOT archived:true" },
-      }),
-  });
+  const query = useQuery(queries.search(debouncedSearch));
 
   /** Callbacks */
 

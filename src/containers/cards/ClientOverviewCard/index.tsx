@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { getCountFromServer, query, where } from "firebase/firestore";
+import { where } from "firebase/firestore";
 import {
   Card,
   CardActionArea,
@@ -11,21 +11,19 @@ import {
   Typography,
 } from "@mui/material";
 import { Person } from "@mui/icons-material";
-
-import clientCollection from "@/lib/collections/firebase/clientCollection";
+import useClients from "@/hooks/firebase/useClients";
 
 const ClientOverviewCard = (props: CardProps) => {
   /** Values */
 
   const navigate = useNavigate();
+  const { queries } = useClients();
 
   /** Queries */
 
-  const clientCountQuery = useQuery({
-    queryKey: ["count", clientCollection] as const,
-    queryFn: ({ queryKey: [_, collection] }) =>
-      getCountFromServer(query(collection, where("archived", "!=", true))),
-  });
+  const clientCountQuery = useQuery(
+    queries.count(where("archived", "!=", true))
+  );
 
   /** Callbacks */
 

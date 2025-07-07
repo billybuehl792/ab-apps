@@ -5,7 +5,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-
 import type { Client } from "@/types/firebase";
 
 interface ClientDetailCardProps extends CardProps {

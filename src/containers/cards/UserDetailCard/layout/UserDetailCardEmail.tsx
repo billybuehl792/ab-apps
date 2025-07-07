@@ -39,7 +39,7 @@ const UserDetailCardEmail = ({ user, ...props }: UserDetailCardEmailProps) => {
   useQuery({
     queryKey: ["isEmailVerified", user.uid],
     queryFn: async () => {
-      await user.reload();
+      await user.getIdToken(true);
       return user.emailVerified;
     },
     initialData: user.emailVerified,

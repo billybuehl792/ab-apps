@@ -1,11 +1,9 @@
 import { createContext } from "react";
-import { orderBy } from "firebase/firestore";
 
-import { getMaterialList } from "@/lib/queries/firebase/materials";
 import type { EstimateCalculatorContextValue } from "../types";
 
 export default createContext<EstimateCalculatorContextValue>({
-  queryOptions: getMaterialList(orderBy("value", "desc")),
+  queryOptions: {} as EstimateCalculatorContextValue["queryOptions"],
 
   methods: {} as EstimateCalculatorContextValue["methods"],
   materialModal: { open: false, material: null },

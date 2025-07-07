@@ -5,10 +5,12 @@ import { type QueryClient } from "@tanstack/react-query";
 
 import AuthContext from "@/context/AuthContext";
 import StatusWrapper from "@/components/layout/StatusWrapper";
+import useClients from "@/hooks/firebase/useClients";
 
 interface RouterContext {
-  auth: ContextType<typeof AuthContext>;
   queryClient: QueryClient;
+  auth: ContextType<typeof AuthContext>;
+  clients: ReturnType<typeof useClients>;
   crumb?: string;
 }
 

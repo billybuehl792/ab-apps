@@ -11,26 +11,40 @@ import {
   Typography,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
-
+import { Logout } from "@mui/icons-material";
 import { auth } from "@/config/firebase";
 import UserDetailCardPhotoUrlIconButton from "@/containers/cards/UserDetailCard/buttons/UserDetailCardPhotoUrlIconButton";
 import UserDetailCardDisplayName from "./layout/UserDetailCardDisplayName";
 import UserDetailCardEmail from "./layout/UserDetailCardEmail";
 import UserDetailCardLastSignIn from "./layout/UserDetailCardLastSignIn";
 import UserDetailCardMemberSince from "./layout/UserDetailCardMemberSince";
-import { Logout } from "@mui/icons-material";
+import UserDetailCardCompany from "./layout/UserDetailCardCompany";
+import type { Company, Permissions } from "@/types/auth";
+import UserDetailCardPermissions from "./layout/UserDetailCardPermissions";
 
 interface UserDetailCardProps extends CardProps {
   user: User;
+  company: Company | null;
+  permissions: Permissions | null;
 }
 
-const UserDetailCard = ({ user, ...props }: UserDetailCardProps) => {
+const UserDetailCard = ({
+  user,
+  company,
+  permissions,
+  ...props
+}: UserDetailCardProps) => {
   /** Values */
 
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
   const items = [
+    {
+      id: "company",
+      label: "Company",
+      value: <UserDetailCardCompany company={company} />,
+    },
     {
       id: "email",
       label: "Email",
@@ -82,6 +96,7 @@ const UserDetailCard = ({ user, ...props }: UserDetailCardProps) => {
         <UserDetailCardPhotoUrlIconButton user={user} />
         <Stack spacing={0.5} alignItems="center">
           <UserDetailCardDisplayName user={user} />
+          <UserDetailCardPermissions permissions={permissions} />
           <UserDetailCardMemberSince user={user} />
         </Stack>
       </CardContent>

@@ -14,7 +14,9 @@ function RouteComponent() {
   /** Values */
 
   const navigate = useNavigate();
-  const { create } = useClients();
+  const {
+    mutations: { create },
+  } = useClients();
 
   /** Callbacks */
 

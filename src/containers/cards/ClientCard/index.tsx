@@ -44,7 +44,9 @@ const ClientCard = ({
   /** Values */
 
   const navigate = useNavigate();
-  const { archive, unarchive } = useClients();
+  const {
+    mutations: { archive, unarchive },
+  } = useClients();
 
   const fullName = `${client.first_name} ${client.last_name}`;
   const disabled = disabledProp || archive.isPending;

@@ -1,9 +1,9 @@
 import { type UseFormReturn } from "react-hook-form";
+import useMaterials from "@/hooks/firebase/useMaterials";
 import type { Address, Material } from "@/types/firebase";
-import { getMaterialList } from "@/lib/queries/firebase/materials";
 
 export interface EstimateCalculatorContextValue {
-  queryOptions: ReturnType<typeof getMaterialList>;
+  queryOptions: ReturnType<ReturnType<typeof useMaterials>["queries"]["list"]>;
   methods: UseFormReturn<
     EstimateCalculatorValues,
     unknown,

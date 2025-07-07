@@ -4,7 +4,6 @@ import { Skeleton, Stack, Typography } from "@mui/material";
 import { Delete, Restore } from "@mui/icons-material";
 
 import useClients from "@/hooks/firebase/useClients";
-import { getClient } from "@/lib/queries/firebase/clients";
 import ClientDetailCard from "@/containers/cards/ClientDetailCard";
 import ClientForm from "@/containers/forms/ClientForm";
 import EditIconButton from "@/components/buttons/EditIconButton";
@@ -19,7 +18,7 @@ export const Route = createFileRoute("/app/clients/$id")({
   }),
   loader: async ({ context, params }) => {
     const clientSnapshot = await context.queryClient.fetchQuery(
-      getClient(params.id)
+      context.clients.queries.detail(params.id)
     );
     const client: Client = { id: clientSnapshot.id, ...clientSnapshot.data() };
 
@@ -46,7 +45,9 @@ function RouteComponent() {
 
   /** Mutations */
 
-  const { update, archive, unarchive } = useClients();
+  const {
+    mutations: { update, archive, unarchive },
+  } = useClients();
 
   /** Callbacks */
 

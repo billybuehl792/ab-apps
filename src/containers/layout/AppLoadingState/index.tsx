@@ -6,11 +6,12 @@ import {
   Typography,
   type TypographyProps,
 } from "@mui/material";
-
 import { APP_TITLE } from "@/constants/layout";
 import { EMPTY_OBJECT } from "@/constants/utility";
+import { ReactNode } from "react";
 
 interface AppLoadingStateProps extends StackProps {
+  description?: ReactNode;
   slotProps?: {
     circularProgress?: CircularProgressProps;
     text?: TypographyProps;
@@ -18,6 +19,7 @@ interface AppLoadingStateProps extends StackProps {
 }
 
 const AppLoadingState = ({
+  description,
   slotProps: {
     circularProgress: circularProgressProps,
     text: textProps,
@@ -43,6 +45,12 @@ const AppLoadingState = ({
       <Typography variant="body2" {...textProps}>
         {APP_TITLE}
       </Typography>
+      {description &&
+        (typeof description === "string" ? (
+          <Typography variant="caption">{description}</Typography>
+        ) : (
+          description
+        ))}
     </Stack>
   );
 };

@@ -3,7 +3,7 @@ import { Stack, type StackProps } from "@mui/material";
 import { orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 
-import { getMaterialList } from "@/lib/queries/firebase/materials";
+import useMaterials from "@/hooks/firebase/useMaterials";
 import EstimateCalculatorProvider from "./providers/EstimateCalculatorProvider";
 import EstimateCalculatorOutput from "./layout/EstimateCalculatorOutput";
 import EstimateCalculatorFieldArray from "./layout/EstimateCalculatorFieldArray";
@@ -47,7 +47,9 @@ const EstimateCalculator = ({
 
   /** Values */
 
-  const queryOptions = getMaterialList(orderBy("value", "desc"));
+  const { queries } = useMaterials();
+
+  const queryOptions = queries.list(orderBy("label"));
   const methods = useForm<EstimateCalculatorValues>({
     defaultValues: ESTIMATE_CALCULATOR_DEFAULT_VALUES,
   });

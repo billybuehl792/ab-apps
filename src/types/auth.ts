@@ -1,6 +1,12 @@
-import { type User } from "firebase/auth";
+import { AuthRole } from "./enums/auth";
 
-export interface AuthContextValue {
-  user: User | null;
-  loading: boolean;
-}
+export type Company = {
+  id: string;
+  label: string;
+  description: string;
+  thumbnail: string;
+};
+
+export type Permissions = {
+  role: AuthRole;
+};

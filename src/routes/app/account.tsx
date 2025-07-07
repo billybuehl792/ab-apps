@@ -1,24 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Container, Stack, Typography } from "@mui/material";
-
-import ErrorCard from "@/components/cards/ErrorCard";
+import useAuth from "@/hooks/auth/useAuth";
 import UserDetailCard from "@/containers/cards/UserDetailCard";
+import ErrorCard from "@/components/cards/ErrorCard";
 
 export const Route = createFileRoute("/app/account")({
   component: RouteComponent,
-  loader: ({ context }) => {
-    const user = context.auth.user;
-    if (!user) throw new Error("User not found");
-
-    return { crumb: "Account", user };
-  },
-  errorComponent: ({ error }) => <ErrorCard error={error} />,
 });
 
 function RouteComponent() {
   /** Values */
 
-  const { user } = Route.useLoaderData();
+  const { user, company, permissions } = useAuth();
 
   return (
     <Container maxWidth="md" disableGutters>
@@ -26,7 +19,15 @@ function RouteComponent() {
         <Typography variant="h6" noWrap>
           Account Info
         </Typography>
-        <UserDetailCard user={user} />
+        {user ? (
+          <UserDetailCard
+            user={user}
+            company={company}
+            permissions={permissions}
+          />
+        ) : (
+          <ErrorCard message="User not found" />
+        )}
       </Stack>
     </Container>
   );

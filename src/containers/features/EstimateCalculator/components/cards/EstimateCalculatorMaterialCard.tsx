@@ -13,7 +13,9 @@ const EstimateCalculatorMaterialCard = ({
 }: ComponentProps<typeof MaterialCard> & { index: number }) => {
   /** Mutations */
 
-  const { archive } = useMaterials();
+  const {
+    mutations: { archive },
+  } = useMaterials();
 
   /** Values */
 
