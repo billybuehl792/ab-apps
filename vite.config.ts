@@ -5,7 +5,7 @@ import { VitePWA } from "vite-plugin-pwa";
 import Inspect from "vite-plugin-inspect";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
-import { theme } from "./src/config/theme";
+import { theme } from "./src/store/config/theme";
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {

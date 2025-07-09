@@ -5,30 +5,49 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { onAuthStateChanged, type User } from "firebase/auth";
-import { auth } from "@/config/firebase";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useSnackbar } from "notistack";
+import { auth } from "@/store/config/firebase";
+import useUsers from "@/hooks/useUsers";
 import AppLoadingState from "@/containers/layout/AppLoadingState";
 import AuthContext from "@/context/AuthContext";
-import { AuthRole } from "@/types/enums/auth";
-import useCompanies from "@/hooks/firebase/useCompanies";
+import { AuthMutationKeys } from "@/store/constants/auth";
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] =
     useState<ContextType<typeof AuthContext>["user"]>(null);
-  const [permissions, setPermissions] =
-    useState<ContextType<typeof AuthContext>["permissions"]>(null);
-  const [company, setCompany] =
-    useState<ContextType<typeof AuthContext>["company"]>(null);
   const [loadingAuth, setLoadingAuth] = useState(true);
-  const [loadingClaims, setLoadingClaims] = useState(false);
 
   /** Values */
 
-  const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
   const {
-    queries: { detail: companyDetail },
-  } = useCompanies();
+    queries: { company, permissions },
+  } = useUsers();
+
+  /** Queries */
+
+  const permissionsQuery = useQuery({
+    ...permissions(user?.uid ?? ""),
+    enabled: !!user,
+  });
+  const companyQuery = useQuery({
+    ...company(user?.uid ?? ""),
+    enabled: !!user,
+  });
+
+  /** Mutations */
+
+  const signOutMutation = useMutation({
+    mutationKey: AuthMutationKeys.signOut,
+    mutationFn: () => signOut(auth),
+    onSuccess: () => enqueueSnackbar("Signed out", { variant: "success" }),
+    onError: (error) =>
+      enqueueSnackbar(`Error signing out: ${error.message}`, {
+        variant: "error",
+      }),
+  });
 
   /** Effects */
 
@@ -41,56 +60,27 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     return unsubscribe;
   }, []);
 
-  useEffect(() => {
-    const fetchCompany = async (id: string) => {
-      try {
-        const data = await queryClient.fetchQuery(companyDetail(id));
-        return { id: data.id, ...data.data() };
-      } catch (error) {
-        console.error("Error fetching company:", error);
-        return null;
-      }
-    };
-
-    const fetchClaims = async (user: User) => {
-      setLoadingClaims(true);
-      try {
-        const token = await user.getIdTokenResult();
-        setPermissions({
-          role:
-            token.claims.role === AuthRole.ADMIN
-              ? AuthRole.ADMIN
-              : AuthRole.BASIC,
-        });
-
-        const companyId = token.claims.companyId as string;
-        const companyDetail = await fetchCompany(companyId);
-        setCompany(companyDetail);
-      } catch (error) {
-        console.error("Error fetching user claims:", error);
-      } finally {
-        setLoadingClaims(false);
-      }
-    };
-
-    if (user) void fetchClaims(user);
-    else {
-      setPermissions(null);
-      setCompany(null);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
   return (
     <AuthContext
       value={useMemo(
-        () => ({ user, permissions, company }),
-        [user, permissions, company]
+        () => ({
+          user,
+          company: companyQuery.data,
+          permissions: permissionsQuery.data,
+          mutations: { signOut: signOutMutation },
+        }),
+        [user, companyQuery.data, permissionsQuery.data, signOutMutation]
       )}
     >
-      {loadingAuth || loadingClaims ? (
+      {loadingAuth || permissionsQuery.isLoading || companyQuery.isLoading ? (
         <AppLoadingState
-          description={loadingClaims && "Loading permissions..."}
+          description={
+            loadingAuth
+              ? "Authenticating..."
+              : permissionsQuery.isLoading
+                ? "Loading permissions..."
+                : "Loading company..."
+          }
         />
       ) : (
         children

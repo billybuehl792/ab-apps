@@ -10,12 +10,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { useDebounce } from "use-debounce";
 
-import useGoogleMaps from "@/hooks/google-maps/useGoogleMaps";
+import useGoogleMaps from "@/hooks/useGoogleMaps";
 import AddressMenuItem from "@/components/menu-items/AddressMenuItem";
-import { getBoundsFromLatLng } from "@/utils/maps";
-import { DEFAULT_LAT_LNG } from "@/constants/maps";
-import { EMPTY_OBJECT } from "@/constants/utility";
-import type { Address } from "@/types/firebase";
+import { getBoundsFromLatLng } from "@/store/utils/maps";
+import { DEFAULT_LAT_LNG } from "@/store/constants/maps";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
+import type { Address } from "@/store/types/locations";
 
 const DEFAULT_BOUNDS = getBoundsFromLatLng(DEFAULT_LAT_LNG, 50);
 

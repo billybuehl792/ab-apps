@@ -12,11 +12,14 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useSnackbar } from "notistack";
-import { db } from "@/config/firebase";
-import { searchClient } from "@/config/algolia";
-import useAuth from "../auth/useAuth";
-import { DEFAULT_COMPANY } from "@/constants/auth";
-import type { Client, ClientData } from "@/types/firebase";
+import { db } from "@/store/config/firebase";
+import useAuth from "./useAuth";
+import { searchClient } from "@/store/config/algolia";
+import { clientConverter } from "@/store/converters";
+import { markdownUtils } from "@/store/utils/markdown";
+import { DEFAULT_COMPANY } from "@/store/constants/auth";
+import { FirebaseCollection } from "@/store/enums/firebase";
+import type { Client } from "@/store/types/clients";
 
 const useClients = () => {
   /** Values */
@@ -26,19 +29,8 @@ const useClients = () => {
 
   const col = collection(
     db,
-    `companies/${company?.id ?? DEFAULT_COMPANY.id}/clients`
-  ).withConverter<ClientData>({
-    toFirestore: (client: ClientData) => ({
-      first_name: String(client.first_name).trim(),
-      last_name: String(client.last_name).trim(),
-      email: String(client.email).trim(),
-      phone: String(client.phone).toPhone(),
-      address: client.address,
-      archived: Boolean(client.archived),
-    }),
-    fromFirestore: (snapshot, options): ClientData =>
-      snapshot.data(options) as ClientData,
-  });
+    `${FirebaseCollection.COMPANIES}/${company?.id ?? DEFAULT_COMPANY.id}/${FirebaseCollection.CLIENTS}`
+  ).withConverter(clientConverter);
 
   /** Queries */
 
@@ -70,7 +62,9 @@ const useClients = () => {
     queryOptions({
       queryKey: [col.id, "search", term] as const,
       queryFn: () =>
-        searchClient.searchSingleIndex<ClientData & { objectID: string }>({
+        searchClient.searchSingleIndex<
+          Omit<Client, "id"> & { objectID: string }
+        >({
           indexName: col.path,
           searchParams: { query: term, filters: "NOT archived:true" },
         }),
@@ -80,11 +74,12 @@ const useClients = () => {
 
   const create = useMutation({
     mutationKey: [col.id, "create"],
-    mutationFn: (data: ClientData) => addDoc(col, data),
+    mutationFn: (data: Omit<Client, "id">) => addDoc(col, data),
     onSuccess: (_, data) =>
-      enqueueSnackbar(`'${data.first_name} ${data.last_name}' client created`, {
-        variant: "success",
-      }),
+      enqueueSnackbar(
+        `${markdownUtils.bold(data.first_name + " " + data.last_name)} client created`,
+        { variant: "success" }
+      ),
     onError: () =>
       enqueueSnackbar("Error creating client", { variant: "error" }),
   });
@@ -96,9 +91,10 @@ const useClients = () => {
       await setDoc(docRef, data);
     },
     onSuccess: (_, data) =>
-      enqueueSnackbar(`'${data.first_name} ${data.last_name}' client updated`, {
-        variant: "success",
-      }),
+      enqueueSnackbar(
+        `${markdownUtils.bold(data.first_name + " " + data.last_name)} updated`,
+        { variant: "success" }
+      ),
     onError: () =>
       enqueueSnackbar("Error updating client", {
         variant: "error",
@@ -107,7 +103,7 @@ const useClients = () => {
 
   const archive = useMutation({
     mutationKey: [col.id, "archive"],
-    mutationFn: async (id: Client["id"]) => {
+    mutationFn: async (id: string) => {
       const docRef = doc(col, id);
       await updateDoc(docRef, { archived: true });
     },

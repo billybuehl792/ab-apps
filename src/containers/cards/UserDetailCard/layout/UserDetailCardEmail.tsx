@@ -9,6 +9,7 @@ import {
   type StackProps,
 } from "@mui/material";
 import { Check, NewReleases, Verified } from "@mui/icons-material";
+import { AuthMutationKeys } from "@/store/constants/auth";
 
 interface UserDetailCardEmailProps extends StackProps {
   user: User;
@@ -22,7 +23,7 @@ const UserDetailCardEmail = ({ user, ...props }: UserDetailCardEmailProps) => {
   /** Mutations */
 
   const emailVerificationMutation = useMutation({
-    mutationKey: ["sendEmailVerification", user.uid],
+    mutationKey: [...AuthMutationKeys.sendEmailVerification, user.uid],
     mutationFn: () => sendEmailVerification(user),
     onSuccess: () => {
       enqueueSnackbar("Email verification sent", { variant: "success" });

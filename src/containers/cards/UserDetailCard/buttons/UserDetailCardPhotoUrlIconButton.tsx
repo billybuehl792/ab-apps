@@ -18,9 +18,8 @@ import {
   IconButton,
   Skeleton,
 } from "@mui/material";
-
-import { storage } from "@/config/firebase";
-import { getFileUploadMetadata } from "@/utils/file";
+import { storage } from "@/store/config/firebase";
+import { getFileUploadMetadata } from "@/store/utils/file";
 
 interface UserDetailCardPhotoUrlIconButtonProps extends BoxProps {
   user: User;

@@ -1,5 +1,4 @@
 import { type ComponentProps } from "react";
-
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 import DollarField from "@/components/fields/DollarField";
 
@@ -11,21 +10,16 @@ const EstimateCalculatorAdditionalField = (
 ) => {
   /** Values */
 
-  const {
-    methods: {
-      formState: { errors },
-      register,
-    },
-  } = useEstimateCalculator();
+  const { methods } = useEstimateCalculator();
 
   return (
     <DollarField
       size="small"
       placeholder="0"
-      error={!!errors.additional}
+      error={!!methods.formState.errors.additional}
       sx={{ width: 120, flexShrink: 0 }}
       {...props}
-      {...register("additional", {
+      {...methods.register("additional", {
         min: {
           value: MIN,
           message: `Value cannot be less than ${String(MIN)}`,

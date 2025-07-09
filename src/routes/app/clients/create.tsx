@@ -1,8 +1,7 @@
 import { type ComponentProps } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Stack, Typography } from "@mui/material";
-
-import useClients from "@/hooks/firebase/useClients";
+import useClients from "@/hooks/useClients";
 import ClientForm from "@/containers/forms/ClientForm";
 
 export const Route = createFileRoute("/app/clients/create")({

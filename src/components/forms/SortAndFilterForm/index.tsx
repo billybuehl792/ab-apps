@@ -4,7 +4,7 @@ import { useForm, type UseFormProps } from "react-hook-form";
 import Form from "@/components/forms/Form";
 import SortAndFilterFormSortField from "./fields/SortAndFilterFormSortField";
 import SortAndFilterFormFiltersField from "./fields/SortAndFilterFormFiltersField";
-import { EMPTY_ARRAY } from "@/constants/utility";
+import { EMPTY_ARRAY } from "@/store/constants/utility";
 
 export interface SortAndFilterFormValues<S = string, F = string> {
   sort: MenuOption<S> | null;

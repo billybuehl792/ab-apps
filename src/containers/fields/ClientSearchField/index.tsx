@@ -10,12 +10,17 @@ import {
   type AutocompleteProps,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import useClients from "@/hooks/firebase/useClients";
+import useClients from "@/hooks/useClients";
 import ClientMenuItem from "@/containers/menu-items/ClientMenuItem";
-import type { ClientData } from "@/types/firebase";
+import type { Client } from "@/store/types/clients";
 
 type ClientSearchFieldProps = Omit<
-  AutocompleteProps<ClientData & { objectID: string }, false, false, false>,
+  AutocompleteProps<
+    Omit<Client, "id"> & { objectID: string },
+    false,
+    false,
+    false
+  >,
   "renderInput" | "options"
 >;
 

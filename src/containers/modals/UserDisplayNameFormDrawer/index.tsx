@@ -1,9 +1,8 @@
 import { type ComponentProps } from "react";
 import { useMediaQuery } from "@mui/material";
-
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
 import UserDisplayNameForm from "@/containers/forms/UserDisplayNameForm";
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface UserDisplayNameFormDrawerProps
   extends Omit<ComponentProps<typeof SwipeableDrawer>, "slotProps"> {

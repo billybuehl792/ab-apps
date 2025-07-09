@@ -1,6 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useMutation } from "@tanstack/react-query";
-import { signOut, type User } from "firebase/auth";
+import { type User } from "firebase/auth";
 import {
   Button,
   Card,
@@ -10,40 +9,33 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { useSnackbar } from "notistack";
 import { Logout } from "@mui/icons-material";
-import { auth } from "@/config/firebase";
+import useAuth from "@/hooks/useAuth";
 import UserDetailCardPhotoUrlIconButton from "@/containers/cards/UserDetailCard/buttons/UserDetailCardPhotoUrlIconButton";
 import UserDetailCardDisplayName from "./layout/UserDetailCardDisplayName";
 import UserDetailCardEmail from "./layout/UserDetailCardEmail";
 import UserDetailCardLastSignIn from "./layout/UserDetailCardLastSignIn";
 import UserDetailCardMemberSince from "./layout/UserDetailCardMemberSince";
-import UserDetailCardCompany from "./layout/UserDetailCardCompany";
-import type { Company, Permissions } from "@/types/auth";
 import UserDetailCardPermissions from "./layout/UserDetailCardPermissions";
+import UserCompanyChip from "@/containers/chips/UserCompanyChip";
 
 interface UserDetailCardProps extends CardProps {
   user: User;
-  company: Company | null;
-  permissions: Permissions | null;
 }
 
-const UserDetailCard = ({
-  user,
-  company,
-  permissions,
-  ...props
-}: UserDetailCardProps) => {
+const UserDetailCard = ({ user, ...props }: UserDetailCardProps) => {
   /** Values */
 
-  const { enqueueSnackbar } = useSnackbar();
+  const {
+    mutations: { signOut },
+  } = useAuth();
   const navigate = useNavigate();
 
   const items = [
     {
       id: "company",
       label: "Company",
-      value: <UserDetailCardCompany company={company} />,
+      value: <UserCompanyChip user={user} />,
     },
     {
       id: "email",
@@ -63,24 +55,12 @@ const UserDetailCard = ({
     },
   ];
 
-  /** Mutations */
-
-  const signOutMutation = useMutation({
-    mutationKey: ["signOut"],
-    mutationFn: () => signOut(auth),
-    onSuccess: () => {
-      enqueueSnackbar("Signed Out", { variant: "success" });
-      void navigate({ to: "/sign-in" });
-    },
-    onError: () => {
-      enqueueSnackbar("Failed to Sign Out", { variant: "error" });
-    },
-  });
-
   /** Callbacks */
 
   const handleSignOut = () => {
-    signOutMutation.mutate();
+    signOut.mutate(undefined, {
+      onSuccess: () => void navigate({ to: "/sign-in" }),
+    });
   };
 
   return (
@@ -96,7 +76,7 @@ const UserDetailCard = ({
         <UserDetailCardPhotoUrlIconButton user={user} />
         <Stack spacing={0.5} alignItems="center">
           <UserDetailCardDisplayName user={user} />
-          <UserDetailCardPermissions permissions={permissions} />
+          <UserDetailCardPermissions user={user} />
           <UserDetailCardMemberSince user={user} />
         </Stack>
       </CardContent>

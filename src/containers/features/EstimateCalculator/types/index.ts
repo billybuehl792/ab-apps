@@ -1,22 +1,23 @@
 import { type UseFormReturn } from "react-hook-form";
-import useMaterials from "@/hooks/firebase/useMaterials";
-import type { Address, Material } from "@/types/firebase";
+import useMaterials from "@/hooks/useMaterials";
+import type { Address } from "@/store/types/locations";
+import type { Material } from "@/store/types/materials";
 
-export interface EstimateCalculatorContextValue {
-  queryOptions: ReturnType<ReturnType<typeof useMaterials>["queries"]["list"]>;
-  methods: UseFormReturn<
-    EstimateCalculatorValues,
-    unknown,
-    EstimateCalculatorValues
-  >;
-  materialModal: { open: boolean; material: Material | null };
-  setMaterialModal: (open: boolean, material: Material | null) => void;
-}
-
-export interface EstimateCalculatorValues {
+export interface EstimateCalculatorForm {
   name: string;
   address: Address;
   tax: number;
   additional?: number;
   materials: (Material & { count: number | null })[];
+}
+
+export interface EstimateCalculatorContextValue {
+  queryOptions: ReturnType<ReturnType<typeof useMaterials>["queries"]["list"]>;
+  methods: UseFormReturn<
+    EstimateCalculatorForm,
+    unknown,
+    EstimateCalculatorForm
+  >;
+  materialModal: { open: boolean; material: Material | null };
+  setMaterialModal: (open: boolean, material: Material | null) => void;
 }

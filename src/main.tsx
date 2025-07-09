@@ -8,9 +8,9 @@ import * as Sentry from "@sentry/react";
 import Providers from "./providers";
 
 import "reset-css/reset.css";
-import "./utils/string";
-import "./utils/number";
-import "./utils/dayjs";
+import "./store/utils/string";
+import "./store/utils/number";
+import "./store/utils/dayjs";
 
 declare module "@tanstack/react-router" {
   interface Register {

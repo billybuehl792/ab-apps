@@ -4,7 +4,7 @@ import { updateProfile, type User } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { Stack, type StackProps, Typography } from "@mui/material";
 
-import useAuth from "@/hooks/auth/useAuth";
+import useAuth from "@/hooks/useAuth";
 import EditIconButton from "@/components/buttons/EditIconButton";
 import UserDisplayNameFormDrawer from "@/containers/modals/UserDisplayNameFormDrawer";
 import UserDisplayNameForm from "@/containers/forms/UserDisplayNameForm";

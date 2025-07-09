@@ -12,10 +12,13 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { useSnackbar } from "notistack";
-import { db } from "@/config/firebase";
-import useAuth from "../auth/useAuth";
-import { DEFAULT_COMPANY } from "@/constants/auth";
-import type { Material, MaterialData } from "@/types/firebase";
+import { db } from "@/store/config/firebase";
+import useAuth from "./useAuth";
+import { materialConverter } from "@/store/converters";
+import { markdownUtils } from "@/store/utils/markdown";
+import { DEFAULT_COMPANY } from "@/store/constants/auth";
+import { FirebaseCollection } from "@/store/enums/firebase";
+import type { Material } from "@/store/types/materials";
 
 const useMaterials = () => {
   /** Values */
@@ -25,16 +28,8 @@ const useMaterials = () => {
 
   const col = collection(
     db,
-    `companies/${company?.id ?? DEFAULT_COMPANY.id}/materials`
-  ).withConverter<MaterialData>({
-    toFirestore: (material: MaterialData) => ({
-      label: material.label.trim(),
-      value: +material.value,
-      description: material.description || "",
-    }),
-    fromFirestore: (snapshot, options): MaterialData =>
-      snapshot.data(options) as MaterialData,
-  });
+    `${FirebaseCollection.COMPANIES}/${company?.id ?? DEFAULT_COMPANY.id}/${FirebaseCollection.MATERIALS}`
+  ).withConverter(materialConverter);
 
   /** Queries */
 
@@ -66,19 +61,17 @@ const useMaterials = () => {
 
   const create = useMutation({
     mutationKey: [col.id, "create"],
-    mutationFn: (data: MaterialData) =>
+    mutationFn: (data: Omit<Material, "id">) =>
       addDoc(col, {
         ...data,
         value: Number(data.value.toFixed(2)),
       }),
     onSuccess: (_, data) =>
-      enqueueSnackbar(`'${data.label}' material created`, {
+      enqueueSnackbar(`${markdownUtils.bold(data.label)} created`, {
         variant: "success",
       }),
     onError: () =>
-      enqueueSnackbar("Error creating material", {
-        variant: "error",
-      }),
+      enqueueSnackbar("Error creating material", { variant: "error" }),
   });
 
   const update = useMutation({
@@ -88,29 +81,23 @@ const useMaterials = () => {
       await setDoc(docRef, data);
     },
     onSuccess: (_, data) =>
-      enqueueSnackbar(`'${data.label}' material updated`, {
+      enqueueSnackbar(`${markdownUtils.bold(data.label)} updated`, {
         variant: "success",
       }),
     onError: () =>
-      enqueueSnackbar("Error updating material", {
-        variant: "error",
-      }),
+      enqueueSnackbar("Error updating material", { variant: "error" }),
   });
 
   const archive = useMutation({
     mutationKey: [col.id, "archive"],
-    mutationFn: async (data: string) => {
-      const docRef = doc(col, data);
+    mutationFn: async (id: string) => {
+      const docRef = doc(col, id);
       await deleteDoc(docRef);
     },
     onSuccess: () =>
-      enqueueSnackbar("Material deleted", {
-        variant: "success",
-      }),
+      enqueueSnackbar("Material deleted", { variant: "success" }),
     onError: () =>
-      enqueueSnackbar("Error deleting material", {
-        variant: "error",
-      }),
+      enqueueSnackbar("Error deleting material", { variant: "error" }),
   });
 
   return {

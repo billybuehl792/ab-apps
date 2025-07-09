@@ -5,7 +5,6 @@ import {
   type StackProps,
   Typography,
 } from "@mui/material";
-
 import useAuthWorkflow from "../../hooks/useAuthWorkflow";
 
 const AuthWorkflowHeader = (props: StackProps) => {

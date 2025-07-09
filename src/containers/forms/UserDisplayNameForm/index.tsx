@@ -1,7 +1,6 @@
 import { type ComponentProps } from "react";
 import { useForm, type UseFormProps } from "react-hook-form";
 import { TextField } from "@mui/material";
-
 import Form from "@/components/forms/Form";
 
 const MAX_LENGTH = 24;

@@ -20,7 +20,7 @@ import {
   type StackProps,
 } from "@mui/material";
 
-import { EMPTY_ARRAY, EMPTY_OBJECT } from "@/constants/utility";
+import { EMPTY_ARRAY, EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface InfiniteListProps<T extends DocumentData = DocumentData>
   extends StackProps {

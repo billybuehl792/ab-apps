@@ -8,11 +8,10 @@ import {
   useMediaQuery,
   type StackProps,
 } from "@mui/material";
-
 import DrawerHeader from "../DrawerHeader";
-import { sxAsArray } from "@/utils/sx";
-import { EMPTY_OBJECT } from "@/constants/utility";
-import { APP_BOTTOM_SAFE_AREA_HEIGHT } from "@/constants/layout";
+import { sxAsArray } from "@/store/utils/sx";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
+import { APP_BOTTOM_SAFE_AREA_HEIGHT } from "@/store/constants/layout";
 
 const iOS =
   typeof navigator !== "undefined" &&

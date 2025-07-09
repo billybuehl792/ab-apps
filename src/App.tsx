@@ -2,8 +2,8 @@ import { RouterProvider } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 
 import router from "./router";
-import useAuth from "./hooks/auth/useAuth";
-import useClients from "./hooks/firebase/useClients";
+import useAuth from "./hooks/useAuth";
+import useClients from "./hooks/useClients";
 
 const App = () => {
   /** Values */

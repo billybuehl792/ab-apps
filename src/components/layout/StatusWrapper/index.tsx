@@ -9,7 +9,7 @@ import {
   type StackProps,
 } from "@mui/material";
 import { ErrorOutline } from "@mui/icons-material";
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 import EmptyState from "../EmptyState";
 
 interface StatusWrapperProps extends StackProps {

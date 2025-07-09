@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Container, Stack, Typography } from "@mui/material";
-import useAuth from "@/hooks/auth/useAuth";
+import useAuth from "@/hooks/useAuth";
 import UserDetailCard from "@/containers/cards/UserDetailCard";
 import ErrorCard from "@/components/cards/ErrorCard";
 
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/app/account")({
 function RouteComponent() {
   /** Values */
 
-  const { user, company, permissions } = useAuth();
+  const { user } = useAuth();
 
   return (
     <Container maxWidth="md" disableGutters>
@@ -20,11 +20,7 @@ function RouteComponent() {
           Account Info
         </Typography>
         {user ? (
-          <UserDetailCard
-            user={user}
-            company={company}
-            permissions={permissions}
-          />
+          <UserDetailCard user={user} />
         ) : (
           <ErrorCard message="User not found" />
         )}

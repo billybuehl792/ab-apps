@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { useLocation } from "@tanstack/react-router";
 import { IconButton, type IconButtonProps } from "@mui/material";
 import { Menu } from "@mui/icons-material";
-
 import NavigationDrawer from "@/containers/modals/NavigationDrawer";
 
 const NavigationMenuIconButton = (props: IconButtonProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  /** Values */
 
   const location = useLocation();
 
@@ -21,7 +22,7 @@ const NavigationMenuIconButton = (props: IconButtonProps) => {
       <IconButton
         color="inherit"
         onClick={() => {
-          setMenuOpen(!menuOpen);
+          setMenuOpen((prev) => !prev);
         }}
         {...props}
       >

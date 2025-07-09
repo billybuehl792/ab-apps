@@ -8,9 +8,9 @@ import {
 import { Box, Button, Stack, type ButtonProps } from "@mui/material";
 import { Message } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
-
-import { auth } from "@/config/firebase";
+import { auth } from "@/store/config/firebase";
 import useAuthWorkflow from "../../hooks/useAuthWorkflow";
+import { AuthMutationKeys } from "@/store/constants/auth";
 
 interface AuthWorkflowPhoneVerificationCodeButtonProps extends ButtonProps {
   multiFactorHint: PhoneMultiFactorInfo;
@@ -36,7 +36,7 @@ const AuthWorkflowPhoneVerificationCodeButton = ({
   /** Mutations */
 
   const sendPhoneVerificationCodeMutation = useMutation({
-    mutationKey: ["sendPhoneVerificationCode"],
+    mutationKey: AuthMutationKeys.sendPhoneVerificationCode,
     mutationFn: async (verifier: RecaptchaVerifier) => {
       if (!multiFactorResolver) throw new Error("No multi-factor resolver");
       return await phoneAuthProvider.verifyPhoneNumber(

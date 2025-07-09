@@ -11,11 +11,10 @@ import {
   type CardContentProps,
 } from "@mui/material";
 import { Delete, Edit, Info, Person, Restore } from "@mui/icons-material";
-
-import { EMPTY_OBJECT } from "@/constants/utility";
-import type { Client } from "@/types/firebase";
-import useClients from "@/hooks/firebase/useClients";
+import useClients from "@/hooks/useClients";
 import MenuOptionListDrawer from "@/components/modals/MenuOptionListDrawer";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
+import type { Client } from "@/store/types/clients";
 
 interface ClientCardProps extends Omit<CardProps, "onClick"> {
   client: Client;

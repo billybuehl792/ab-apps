@@ -1,6 +1,6 @@
 import { type ComponentProps } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import useMaterials from "@/hooks/firebase/useMaterials";
+import useMaterials from "@/hooks/useMaterials";
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 import MaterialFormDrawer from "@/containers/modals/MaterialFormDrawer";
 import MaterialForm from "@/containers/forms/MaterialForm";

@@ -1,8 +1,7 @@
 import { type ComponentProps } from "react";
 import { Menu, type MenuProps } from "@mui/material";
-
 import MenuOptionList from "@/components/lists/MenuOptionList";
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface MenuOptionListMenuProps
   extends Omit<MenuProps, "slotProps" | "onClose"> {

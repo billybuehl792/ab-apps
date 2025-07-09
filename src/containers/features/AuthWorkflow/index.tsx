@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Stack, type StackProps } from "@mui/material";
 import { useSnackbar } from "notistack";
-
 import AuthWorkflowProvider from "./providers/AuthWorkflowProvider";
 import AuthWorkflowHeader from "./components/layout/AuthWorkflowHeader";
 import AuthWorkflowBody from "./components/layout/AuthWorkflowBody";

@@ -2,25 +2,26 @@ import { type ComponentProps, useState } from "react";
 import { Button, Collapse, collapseClasses, Stack } from "@mui/material";
 import { useForm, type UseFormProps } from "react-hook-form";
 import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
-
 import Form from "@/components/forms/Form";
 import MaterialFormValueField from "./fields/MaterialFormValueField";
 import MaterialFormTitleField from "./fields/MaterialFormTitleField";
 import MaterialFormDescriptionField from "./fields/MaterialFormDescriptionField";
-import type { MaterialData } from "@/types/firebase";
+import type { Material } from "@/store/types/materials";
+
+export type MaterialForm = Omit<Material, "id">;
 
 type MaterialFormProps = Omit<
-  ComponentProps<typeof Form<MaterialData>>,
+  ComponentProps<typeof Form<MaterialForm>>,
   "methods"
 > &
-  UseFormProps<MaterialData>;
+  UseFormProps<MaterialForm>;
 
 const MaterialForm = (props: MaterialFormProps) => {
   const [showMoreEnabled, setShowMoreEnabled] = useState(false);
 
   /** Values */
 
-  const methods = useForm<MaterialData>({
+  const methods = useForm<MaterialForm>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
     defaultValues: {

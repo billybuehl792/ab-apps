@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import {
   limit,
   orderBy,
@@ -14,15 +15,13 @@ import {
   type TablePaginationProps,
 } from "@mui/material";
 import { Groups } from "@mui/icons-material";
-
+import useClients from "@/hooks/useClients";
 import CreateClientLink from "@/containers/links/CreateClientLink";
 import ClientSearchField from "@/containers/fields/ClientSearchField";
 import ClientCard from "@/containers/cards/ClientCard";
 import SortAndFilterIconButton from "@/components/buttons/SortAndFilterIconButton";
-import { type SortAndFilterFormValues } from "@/components/forms/SortAndFilterForm";
-import useClients from "@/hooks/firebase/useClients";
-import { useQuery } from "@tanstack/react-query";
 import StatusWrapper from "@/components/layout/StatusWrapper";
+import { type SortAndFilterFormValues } from "@/components/forms/SortAndFilterForm";
 
 export const Route = createFileRoute("/app/clients/")({
   component: RouteComponent,

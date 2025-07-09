@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface FormActionsProps extends StackProps {
   submitLabel?: ReactNode;

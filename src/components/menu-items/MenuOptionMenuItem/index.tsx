@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 
 import ConfirmDialog from "@/components/modals/ConfirmDialog";
-import { sxAsArray } from "@/utils/sx";
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { sxAsArray } from "@/store/utils/sx";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface MenuOptionMenuItemProps extends MenuItemProps {
   option: MenuOption;

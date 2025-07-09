@@ -2,8 +2,8 @@ import { type ComponentProps } from "react";
 import { useFormContext } from "react-hook-form";
 
 import EmailField from "@/components/fields/EmailField";
-import { RegexPattern } from "@/utils/regex";
-import type { SignInFormValues } from "..";
+import { RegexPattern } from "@/store/utils/regex";
+import type { SignInForm } from "..";
 
 const MAX_LENGTH = 128;
 
@@ -13,7 +13,7 @@ const SignInFormEmailField = (props: ComponentProps<typeof EmailField>) => {
   const {
     formState: { errors },
     register,
-  } = useFormContext<SignInFormValues>();
+  } = useFormContext<SignInForm>();
 
   return (
     <EmailField

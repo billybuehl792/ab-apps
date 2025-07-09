@@ -1,7 +1,7 @@
 import { type User } from "firebase/auth";
 import dayjs from "dayjs";
 import { Tooltip, Typography, type TypographyProps } from "@mui/material";
-import { DateTimeFormat } from "@/types/enums/datetime";
+import { DateTimeFormat } from "@/store/enums/datetime";
 
 interface UserDetailCardLastSignInProps extends TypographyProps {
   user: User;

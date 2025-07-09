@@ -1,10 +1,11 @@
-import { Chip, Stack, type StackProps, Typography } from "@mui/material";
-import type { Permissions } from "@/types/auth";
+import { Stack, type StackProps, Typography } from "@mui/material";
+import { type User } from "firebase/auth";
+import UserPermissionsChip from "@/containers/chips/UserPermissionsChip";
 
 const UserDetailCardPermissions = ({
-  permissions,
+  user,
   ...props
-}: StackProps & { permissions: Permissions | null }) => {
+}: StackProps & { user: User }) => {
   return (
     <Stack
       direction="row"
@@ -13,13 +14,8 @@ const UserDetailCardPermissions = ({
       color="white"
       {...props}
     >
-      <Typography variant="body2">Level:</Typography>
-      <Chip
-        label={permissions?.role.toCapitalized() ?? "-"}
-        size="small"
-        color="info"
-        variant="filled"
-      />
+      <Typography variant="body2">Permissions:</Typography>
+      <UserPermissionsChip user={user} />
     </Stack>
   );
 };

@@ -2,7 +2,7 @@ import { type ComponentProps } from "react";
 import { MenuList, type MenuListProps } from "@mui/material";
 
 import MenuOptionMenuItem from "@/components/menu-items/MenuOptionMenuItem";
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface MenuOptionListProps extends MenuListProps {
   options: MenuOption[];

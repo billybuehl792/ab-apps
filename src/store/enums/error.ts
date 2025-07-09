@@ -8,8 +8,3 @@ export enum FirebaseErrorCode {
   TOO_MANY_ATTEMPTS = "auth/too-many-requests",
   WRONG_PASSWORD = "auth/wrong-password",
 }
-
-export enum FirebaseCollectionId {
-  CLIENTS = "clients",
-  MATERIALS = "materials",
-}

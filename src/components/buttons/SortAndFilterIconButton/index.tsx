@@ -9,7 +9,7 @@ import { Tune } from "@mui/icons-material";
 
 import SortAndFilterDrawer from "@/components/modals/SortAndFilterDrawer";
 import SortAndFilterForm from "@/components/forms/SortAndFilterForm";
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface SortAndFilterIconButtonProps
   extends Omit<IconButtonProps, "form" | "onSubmit">,

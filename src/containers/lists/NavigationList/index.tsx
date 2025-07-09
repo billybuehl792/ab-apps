@@ -7,8 +7,7 @@ import {
   Person,
   PersonAdd,
 } from "@mui/icons-material";
-
-import useAuth from "@/hooks/auth/useAuth";
+import useAuth from "@/hooks/useAuth";
 import NestedList from "@/components/lists/NestedList";
 
 const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
@@ -31,7 +30,7 @@ const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
       to: "/app/clients",
       render: Boolean(user),
       selected: pathname === "/app/clients",
-      expanded: ["/app/clients/create"].includes(pathname),
+      expanded: pathname === "/app/clients/create",
       icon: <Groups />,
       items: [
         {

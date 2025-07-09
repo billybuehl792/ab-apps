@@ -1,30 +1,12 @@
-import { Link, useLocation, useMatches } from "@tanstack/react-router";
-import {
-  Breadcrumbs,
-  LinkProps as MuiLinkProps,
-  Link as MuiLink,
-  type BreadcrumbsProps,
-} from "@mui/material";
+import { useLocation, useMatches, useNavigate } from "@tanstack/react-router";
+import { Breadcrumbs, Link, type BreadcrumbsProps } from "@mui/material";
 
-import { EMPTY_OBJECT } from "@/constants/utility";
-
-interface NavigationBreadcrumbsProps
-  extends Omit<BreadcrumbsProps, "slotProps"> {
-  hideRootCrumb?: boolean;
-  slotProps?: {
-    crumb?: MuiLinkProps;
-  } & BreadcrumbsProps["slotProps"];
-}
-
-const NavigationBreadcrumbs = ({
-  hideRootCrumb,
-  slotProps: { crumb: crumbProps, ...slotProps } = EMPTY_OBJECT,
-  ...props
-}: NavigationBreadcrumbsProps) => {
+const NavigationBreadcrumbs = (props: BreadcrumbsProps) => {
   /** Values */
 
-  const { pathname } = useLocation();
+  const navigate = useNavigate();
   const matches = useMatches();
+  const { pathname } = useLocation();
 
   const crumbs = matches
     .filter((match) => match.loaderData?.crumb)
@@ -33,21 +15,27 @@ const NavigationBreadcrumbs = ({
       label: loaderData?.crumb,
     }));
 
-  if (hideRootCrumb && crumbs.length <= 1) return;
+  /** Callbacks */
+
+  const handleCrumbClick = (to: string) => void navigate({ to });
+
   return (
-    <Breadcrumbs slotProps={slotProps} {...props}>
+    <Breadcrumbs {...props}>
       {crumbs.map((crumb) => (
-        <MuiLink
+        <Link
           key={crumb.href}
-          component={Link}
-          to={crumb.href}
+          component="button"
+          variant="body2"
           underline="none"
           color={pathname === crumb.href ? "textPrimary" : "inherit"}
-          disabled={pathname === crumb.href}
-          {...crumbProps}
+          fontWeight={pathname === crumb.href ? "bold" : "normal"}
+          onClick={() => {
+            handleCrumbClick(crumb.href);
+          }}
+          sx={{ cursor: "pointer", verticalAlign: "inherit" }}
         >
           {crumb.label}
-        </MuiLink>
+        </Link>
       ))}
     </Breadcrumbs>
   );

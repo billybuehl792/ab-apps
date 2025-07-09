@@ -2,7 +2,7 @@ import { type PropsWithChildren } from "react";
 import { ThemeProvider } from "@mui/material";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SnackbarProvider } from "notistack";
-import { theme } from "@/config/theme";
+import { theme } from "@/store/config/theme";
 import AuthProvider from "./AuthProvider";
 import Snackbar from "@/components/alerts/Snackbar";
 import GoogleMapsProvider from "./GoogleMapsProvider";

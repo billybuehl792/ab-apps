@@ -1,6 +1,5 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { Box, Paper, useMediaQuery } from "@mui/material";
-
 import NavigationList from "@/containers/lists/NavigationList";
 import NavigationFooter from "@/containers/layout/NavigationFooter";
 import AppBar from "@/containers/layout/AppBar";
@@ -9,7 +8,7 @@ import {
   APP_BOTTOM_SAFE_AREA_HEIGHT,
   APP_FOOTER_HEIGHT,
   APP_SIDE_PANEL_WIDTH,
-} from "@/constants/layout";
+} from "@/store/constants/layout";
 
 export const Route = createFileRoute("/app")({
   component: RouteComponent,

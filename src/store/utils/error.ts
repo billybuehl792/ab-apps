@@ -1,4 +1,4 @@
-import { FirebaseErrorCode } from "@/types/enums/firebase";
+import { FirebaseErrorCode } from "@/store/enums/error";
 import type { FirebaseError } from "firebase/app";
 
 export const getErrorMessage = (error: Error) => {

@@ -6,18 +6,18 @@ import Form from "@/components/forms/Form";
 import SignInFormPasswordField from "./fields/SignInFormPasswordField";
 import SignInFormEmailField from "./fields/SignInFormEmailField";
 
-export type SignInFormValues = { email: string; password: string };
+export type SignInForm = { email: string; password: string };
 
 type SignInFormProps = Omit<
-  ComponentProps<typeof Form<SignInFormValues, UserCredential>>,
+  ComponentProps<typeof Form<SignInForm, UserCredential>>,
   "methods"
 > &
-  UseFormProps<SignInFormValues>;
+  UseFormProps<SignInForm>;
 
 const SignInForm = ({ onError, ...props }: SignInFormProps) => {
   /** Values */
 
-  const methods = useForm<SignInFormValues>({
+  const methods = useForm<SignInForm>({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
     defaultValues: {

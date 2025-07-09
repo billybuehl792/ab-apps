@@ -1,9 +1,8 @@
 import { type ReactNode, type ComponentProps } from "react";
 import { useMediaQuery, type MenuProps } from "@mui/material";
-
 import MenuOptionListDrawer from "../MenuOptionListDrawer";
 import MenuOptionListMenu from "../MenuOptionListMenu";
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface MenuOptionListModalProps {
   anchorEl?: MenuProps["anchorEl"];

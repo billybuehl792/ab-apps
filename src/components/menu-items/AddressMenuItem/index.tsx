@@ -7,8 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Place } from "@mui/icons-material";
-
-import type { Address } from "@/types/firebase";
+import type { Address } from "@/store/types/locations";
 
 interface AddressMenuItemProps extends Omit<MenuItemProps, "value"> {
   value: Address;

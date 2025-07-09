@@ -6,9 +6,9 @@ import {
 } from "firebase/auth";
 import { Box, Stack, Typography, type StackProps } from "@mui/material";
 import { useSnackbar } from "notistack";
-
 import VerificationCodeForm from "@/containers/forms/VerificationCodeForm";
 import useAuthWorkflow from "../../hooks/useAuthWorkflow";
+import { AuthMutationKeys } from "@/store/constants/auth";
 
 const AuthWorkflowMultiFactorPhoneVerification = (props: StackProps) => {
   /** Values */
@@ -25,7 +25,7 @@ const AuthWorkflowMultiFactorPhoneVerification = (props: StackProps) => {
   /** Mutations */
 
   const verifyPhoneCodeMutation = useMutation({
-    mutationKey: ["verifyPhoneCode"],
+    mutationKey: AuthMutationKeys.verifyPhoneCode,
     mutationFn: async (data: { code: string }) => {
       if (!multiFactorResolver) throw new Error("No multi-factor resolver");
       if (!multiFactorVerificationId)

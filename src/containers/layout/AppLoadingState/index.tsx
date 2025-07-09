@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import {
   CircularProgress,
   type CircularProgressProps,
@@ -6,9 +7,8 @@ import {
   Typography,
   type TypographyProps,
 } from "@mui/material";
-import { APP_TITLE } from "@/constants/layout";
-import { EMPTY_OBJECT } from "@/constants/utility";
-import { ReactNode } from "react";
+import { APP_TITLE } from "@/store/constants/layout";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface AppLoadingStateProps extends StackProps {
   description?: ReactNode;

@@ -1,6 +1,5 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Box, Card, CardContent } from "@mui/material";
-
 import AuthWorkflow from "@/containers/features/AuthWorkflow";
 
 export const Route = createFileRoute("/sign-in")({

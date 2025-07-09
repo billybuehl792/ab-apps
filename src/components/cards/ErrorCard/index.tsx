@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { ErrorOutline } from "@mui/icons-material";
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface ErrorCardProps extends CardProps {
   message?: ReactNode;

@@ -1,20 +1,15 @@
 import { queryOptions } from "@tanstack/react-query";
 import { collection, doc, getDoc } from "firebase/firestore";
-import { db } from "@/config/firebase";
-import { Company } from "@/types/auth";
+import { db } from "@/store/config/firebase";
+import { companyConverter } from "@/store/converters";
+import { FirebaseCollection } from "@/store/enums/firebase";
 
 const useCompanies = () => {
   /** Values */
 
-  const col = collection(db, "companies").withConverter<Omit<Company, "id">>({
-    toFirestore: (data: Omit<Company, "id">) => ({
-      label: data.label.trim(),
-      description: data.description || "",
-      thumbnail: data.thumbnail || "",
-    }),
-    fromFirestore: (snapshot, options): Omit<Company, "id"> =>
-      snapshot.data(options) as Omit<Company, "id">,
-  });
+  const col = collection(db, FirebaseCollection.COMPANIES).withConverter(
+    companyConverter
+  );
 
   /** Queries */
 

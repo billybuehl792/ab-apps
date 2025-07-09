@@ -1,6 +1,5 @@
 import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { Container, Stack } from "@mui/material";
-
 import NavigationBreadcrumbs from "@/containers/lists/NavigationBreadcrumbs";
 import CreateClientLink from "@/containers/links/CreateClientLink";
 

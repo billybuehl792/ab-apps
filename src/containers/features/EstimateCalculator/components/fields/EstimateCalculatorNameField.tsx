@@ -7,22 +7,17 @@ const MAX_LENGTH = 32;
 const EstimateCalculatorNameField = (props: TextFieldProps) => {
   /** Values */
 
-  const {
-    methods: {
-      formState: { errors },
-      register,
-    },
-  } = useEstimateCalculator();
+  const { methods } = useEstimateCalculator();
 
   return (
     <TextField
       placeholder="Name"
       required
       size="small"
-      error={Boolean(errors.name)}
-      helperText={errors.name?.message}
+      error={Boolean(methods.formState.errors.name)}
+      helperText={methods.formState.errors.name?.message}
       fullWidth
-      {...register("name", {
+      {...methods.register("name", {
         required: "Name is required",
         maxLength: {
           value: MAX_LENGTH,

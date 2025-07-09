@@ -1,7 +1,6 @@
 import { type ComponentProps } from "react";
 import { Delete, Edit } from "@mui/icons-material";
-
-import useMaterials from "@/hooks/firebase/useMaterials";
+import useMaterials from "@/hooks/useMaterials";
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 import MaterialCard from "@/containers/cards/MaterialCard";
 import EstimateCalculatorCountField from "../fields/EstimateCalculatorCountField";

@@ -1,5 +1,5 @@
 import { type ComponentProps, useState, useEffect } from "react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import {
   Collapse,
   List,
@@ -7,17 +7,12 @@ import {
   ListItemButton,
   type ListItemButtonProps,
   ListItemIcon,
-  type ListItemIconProps,
   ListItemText,
-  type ListItemTextProps,
   type ListItemProps,
   type ListProps,
   Typography,
 } from "@mui/material";
-
 import ExpandIconButton from "@/components/buttons/ExpandIconButton";
-import { sxAsArray } from "@/utils/sx";
-import { EMPTY_ARRAY, EMPTY_OBJECT } from "@/constants/utility";
 
 interface NestedListProps extends ListProps {
   items: ListItem[];
@@ -29,23 +24,15 @@ interface NestedListProps extends ListProps {
 interface NestedListItemProps extends ListItemProps {
   item: ListItem;
   indent?: number;
-  slotProps?: {
-    button?: ListItemButtonProps;
-    icon?: ListItemIconProps;
-    text?: ListItemTextProps;
-  } & ListItemProps["slotProps"];
 }
-const NestedList = ({
-  items,
-  slotProps: { item: itemProps } = EMPTY_OBJECT,
-  ...props
-}: NestedListProps) => {
+
+const NestedList = ({ items, slotProps, ...props }: NestedListProps) => {
   return (
     <List disablePadding dense {...props}>
       {items
         .filter(({ render }) => render !== false)
         .map((item) => (
-          <NestedListItem key={item.id} item={item} {...itemProps} />
+          <NestedListItem key={item.id} item={item} {...slotProps?.item} />
         ))}
     </List>
   );
@@ -54,20 +41,23 @@ const NestedList = ({
 const NestedListItem = ({
   item,
   indent = 2,
-  slotProps: {
-    button: buttonProps,
-    icon: iconProps,
-    text: textProps,
-    ...slotProps
-  } = EMPTY_OBJECT,
   ...props
 }: NestedListItemProps) => {
   const [expanded, setExpanded] = useState(false);
 
   /** Values */
 
+  const navigate = useNavigate();
+
   const hasChildren =
     item.items?.some(({ render }) => render !== false) ?? false;
+
+  /** Callbacks */
+
+  const handleOnClick: ListItemButtonProps["onClick"] = (event) => {
+    if (item.onClick) item.onClick(event, item.id);
+    else if (item.to) void navigate({ to: item.to });
+  };
 
   /** Effects */
 
@@ -89,28 +79,17 @@ const NestedListItem = ({
             />
           ),
         })}
-        {...slotProps}
         {...props}
       >
         <ListItemButton
           selected={item.selected}
           disabled={item.disabled}
-          {...(!!item.to && { component: Link, to: item.to })}
-          onClick={(event) => item.onClick?.(event, item.id)}
-          {...buttonProps}
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          sx={[{ pl: indent }, ...sxAsArray(buttonProps?.sx)]}
+          onClick={handleOnClick}
         >
           {!!item.icon && (
-            <ListItemIcon
-              {...iconProps}
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              sx={[{ minWidth: 36 }, ...sxAsArray(iconProps?.sx)]}
-            >
-              {item.icon}
-            </ListItemIcon>
+            <ListItemIcon sx={{ minWidth: 36 }}>{item.icon}</ListItemIcon>
           )}
-          <ListItemText {...textProps}>
+          <ListItemText>
             <Typography
               variant="body2"
               fontWeight={item.selected ? 600 : 500}
@@ -126,7 +105,7 @@ const NestedListItem = ({
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <NestedList
             component="div"
-            items={item.items ?? EMPTY_ARRAY}
+            items={item.items ?? []}
             slotProps={{ item: { indent: indent + 2 } }}
           />
         </Collapse>

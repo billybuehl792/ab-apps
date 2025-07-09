@@ -3,7 +3,7 @@ import { IconButton, type IconButtonProps } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
 
 import MenuOptionListModal from "@/components/modals/MenuOptionListModal";
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 const DEFAULT_ICON = <MoreVert />;
 

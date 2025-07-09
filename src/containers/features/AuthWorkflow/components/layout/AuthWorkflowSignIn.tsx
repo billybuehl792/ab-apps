@@ -5,11 +5,11 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useSnackbar } from "notistack";
-
-import { auth } from "@/config/firebase";
+import { auth } from "@/store/config/firebase";
 import useAuthWorkflow from "../../hooks/useAuthWorkflow";
 import SignInForm from "@/containers/forms/SignInForm";
-import { getErrorMessage, isMfaError } from "@/utils/error";
+import { getErrorMessage, isMfaError } from "@/store/utils/error";
+import { AuthMutationKeys } from "@/store/constants/auth";
 
 const AuthWorkflowSignIn = () => {
   /** Values */
@@ -20,7 +20,7 @@ const AuthWorkflowSignIn = () => {
   /** Mutations */
 
   const signInMutation = useMutation({
-    mutationKey: ["signIn"],
+    mutationKey: AuthMutationKeys.signIn,
     mutationFn: async (data: { email: string; password: string }) => {
       return await signInWithEmailAndPassword(auth, data.email, data.password);
     },

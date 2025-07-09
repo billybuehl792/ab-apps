@@ -1,5 +1,4 @@
 import { createContext } from "react";
-
 import type { EstimateCalculatorContextValue } from "../types";
 
 export default createContext<EstimateCalculatorContextValue>({

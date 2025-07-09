@@ -1,30 +1,12 @@
 import { type ComponentProps } from "react";
-
 import NavigationList from "@/containers/lists/NavigationList";
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
-import { APP_TITLE } from "@/constants/layout";
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { APP_TITLE } from "@/store/constants/layout";
 
-interface NavigationDrawerProps extends ComponentProps<typeof SwipeableDrawer> {
-  slotProps?: {
-    nav?: ComponentProps<typeof NavigationList>;
-  } & ComponentProps<typeof SwipeableDrawer>["slotProps"];
-}
-
-const NavigationDrawer = ({
-  onClose,
-  slotProps: { nav: navProps, ...slotProps } = EMPTY_OBJECT,
-  ...props
-}: NavigationDrawerProps) => {
+const NavigationDrawer = (props: ComponentProps<typeof SwipeableDrawer>) => {
   return (
-    <SwipeableDrawer
-      title={APP_TITLE}
-      fullHeight
-      onClose={onClose}
-      slotProps={slotProps}
-      {...props}
-    >
-      <NavigationList component="nav" {...navProps} />
+    <SwipeableDrawer title={APP_TITLE} fullHeight {...props}>
+      <NavigationList component="nav" />
     </SwipeableDrawer>
   );
 };

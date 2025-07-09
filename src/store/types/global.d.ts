@@ -2,7 +2,6 @@ import { type ReactNode, type MouseEvent } from "react";
 import { type ToOptions } from "@tanstack/react-router";
 
 declare global {
-  // eslint-disable-next-line no-var
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
 
   type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<

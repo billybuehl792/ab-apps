@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Person } from "@mui/icons-material";
-import useClients from "@/hooks/firebase/useClients";
+import useClients from "@/hooks/useClients";
 
 const ClientOverviewCard = (props: CardProps) => {
   /** Values */

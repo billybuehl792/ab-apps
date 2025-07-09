@@ -2,14 +2,13 @@ import { type ComponentProps } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Skeleton, Stack, Typography } from "@mui/material";
 import { Delete, Restore } from "@mui/icons-material";
-
-import useClients from "@/hooks/firebase/useClients";
+import useClients from "@/hooks/useClients";
 import ClientDetailCard from "@/containers/cards/ClientDetailCard";
 import ClientForm from "@/containers/forms/ClientForm";
 import EditIconButton from "@/components/buttons/EditIconButton";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 import ErrorCard from "@/components/cards/ErrorCard";
-import type { Client } from "@/types/firebase";
+import type { Client } from "@/store/types/clients";
 
 export const Route = createFileRoute("/app/clients/$id")({
   component: RouteComponent,

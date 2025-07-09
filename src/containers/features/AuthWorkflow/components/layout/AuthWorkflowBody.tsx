@@ -1,5 +1,4 @@
 import { FactorId } from "firebase/auth";
-
 import useAuthWorkflow from "../../hooks/useAuthWorkflow";
 import AuthWorkflowSignIn from "./AuthWorkflowSignIn";
 import AuthWorkflowMultiFactorHints from "./AuthWorkflowMultiFactorHints";

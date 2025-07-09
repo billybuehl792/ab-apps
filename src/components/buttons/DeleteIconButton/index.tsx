@@ -3,7 +3,7 @@ import { IconButton, type IconButtonProps } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 
 import ConfirmDialog from "@/components/modals/ConfirmDialog";
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 const DEFAULT_ICON = <Delete />;
 

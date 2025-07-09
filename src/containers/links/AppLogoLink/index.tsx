@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Typography, type TypographyProps } from "@mui/material";
-import { APP_TITLE } from "@/constants/layout";
+import { APP_TITLE } from "@/store/constants/layout";
 
 const AppLogoLink = (props: TypographyProps<typeof Link>) => {
   return (
