@@ -13,6 +13,8 @@ import DialogTitle from "../DialogTitle";
 interface ConfirmDialogProps extends Omit<DialogProps, "title"> {
   title?: ReactNode;
   description?: ReactNode;
+  confirmButtonText?: string;
+  cancelButtonText?: string;
   onConfirm?: ButtonProps["onClick"];
   onCancel?: DialogProps["onClose"];
 }
@@ -20,6 +22,8 @@ interface ConfirmDialogProps extends Omit<DialogProps, "title"> {
 const ConfirmDialog = ({
   title,
   description,
+  confirmButtonText = "Confirm",
+  cancelButtonText = "Cancel",
   onConfirm,
   onCancel,
   onClose: onCloseProp,
@@ -55,10 +59,10 @@ const ConfirmDialog = ({
             onClose(new CloseEvent("close"), "backdropClick");
           }}
         >
-          Cancel
+          {cancelButtonText}
         </Button>
         <Button onClick={onConfirm} autoFocus>
-          Confirm
+          {confirmButtonText}
         </Button>
       </DialogActions>
     </Dialog>

@@ -46,6 +46,7 @@ const MenuOptionMenuItem = ({
   return (
     <>
       <MenuItem
+        selected={option.selected}
         disabled={option.disabled}
         onClick={onClick}
         {...props}

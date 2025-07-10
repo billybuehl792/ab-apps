@@ -1,7 +1,5 @@
-import { useNavigate } from "@tanstack/react-router";
 import { type User } from "firebase/auth";
 import {
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -9,8 +7,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { Logout } from "@mui/icons-material";
-import useAuth from "@/hooks/useAuth";
 import UserDetailCardPhotoUrlIconButton from "@/containers/cards/UserDetailCard/buttons/UserDetailCardPhotoUrlIconButton";
 import UserDetailCardDisplayName from "./layout/UserDetailCardDisplayName";
 import UserDetailCardEmail from "./layout/UserDetailCardEmail";
@@ -18,6 +14,7 @@ import UserDetailCardLastSignIn from "./layout/UserDetailCardLastSignIn";
 import UserDetailCardMemberSince from "./layout/UserDetailCardMemberSince";
 import UserDetailCardPermissions from "./layout/UserDetailCardPermissions";
 import UserCompanyChip from "@/containers/chips/UserCompanyChip";
+import SignOutButton from "@/containers/buttons/SignOutButton";
 
 interface UserDetailCardProps extends CardProps {
   user: User;
@@ -25,11 +22,6 @@ interface UserDetailCardProps extends CardProps {
 
 const UserDetailCard = ({ user, ...props }: UserDetailCardProps) => {
   /** Values */
-
-  const {
-    mutations: { signOut },
-  } = useAuth();
-  const navigate = useNavigate();
 
   const items = [
     {
@@ -54,14 +46,6 @@ const UserDetailCard = ({ user, ...props }: UserDetailCardProps) => {
       value: <UserDetailCardLastSignIn user={user} />,
     },
   ];
-
-  /** Callbacks */
-
-  const handleSignOut = () => {
-    signOut.mutate(undefined, {
-      onSuccess: () => void navigate({ to: "/sign-in" }),
-    });
-  };
 
   return (
     <Card {...props}>
@@ -104,14 +88,7 @@ const UserDetailCard = ({ user, ...props }: UserDetailCardProps) => {
         </Stack>
       </CardContent>
       <CardActions sx={{ justifyContent: "end" }}>
-        <Button
-          variant="text"
-          size="small"
-          startIcon={<Logout />}
-          onClick={handleSignOut}
-        >
-          Sign Out
-        </Button>
+        <SignOutButton />
       </CardActions>
     </Card>
   );
