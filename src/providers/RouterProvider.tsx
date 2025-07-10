@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from "react";
 import { RouterProvider as TanstackRouterProvider } from "@tanstack/react-router";
-import router from "@/router";
+import router from "@/store/config/router";
 import { useQueryClient } from "@tanstack/react-query";
 import useAuth from "@/hooks/useAuth";
 import useClients from "@/hooks/useClients";

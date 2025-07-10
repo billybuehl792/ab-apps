@@ -1,5 +1,5 @@
 import { StrictMode } from "react";
-import router from "./router";
+import router from "./store/config/router";
 import ReactDOM from "react-dom/client";
 import * as Sentry from "@sentry/react";
 import Providers from "./providers";

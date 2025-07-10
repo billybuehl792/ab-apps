@@ -1,8 +1,8 @@
 import { routeTree } from "@/routeTree.gen";
 import { createRouter } from "@tanstack/react-router";
-import useClients from "./hooks/useClients";
+import useClients from "../../hooks/useClients";
 import { ContextType } from "react";
-import AuthContext from "./context/AuthContext";
+import AuthContext from "../../context/AuthContext";
 
 const router = createRouter({
   routeTree,

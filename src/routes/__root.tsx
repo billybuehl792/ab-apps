@@ -12,7 +12,12 @@ export const Route = createRootRouteWithContext<{
   clients: ReturnType<typeof useClients>;
   crumb?: string;
 }>()({
-  component: RouteComponent,
+  component: () => (
+    <>
+      <Outlet />
+      <TanStackRouterDevtools />
+    </>
+  ),
   errorComponent: ({ error }) => (
     <StatusWrapper
       error={error}
@@ -27,12 +32,3 @@ export const Route = createRootRouteWithContext<{
     />
   ),
 });
-
-function RouteComponent() {
-  return (
-    <>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  );
-}
