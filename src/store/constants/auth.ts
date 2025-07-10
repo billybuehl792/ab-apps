@@ -1,6 +1,4 @@
-import { AuthRole } from "../enums/auth";
 import type { Company } from "../types/companies";
-import type { Permissions } from "../types/auth";
 
 const DEFAULT_COMPANY_THUMBNAIL =
   "https://www.eia.gov/consumption/commercial/images/WarehouseStorage.png";
@@ -10,10 +8,6 @@ export const DEFAULT_COMPANY: Company = {
   label: "Default Company",
   description: "This is the default company.",
   thumbnail: DEFAULT_COMPANY_THUMBNAIL,
-};
-
-export const DEFAULT_PERMISSIONS: Permissions = {
-  role: AuthRole.BASIC,
 };
 
 /** Queries & Mutations */
