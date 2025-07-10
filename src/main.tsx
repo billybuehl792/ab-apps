@@ -1,10 +1,7 @@
 import { StrictMode } from "react";
 import router from "./router";
-import App from "./App";
-
 import ReactDOM from "react-dom/client";
 import * as Sentry from "@sentry/react";
-
 import Providers from "./providers";
 
 import "reset-css/reset.css";
@@ -45,9 +42,7 @@ if (!rootElement.innerHTML) {
   });
   root.render(
     <StrictMode>
-      <Providers>
-        <App />
-      </Providers>
+      <Providers />
     </StrictMode>
   );
 }

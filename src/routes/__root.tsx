@@ -6,14 +6,12 @@ import AuthContext from "@/context/AuthContext";
 import StatusWrapper from "@/components/layout/StatusWrapper";
 import useClients from "@/hooks/useClients";
 
-interface RouterContext {
+export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   auth: ContextType<typeof AuthContext>;
   clients: ReturnType<typeof useClients>;
   crumb?: string;
-}
-
-export const Route = createRootRouteWithContext<RouterContext>()({
+}>()({
   component: RouteComponent,
   errorComponent: ({ error }) => (
     <StatusWrapper

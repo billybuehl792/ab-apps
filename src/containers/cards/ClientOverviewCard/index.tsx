@@ -17,19 +17,17 @@ const ClientOverviewCard = (props: CardProps) => {
   /** Values */
 
   const navigate = useNavigate();
-  const { queries } = useClients();
+  const { queries: clientQueries } = useClients();
 
   /** Queries */
 
   const clientCountQuery = useQuery(
-    queries.count(where("archived", "!=", true))
+    clientQueries.count(where("archived", "!=", true))
   );
 
   /** Callbacks */
 
-  const handleOnClick = () => {
-    void navigate({ to: "/app/clients" });
-  };
+  const handleOnClick = () => void navigate({ to: "/app/clients" });
 
   return (
     <Card {...props}>

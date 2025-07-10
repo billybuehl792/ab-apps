@@ -1,9 +1,7 @@
 import { createContext } from "react";
 
-interface GoogleMapsContextValue {
+export default createContext<{
   places: google.maps.PlacesLibrary | null;
-}
-
-export default createContext<GoogleMapsContextValue>({
+}>({
   places: null,
 });
