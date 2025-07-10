@@ -25,6 +25,8 @@ const getFirebaseErrorMessage = (error: FirebaseError) => {
       return "Wrong password";
     case FirebaseErrorCode.TOO_MANY_ATTEMPTS:
       return "Too many sign in attempts, please try again later";
+    case FirebaseErrorCode.USER_NOT_FOUND:
+      return "User not found";
     default:
       return error.message;
   }

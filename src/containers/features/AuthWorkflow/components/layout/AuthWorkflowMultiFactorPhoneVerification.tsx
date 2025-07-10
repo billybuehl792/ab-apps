@@ -6,8 +6,9 @@ import {
 } from "firebase/auth";
 import { Box, Stack, Typography, type StackProps } from "@mui/material";
 import { useSnackbar } from "notistack";
-import VerificationCodeForm from "@/containers/forms/VerificationCodeForm";
 import useAuthWorkflow from "../../hooks/useAuthWorkflow";
+import VerificationCodeForm from "@/containers/forms/VerificationCodeForm";
+import { markdownUtils } from "@/store/utils/markdown";
 import { AuthMutationKeys } from "@/store/constants/auth";
 
 const AuthWorkflowMultiFactorPhoneVerification = (props: StackProps) => {
@@ -37,14 +38,12 @@ const AuthWorkflowMultiFactorPhoneVerification = (props: StackProps) => {
         )
       );
     },
-    onSuccess: (data) => {
-      onSuccess(data);
-    },
-    onError: (error) => {
-      enqueueSnackbar(`Error verifying phone code: ${error.message}`, {
-        variant: "error",
-      });
-    },
+    onSuccess,
+    onError: (error) =>
+      enqueueSnackbar(
+        `Error verifying phone code: ${markdownUtils.bold(error.message)}`,
+        { variant: "error" }
+      ),
   });
 
   return (

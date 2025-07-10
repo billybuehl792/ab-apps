@@ -42,11 +42,17 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const signOutMutation = useMutation({
     mutationKey: AuthMutationKeys.signOut,
     mutationFn: () => signOut(auth),
+    onMutate: () => {
+      setLoadingAuth(true);
+    },
     onSuccess: () => enqueueSnackbar("Signed out", { variant: "success" }),
     onError: (error) =>
       enqueueSnackbar(`Error signing out: ${error.message}`, {
         variant: "error",
       }),
+    onSettled: () => {
+      setLoadingAuth(false);
+    },
   });
 
   /** Effects */
@@ -76,7 +82,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
         <AppLoadingState
           description={
             loadingAuth
-              ? "Authenticating..."
+              ? undefined
               : permissionsQuery.isLoading
                 ? "Loading permissions..."
                 : "Loading company..."

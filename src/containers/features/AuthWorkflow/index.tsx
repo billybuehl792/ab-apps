@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Stack, type StackProps } from "@mui/material";
 import { useSnackbar } from "notistack";
 import AuthWorkflowProvider from "./providers/AuthWorkflowProvider";
-import AuthWorkflowHeader from "./components/layout/AuthWorkflowHeader";
+import AuthWorkflowBreadcrumbs from "./components/layout/AuthWorkflowBreadcrumbs";
 import AuthWorkflowBody from "./components/layout/AuthWorkflowBody";
+import { markdownUtils } from "@/store/utils/markdown";
 import type { AuthWorkflowContextValue } from "./types";
 
 interface AuthWorkflowProps extends StackProps {
@@ -27,10 +28,18 @@ const AuthWorkflow = ({ onSuccess, ...props }: AuthWorkflowProps) => {
   const handleSignInSuccess: AuthWorkflowContextValue["onSuccess"] = (
     value
   ) => {
-    const userName = value.user.displayName ?? value.user.email ?? "User";
-    enqueueSnackbar(`${userName} signed in`, { variant: "success" });
-
+    enqueueSnackbar(
+      `${markdownUtils.bold(value.user.displayName ?? value.user.email) || "User"} signed in`,
+      { variant: "success" }
+    );
+    resetWorkflow();
     onSuccess?.(value);
+  };
+
+  const resetWorkflow = () => {
+    setMultiFactorHint(null);
+    setMultiFactorResolver(null);
+    setMultiFactorVerificationId(null);
   };
 
   return (
@@ -46,7 +55,7 @@ const AuthWorkflow = ({ onSuccess, ...props }: AuthWorkflowProps) => {
       }}
     >
       <Stack spacing={2} {...props}>
-        <AuthWorkflowHeader />
+        <AuthWorkflowBreadcrumbs />
         <AuthWorkflowBody />
       </Stack>
     </AuthWorkflowProvider>

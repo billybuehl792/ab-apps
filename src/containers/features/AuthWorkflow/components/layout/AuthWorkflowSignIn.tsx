@@ -24,17 +24,13 @@ const AuthWorkflowSignIn = () => {
     mutationFn: async (data: { email: string; password: string }) => {
       return await signInWithEmailAndPassword(auth, data.email, data.password);
     },
-    onSuccess: (data) => {
-      onSuccess(data);
-    },
+    onSuccess,
     onError: (error) => {
-      if (isMfaError(error)) {
-        const resolver = getMultiFactorResolver(
-          auth,
-          error as MultiFactorError
+      if (isMfaError(error))
+        setMultiFactorResolver(
+          getMultiFactorResolver(auth, error as MultiFactorError)
         );
-        setMultiFactorResolver(resolver);
-      } else enqueueSnackbar(getErrorMessage(error), { variant: "error" });
+      else enqueueSnackbar(getErrorMessage(error), { variant: "error" });
     },
   });
 
