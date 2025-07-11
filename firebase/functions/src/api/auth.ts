@@ -1,8 +1,9 @@
 import { getAuth } from "firebase-admin/auth";
-import * as logger from "firebase-functions/logger";
 import { HttpsError, onCall } from "firebase-functions/https";
-import { AuthRole } from "../enums/auth";
 import { getFirestore } from "firebase-admin/firestore";
+import * as logger from "firebase-functions/logger";
+import { AuthRole } from "../enums/auth";
+import type { Permissions } from "../types/auth";
 
 // FETCH
 
@@ -11,34 +12,49 @@ export const getUserPermissions = onCall<{ id: string }>(async (request) => {
     throw new HttpsError("permission-denied", "Authentication required");
 
   try {
-    const id = String(request.data.id);
-    const user = await getAuth().getUser(id);
-    return { role: user.customClaims?.role };
+    const userId = String(request.data.id);
+    const user = await getAuth().getUser(userId);
+
+    const role = String(user.customClaims?.role);
+    if (!Object.values(AuthRole).includes(role as AuthRole))
+      throw new Error(
+        `User does not have a valid role. To access the app, an admin must configure a role for this user.`
+      );
+
+    return { role };
   } catch (error) {
-    throw new HttpsError(
-      "invalid-argument",
-      "Error retrieving user permissions"
-    );
+    const message = error instanceof Error ? error.message : String(error);
+    throw new HttpsError("invalid-argument", message);
   }
 });
 
 export const getUserCompany = onCall<{ id: string }>(async (request) => {
-  console.log("getUserCompany called with id:", request.data.id);
   if (!request.auth)
     throw new HttpsError("permission-denied", "Authentication required");
 
   try {
-    const id = String(request.data.id);
-    const user = await getAuth().getUser(id);
+    const userId = String(request.data.id);
+    const user = await getAuth().getUser(userId);
     const companyId = String(user.customClaims?.companyId);
+
+    if (!companyId)
+      throw new Error(
+        "User does not belong to a company. A company must be configured by an admin."
+      );
+
     const company = await getFirestore()
       .collection("companies")
       .doc(companyId)
       .get();
-    if (!company.exists) throw new Error("Company does not exist");
+    if (!company.exists)
+      throw new Error(
+        "The company this user belongs to does not exist. An admin must reconfigure this user."
+      );
+
     return { id: company.id, ...company.data() };
   } catch (error) {
-    throw new HttpsError("invalid-argument", "Error retrieving user company");
+    const message = error instanceof Error ? error.message : String(error);
+    throw new HttpsError("invalid-argument", message);
   }
 });
 
@@ -52,7 +68,7 @@ export const updateUserPermissions = onCall<{
     throw new HttpsError("permission-denied", "Only admins can set user roles");
 
   try {
-    const id = String(request.data.id);
+    const userId = String(request.data.id);
     const role = String(request.data.permissions.role);
 
     if (!Object.values(AuthRole).includes(role as AuthRole))
@@ -60,17 +76,17 @@ export const updateUserPermissions = onCall<{
         `Role must be one of: ${Object.values(AuthRole).join(", ")}`
       );
 
-    const user = await getAuth().getUser(id);
-    const permissions = { role };
+    const user = await getAuth().getUser(userId);
+    const permissions: Permissions = { role: role as AuthRole };
     await getAuth().setCustomUserClaims(user.uid, {
       ...user.customClaims,
       role: permissions.role,
     });
-    logger.info("User permissions updated", user, permissions);
 
+    logger.info("User permissions updated", user, permissions);
     return {
       message: `${user.displayName} permissions updated`,
-      permission: { role },
+      permissions,
     };
   } catch (error) {
     throw new HttpsError("invalid-argument", "Error setting user role");

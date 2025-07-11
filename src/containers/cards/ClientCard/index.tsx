@@ -13,7 +13,6 @@ import {
 import { Delete, Edit, Info, Person, Restore } from "@mui/icons-material";
 import useClients from "@/hooks/useClients";
 import MenuOptionListDrawer from "@/components/modals/MenuOptionListDrawer";
-import { EMPTY_OBJECT } from "@/store/constants/utility";
 import type { Client } from "@/store/types/clients";
 
 interface ClientCardProps extends Omit<CardProps, "onClick"> {
@@ -32,10 +31,7 @@ const ClientCard = ({
   disabled: disabledProp,
   options: optionsProp,
   onClick: onClickProp,
-  slotProps: {
-    cardActionArea: cardActionAreaProps,
-    cardContent: cardContentProps,
-  } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: ClientCardProps) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -110,14 +106,14 @@ const ClientCard = ({
       <CardActionArea
         disabled={disabled}
         onClick={onClick}
-        {...cardActionAreaProps}
+        {...slotProps?.cardActionArea}
       >
         <CardContent
           component={Stack}
           direction="row"
           spacing={2}
           alignItems="center"
-          {...cardContentProps}
+          {...slotProps?.cardContent}
         >
           <Person />
           <Stack spacing={0.75} overflow="hidden">

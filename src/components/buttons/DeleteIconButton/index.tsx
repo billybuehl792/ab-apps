@@ -1,9 +1,7 @@
 import { type ComponentProps, useState, type ReactNode } from "react";
 import { IconButton, type IconButtonProps } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-
 import ConfirmDialog from "@/components/modals/ConfirmDialog";
-import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 const DEFAULT_ICON = <Delete />;
 
@@ -27,7 +25,7 @@ const DeleteIconButton = ({
   icon = DEFAULT_ICON,
   confirm,
   onClick: onClickProp,
-  slotProps: { confirmDialog: confirmDialogProps } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: DeleteIconButtonProps) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -74,10 +72,10 @@ const DeleteIconButton = ({
       {confirm && (
         <ConfirmDialog
           open={confirmOpen}
-          {...(typeof confirm === "object" ? confirm : EMPTY_OBJECT)}
+          {...(typeof confirm === "object" ? confirm : null)}
           onConfirm={handleConfirm}
           onCancel={handleCancel}
-          {...confirmDialogProps}
+          {...slotProps?.confirmDialog}
         />
       )}
     </>

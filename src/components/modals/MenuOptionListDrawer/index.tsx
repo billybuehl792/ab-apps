@@ -1,7 +1,6 @@
 import { type ComponentProps } from "react";
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
 import MenuOptionList from "@/components/lists/MenuOptionList";
-import { EMPTY_OBJECT } from "@/store/constants/utility";
 import { useMediaQuery } from "@mui/material";
 import { sxAsArray } from "@/store/utils/sx";
 
@@ -22,7 +21,7 @@ const MenuOptionListDrawer = ({
   disableCloseOnSelect,
   title = "Options",
   onClose,
-  slotProps: { list: listProps, ...slotProps } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: MenuOptionListDrawerProps) => {
   /** Values */
@@ -46,9 +45,9 @@ const MenuOptionListDrawer = ({
               onClose?.();
           },
         }))}
-        {...listProps}
+        {...slotProps?.list}
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        sx={[{ minWidth: 300 }, ...sxAsArray(listProps?.sx)]}
+        sx={[{ minWidth: 300 }, ...sxAsArray(slotProps?.list?.sx)]}
       />
     </SwipeableDrawer>
   );

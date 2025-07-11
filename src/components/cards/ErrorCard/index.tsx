@@ -1,5 +1,7 @@
-import { type ReactNode, type JSX } from "react";
+import { type JSX } from "react";
 import {
+  Button,
+  type ButtonProps,
   Card,
   CardContent,
   type CardContentProps,
@@ -8,29 +10,40 @@ import {
   Typography,
 } from "@mui/material";
 import { ErrorOutline } from "@mui/icons-material";
-import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface ErrorCardProps extends CardProps {
-  message?: ReactNode;
-  error?: Error;
+  error: boolean | string | Error | JSX.Element;
   icon?: JSX.Element;
   slotProps?: {
     cardContent?: CardContentProps;
+    errorButton?: ButtonProps;
   };
 }
 
 const ErrorCard = ({
   children,
-  error,
+  error = "Something went wrong...",
   icon,
-  message,
-  slotProps: { cardContent: cardContentProps } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: ErrorCardProps) => {
   /** Values */
 
+  const message =
+    typeof error === "string"
+      ? error
+      : error instanceof Error
+        ? error.message
+        : typeof error === "boolean"
+          ? "An unexpected error occurred."
+          : undefined;
+
   const content =
-    children ?? message ?? error?.message ?? "Something went wrong...";
+    children ||
+    (typeof error !== "string" &&
+      typeof error !== "boolean" &&
+      !(error instanceof Error) &&
+      error);
 
   return (
     <Card {...props}>
@@ -38,13 +51,20 @@ const ErrorCard = ({
         component={Stack}
         spacing={1}
         alignItems="center"
-        {...cardContentProps}
+        {...slotProps?.cardContent}
       >
-        {icon ?? <ErrorOutline fontSize="large" color="error" />}
-        {typeof content === "string" ? (
-          <Typography variant="body2">{content}</Typography>
+        {message ? (
+          <>
+            {icon ?? <ErrorOutline fontSize="large" color="error" />}
+            <Typography color="error" textAlign="center">
+              {message}
+            </Typography>
+          </>
         ) : (
           content
+        )}
+        {!!slotProps?.errorButton && (
+          <Button children="Retry" {...slotProps.errorButton} />
         )}
       </CardContent>
     </Card>

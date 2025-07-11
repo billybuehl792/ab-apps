@@ -7,10 +7,8 @@ import {
   MenuItem,
   type MenuItemProps,
 } from "@mui/material";
-
 import ConfirmDialog from "@/components/modals/ConfirmDialog";
 import { sxAsArray } from "@/store/utils/sx";
-import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface MenuOptionMenuItemProps extends MenuItemProps {
   option: MenuOption;
@@ -23,11 +21,7 @@ interface MenuOptionMenuItemProps extends MenuItemProps {
 
 const MenuOptionMenuItem = ({
   option,
-  slotProps: {
-    text: textProps,
-    icon: iconProps,
-    confirmDialog: confirmDialogProps,
-  } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: MenuOptionMenuItemProps) => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -55,17 +49,17 @@ const MenuOptionMenuItem = ({
       >
         {!!option.icon && (
           <ListItemIcon
-            {...iconProps}
+            {...slotProps?.icon}
             sx={[
               { svg: { color } },
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              ...sxAsArray(iconProps?.sx),
+              ...sxAsArray(slotProps?.icon?.sx),
             ]}
           >
             {option.icon}
           </ListItemIcon>
         )}
-        <ListItemText {...textProps}>{option.label}</ListItemText>
+        <ListItemText {...slotProps?.text}>{option.label}</ListItemText>
       </MenuItem>
       {!!option.confirm && (
         <ConfirmDialog
@@ -78,7 +72,7 @@ const MenuOptionMenuItem = ({
           onCancel={() => {
             setConfirmDialogOpen(false);
           }}
-          {...confirmDialogProps}
+          {...slotProps?.confirmDialog}
         />
       )}
     </>

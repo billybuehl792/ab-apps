@@ -7,8 +7,6 @@ import {
 } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 
-import { EMPTY_OBJECT } from "@/store/constants/utility";
-
 interface FormActionsProps extends StackProps {
   submitLabel?: ReactNode;
   resetLabel?: ReactNode;
@@ -25,10 +23,7 @@ const FormActions = ({
   submitLabel = "Submit",
   resetLabel = resetAsCancel ? "Cancel" : "Reset",
   disableReset,
-  slotProps: {
-    resetButton: resetButtonProps,
-    submitButton: submitButtonProps,
-  } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: FormActionsProps) => {
   /** Values */
@@ -41,7 +36,7 @@ const FormActions = ({
         type="submit"
         loading={formState.isSubmitting}
         disabled={formState.disabled}
-        {...submitButtonProps}
+        {...slotProps?.submitButton}
       >
         {submitLabel}
       </Button>
@@ -55,7 +50,7 @@ const FormActions = ({
             formState.disabled ||
             (!resetAsCancel && !formState.isDirty)
           }
-          {...resetButtonProps}
+          {...slotProps?.resetButton}
         >
           {resetLabel}
         </Button>

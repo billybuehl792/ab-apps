@@ -5,10 +5,8 @@ import {
   type UseFormReturn,
 } from "react-hook-form";
 import { FormHelperText, Stack, type StackProps } from "@mui/material";
-
 import FormActions from "./FormActions";
 import { getErrorMessage } from "@/store/utils/error";
-import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface FormProps<T extends FieldValues = FieldValues, R = unknown, E = Error>
   extends Omit<StackProps<"form">, "onSubmit" | "onError"> {
@@ -36,7 +34,7 @@ const Form = <T extends FieldValues = FieldValues, R = unknown, E = Error>({
   onSuccess,
   onError,
   onReset: onResetProp,
-  slotProps: { fieldset: fieldsetProps, actions: actionsProps } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: FormProps<T, R, E>) => {
   /** Callbacks */
@@ -70,7 +68,7 @@ const Form = <T extends FieldValues = FieldValues, R = unknown, E = Error>({
         onReset={handleReset}
         {...props}
       >
-        <Stack spacing={2} {...fieldsetProps}>
+        <Stack spacing={2} {...slotProps?.fieldset}>
           {children}
           {showRootError && !!methods.formState.errors.root && (
             <FormHelperText error>
@@ -78,7 +76,7 @@ const Form = <T extends FieldValues = FieldValues, R = unknown, E = Error>({
             </FormHelperText>
           )}
         </Stack>
-        <FormActions {...actionsProps} />
+        <FormActions {...slotProps?.actions} />
       </Stack>
     </FormProvider>
   );

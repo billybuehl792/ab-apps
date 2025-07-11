@@ -10,8 +10,8 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { auth } from "@/store/config/firebase";
 import useUsers from "@/hooks/useUsers";
-import AppLoadingState from "@/containers/layout/AppLoadingState";
 import AuthContext from "@/context/AuthContext";
+import StatusWrapper from "@/components/layout/StatusWrapper";
 import { AuthMutationKeys } from "@/store/constants/auth";
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
@@ -22,18 +22,16 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   /** Values */
 
   const { enqueueSnackbar } = useSnackbar();
-  const {
-    queries: { company, permissions },
-  } = useUsers();
+  const { queries: userQueries } = useUsers();
 
   /** Queries */
 
   const permissionsQuery = useQuery({
-    ...permissions(user?.uid ?? ""),
+    ...userQueries.permissions(user?.uid ?? ""),
     enabled: !!user,
   });
   const companyQuery = useQuery({
-    ...company(user?.uid ?? ""),
+    ...userQueries.company(user?.uid ?? ""),
     enabled: !!user,
   });
 
@@ -78,19 +76,40 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
         [user, companyQuery.data, permissionsQuery.data, signOutMutation]
       )}
     >
-      {loadingAuth || permissionsQuery.isLoading || companyQuery.isLoading ? (
-        <AppLoadingState
-          description={
-            loadingAuth
-              ? undefined
-              : permissionsQuery.isLoading
-                ? "Loading permissions..."
-                : "Loading company..."
-          }
-        />
-      ) : (
-        children
-      )}
+      <StatusWrapper
+        component="main"
+        loading={
+          loadingAuth || permissionsQuery.isLoading || companyQuery.isLoading
+        }
+        loadingDescription={
+          permissionsQuery.isLoading
+            ? "Loading permissions..."
+            : companyQuery.isLoading
+              ? "Loading company..."
+              : null
+        }
+        error={permissionsQuery.error || companyQuery.error}
+        slotProps={{
+          errorButton: {
+            children: "Sign Out",
+            loading: signOutMutation.isPending,
+            onClick: () => {
+              signOutMutation.mutate();
+            },
+          },
+        }}
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          color: "primary.contrastText",
+          bgcolor: "primary.main",
+        }}
+      >
+        {children}
+      </StatusWrapper>
     </AuthContext>
   );
 };

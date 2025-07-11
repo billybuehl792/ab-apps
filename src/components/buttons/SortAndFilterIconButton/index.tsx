@@ -6,10 +6,8 @@ import {
   type IconButtonProps,
 } from "@mui/material";
 import { Tune } from "@mui/icons-material";
-
 import SortAndFilterDrawer from "@/components/modals/SortAndFilterDrawer";
 import SortAndFilterForm from "@/components/forms/SortAndFilterForm";
-import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface SortAndFilterIconButtonProps
   extends Omit<IconButtonProps, "form" | "onSubmit">,
@@ -28,7 +26,7 @@ const SortAndFilterIconButton = ({
   filterOptions,
   onSubmit,
   onClick: onClickProp,
-  slotProps: { drawer: drawerProps } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: SortAndFilterIconButtonProps) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -68,7 +66,7 @@ const SortAndFilterIconButton = ({
           filterOptions={filterOptions}
           onSubmit={onSubmit}
           onClose={handleCloseModal}
-          {...drawerProps}
+          {...slotProps?.drawer}
         />
       )}
     </>

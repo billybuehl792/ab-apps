@@ -1,8 +1,6 @@
 import { type ComponentProps } from "react";
 import { MenuList, type MenuListProps } from "@mui/material";
-
 import MenuOptionMenuItem from "@/components/menu-items/MenuOptionMenuItem";
-import { EMPTY_OBJECT } from "@/store/constants/utility";
 
 interface MenuOptionListProps extends MenuListProps {
   options: MenuOption[];
@@ -16,7 +14,7 @@ interface MenuOptionListProps extends MenuListProps {
  */
 const MenuOptionList = ({
   options,
-  slotProps: { menuItem: menuItemProps } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: MenuOptionListProps) => {
   return (
@@ -27,7 +25,7 @@ const MenuOptionList = ({
           <MenuOptionMenuItem
             key={option.id}
             option={option}
-            {...menuItemProps}
+            {...slotProps?.menuItem}
           />
         ))}
     </MenuList>

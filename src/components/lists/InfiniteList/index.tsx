@@ -19,8 +19,7 @@ import {
   Stack,
   type StackProps,
 } from "@mui/material";
-
-import { EMPTY_ARRAY, EMPTY_OBJECT } from "@/store/constants/utility";
+import { EMPTY_ARRAY } from "@/store/constants/utility";
 
 interface InfiniteListProps<T extends DocumentData = DocumentData>
   extends StackProps {
@@ -48,10 +47,7 @@ const InfiniteList = <T extends DocumentData = DocumentData>({
   constraints = EMPTY_ARRAY,
   pageSize = 10,
   renderItem,
-  slotProps: {
-    loadMoreButton: loadMoreButtonProps,
-    skeleton: skeletonProps,
-  } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: InfiniteListProps<T>): ReactNode => {
   /** Queries */
@@ -96,7 +92,7 @@ const InfiniteList = <T extends DocumentData = DocumentData>({
               key={crypto.randomUUID()}
               height={82}
               variant="rounded"
-              {...skeletonProps}
+              {...slotProps?.skeleton}
             />
           ))}
 
@@ -106,7 +102,7 @@ const InfiniteList = <T extends DocumentData = DocumentData>({
           onClick={() => {
             void listQuery.fetchNextPage();
           }}
-          {...loadMoreButtonProps}
+          {...slotProps?.loadMoreButton}
         >
           Load More
         </Button>

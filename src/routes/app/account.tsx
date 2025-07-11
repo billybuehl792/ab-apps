@@ -22,7 +22,7 @@ function RouteComponent() {
         {user ? (
           <UserDetailCard user={user} />
         ) : (
-          <ErrorCard message="User not found" />
+          <ErrorCard error="User not found" />
         )}
       </Stack>
     </Container>
