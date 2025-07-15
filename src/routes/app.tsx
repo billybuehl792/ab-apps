@@ -1,7 +1,9 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { Box, Paper, useMediaQuery } from "@mui/material";
+import useAuth from "@/hooks/useAuth";
 import NavigationList from "@/containers/lists/NavigationList";
 import NavigationFooter from "@/containers/layout/NavigationFooter";
+import StatusWrapper from "@/components/layout/StatusWrapper";
 import AppBar from "@/containers/layout/AppBar";
 import {
   APP_BAR_HEIGHT,
@@ -29,6 +31,8 @@ function RouteComponent() {
   const isDesktop = useMediaQuery(({ breakpoints }) => breakpoints.up("sm"));
   const isMobile = useMediaQuery("(pointer: coarse)");
 
+  const { user, loading, company, permissions } = useAuth();
+
   return (
     <>
       <Box
@@ -44,7 +48,12 @@ function RouteComponent() {
         right={0}
         overflow="auto"
       >
-        <Outlet />
+        <StatusWrapper
+          loading={loading}
+          error={!user || !company || !permissions}
+        >
+          <Outlet />
+        </StatusWrapper>
       </Box>
       {isDesktop && (
         <Paper

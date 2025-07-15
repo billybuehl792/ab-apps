@@ -33,9 +33,7 @@ const AuthWorkflow = ({ onSuccess, ...props }: AuthWorkflowProps) => {
       { variant: "success" }
     );
     resetWorkflow();
-    setTimeout(() => {
-      onSuccess?.(value);
-    }, 600);
+    onSuccess?.(value);
   };
 
   const resetWorkflow = () => {

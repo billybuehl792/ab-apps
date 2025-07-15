@@ -5,7 +5,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { auth } from "@/store/config/firebase";
@@ -21,6 +21,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
   /** Values */
 
+  const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
   const { queries: userQueries } = useUsers();
 
@@ -41,14 +42,20 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     mutationKey: AuthMutationKeys.signOut,
     mutationFn: () => signOut(auth),
     onMutate: () => {
+      const tempUser = user;
       setLoadingAuth(true);
+      setUser(null);
+      return { tempUser };
     },
-    onSuccess: () => enqueueSnackbar("Signed out", { variant: "success" }),
-    onError: (error) =>
+    onSuccess: () => {
+      enqueueSnackbar("Signed out", { variant: "success" });
+      queryClient.clear();
+    },
+    onError: (error, _, context) => {
       enqueueSnackbar(`Error signing out: ${error.message}`, {
         variant: "error",
-      }),
-    onSettled: () => {
+      });
+      setUser(context?.tempUser ?? null);
       setLoadingAuth(false);
     },
   });
@@ -71,9 +78,19 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
           user,
           company: companyQuery.data,
           permissions: permissionsQuery.data,
+          loading:
+            loadingAuth || permissionsQuery.isLoading || companyQuery.isLoading,
           mutations: { signOut: signOutMutation },
         }),
-        [user, companyQuery.data, permissionsQuery.data, signOutMutation]
+        [
+          user,
+          companyQuery.data,
+          companyQuery.isLoading,
+          permissionsQuery.data,
+          permissionsQuery.isLoading,
+          loadingAuth,
+          signOutMutation,
+        ]
       )}
     >
       <StatusWrapper
