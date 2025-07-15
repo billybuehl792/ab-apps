@@ -1,5 +1,5 @@
 import { type ComponentProps } from "react";
-import { useLocation, useNavigate, useRouter } from "@tanstack/react-router";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Avatar } from "@mui/material";
 import { Logout, Person } from "@mui/icons-material";
 import useAuth from "@/hooks/useAuth";
@@ -11,7 +11,6 @@ const UserIconButton = (
   /** Values */
 
   const navigate = useNavigate();
-  const router = useRouter();
   const { pathname } = useLocation();
   const {
     user,
@@ -19,14 +18,6 @@ const UserIconButton = (
   } = useAuth();
 
   const userName = user?.displayName ?? user?.email ?? "User";
-
-  /** Callbacks */
-
-  const handleSignOut = () => {
-    signOut.mutate(undefined, {
-      onSuccess: () => void router.invalidate(),
-    });
-  };
 
   /** Options */
 
@@ -43,7 +34,7 @@ const UserIconButton = (
       label: "Sign Out",
       icon: <Logout />,
       confirm: "Are you sure you want to sign out?",
-      onClick: handleSignOut,
+      onClick: signOut.mutate,
     },
   ];
 

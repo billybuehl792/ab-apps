@@ -8,10 +8,8 @@ export default createContext<{
   user: User | null;
   company?: Company;
   permissions?: Permissions;
-  loading: boolean;
   mutations: { signOut: UseMutationResult<void, Error, void> };
 }>({
   user: null,
-  loading: true,
   mutations: { signOut: {} as UseMutationResult<void, Error, void> },
 });

@@ -10,7 +10,6 @@ const router = createRouter({
   context: {
     auth: {
       user: null,
-      loading: true,
       mutations: {} as ContextType<typeof AuthContext>["mutations"],
     },
     clients: {} as ReturnType<typeof useClients>,

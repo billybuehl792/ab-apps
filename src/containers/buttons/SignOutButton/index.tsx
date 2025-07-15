@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useRouter } from "@tanstack/react-router";
 import useAuth from "@/hooks/useAuth";
 import { Button, type ButtonProps } from "@mui/material";
 import { Logout } from "@mui/icons-material";
@@ -10,7 +9,6 @@ const SignOutButton = (props: ButtonProps) => {
 
   /** Values */
 
-  const router = useRouter();
   const {
     mutations: { signOut },
   } = useAuth();
@@ -18,9 +16,7 @@ const SignOutButton = (props: ButtonProps) => {
   /** Callbacks */
 
   const handleSignOut = () => {
-    signOut.mutate(undefined, {
-      onSuccess: () => void router.invalidate(),
-    });
+    signOut.mutate();
   };
 
   return (

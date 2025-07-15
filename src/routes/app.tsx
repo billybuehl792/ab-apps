@@ -9,7 +9,6 @@ import {
   APP_FOOTER_HEIGHT,
   APP_SIDE_PANEL_WIDTH,
 } from "@/store/constants/layout";
-import AppStatusWrapper from "@/containers/layout/AppStatusWrapper";
 
 export const Route = createFileRoute("/app")({
   component: RouteComponent,
@@ -31,7 +30,7 @@ function RouteComponent() {
   const isMobile = useMediaQuery("(pointer: coarse)");
 
   return (
-    <AppStatusWrapper>
+    <>
       <Box
         component="main"
         position="absolute"
@@ -79,6 +78,6 @@ function RouteComponent() {
           }}
         />
       )}
-    </AppStatusWrapper>
+    </>
   );
 }
