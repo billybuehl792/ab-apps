@@ -11,13 +11,13 @@ import { useSnackbar } from "notistack";
 import { auth } from "@/store/config/firebase";
 import useUsers from "@/hooks/useUsers";
 import AuthContext from "@/context/AuthContext";
-import StatusWrapper from "@/components/layout/StatusWrapper";
 import { AuthMutationKeys } from "@/store/constants/auth";
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] =
     useState<ContextType<typeof AuthContext>["user"]>(null);
-  const [loadingAuth, setLoadingAuth] = useState(true);
+  const [loadingAuth, setLoadingAuth] =
+    useState<ContextType<typeof AuthContext>["loading"]>(true);
 
   /** Values */
 
@@ -41,15 +41,18 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     mutationKey: AuthMutationKeys.signOut,
     mutationFn: () => signOut(auth),
     onMutate: () => {
+      const tempUser = user;
       setLoadingAuth(true);
+      setUser(null);
+      return { user: tempUser };
     },
     onSuccess: () => enqueueSnackbar("Signed out", { variant: "success" }),
-    onError: (error) =>
+    onError: (error, _, context) => {
+      setUser(context?.user ?? null);
+      setLoadingAuth(false);
       enqueueSnackbar(`Error signing out: ${error.message}`, {
         variant: "error",
-      }),
-    onSettled: () => {
-      setLoadingAuth(false);
+      });
     },
   });
 
@@ -71,45 +74,22 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
           user,
           company: companyQuery.data,
           permissions: permissionsQuery.data,
+          loading:
+            loadingAuth || permissionsQuery.isLoading || companyQuery.isLoading,
           mutations: { signOut: signOutMutation },
         }),
-        [user, companyQuery.data, permissionsQuery.data, signOutMutation]
+        [
+          user,
+          companyQuery.data,
+          companyQuery.isLoading,
+          permissionsQuery.data,
+          permissionsQuery.isLoading,
+          loadingAuth,
+          signOutMutation,
+        ]
       )}
     >
-      <StatusWrapper
-        component="main"
-        loading={
-          loadingAuth || permissionsQuery.isLoading || companyQuery.isLoading
-        }
-        loadingDescription={
-          permissionsQuery.isLoading
-            ? "Loading permissions..."
-            : companyQuery.isLoading
-              ? "Loading company..."
-              : null
-        }
-        error={permissionsQuery.error || companyQuery.error}
-        slotProps={{
-          errorButton: {
-            children: "Sign Out",
-            loading: signOutMutation.isPending,
-            onClick: () => {
-              signOutMutation.mutate();
-            },
-          },
-        }}
-        sx={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          color: "primary.contrastText",
-          bgcolor: "primary.main",
-        }}
-      >
-        {children}
-      </StatusWrapper>
+      {children}
     </AuthContext>
   );
 };
