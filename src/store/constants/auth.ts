@@ -14,8 +14,6 @@ export const DEFAULT_COMPANY: Company = {
 
 export const AuthKey = ["auth"] as const;
 export const AuthQueryKeys = {
-  company: [...AuthKey, "company"],
-  permissions: [...AuthKey, "permissions"],
   token: [...AuthKey, "token"],
 } as const;
 export const AuthMutationKeys = {
@@ -23,6 +21,5 @@ export const AuthMutationKeys = {
   sendPhoneVerificationCode: [...AuthKey, "sendPhoneVerificationCode"],
   signIn: [...AuthKey, "signIn"],
   signOut: [...AuthKey, "signOut"],
-  updatePermissions: [...AuthKey, "updatePermissions"],
   verifyPhoneCode: [...AuthKey, "verifyPhoneCode"],
 } as const;

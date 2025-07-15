@@ -81,14 +81,21 @@ const UserPermissionsFormDrawer = ({
                 <FormControl error={Boolean(formState.errors.role)}>
                   <FormLabel>Role</FormLabel>
                   <RadioGroup {...field}>
-                    {Object.values(AuthRole).map((role) => (
-                      <FormControlLabel
-                        key={role}
-                        value={role}
-                        control={<Radio />}
-                        label={role.toCapitalized()}
-                      />
-                    ))}
+                    <FormControlLabel
+                      value={AuthRole.SUPER_ADMIN}
+                      label="Super Admin"
+                      control={<Radio />}
+                    />
+                    <FormControlLabel
+                      value={AuthRole.ADMIN}
+                      label="Admin"
+                      control={<Radio />}
+                    />
+                    <FormControlLabel
+                      value={AuthRole.STANDARD}
+                      label="Standard"
+                      control={<Radio />}
+                    />
                   </RadioGroup>
                   {!!formState.errors.role && (
                     <FormHelperText error>

@@ -41,24 +41,24 @@ const StatusWrapper = ({
   ...props
 }: StatusWrapperProps) => {
   if (loading)
-    return (
-      <StatusWrapperContainer {...props}>
-        {typeof loading === "boolean" ? (
-          (loadingIcon ?? <CircularProgress size={40} color="inherit" />)
-        ) : typeof loading === "string" ? (
-          <Typography color="info" noWrap>
-            {loading}
-          </Typography>
-        ) : (
-          loading
-        )}
-        {loadingDescription && (
-          <Typography variant="caption" color="inherit" noWrap>
-            {loadingDescription}
-          </Typography>
-        )}
-      </StatusWrapperContainer>
-    );
+    if (typeof loading === "boolean" || typeof loading === "string")
+      return (
+        <StatusWrapperContainer {...props}>
+          {typeof loading === "boolean"
+            ? (loadingIcon ?? <CircularProgress size={40} color="inherit" />)
+            : typeof loading === "string" && (
+                <Typography color="info" noWrap>
+                  {loading}
+                </Typography>
+              )}
+          {loadingDescription && (
+            <Typography variant="caption" color="inherit" noWrap>
+              {loadingDescription}
+            </Typography>
+          )}
+        </StatusWrapperContainer>
+      );
+    else return loading;
   else if (error) {
     return (
       <StatusWrapperContainer {...props}>

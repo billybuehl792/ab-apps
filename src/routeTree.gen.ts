@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
 import { Route as AppEstimateCalculatorRouteImport } from './routes/app/estimate-calculator'
 import { Route as AppClientsRouteImport } from './routes/app/clients'
+import { Route as AppAdminRouteImport } from './routes/app/admin'
 import { Route as AppAccountRouteImport } from './routes/app/account'
 import { Route as AppClientsIndexRouteImport } from './routes/app/clients/index'
 import { Route as AppClientsCreateRouteImport } from './routes/app/clients/create'
@@ -50,6 +51,11 @@ const AppClientsRoute = AppClientsRouteImport.update({
   path: '/clients',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAccountRoute = AppAccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/app/account': typeof AppAccountRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
   '/app/': typeof AppIndexRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sign-in': typeof SignInRoute
   '/app/account': typeof AppAccountRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
   '/app': typeof AppIndexRoute
   '/app/clients/$id': typeof AppClientsIdRoute
@@ -99,6 +107,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/app/account': typeof AppAccountRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
   '/app/': typeof AppIndexRoute
@@ -113,6 +122,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/sign-in'
     | '/app/account'
+    | '/app/admin'
     | '/app/clients'
     | '/app/estimate-calculator'
     | '/app/'
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sign-in'
     | '/app/account'
+    | '/app/admin'
     | '/app/estimate-calculator'
     | '/app'
     | '/app/clients/$id'
@@ -135,6 +146,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/sign-in'
     | '/app/account'
+    | '/app/admin'
     | '/app/clients'
     | '/app/estimate-calculator'
     | '/app/'
@@ -193,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppClientsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/account': {
       id: '/app/account'
       path: '/account'
@@ -242,6 +261,7 @@ const AppClientsRouteWithChildren = AppClientsRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppAccountRoute: typeof AppAccountRoute
+  AppAdminRoute: typeof AppAdminRoute
   AppClientsRoute: typeof AppClientsRouteWithChildren
   AppEstimateCalculatorRoute: typeof AppEstimateCalculatorRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -249,6 +269,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAccountRoute: AppAccountRoute,
+  AppAdminRoute: AppAdminRoute,
   AppClientsRoute: AppClientsRouteWithChildren,
   AppEstimateCalculatorRoute: AppEstimateCalculatorRoute,
   AppIndexRoute: AppIndexRoute,

@@ -9,24 +9,34 @@ import {
   type ChipProps,
 } from "@mui/material";
 import { Store } from "@mui/icons-material";
-import useUsers from "@/hooks/useUsers";
-import { type User } from "firebase/auth";
+import useCompanies from "@/hooks/useCompanies";
+import type { Company } from "@/store/types/companies";
 
-const UserCompanyChip = ({ user, ...props }: ChipProps & { user: User }) => {
+interface CompanyChipProps extends ChipProps {
+  company: Company | string;
+}
+
+const CompanyChip = ({ company: companyProp, ...props }: CompanyChipProps) => {
   /** Values */
 
-  const {
-    queries: { company },
-  } = useUsers();
+  const { queries: companyQueries } = useCompanies();
+  const companyId =
+    typeof companyProp === "string" ? companyProp : companyProp.id;
 
   /** Queries */
 
-  const companyQuery = useQuery(company(user.uid));
+  const companyQuery = useQuery({
+    ...companyQueries.detail(companyId),
+    select: (data) => ({ id: data.id, ...data.data() }),
+    enabled: typeof companyProp === "string",
+  });
 
-  const alt = companyQuery.data?.label ?? "company";
-  const label = companyQuery.data?.label ?? "-";
-  const thumbnail = companyQuery.data?.thumbnail;
-  const description = companyQuery.data?.description;
+  const company =
+    typeof companyProp === "string" ? companyQuery.data : companyProp;
+  const alt = company?.label ?? "company";
+  const label = company?.label ?? "-";
+  const thumbnail = company?.thumbnail;
+  const description = company?.description;
 
   /** Components */
 
@@ -38,10 +48,10 @@ const UserCompanyChip = ({ user, ...props }: ChipProps & { user: User }) => {
         companyQuery.isLoading ? (
           <Skeleton variant="circular" />
         ) : thumbnail ? undefined : (
-          <Store sx={{ maxWidth: "60%", color: "white" }} />
+          <Store sx={{ maxWidth: "60%" }} />
         )
       }
-      sx={{ bgcolor: "primary.main", width: 24, height: 24 }}
+      sx={{ width: 24, height: 24 }}
     />
   );
 
@@ -81,4 +91,4 @@ const UserCompanyChip = ({ user, ...props }: ChipProps & { user: User }) => {
   );
 };
 
-export default UserCompanyChip;
+export default CompanyChip;

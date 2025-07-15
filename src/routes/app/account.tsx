@@ -11,7 +11,7 @@ export const Route = createFileRoute("/app/account")({
 function RouteComponent() {
   /** Values */
 
-  const { user } = useAuth();
+  const { user, company } = useAuth();
 
   return (
     <Container maxWidth="md" disableGutters>
@@ -20,7 +20,7 @@ function RouteComponent() {
           Account Info
         </Typography>
         {user ? (
-          <UserDetailCard user={user} />
+          <UserDetailCard user={user} company={company} />
         ) : (
           <ErrorCard error="User not found" />
         )}

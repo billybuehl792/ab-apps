@@ -5,12 +5,13 @@ import {
 } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { type User } from "firebase/auth";
+import { type ListUsersResult } from "firebase-admin/auth";
 import { httpsCallable } from "firebase/functions";
 import { functions } from "@/store/config/firebase";
-import { AuthMutationKeys, AuthQueryKeys } from "@/store/constants/auth";
 import { markdownUtils } from "@/store/utils/markdown";
-import type { Company } from "@/store/types/companies";
 import type { Permissions } from "@/store/types/auth";
+
+const QUERY_KEY = ["users"] as const;
 
 const useUsers = () => {
   /** Values */
@@ -20,28 +21,26 @@ const useUsers = () => {
 
   /** Queries */
 
-  const company = (id: string) =>
+  const list = () =>
     queryOptions({
-      queryKey: [...AuthQueryKeys.company, id] as const,
+      queryKey: [...QUERY_KEY, "list"] as const,
       queryFn: async () => {
-        const res = await httpsCallable<{ id: string }, Company>(
+        const res = await httpsCallable<unknown, ListUsersResult>(
           functions,
-          "auth-getUserCompany"
-        )({ id });
-
+          "users-getUserList"
+        )();
         return res.data;
       },
     });
 
   const permissions = (id: string) =>
     queryOptions({
-      queryKey: [...AuthQueryKeys.permissions, id] as const,
+      queryKey: [...QUERY_KEY, "permissions", id] as const,
       queryFn: async () => {
         const res = await httpsCallable<{ id: string }, Permissions>(
           functions,
-          "auth-getUserPermissions"
+          "users-getUserPermissions"
         )({ id });
-
         return res.data;
       },
     });
@@ -49,20 +48,20 @@ const useUsers = () => {
   /** Mutations */
 
   const updatePermissions = useMutation({
-    mutationKey: AuthMutationKeys.updatePermissions,
+    mutationKey: [...QUERY_KEY, "permissions", "update"],
     mutationFn: async (data: { user: User; permissions: Permissions }) => {
       const res = await httpsCallable<
         { id: string; permissions: Permissions },
         { message: string; permissions: Permissions }
       >(
         functions,
-        "auth-updateUserPermissions"
+        "users-updatePermissions"
       )({ id: data.user.uid, permissions: data.permissions });
 
       return res.data;
     },
     onSuccess: (_, data) => {
-      void queryClient.invalidateQueries(permissions(data.user.uid));
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEY });
       enqueueSnackbar(
         `${markdownUtils.bold(data.user.displayName) || "User"} permissions updated to ${markdownUtils.bold(data.permissions.role)}`,
         { variant: "success" }
@@ -72,7 +71,7 @@ const useUsers = () => {
   });
 
   return {
-    queries: { company, permissions },
+    queries: { list, permissions },
     mutations: { updatePermissions },
   };
 };

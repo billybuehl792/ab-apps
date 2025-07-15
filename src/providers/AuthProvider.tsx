@@ -7,33 +7,50 @@ import {
 } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { httpsCallable } from "firebase/functions";
 import { useSnackbar } from "notistack";
-import { auth } from "@/store/config/firebase";
-import useUsers from "@/hooks/useUsers";
+import { auth, functions } from "@/store/config/firebase";
 import AuthContext from "@/context/AuthContext";
 import StatusWrapper from "@/components/layout/StatusWrapper";
 import { AuthMutationKeys } from "@/store/constants/auth";
+import type { Company } from "@/store/types/companies";
+import type { Permissions } from "@/store/types/auth";
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] =
     useState<ContextType<typeof AuthContext>["user"]>(null);
-  const [loadingAuth, setLoadingAuth] = useState(true);
+  const [loadingAuth, setLoadingAuth] =
+    useState<ContextType<typeof AuthContext>["loading"]>(true);
 
   /** Values */
 
   const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
-  const { queries: userQueries } = useUsers();
 
   /** Queries */
 
-  const permissionsQuery = useQuery({
-    ...userQueries.permissions(user?.uid ?? ""),
-    enabled: !!user,
-  });
   const companyQuery = useQuery({
-    ...userQueries.company(user?.uid ?? ""),
-    enabled: !!user,
+    queryKey: ["company"],
+    queryFn: async () => {
+      const res = await httpsCallable<unknown, Company>(
+        functions,
+        "auth-getCompany"
+      )();
+
+      return res.data;
+    },
+  });
+
+  const permissionsQuery = useQuery({
+    queryKey: ["permissions"],
+    queryFn: async () => {
+      const res = await httpsCallable<unknown, Permissions>(
+        functions,
+        "auth-getPermissions"
+      )();
+
+      return res.data;
+    },
   });
 
   /** Mutations */

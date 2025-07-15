@@ -13,21 +13,24 @@ import UserDetailCardEmail from "./layout/UserDetailCardEmail";
 import UserDetailCardLastSignIn from "./layout/UserDetailCardLastSignIn";
 import UserDetailCardMemberSince from "./layout/UserDetailCardMemberSince";
 import UserDetailCardPermissions from "./layout/UserDetailCardPermissions";
-import UserCompanyChip from "@/containers/chips/UserCompanyChip";
+import UserCompanyChip from "@/containers/chips/CompanyChip";
 import SignOutButton from "@/containers/buttons/SignOutButton";
+import type { Company } from "@/store/types/companies";
 
 interface UserDetailCardProps extends CardProps {
   user: User;
+  company?: Company;
 }
 
-const UserDetailCard = ({ user, ...props }: UserDetailCardProps) => {
+const UserDetailCard = ({ user, company, ...props }: UserDetailCardProps) => {
   /** Values */
 
   const items = [
     {
       id: "company",
+      render: Boolean(company),
       label: "Company",
-      value: <UserCompanyChip user={user} />,
+      value: <UserCompanyChip company={company ?? ""} />,
     },
     {
       id: "email",

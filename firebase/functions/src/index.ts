@@ -10,10 +10,11 @@
 import { initializeApp } from "firebase-admin/app";
 
 import * as auth from "./api/auth";
+import * as users from "./api/users";
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
 
 initializeApp();
 
-export { auth };
+export { auth, users };

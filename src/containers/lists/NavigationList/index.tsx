@@ -1,6 +1,7 @@
 import { type ComponentProps } from "react";
 import { useLocation } from "@tanstack/react-router";
 import {
+  AdminPanelSettings,
   Construction,
   Groups,
   Home,
@@ -9,11 +10,12 @@ import {
 } from "@mui/icons-material";
 import useAuth from "@/hooks/useAuth";
 import NestedList from "@/components/lists/NestedList";
+import { AuthRole } from "@/store/enums/auth";
 
 const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
   /** Values */
 
-  const { user } = useAuth();
+  const { user, permissions } = useAuth();
   const { pathname } = useLocation();
 
   const navigationItems: ListItem[] = [
@@ -58,6 +60,16 @@ const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
       render: Boolean(user),
       selected: pathname === "/app/account",
       icon: <Person />,
+    },
+    {
+      id: "admin",
+      label: "Admin",
+      to: "/app/admin",
+      render: [AuthRole.ADMIN, AuthRole.SUPER_ADMIN].includes(
+        permissions?.role ?? AuthRole.STANDARD
+      ),
+      selected: pathname === "/app/admin",
+      icon: <AdminPanelSettings />,
     },
   ];
 

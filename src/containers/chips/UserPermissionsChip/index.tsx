@@ -10,14 +10,11 @@ const UserPermissionsChip = (props: ChipProps & { user: User }) => {
 
   /** Values */
 
-  const {
-    queries: { permissions },
-    mutations: { updatePermissions },
-  } = useUsers();
+  const { queries: userQueries, mutations: userMutations } = useUsers();
 
   /** Queries */
 
-  const permissionsQuery = useQuery(permissions(props.user.uid));
+  const permissionsQuery = useQuery(userQueries.permissions(props.user.uid));
 
   /** Callbacks */
 
@@ -29,7 +26,7 @@ const UserPermissionsChip = (props: ChipProps & { user: User }) => {
       return;
     }
 
-    updatePermissions.mutate(
+    userMutations.updatePermissions.mutate(
       {
         user: props.user,
         permissions: { role: data.role },
