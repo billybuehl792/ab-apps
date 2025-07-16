@@ -1,7 +1,7 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { Container, Stack, Typography } from "@mui/material";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { Container, Stack } from "@mui/material";
 import { AuthRole } from "@/store/enums/auth";
-import UserList from "@/containers/lists/UserList";
+import NavigationBreadcrumbs from "@/containers/lists/NavigationBreadcrumbs";
 
 export const Route = createFileRoute("/app/admin")({
   component: RouteComponent,
@@ -12,16 +12,15 @@ export const Route = createFileRoute("/app/admin")({
 
     if (!isAdmin) redirect({ to: "/app", replace: true, throw: true });
   },
+  loader: () => ({ crumb: "AB Admin" }),
 });
 
 function RouteComponent() {
   return (
-    <Container maxWidth="md" disableGutters>
-      <Stack spacing={1} p={2}>
-        <Typography variant="h6" noWrap>
-          Admin
-        </Typography>
-        <UserList />
+    <Container maxWidth="lg" disableGutters>
+      <Stack spacing={2} p={2}>
+        <NavigationBreadcrumbs />
+        <Outlet />
       </Stack>
     </Container>
   );

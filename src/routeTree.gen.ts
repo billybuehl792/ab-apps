@@ -18,8 +18,12 @@ import { Route as AppClientsRouteImport } from './routes/app/clients'
 import { Route as AppAdminRouteImport } from './routes/app/admin'
 import { Route as AppAccountRouteImport } from './routes/app/account'
 import { Route as AppClientsIndexRouteImport } from './routes/app/clients/index'
+import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
 import { Route as AppClientsCreateRouteImport } from './routes/app/clients/create'
 import { Route as AppClientsIdRouteImport } from './routes/app/clients/$id'
+import { Route as AppAdminUsersRouteImport } from './routes/app/admin/users'
+import { Route as AppAdminUsersIndexRouteImport } from './routes/app/admin/users/index'
+import { Route as AppAdminUsersIdRouteImport } from './routes/app/admin/users/$id'
 
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
@@ -66,6 +70,11 @@ const AppClientsIndexRoute = AppClientsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppClientsRoute,
 } as any)
+const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAdminRoute,
+} as any)
 const AppClientsCreateRoute = AppClientsCreateRouteImport.update({
   id: '/create',
   path: '/create',
@@ -76,30 +85,51 @@ const AppClientsIdRoute = AppClientsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppClientsRoute,
 } as any)
+const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminUsersIndexRoute = AppAdminUsersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAdminUsersRoute,
+} as any)
+const AppAdminUsersIdRoute = AppAdminUsersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppAdminUsersRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/app/account': typeof AppAccountRoute
-  '/app/admin': typeof AppAdminRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
   '/app/': typeof AppIndexRoute
+  '/app/admin/users': typeof AppAdminUsersRouteWithChildren
   '/app/clients/$id': typeof AppClientsIdRoute
   '/app/clients/create': typeof AppClientsCreateRoute
+  '/app/admin/': typeof AppAdminIndexRoute
   '/app/clients/': typeof AppClientsIndexRoute
+  '/app/admin/users/$id': typeof AppAdminUsersIdRoute
+  '/app/admin/users/': typeof AppAdminUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sign-in': typeof SignInRoute
   '/app/account': typeof AppAccountRoute
-  '/app/admin': typeof AppAdminRoute
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
   '/app': typeof AppIndexRoute
   '/app/clients/$id': typeof AppClientsIdRoute
   '/app/clients/create': typeof AppClientsCreateRoute
+  '/app/admin': typeof AppAdminIndexRoute
   '/app/clients': typeof AppClientsIndexRoute
+  '/app/admin/users/$id': typeof AppAdminUsersIdRoute
+  '/app/admin/users': typeof AppAdminUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -107,13 +137,17 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/app/account': typeof AppAccountRoute
-  '/app/admin': typeof AppAdminRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
   '/app/': typeof AppIndexRoute
+  '/app/admin/users': typeof AppAdminUsersRouteWithChildren
   '/app/clients/$id': typeof AppClientsIdRoute
   '/app/clients/create': typeof AppClientsCreateRoute
+  '/app/admin/': typeof AppAdminIndexRoute
   '/app/clients/': typeof AppClientsIndexRoute
+  '/app/admin/users/$id': typeof AppAdminUsersIdRoute
+  '/app/admin/users/': typeof AppAdminUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -126,20 +160,26 @@ export interface FileRouteTypes {
     | '/app/clients'
     | '/app/estimate-calculator'
     | '/app/'
+    | '/app/admin/users'
     | '/app/clients/$id'
     | '/app/clients/create'
+    | '/app/admin/'
     | '/app/clients/'
+    | '/app/admin/users/$id'
+    | '/app/admin/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/sign-in'
     | '/app/account'
-    | '/app/admin'
     | '/app/estimate-calculator'
     | '/app'
     | '/app/clients/$id'
     | '/app/clients/create'
+    | '/app/admin'
     | '/app/clients'
+    | '/app/admin/users/$id'
+    | '/app/admin/users'
   id:
     | '__root__'
     | '/'
@@ -150,9 +190,13 @@ export interface FileRouteTypes {
     | '/app/clients'
     | '/app/estimate-calculator'
     | '/app/'
+    | '/app/admin/users'
     | '/app/clients/$id'
     | '/app/clients/create'
+    | '/app/admin/'
     | '/app/clients/'
+    | '/app/admin/users/$id'
+    | '/app/admin/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -226,6 +270,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppClientsIndexRouteImport
       parentRoute: typeof AppClientsRoute
     }
+    '/app/admin/': {
+      id: '/app/admin/'
+      path: '/'
+      fullPath: '/app/admin/'
+      preLoaderRoute: typeof AppAdminIndexRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
     '/app/clients/create': {
       id: '/app/clients/create'
       path: '/create'
@@ -240,8 +291,57 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppClientsIdRouteImport
       parentRoute: typeof AppClientsRoute
     }
+    '/app/admin/users': {
+      id: '/app/admin/users'
+      path: '/users'
+      fullPath: '/app/admin/users'
+      preLoaderRoute: typeof AppAdminUsersRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/users/': {
+      id: '/app/admin/users/'
+      path: '/'
+      fullPath: '/app/admin/users/'
+      preLoaderRoute: typeof AppAdminUsersIndexRouteImport
+      parentRoute: typeof AppAdminUsersRoute
+    }
+    '/app/admin/users/$id': {
+      id: '/app/admin/users/$id'
+      path: '/$id'
+      fullPath: '/app/admin/users/$id'
+      preLoaderRoute: typeof AppAdminUsersIdRouteImport
+      parentRoute: typeof AppAdminUsersRoute
+    }
   }
 }
+
+interface AppAdminUsersRouteChildren {
+  AppAdminUsersIdRoute: typeof AppAdminUsersIdRoute
+  AppAdminUsersIndexRoute: typeof AppAdminUsersIndexRoute
+}
+
+const AppAdminUsersRouteChildren: AppAdminUsersRouteChildren = {
+  AppAdminUsersIdRoute: AppAdminUsersIdRoute,
+  AppAdminUsersIndexRoute: AppAdminUsersIndexRoute,
+}
+
+const AppAdminUsersRouteWithChildren = AppAdminUsersRoute._addFileChildren(
+  AppAdminUsersRouteChildren,
+)
+
+interface AppAdminRouteChildren {
+  AppAdminUsersRoute: typeof AppAdminUsersRouteWithChildren
+  AppAdminIndexRoute: typeof AppAdminIndexRoute
+}
+
+const AppAdminRouteChildren: AppAdminRouteChildren = {
+  AppAdminUsersRoute: AppAdminUsersRouteWithChildren,
+  AppAdminIndexRoute: AppAdminIndexRoute,
+}
+
+const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(
+  AppAdminRouteChildren,
+)
 
 interface AppClientsRouteChildren {
   AppClientsIdRoute: typeof AppClientsIdRoute
@@ -261,7 +361,7 @@ const AppClientsRouteWithChildren = AppClientsRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppAccountRoute: typeof AppAccountRoute
-  AppAdminRoute: typeof AppAdminRoute
+  AppAdminRoute: typeof AppAdminRouteWithChildren
   AppClientsRoute: typeof AppClientsRouteWithChildren
   AppEstimateCalculatorRoute: typeof AppEstimateCalculatorRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -269,7 +369,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAccountRoute: AppAccountRoute,
-  AppAdminRoute: AppAdminRoute,
+  AppAdminRoute: AppAdminRouteWithChildren,
   AppClientsRoute: AppClientsRouteWithChildren,
   AppEstimateCalculatorRoute: AppEstimateCalculatorRoute,
   AppIndexRoute: AppIndexRoute,

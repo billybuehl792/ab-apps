@@ -1,42 +1,35 @@
-import { type ComponentProps, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Chip, Skeleton, type ChipProps } from "@mui/material";
 import { type User } from "firebase/auth";
 import useUsers from "@/hooks/useUsers";
 import UserPermissionsFormDrawer from "@/containers/modals/UserPermissionsFormDrawer";
+import { AuthRoleLabel } from "@/store/constants/auth";
 
-const UserPermissionsChip = (props: ChipProps & { user: User }) => {
+const UserPermissionsChip = ({
+  user,
+  ...props
+}: ChipProps & { user: User | string }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   /** Values */
 
-  const { queries: userQueries, mutations: userMutations } = useUsers();
+  const users = useUsers();
+  const userId = typeof user === "string" ? user : user.uid;
 
   /** Queries */
 
-  const permissionsQuery = useQuery(userQueries.permissions(props.user.uid));
+  const permissionsQuery = useQuery(users.queries.permissions(userId));
+
+  const hasRole = !!permissionsQuery.data?.role;
+  const role = permissionsQuery.data?.role
+    ? AuthRoleLabel[permissionsQuery.data.role]
+    : "None";
 
   /** Callbacks */
 
-  const handleSubmit: ComponentProps<
-    typeof UserPermissionsFormDrawer
-  >["onSubmit"] = (data) => {
-    if (data.role === permissionsQuery.data?.role) {
-      setModalOpen(false);
-      return;
-    }
-
-    userMutations.updatePermissions.mutate(
-      {
-        user: props.user,
-        permissions: { role: data.role },
-      },
-      {
-        onSuccess: () => {
-          setModalOpen(false);
-        },
-      }
-    );
+  const handleToggleModal = () => {
+    setModalOpen((prev) => !prev);
   };
 
   return (
@@ -46,27 +39,22 @@ const UserPermissionsChip = (props: ChipProps & { user: User }) => {
           permissionsQuery.isLoading ? (
             <Skeleton variant="text" width={60} />
           ) : (
-            (permissionsQuery.data?.role ?? "-")
+            role
           )
         }
         size="small"
-        color="info"
-        variant="filled"
+        variant={hasRole ? "filled" : "outlined"}
         disabled={permissionsQuery.isLoading}
-        onClick={() => {
-          setModalOpen(true);
-        }}
+        onClick={handleToggleModal}
+        sx={{ opacity: hasRole ? 1 : 0.5 }}
         {...props}
       />
 
       {/* Modals */}
       <UserPermissionsFormDrawer
         open={modalOpen}
-        {...(permissionsQuery.isSuccess && { values: permissionsQuery.data })}
-        onSubmit={handleSubmit}
-        onClose={() => {
-          setModalOpen(false);
-        }}
+        user={user}
+        onClose={handleToggleModal}
       />
     </>
   );

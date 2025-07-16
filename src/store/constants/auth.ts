@@ -1,3 +1,4 @@
+import { AuthRole } from "../enums/auth";
 import type { Company } from "../types/companies";
 
 const DEFAULT_COMPANY_THUMBNAIL =
@@ -8,6 +9,12 @@ export const DEFAULT_COMPANY: Company = {
   label: "Default Company",
   description: "This is the default company.",
   thumbnail: DEFAULT_COMPANY_THUMBNAIL,
+};
+
+export const AuthRoleLabel: { [key in AuthRole]: string } = {
+  [AuthRole.SUPER_ADMIN]: "Super Admin",
+  [AuthRole.ADMIN]: "Admin",
+  [AuthRole.STANDARD]: "Standard User",
 };
 
 /** Queries & Mutations */

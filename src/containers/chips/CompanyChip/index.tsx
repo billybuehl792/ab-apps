@@ -12,11 +12,10 @@ import { Store } from "@mui/icons-material";
 import useCompanies from "@/hooks/useCompanies";
 import type { Company } from "@/store/types/companies";
 
-interface CompanyChipProps extends ChipProps {
-  company: Company | string;
-}
-
-const CompanyChip = ({ company: companyProp, ...props }: CompanyChipProps) => {
+const CompanyChip = ({
+  company: companyProp,
+  ...props
+}: ChipProps & { company: Company | string }) => {
   /** Values */
 
   const { queries: companyQueries } = useCompanies();
@@ -28,13 +27,13 @@ const CompanyChip = ({ company: companyProp, ...props }: CompanyChipProps) => {
   const companyQuery = useQuery({
     ...companyQueries.detail(companyId),
     select: (data) => ({ id: data.id, ...data.data() }),
-    enabled: typeof companyProp === "string",
+    enabled: typeof companyProp === "string" && !!companyId,
   });
 
   const company =
     typeof companyProp === "string" ? companyQuery.data : companyProp;
   const alt = company?.label ?? "company";
-  const label = company?.label ?? "-";
+  const label = company?.label ?? "No Company";
   const thumbnail = company?.thumbnail;
   const description = company?.description;
 
@@ -85,6 +84,7 @@ const CompanyChip = ({ company: companyProp, ...props }: CompanyChipProps) => {
         size="small"
         color="default"
         variant="outlined"
+        sx={{ opacity: companyId ? 1 : 0.5 }}
         {...props}
       />
     </Tooltip>

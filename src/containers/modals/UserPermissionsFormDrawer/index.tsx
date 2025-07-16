@@ -1,33 +1,22 @@
-import { type FormEventHandler, type ComponentProps } from "react";
-import {
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  FormLabel,
-  Radio,
-  RadioGroup,
-  Stack,
-  useMediaQuery,
-} from "@mui/material";
-import {
-  Controller,
-  FormProvider,
-  useForm,
-  type UseFormProps,
-} from "react-hook-form";
+import { type FormEventHandler, type ComponentProps, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Button, Stack, useMediaQuery } from "@mui/material";
+import { FormProvider, useForm } from "react-hook-form";
+import { type User } from "firebase/auth";
+import { type UserRecord } from "firebase-admin/auth";
+import useUsers from "@/hooks/useUsers";
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
-import { AuthRole } from "@/store/enums/auth";
+import UserPermissionsFormDrawerRoleField from "./fields/UserPermissionsFormDrawerRoleField";
 import type { Permissions } from "@/store/types/auth";
+import { AuthRole } from "@/store/enums/auth";
 
 interface UserPermissionsFormDrawerProps
-  extends Omit<ComponentProps<typeof SwipeableDrawer>, "onSubmit">,
-    UseFormProps<Permissions> {
-  onSubmit: (data: Permissions) => void;
+  extends ComponentProps<typeof SwipeableDrawer> {
+  user: User | UserRecord | string;
 }
 
 const UserPermissionsFormDrawer = ({
-  onSubmit,
+  user,
   onClose,
   ...props
 }: UserPermissionsFormDrawerProps) => {
@@ -36,14 +25,29 @@ const UserPermissionsFormDrawer = ({
   const isMobile = useMediaQuery("(pointer: coarse)");
   const isSm = useMediaQuery((theme) => theme.breakpoints.up("sm"));
 
+  const users = useUsers();
+
+  const userId = typeof user === "string" ? user : user.uid;
+
   /** Form */
 
-  const methods = useForm<Permissions>(props);
+  const methods = useForm<Permissions>({
+    defaultValues: { role: AuthRole.STANDARD },
+  });
+
+  /** Queries */
+
+  const userPermissionsQuery = useQuery(users.queries.permissions(userId));
 
   /** Callbacks */
 
   const handleSubmit = methods.handleSubmit((data) => {
-    onSubmit(data);
+    if (data.role === userPermissionsQuery.data?.role) handleOnClose();
+    else
+      users.mutations.updatePermissions.mutate(
+        { id: userId, permissions: data },
+        { onSuccess: handleOnClose }
+      );
   }) as FormEventHandler;
 
   const handleReset: FormEventHandler<HTMLFormElement> = (event) => {
@@ -55,6 +59,12 @@ const UserPermissionsFormDrawer = ({
     methods.reset();
     onClose?.();
   };
+
+  /** Effects */
+
+  useEffect(() => {
+    methods.reset(userPermissionsQuery.data);
+  }, [methods, userPermissionsQuery.data]);
 
   return (
     <SwipeableDrawer
@@ -73,38 +83,7 @@ const UserPermissionsFormDrawer = ({
           onReset={handleReset}
         >
           <Stack flexGrow={1} p={2}>
-            <Controller
-              name="role"
-              control={methods.control}
-              rules={{ required: "Role is required" }}
-              render={({ field, formState }) => (
-                <FormControl error={Boolean(formState.errors.role)}>
-                  <FormLabel>Role</FormLabel>
-                  <RadioGroup {...field}>
-                    <FormControlLabel
-                      value={AuthRole.SUPER_ADMIN}
-                      label="Super Admin"
-                      control={<Radio />}
-                    />
-                    <FormControlLabel
-                      value={AuthRole.ADMIN}
-                      label="Admin"
-                      control={<Radio />}
-                    />
-                    <FormControlLabel
-                      value={AuthRole.STANDARD}
-                      label="Standard"
-                      control={<Radio />}
-                    />
-                  </RadioGroup>
-                  {!!formState.errors.role && (
-                    <FormHelperText error>
-                      {formState.errors.role.message}
-                    </FormHelperText>
-                  )}
-                </FormControl>
-              )}
-            />
+            <UserPermissionsFormDrawerRoleField />
           </Stack>
           <Stack
             position="sticky"
@@ -112,11 +91,11 @@ const UserPermissionsFormDrawer = ({
             spacing={1}
             p={2}
             pt={0}
-            bgcolor="background.paper"
+            bgcolor={({ palette }) => palette.background.paper}
           >
             <Button
               type="submit"
-              loading={methods.formState.isSubmitting}
+              loading={users.mutations.updatePermissions.isPending}
               disabled={methods.formState.disabled}
             >
               Submit

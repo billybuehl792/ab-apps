@@ -31,6 +31,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const companyQuery = useQuery({
     queryKey: ["company"],
+    enabled: !!user,
     queryFn: async () => {
       const res = await httpsCallable<unknown, Company>(
         functions,
@@ -43,6 +44,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const permissionsQuery = useQuery({
     queryKey: ["permissions"],
+    enabled: !!user,
     queryFn: async () => {
       const res = await httpsCallable<unknown, Permissions>(
         functions,

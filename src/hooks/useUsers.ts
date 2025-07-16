@@ -4,11 +4,9 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { type User } from "firebase/auth";
-import { type ListUsersResult } from "firebase-admin/auth";
+import { type UserRecord, type ListUsersResult } from "firebase-admin/auth";
 import { httpsCallable } from "firebase/functions";
 import { functions } from "@/store/config/firebase";
-import { markdownUtils } from "@/store/utils/markdown";
 import type { Permissions } from "@/store/types/auth";
 
 const QUERY_KEY = ["users"] as const;
@@ -21,14 +19,29 @@ const useUsers = () => {
 
   /** Queries */
 
-  const list = () =>
+  const detail = (id: string) =>
     queryOptions({
-      queryKey: [...QUERY_KEY, "list"] as const,
+      queryKey: [...QUERY_KEY, "detail", id] as const,
       queryFn: async () => {
-        const res = await httpsCallable<unknown, ListUsersResult>(
+        const res = await httpsCallable<{ id: string }, UserRecord>(
+          functions,
+          "users-getUser"
+        )({ id });
+        return res.data;
+      },
+    });
+
+  const list = (params?: { maxResults?: number; pageToken?: string }) =>
+    queryOptions({
+      queryKey: [...QUERY_KEY, "list", params] as const,
+      queryFn: async () => {
+        const res = await httpsCallable<
+          { maxResults?: number; pageToken?: string },
+          ListUsersResult
+        >(
           functions,
           "users-getUserList"
-        )();
+        )(params);
         return res.data;
       },
     });
@@ -49,29 +62,26 @@ const useUsers = () => {
 
   const updatePermissions = useMutation({
     mutationKey: [...QUERY_KEY, "permissions", "update"],
-    mutationFn: async (data: { user: User; permissions: Permissions }) => {
+    mutationFn: async (data: { id: string; permissions: Permissions }) => {
       const res = await httpsCallable<
         { id: string; permissions: Permissions },
         { message: string; permissions: Permissions }
       >(
         functions,
         "users-updatePermissions"
-      )({ id: data.user.uid, permissions: data.permissions });
+      )(data);
 
       return res.data;
     },
-    onSuccess: (_, data) => {
+    onSuccess: (res) => {
       void queryClient.invalidateQueries({ queryKey: QUERY_KEY });
-      enqueueSnackbar(
-        `${markdownUtils.bold(data.user.displayName) || "User"} permissions updated to ${markdownUtils.bold(data.permissions.role)}`,
-        { variant: "success" }
-      );
+      enqueueSnackbar(res.message, { variant: "success" });
     },
     onError: (error) => enqueueSnackbar(error.message, { variant: "error" }),
   });
 
   return {
-    queries: { list, permissions },
+    queries: { detail, list, permissions },
     mutations: { updatePermissions },
   };
 };

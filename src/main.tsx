@@ -25,6 +25,7 @@ Sentry.init({
   ],
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
+  enabled: import.meta.env.PROD,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

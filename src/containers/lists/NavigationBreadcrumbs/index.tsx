@@ -27,12 +27,17 @@ const NavigationBreadcrumbs = (props: BreadcrumbsProps) => {
           component="button"
           variant="body2"
           underline="none"
-          color={pathname === crumb.href ? "textPrimary" : "inherit"}
-          fontWeight={pathname === crumb.href ? "bold" : "normal"}
+          color="inherit"
           onClick={() => {
             handleCrumbClick(crumb.href);
           }}
-          sx={{ cursor: "pointer", verticalAlign: "inherit" }}
+          style={{ verticalAlign: "inherit" }}
+          {...(pathname === crumb.href && {
+            color: "textPrimary",
+            fontWeight: "bold",
+            onClick: undefined,
+            sx: { cursor: "default" },
+          })}
         >
           {crumb.label}
         </Link>

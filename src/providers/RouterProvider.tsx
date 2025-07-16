@@ -4,18 +4,20 @@ import router from "@/store/config/router";
 import { useQueryClient } from "@tanstack/react-query";
 import useAuth from "@/hooks/useAuth";
 import useClients from "@/hooks/useClients";
+import useUsers from "@/hooks/useUsers";
 
 const RouterProvider = (props: PropsWithChildren) => {
   /** Values */
 
-  const auth = useAuth();
   const queryClient = useQueryClient();
+  const auth = useAuth();
   const clients = useClients();
+  const users = useUsers();
 
   return (
     <TanstackRouterProvider
       router={router}
-      context={{ auth, queryClient, clients }}
+      context={{ queryClient, auth, clients, users }}
       {...props}
     />
   );

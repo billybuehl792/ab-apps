@@ -1,19 +1,16 @@
 import { routeTree } from "@/routeTree.gen";
 import { createRouter } from "@tanstack/react-router";
-import useClients from "../../hooks/useClients";
-import { ContextType } from "react";
-import AuthContext from "../../context/AuthContext";
+import useAuth from "@/hooks/useAuth";
+import useClients from "@/hooks/useClients";
+import useUsers from "@/hooks/useUsers";
 
 const router = createRouter({
   routeTree,
   defaultPendingMs: 0,
   context: {
-    auth: {
-      user: null,
-      loading: true,
-      mutations: {} as ContextType<typeof AuthContext>["mutations"],
-    },
+    auth: {} as ReturnType<typeof useAuth>,
     clients: {} as ReturnType<typeof useClients>,
+    users: {} as ReturnType<typeof useUsers>,
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     queryClient: null!,
   },

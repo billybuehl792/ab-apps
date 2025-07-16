@@ -7,23 +7,48 @@ import type { Permissions } from "../types/auth";
 
 // FETCH
 
-export const getUserList = onCall(async (request) => {
+export const getUser = onCall<{ id: string }>(async (request) => {
   if (!request.auth)
     throw new HttpsError("permission-denied", "Authentication required");
 
   try {
-    const user = await getAuth().getUser(String(request.auth.uid));
+    const auth = getAuth();
+    const user = await auth.getUser(String(request.auth.uid));
     if (!authUtils.isAdmin(user))
       throw new Error(
-        `User does not have a valid role. User must be an admin to access the list of users.`
+        `User does not have a valid role. User must be an admin to access user data.`
       );
 
-    return await getAuth().listUsers();
+    return await auth.getUser(request.data.id);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     throw new HttpsError("invalid-argument", message);
   }
 });
+
+export const getUserList = onCall<{ maxResults?: number; pageToken?: string }>(
+  async (request) => {
+    if (!request.auth)
+      throw new HttpsError("permission-denied", "Authentication required");
+
+    try {
+      const auth = getAuth();
+      const user = await auth.getUser(String(request.auth.uid));
+      if (!authUtils.isAdmin(user))
+        throw new Error(
+          `User does not have a valid role. User must be an admin to access the list of users.`
+        );
+
+      return await auth.listUsers(
+        request.data.maxResults,
+        request.data.pageToken ?? undefined
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new HttpsError("invalid-argument", message);
+    }
+  }
+);
 
 export const getUserPermissions = onCall<{ id: string }>(async (request) => {
   if (!request.auth)
