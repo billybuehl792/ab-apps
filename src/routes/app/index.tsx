@@ -17,7 +17,7 @@ function RouteComponent() {
             <ClientOverviewCard />
           </Grid>
         </Grid>
-        <Typography variant="h6">Apps</Typography>
+        <Typography variant="h6">My Apps</Typography>
         <Grid container spacing={1}>
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
             <EstimateCalculatorOverviewCard />

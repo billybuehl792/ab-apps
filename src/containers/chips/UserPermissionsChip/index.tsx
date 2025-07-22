@@ -1,17 +1,15 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Chip, Skeleton, type ChipProps } from "@mui/material";
 import { type User } from "firebase/auth";
+import { type UserRecord } from "firebase-admin/auth";
 import useUsers from "@/hooks/useUsers";
-import UserPermissionsFormDrawer from "@/containers/modals/UserPermissionsFormDrawer";
 import { AuthRoleLabel } from "@/store/constants/auth";
+import { sxAsArray } from "@/store/utils/sx";
 
 const UserPermissionsChip = ({
   user,
   ...props
-}: ChipProps & { user: User | string }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-
+}: ChipProps & { user: User | UserRecord | string }) => {
   /** Values */
 
   const users = useUsers();
@@ -26,37 +24,22 @@ const UserPermissionsChip = ({
     ? AuthRoleLabel[permissionsQuery.data.role]
     : "None";
 
-  /** Callbacks */
-
-  const handleToggleModal = () => {
-    setModalOpen((prev) => !prev);
-  };
-
   return (
-    <>
-      <Chip
-        label={
-          permissionsQuery.isLoading ? (
-            <Skeleton variant="text" width={60} />
-          ) : (
-            role
-          )
-        }
-        size="small"
-        variant={hasRole ? "filled" : "outlined"}
-        disabled={permissionsQuery.isLoading}
-        onClick={handleToggleModal}
-        sx={{ opacity: hasRole ? 1 : 0.5 }}
-        {...props}
-      />
-
-      {/* Modals */}
-      <UserPermissionsFormDrawer
-        open={modalOpen}
-        user={user}
-        onClose={handleToggleModal}
-      />
-    </>
+    <Chip
+      label={
+        permissionsQuery.isLoading ? (
+          <Skeleton variant="text" width={60} />
+        ) : (
+          role
+        )
+      }
+      size="small"
+      variant={hasRole ? "filled" : "outlined"}
+      disabled={permissionsQuery.isLoading}
+      {...props}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      sx={[{ opacity: hasRole ? 1 : 0.5 }, ...sxAsArray(props.sx)]}
+    />
   );
 };
 

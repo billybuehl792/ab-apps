@@ -14,7 +14,7 @@ export const DEFAULT_COMPANY: Company = {
 export const AuthRoleLabel: { [key in AuthRole]: string } = {
   [AuthRole.SUPER_ADMIN]: "Super Admin",
   [AuthRole.ADMIN]: "Admin",
-  [AuthRole.STANDARD]: "Standard User",
+  [AuthRole.STANDARD]: "User",
 };
 
 /** Queries & Mutations */

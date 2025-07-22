@@ -1,6 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { type User } from "firebase/auth";
-import { Chip, Skeleton, Tooltip, type ChipProps } from "@mui/material";
+import {
+  Skeleton,
+  Stack,
+  type StackProps,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { NewReleases, Verified } from "@mui/icons-material";
 import useUsers from "@/hooks/useUsers";
 import { type UserRecord } from "firebase-admin/auth";
@@ -8,7 +14,7 @@ import { type UserRecord } from "firebase-admin/auth";
 const UserEmailChip = ({
   user: userProp,
   ...props
-}: ChipProps & { user: User | UserRecord | string }) => {
+}: StackProps & { user: User | UserRecord | string }) => {
   /** Values */
 
   const users = useUsers();
@@ -16,34 +22,29 @@ const UserEmailChip = ({
 
   /** Queries */
 
-  const userQuery = useQuery(users.queries.detail(userId));
+  const userQuery = useQuery({
+    ...users.queries.detail(userId),
+    enabled: typeof userProp === "string",
+  });
   const user = typeof userProp === "string" ? userQuery.data : userProp;
 
   return (
-    <Chip
-      label={
-        userQuery.isLoading ? (
-          <Skeleton variant="text" width={60} />
+    <Stack direction="row" spacing={1} alignItems="center" {...props}>
+      {userQuery.isLoading ? (
+        <Skeleton variant="text" width={100} />
+      ) : (
+        <Typography variant="caption">{user?.email}</Typography>
+      )}
+      <Tooltip
+        title={user?.emailVerified ? "Email verified" : "Email not verified"}
+      >
+        {user?.emailVerified ? (
+          <Verified fontSize="small" color="primary" />
         ) : (
-          (user?.email ?? "No Email")
-        )
-      }
-      icon={
-        <Tooltip
-          title={user?.emailVerified ? "Email Verified" : "Email Not Verified"}
-        >
-          {user?.emailVerified ? (
-            <Verified fontSize="small" />
-          ) : (
-            <NewReleases fontSize="small" />
-          )}
-        </Tooltip>
-      }
-      variant="outlined"
-      size="small"
-      sx={{ opacity: user?.emailVerified ? 1 : 0.5 }}
-      {...props}
-    />
+          <NewReleases fontSize="small" color="warning" />
+        )}
+      </Tooltip>
+    </Stack>
   );
 };
 

@@ -1,15 +1,19 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Avatar,
   Card,
   CardContent,
   Divider,
+  Grid2 as Grid,
   Stack,
   Typography,
 } from "@mui/material";
 import ErrorCard from "@/components/cards/ErrorCard";
 import UserPermissionsChip from "@/containers/chips/UserPermissionsChip";
 import UserEmailChip from "@/containers/chips/UserEmailChip";
+import UserCompanyChip from "@/containers/chips/UserCompanyChip";
+import UserPermissionsFormDrawer from "@/containers/modals/UserPermissionsFormDrawer";
 
 export const Route = createFileRoute("/app/admin/users/$id")({
   component: RouteComponent,
@@ -23,10 +27,20 @@ export const Route = createFileRoute("/app/admin/users/$id")({
 });
 
 function RouteComponent() {
+  const [permissionsFormDrawerOpen, setPermissionsFormDrawerOpen] =
+    useState(false);
+
   /** Values */
 
   const { user } = Route.useLoaderData();
 
+  /** Callbacks */
+
+  const handleTogglePermissionsFormDrawer = () => {
+    setPermissionsFormDrawerOpen((prev) => !prev);
+  };
+
+  /** Items */
   const details = [
     { id: "email", label: "Email", value: <UserEmailChip user={user} /> },
     {
@@ -37,23 +51,42 @@ function RouteComponent() {
     {
       id: "permissions",
       label: "Permissions",
-      value: <UserPermissionsChip user={user.uid} />,
+      value: (
+        <UserPermissionsChip
+          user={user}
+          onClick={handleTogglePermissionsFormDrawer}
+        />
+      ),
+    },
+    {
+      id: "company",
+      label: "Company",
+      value: <UserCompanyChip user={user} />,
+    },
+  ];
+
+  const metadata = [
+    {
+      id: "creationTime",
+      label: "Created At",
+      value: user.metadata.creationTime,
+    },
+    {
+      id: "lastSignInTime",
+      label: "Last Sign In",
+      value: user.metadata.lastSignInTime,
     },
   ];
 
   return (
-    <Stack
-      direction="row"
-      spacing={2}
-      divider={<Divider orientation="vertical" flexItem />}
-    >
+    <Stack direction="row" spacing={2}>
       <Stack spacing={1} alignItems="center">
         <Avatar
           src={user.photoURL}
           alt={user.displayName ?? user.email ?? "User"}
-          sx={{ width: 180, height: 180 }}
+          sx={{ width: 120, height: 120 }}
         />
-        <Typography variant="h6">
+        <Typography variant="body1">
           {user.displayName ?? user.email ?? "User"}
         </Typography>
       </Stack>
@@ -79,8 +112,27 @@ function RouteComponent() {
               </Stack>
             ))}
           </Stack>
+          <Grid container spacing={1}>
+            {metadata.map((item) => (
+              <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
+                <Stack spacing={1}>
+                  <Typography variant="body2" color="textSecondary">
+                    {item.label}:
+                  </Typography>
+                  <Typography variant="body2">{item.value}</Typography>
+                </Stack>
+              </Grid>
+            ))}
+          </Grid>
         </CardContent>
       </Card>
+
+      {/* Modals */}
+      <UserPermissionsFormDrawer
+        user={user}
+        open={permissionsFormDrawerOpen}
+        onClose={handleTogglePermissionsFormDrawer}
+      />
     </Stack>
   );
 }

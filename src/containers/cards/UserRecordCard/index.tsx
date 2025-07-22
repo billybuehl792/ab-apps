@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import CompanyChip from "@/containers/chips/CompanyChip";
 import UserEmailChip from "@/containers/chips/UserEmailChip";
+import UserPermissionsChip from "@/containers/chips/UserPermissionsChip";
 
 interface UserRecordCardProps extends CardProps {
   user: UserRecord;
@@ -40,10 +41,13 @@ const UserRecordCard = ({ user, ...props }: UserRecordCardProps) => {
         >
           <Avatar src={user.photoURL} alt={user.displayName} />
           <Stack spacing={1}>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Typography variant="body1" noWrap>
-                {user.displayName}
-              </Typography>
+            <Stack>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Typography variant="body1" noWrap>
+                  {user.displayName}
+                </Typography>
+                <UserPermissionsChip user={user} />
+              </Stack>
               <UserEmailChip user={user} />
             </Stack>
             <Stack direction="row">

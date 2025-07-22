@@ -6,7 +6,6 @@ import {
   Groups,
   Home,
   Person,
-  PersonAdd,
 } from "@mui/icons-material";
 import useAuth from "@/hooks/useAuth";
 import NestedList from "@/components/lists/NestedList";
@@ -31,19 +30,8 @@ const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
       label: "Clients",
       to: "/app/clients",
       render: Boolean(user),
-      selected: pathname === "/app/clients",
-      expanded: pathname === "/app/clients/create",
+      selected: pathname.startsWith("/app/clients"),
       icon: <Groups />,
-      items: [
-        {
-          id: "clientsCreate",
-          label: "Create Client",
-          to: "/app/clients/create",
-          render: Boolean(user),
-          selected: pathname === "/app/clients/create",
-          icon: <PersonAdd />,
-        },
-      ],
     },
     {
       id: "estimateCalculator",
@@ -58,7 +46,7 @@ const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
       label: "Account",
       to: "/app/account",
       render: Boolean(user),
-      selected: pathname === "/app/account",
+      selected: pathname.startsWith("/app/account"),
       icon: <Person />,
     },
     {
@@ -68,7 +56,7 @@ const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
       render: [AuthRole.ADMIN, AuthRole.SUPER_ADMIN].includes(
         permissions?.role ?? AuthRole.STANDARD
       ),
-      selected: pathname === "/app/admin",
+      selected: pathname.startsWith("/app/admin"),
       icon: <AdminPanelSettings />,
     },
   ];
