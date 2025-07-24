@@ -1,13 +1,15 @@
 import { type ComponentProps } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Skeleton, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { Delete, Restore } from "@mui/icons-material";
+import { clientQueries } from "@/store/queries/clients";
 import useClients from "@/hooks/useClients";
 import ClientDetailCard from "@/containers/cards/ClientDetailCard";
 import ClientForm from "@/containers/forms/ClientForm";
 import EditIconButton from "@/components/buttons/EditIconButton";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 import ErrorCard from "@/components/cards/ErrorCard";
+import StatusWrapper from "@/components/layout/StatusWrapper";
 import type { Client } from "@/store/types/clients";
 
 export const Route = createFileRoute("/app/clients/$id")({
@@ -16,18 +18,15 @@ export const Route = createFileRoute("/app/clients/$id")({
     edit: Boolean(search.edit) || undefined,
   }),
   loader: async ({ context, params }) => {
-    const clientSnapshot = await context.queryClient.fetchQuery(
-      context.clients.queries.detail(params.id)
+    const doc = await context.queryClient.fetchQuery(
+      clientQueries.detail(context.auth.company.id, params.id)
     );
-    const client: Client = { id: clientSnapshot.id, ...clientSnapshot.data() };
+    const client: Client = { id: doc.id, ...doc.data() };
 
     return { client, crumb: `${client.first_name} ${client.last_name}` };
   },
   pendingComponent: () => (
-    <Stack spacing={1}>
-      <Skeleton variant="rounded" height={32} />
-      <Skeleton variant="rounded" height={108} />
-    </Stack>
+    <StatusWrapper loading loadingDescription="loading client..." />
   ),
   errorComponent: ({ error }) => <ErrorCard error={error} />,
 });
@@ -37,21 +36,17 @@ function RouteComponent() {
 
   const { client } = Route.useLoaderData();
   const { edit } = Route.useSearch();
-
   const navigate = useNavigate();
+  const clients = useClients();
 
   const clientFullName = `${client.first_name} ${client.last_name}`;
 
   /** Mutations */
 
-  const {
-    mutations: { update, archive, unarchive },
-  } = useClients();
-
   /** Callbacks */
 
   const onSubmit: ComponentProps<typeof ClientForm>["onSubmit"] = (data) =>
-    update.mutateAsync({ id: client.id, ...data });
+    clients.mutations.update.mutateAsync({ id: client.id, ...data });
 
   const onSuccess: ComponentProps<typeof ClientForm>["onSuccess"] = () =>
     void navigate({ to: `/app/clients/${client.id}` });
@@ -78,7 +73,7 @@ function RouteComponent() {
       confirm:
         "Are you sure you want to delete this client? This action cannot be undone.",
       onClick: () => {
-        archive.mutate(client.id, {
+        clients.mutations.archive.mutate(client.id, {
           onSuccess: void navigate({ to: `/app/clients` }),
         });
       },
@@ -89,7 +84,7 @@ function RouteComponent() {
       label: "Restore",
       icon: <Restore />,
       onClick: () => {
-        unarchive.mutate(client.id);
+        clients.mutations.restore.mutate(client.id);
       },
     },
   ];

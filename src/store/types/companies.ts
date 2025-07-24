@@ -3,4 +3,5 @@ export interface Company {
   label: string;
   description: string;
   thumbnail: string;
+  archived: boolean;
 }

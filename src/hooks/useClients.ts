@@ -1,100 +1,62 @@
-import { queryOptions, useMutation } from "@tanstack/react-query";
-import {
-  addDoc,
-  collection,
-  doc,
-  getCountFromServer,
-  getDoc,
-  getDocs,
-  query,
-  type QueryConstraint,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { db } from "@/store/config/firebase";
 import useAuth from "./useAuth";
-import { searchClient } from "@/store/config/algolia";
-import { clientConverter } from "@/store/converters";
+import { clientQueries } from "@/store/queries/clients";
+import { clientMutations } from "@/store/mutations/clients";
 import { markdownUtils } from "@/store/utils/markdown";
-import { DEFAULT_COMPANY } from "@/store/constants/auth";
 import { FirebaseCollection } from "@/store/enums/firebase";
-import type { Client } from "@/store/types/clients";
+import type { Company } from "@/store/types/companies";
+import type { QueryParams } from "@/store/types/queries";
 
-const useClients = () => {
+const useClients = (company?: Company | string) => {
   /** Values */
 
   const { enqueueSnackbar } = useSnackbar();
-  const { company } = useAuth();
+  const queryClient = useQueryClient();
+  const auth = useAuth();
 
-  const col = collection(
-    db,
-    `${FirebaseCollection.COMPANIES}/${company?.id ?? DEFAULT_COMPANY.id}/${FirebaseCollection.CLIENTS}`
-  ).withConverter(clientConverter);
+  const companyId =
+    typeof company === "string" ? company : (company?.id ?? auth.company.id);
 
   /** Queries */
 
-  const count = (...constraints: QueryConstraint[]) =>
-    queryOptions({
-      queryKey: [col.id, "count", constraints] as const,
-      queryFn: () => getCountFromServer(query(col, ...constraints)),
-    });
+  const count = (params?: QueryParams) =>
+    clientQueries.count(companyId, params);
 
-  const detail = (id: string) =>
-    queryOptions({
-      queryKey: [col.id, "detail", id] as const,
-      queryFn: async () => {
-        const docRef = doc(col, id);
-        const docSnap = await getDoc(docRef);
-        if (!docSnap.exists()) throw new Error("Client does not exist");
+  const detail = (id: string) => clientQueries.detail(companyId, id);
 
-        return docSnap;
-      },
-    });
+  const list = (params?: QueryParams) => clientQueries.list(companyId, params);
 
-  const list = (...constraints: QueryConstraint[]) =>
-    queryOptions({
-      queryKey: [col.id, "list", constraints] as const,
-      queryFn: () => getDocs(query(col, ...constraints)),
-    });
-
-  const search = (term?: string) =>
-    queryOptions({
-      queryKey: [col.id, "search", term] as const,
-      queryFn: () =>
-        searchClient.searchSingleIndex<
-          Omit<Client, "id"> & { objectID: string }
-        >({
-          indexName: col.path,
-          searchParams: { query: term, filters: "NOT archived:true" },
-        }),
-    });
+  const search = (term?: string) => clientQueries.search(companyId, term);
 
   /** Mutations */
 
   const create = useMutation({
-    mutationKey: [col.id, "create"],
-    mutationFn: (data: Omit<Client, "id">) => addDoc(col, data),
-    onSuccess: (_, data) =>
-      enqueueSnackbar(
+    ...clientMutations.create(companyId),
+    onSuccess: (_, data) => {
+      void queryClient.invalidateQueries({
+        queryKey: [FirebaseCollection.CLIENTS, companyId],
+      });
+      void enqueueSnackbar(
         `${markdownUtils.bold(data.first_name + " " + data.last_name)} client created`,
         { variant: "success" }
-      ),
+      );
+    },
     onError: () =>
       enqueueSnackbar("Error creating client", { variant: "error" }),
   });
 
   const update = useMutation({
-    mutationKey: [col.id, "update"],
-    mutationFn: async ({ id, ...data }: Client) => {
-      const docRef = doc(col, id);
-      await setDoc(docRef, data);
-    },
-    onSuccess: (_, data) =>
-      enqueueSnackbar(
+    ...clientMutations.update(companyId),
+    onSuccess: (_, data) => {
+      void queryClient.invalidateQueries({
+        queryKey: [FirebaseCollection.CLIENTS, companyId],
+      });
+      void enqueueSnackbar(
         `${markdownUtils.bold(data.first_name + " " + data.last_name)} updated`,
         { variant: "success" }
-      ),
+      );
+    },
     onError: () =>
       enqueueSnackbar("Error updating client", {
         variant: "error",
@@ -102,31 +64,32 @@ const useClients = () => {
   });
 
   const archive = useMutation({
-    mutationKey: [col.id, "archive"],
-    mutationFn: async (id: string) => {
-      const docRef = doc(col, id);
-      await updateDoc(docRef, { archived: true });
+    ...clientMutations.archive(companyId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [FirebaseCollection.CLIENTS, companyId],
+      });
+      void enqueueSnackbar("Client archived", { variant: "success" });
     },
-    onSuccess: () => enqueueSnackbar("Client deleted", { variant: "success" }),
     onError: () =>
-      enqueueSnackbar("Error deleting client", { variant: "error" }),
+      enqueueSnackbar("Error archiving client", { variant: "error" }),
   });
 
-  const unarchive = useMutation({
-    mutationKey: [col.id, "unarchive"],
-    mutationFn: async (id: string) => {
-      const docRef = doc(col, id);
-      await updateDoc(docRef, { archived: false });
+  const restore = useMutation({
+    ...clientMutations.restore(companyId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [FirebaseCollection.CLIENTS, companyId],
+      });
+      void enqueueSnackbar("Client restored", { variant: "success" });
     },
-    onSuccess: () => enqueueSnackbar("Client restored", { variant: "success" }),
     onError: () =>
       enqueueSnackbar("Error restoring client", { variant: "error" }),
   });
 
   return {
-    collection: col,
     queries: { count, detail, list, search },
-    mutations: { create, update, archive, unarchive },
+    mutations: { create, update, archive, restore },
   };
 };
 

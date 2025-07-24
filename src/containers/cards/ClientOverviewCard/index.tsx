@@ -1,6 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { where } from "firebase/firestore";
 import {
   Card,
   CardActionArea,
@@ -17,13 +16,11 @@ const ClientOverviewCard = (props: CardProps) => {
   /** Values */
 
   const navigate = useNavigate();
-  const { queries: clientQueries } = useClients();
+  const clients = useClients();
 
   /** Queries */
 
-  const clientCountQuery = useQuery(
-    clientQueries.count(where("archived", "!=", true))
-  );
+  const clientCountQuery = useQuery(clients.queries.count({ archived: false }));
 
   /** Callbacks */
 

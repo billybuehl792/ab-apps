@@ -12,9 +12,7 @@ const EstimateCalculatorMaterialCard = ({
 }: ComponentProps<typeof MaterialCard> & { index: number }) => {
   /** Mutations */
 
-  const {
-    mutations: { archive },
-  } = useMaterials();
+  const materials = useMaterials();
 
   /** Values */
 
@@ -37,7 +35,7 @@ const EstimateCalculatorMaterialCard = ({
       confirm:
         "Are you sure you want to delete this material? This action cannot be undone.",
       onClick: () => {
-        archive.mutate(material.id);
+        materials.mutations.remove.mutate(material.id);
       },
     },
   ];

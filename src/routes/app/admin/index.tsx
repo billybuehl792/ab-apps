@@ -1,4 +1,4 @@
-import { People } from "@mui/icons-material";
+import { People, Store } from "@mui/icons-material";
 import {
   Card,
   CardActionArea,
@@ -14,20 +14,39 @@ export const Route = createFileRoute("/app/admin/")({
 });
 
 function RouteComponent() {
+  /** Values */
+
+  const items: ListItem[] = [
+    {
+      id: "users",
+      label: "Users",
+      icon: <People fontSize="large" />,
+      to: "/app/admin/users",
+    },
+    {
+      id: "companies",
+      label: "Companies",
+      icon: <Store fontSize="large" />,
+      to: "/app/admin/companies",
+    },
+  ];
+
   return (
     <Grid container spacing={1}>
-      <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-        <Card>
-          <CardActionArea component={Link} to="/app/admin/users">
-            <CardContent component={Stack} spacing={1}>
-              <People fontSize="large" />
-              <Typography variant="body2" noWrap>
-                Users
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      </Grid>
+      {items.map((item) => (
+        <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
+          <Card>
+            <CardActionArea component={Link} to={item.to}>
+              <CardContent component={Stack} spacing={1}>
+                {item.icon}
+                <Typography variant="body2" noWrap>
+                  {item.label}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
+      ))}
     </Grid>
   );
 }

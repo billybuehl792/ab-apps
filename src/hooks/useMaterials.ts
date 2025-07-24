@@ -1,109 +1,81 @@
-import { queryOptions, useMutation } from "@tanstack/react-query";
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getCountFromServer,
-  getDoc,
-  getDocs,
-  query,
-  type QueryConstraint,
-  setDoc,
-} from "firebase/firestore";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
-import { db } from "@/store/config/firebase";
 import useAuth from "./useAuth";
-import { materialConverter } from "@/store/converters";
-import { markdownUtils } from "@/store/utils/markdown";
-import { DEFAULT_COMPANY } from "@/store/constants/auth";
+import { materialQueries } from "@/store/queries/materials";
+import { materialMutations } from "@/store/mutations/materials";
 import { FirebaseCollection } from "@/store/enums/firebase";
-import type { Material } from "@/store/types/materials";
+import { markdownUtils } from "@/store/utils/markdown";
+import type { Company } from "@/store/types/companies";
+import type { QueryParams } from "@/store/types/queries";
 
-const useMaterials = () => {
+const useMaterials = (company?: Company | string) => {
   /** Values */
 
+  const queryClient = useQueryClient();
   const { enqueueSnackbar } = useSnackbar();
-  const { company } = useAuth();
+  const auth = useAuth();
 
-  const col = collection(
-    db,
-    `${FirebaseCollection.COMPANIES}/${company?.id ?? DEFAULT_COMPANY.id}/${FirebaseCollection.MATERIALS}`
-  ).withConverter(materialConverter);
+  const companyId =
+    typeof company === "string" ? company : (company?.id ?? auth.company.id);
 
   /** Queries */
 
-  const count = (...constraints: QueryConstraint[]) =>
-    queryOptions({
-      queryKey: [col.id, "count", constraints] as const,
-      queryFn: () => getCountFromServer(query(col, ...constraints)),
-    });
+  const count = (params?: QueryParams) =>
+    materialQueries.count(companyId, params);
 
-  const detail = (id: string) =>
-    queryOptions({
-      queryKey: [col.id, "detail", id] as const,
-      queryFn: async () => {
-        const docRef = doc(col, id);
-        const docSnap = await getDoc(docRef);
-        if (!docSnap.exists()) throw new Error("Material does not exist");
+  const detail = (id: string) => materialQueries.detail(companyId, id);
 
-        return docSnap;
-      },
-    });
-
-  const list = (...constraints: QueryConstraint[]) =>
-    queryOptions({
-      queryKey: [col.id, "list", constraints] as const,
-      queryFn: () => getDocs(query(col, ...constraints)),
-    });
+  const list = (params?: QueryParams) =>
+    materialQueries.list(companyId, params);
 
   /** Mutations */
 
   const create = useMutation({
-    mutationKey: [col.id, "create"],
-    mutationFn: (data: Omit<Material, "id">) =>
-      addDoc(col, {
-        ...data,
-        value: Number(data.value.toFixed(2)),
-      }),
-    onSuccess: (_, data) =>
-      enqueueSnackbar(`${markdownUtils.bold(data.label)} created`, {
-        variant: "success",
-      }),
+    ...materialMutations.create(companyId),
+    onSuccess: (_, data) => {
+      void queryClient.invalidateQueries({
+        queryKey: [FirebaseCollection.MATERIALS, companyId],
+      });
+      void enqueueSnackbar(
+        `${markdownUtils.bold(data.label)} material created`,
+        { variant: "success" }
+      );
+    },
     onError: () =>
       enqueueSnackbar("Error creating material", { variant: "error" }),
   });
 
   const update = useMutation({
-    mutationKey: [col.id, "update"],
-    mutationFn: async ({ id, ...data }: Material) => {
-      const docRef = doc(col, id);
-      await setDoc(docRef, data);
-    },
-    onSuccess: (_, data) =>
-      enqueueSnackbar(`${markdownUtils.bold(data.label)} updated`, {
+    ...materialMutations.update(companyId),
+    onSuccess: (_, data) => {
+      void queryClient.invalidateQueries({
+        queryKey: [FirebaseCollection.MATERIALS, companyId],
+      });
+      void enqueueSnackbar(`${markdownUtils.bold(data.label)} updated`, {
         variant: "success",
-      }),
+      });
+    },
     onError: () =>
-      enqueueSnackbar("Error updating material", { variant: "error" }),
+      enqueueSnackbar("Error updating material", {
+        variant: "error",
+      }),
   });
 
-  const archive = useMutation({
-    mutationKey: [col.id, "archive"],
-    mutationFn: async (id: string) => {
-      const docRef = doc(col, id);
-      await deleteDoc(docRef);
+  const remove = useMutation({
+    ...materialMutations.remove(companyId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: [FirebaseCollection.MATERIALS, companyId],
+      });
+      void enqueueSnackbar("Material deleted", { variant: "success" });
     },
-    onSuccess: () =>
-      enqueueSnackbar("Material deleted", { variant: "success" }),
     onError: () =>
       enqueueSnackbar("Error deleting material", { variant: "error" }),
   });
 
   return {
-    collection: col,
     queries: { count, detail, list },
-    mutations: { create, update, archive },
+    mutations: { create, update, remove },
   };
 };
 

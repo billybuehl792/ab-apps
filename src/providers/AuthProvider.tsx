@@ -7,14 +7,16 @@ import {
 } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { httpsCallable } from "firebase/functions";
 import { useSnackbar } from "notistack";
-import { auth, functions } from "@/store/config/firebase";
+import { auth } from "@/store/config/firebase";
 import AuthContext from "@/context/AuthContext";
 import StatusWrapper from "@/components/layout/StatusWrapper";
-import { AuthMutationKeys } from "@/store/constants/auth";
-import type { Company } from "@/store/types/companies";
-import type { Permissions } from "@/store/types/auth";
+import {
+  AuthMutationKeys,
+  DEFAULT_COMPANY,
+  DEFAULT_PERMISSIONS,
+} from "@/store/constants/auth";
+import { authQueries } from "@/store/queries/auth";
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] =
@@ -30,29 +32,13 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   /** Queries */
 
   const companyQuery = useQuery({
-    queryKey: ["company"],
+    ...authQueries.company(),
     enabled: !!user,
-    queryFn: async () => {
-      const res = await httpsCallable<unknown, Company>(
-        functions,
-        "auth-getCompany"
-      )();
-
-      return res.data;
-    },
   });
 
   const permissionsQuery = useQuery({
-    queryKey: ["permissions"],
+    ...authQueries.permissions(),
     enabled: !!user,
-    queryFn: async () => {
-      const res = await httpsCallable<unknown, Permissions>(
-        functions,
-        "auth-getPermissions"
-      )();
-
-      return res.data;
-    },
   });
 
   /** Mutations */
@@ -95,8 +81,8 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       value={useMemo(
         () => ({
           user,
-          company: companyQuery.data,
-          permissions: permissionsQuery.data,
+          company: companyQuery.data ?? DEFAULT_COMPANY,
+          permissions: permissionsQuery.data ?? DEFAULT_PERMISSIONS,
           loading:
             loadingAuth || permissionsQuery.isLoading || companyQuery.isLoading,
           mutations: { signOut: signOutMutation },

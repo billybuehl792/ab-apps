@@ -9,20 +9,25 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { userQueries } from "@/store/queries/users";
 import ErrorCard from "@/components/cards/ErrorCard";
 import UserPermissionsChip from "@/containers/chips/UserPermissionsChip";
 import UserEmailChip from "@/containers/chips/UserEmailChip";
 import UserCompanyChip from "@/containers/chips/UserCompanyChip";
 import UserPermissionsFormDrawer from "@/containers/modals/UserPermissionsFormDrawer";
+import StatusWrapper from "@/components/layout/StatusWrapper";
 
 export const Route = createFileRoute("/app/admin/users/$id")({
   component: RouteComponent,
   loader: async ({ context, params }) => {
     const user = await context.queryClient.fetchQuery(
-      context.users.queries.detail(params.id)
+      userQueries.detail(params.id)
     );
     return { user, crumb: user.displayName ?? user.email ?? "User" };
   },
+  pendingComponent: () => (
+    <StatusWrapper loading loadingDescription="loading user..." />
+  ),
   errorComponent: ({ error }) => <ErrorCard error={error} />,
 });
 

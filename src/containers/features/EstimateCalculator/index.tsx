@@ -1,6 +1,5 @@
 import { type FormEventHandler, useState } from "react";
 import { Stack, type StackProps } from "@mui/material";
-import { orderBy } from "firebase/firestore";
 import { useForm } from "react-hook-form";
 import useMaterials from "@/hooks/useMaterials";
 import EstimateCalculatorProvider from "./providers/EstimateCalculatorProvider";
@@ -22,9 +21,9 @@ const EstimateCalculator = (props: StackProps<"form">) => {
 
   /** Values */
 
-  const { queries } = useMaterials();
+  const materials = useMaterials();
 
-  const queryOptions = queries.list(orderBy("label"));
+  const queryOptions = materials.queries.list({ orderBy: "label" });
   const methods = useForm<EstimateCalculatorForm>({
     defaultValues: ESTIMATE_CALCULATOR_DEFAULT_VALUES,
   });

@@ -13,14 +13,12 @@ function RouteComponent() {
   /** Values */
 
   const navigate = useNavigate();
-  const {
-    mutations: { create },
-  } = useClients();
+  const clients = useClients();
 
   /** Callbacks */
 
   const onSubmit: ComponentProps<typeof ClientForm>["onSubmit"] = (data) =>
-    create.mutateAsync(data, {
+    clients.mutations.create.mutateAsync(data, {
       onSuccess: ({ id }) => void navigate({ to: `/app/clients/${id}` }),
     });
 

@@ -22,8 +22,11 @@ import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
 import { Route as AppClientsCreateRouteImport } from './routes/app/clients/create'
 import { Route as AppClientsIdRouteImport } from './routes/app/clients/$id'
 import { Route as AppAdminUsersRouteImport } from './routes/app/admin/users'
+import { Route as AppAdminCompaniesRouteImport } from './routes/app/admin/companies'
 import { Route as AppAdminUsersIndexRouteImport } from './routes/app/admin/users/index'
+import { Route as AppAdminCompaniesIndexRouteImport } from './routes/app/admin/companies/index'
 import { Route as AppAdminUsersIdRouteImport } from './routes/app/admin/users/$id'
+import { Route as AppAdminCompaniesIdRouteImport } from './routes/app/admin/companies/$id'
 
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
@@ -90,15 +93,30 @@ const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AppAdminRoute,
 } as any)
+const AppAdminCompaniesRoute = AppAdminCompaniesRouteImport.update({
+  id: '/companies',
+  path: '/companies',
+  getParentRoute: () => AppAdminRoute,
+} as any)
 const AppAdminUsersIndexRoute = AppAdminUsersIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppAdminUsersRoute,
 } as any)
+const AppAdminCompaniesIndexRoute = AppAdminCompaniesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAdminCompaniesRoute,
+} as any)
 const AppAdminUsersIdRoute = AppAdminUsersIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => AppAdminUsersRoute,
+} as any)
+const AppAdminCompaniesIdRoute = AppAdminCompaniesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppAdminCompaniesRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -110,12 +128,15 @@ export interface FileRoutesByFullPath {
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
   '/app/': typeof AppIndexRoute
+  '/app/admin/companies': typeof AppAdminCompaniesRouteWithChildren
   '/app/admin/users': typeof AppAdminUsersRouteWithChildren
   '/app/clients/$id': typeof AppClientsIdRoute
   '/app/clients/create': typeof AppClientsCreateRoute
   '/app/admin/': typeof AppAdminIndexRoute
   '/app/clients/': typeof AppClientsIndexRoute
+  '/app/admin/companies/$id': typeof AppAdminCompaniesIdRoute
   '/app/admin/users/$id': typeof AppAdminUsersIdRoute
+  '/app/admin/companies/': typeof AppAdminCompaniesIndexRoute
   '/app/admin/users/': typeof AppAdminUsersIndexRoute
 }
 export interface FileRoutesByTo {
@@ -128,7 +149,9 @@ export interface FileRoutesByTo {
   '/app/clients/create': typeof AppClientsCreateRoute
   '/app/admin': typeof AppAdminIndexRoute
   '/app/clients': typeof AppClientsIndexRoute
+  '/app/admin/companies/$id': typeof AppAdminCompaniesIdRoute
   '/app/admin/users/$id': typeof AppAdminUsersIdRoute
+  '/app/admin/companies': typeof AppAdminCompaniesIndexRoute
   '/app/admin/users': typeof AppAdminUsersIndexRoute
 }
 export interface FileRoutesById {
@@ -141,12 +164,15 @@ export interface FileRoutesById {
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
   '/app/': typeof AppIndexRoute
+  '/app/admin/companies': typeof AppAdminCompaniesRouteWithChildren
   '/app/admin/users': typeof AppAdminUsersRouteWithChildren
   '/app/clients/$id': typeof AppClientsIdRoute
   '/app/clients/create': typeof AppClientsCreateRoute
   '/app/admin/': typeof AppAdminIndexRoute
   '/app/clients/': typeof AppClientsIndexRoute
+  '/app/admin/companies/$id': typeof AppAdminCompaniesIdRoute
   '/app/admin/users/$id': typeof AppAdminUsersIdRoute
+  '/app/admin/companies/': typeof AppAdminCompaniesIndexRoute
   '/app/admin/users/': typeof AppAdminUsersIndexRoute
 }
 export interface FileRouteTypes {
@@ -160,12 +186,15 @@ export interface FileRouteTypes {
     | '/app/clients'
     | '/app/estimate-calculator'
     | '/app/'
+    | '/app/admin/companies'
     | '/app/admin/users'
     | '/app/clients/$id'
     | '/app/clients/create'
     | '/app/admin/'
     | '/app/clients/'
+    | '/app/admin/companies/$id'
     | '/app/admin/users/$id'
+    | '/app/admin/companies/'
     | '/app/admin/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -178,7 +207,9 @@ export interface FileRouteTypes {
     | '/app/clients/create'
     | '/app/admin'
     | '/app/clients'
+    | '/app/admin/companies/$id'
     | '/app/admin/users/$id'
+    | '/app/admin/companies'
     | '/app/admin/users'
   id:
     | '__root__'
@@ -190,12 +221,15 @@ export interface FileRouteTypes {
     | '/app/clients'
     | '/app/estimate-calculator'
     | '/app/'
+    | '/app/admin/companies'
     | '/app/admin/users'
     | '/app/clients/$id'
     | '/app/clients/create'
     | '/app/admin/'
     | '/app/clients/'
+    | '/app/admin/companies/$id'
     | '/app/admin/users/$id'
+    | '/app/admin/companies/'
     | '/app/admin/users/'
   fileRoutesById: FileRoutesById
 }
@@ -298,12 +332,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminUsersRouteImport
       parentRoute: typeof AppAdminRoute
     }
+    '/app/admin/companies': {
+      id: '/app/admin/companies'
+      path: '/companies'
+      fullPath: '/app/admin/companies'
+      preLoaderRoute: typeof AppAdminCompaniesRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
     '/app/admin/users/': {
       id: '/app/admin/users/'
       path: '/'
       fullPath: '/app/admin/users/'
       preLoaderRoute: typeof AppAdminUsersIndexRouteImport
       parentRoute: typeof AppAdminUsersRoute
+    }
+    '/app/admin/companies/': {
+      id: '/app/admin/companies/'
+      path: '/'
+      fullPath: '/app/admin/companies/'
+      preLoaderRoute: typeof AppAdminCompaniesIndexRouteImport
+      parentRoute: typeof AppAdminCompaniesRoute
     }
     '/app/admin/users/$id': {
       id: '/app/admin/users/$id'
@@ -312,8 +360,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAdminUsersIdRouteImport
       parentRoute: typeof AppAdminUsersRoute
     }
+    '/app/admin/companies/$id': {
+      id: '/app/admin/companies/$id'
+      path: '/$id'
+      fullPath: '/app/admin/companies/$id'
+      preLoaderRoute: typeof AppAdminCompaniesIdRouteImport
+      parentRoute: typeof AppAdminCompaniesRoute
+    }
   }
 }
+
+interface AppAdminCompaniesRouteChildren {
+  AppAdminCompaniesIdRoute: typeof AppAdminCompaniesIdRoute
+  AppAdminCompaniesIndexRoute: typeof AppAdminCompaniesIndexRoute
+}
+
+const AppAdminCompaniesRouteChildren: AppAdminCompaniesRouteChildren = {
+  AppAdminCompaniesIdRoute: AppAdminCompaniesIdRoute,
+  AppAdminCompaniesIndexRoute: AppAdminCompaniesIndexRoute,
+}
+
+const AppAdminCompaniesRouteWithChildren =
+  AppAdminCompaniesRoute._addFileChildren(AppAdminCompaniesRouteChildren)
 
 interface AppAdminUsersRouteChildren {
   AppAdminUsersIdRoute: typeof AppAdminUsersIdRoute
@@ -330,11 +398,13 @@ const AppAdminUsersRouteWithChildren = AppAdminUsersRoute._addFileChildren(
 )
 
 interface AppAdminRouteChildren {
+  AppAdminCompaniesRoute: typeof AppAdminCompaniesRouteWithChildren
   AppAdminUsersRoute: typeof AppAdminUsersRouteWithChildren
   AppAdminIndexRoute: typeof AppAdminIndexRoute
 }
 
 const AppAdminRouteChildren: AppAdminRouteChildren = {
+  AppAdminCompaniesRoute: AppAdminCompaniesRouteWithChildren,
   AppAdminUsersRoute: AppAdminUsersRouteWithChildren,
   AppAdminIndexRoute: AppAdminIndexRoute,
 }

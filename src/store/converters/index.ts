@@ -11,6 +11,7 @@ export const companyConverter = {
     label: data.label.trim(),
     description: data.description || "",
     thumbnail: data.thumbnail || "",
+    archived: Boolean(data.archived),
   }),
   fromFirestore: (snapshot: QueryDocumentSnapshot, options: SnapshotOptions) =>
     snapshot.data(options) as Omit<Company, "id">,

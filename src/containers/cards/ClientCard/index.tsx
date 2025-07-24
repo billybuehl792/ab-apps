@@ -39,12 +39,10 @@ const ClientCard = ({
   /** Values */
 
   const navigate = useNavigate();
-  const {
-    mutations: { archive, unarchive },
-  } = useClients();
+  const clients = useClients();
 
   const fullName = `${client.first_name} ${client.last_name}`;
-  const disabled = disabledProp || archive.isPending;
+  const disabled = disabledProp || clients.mutations.archive.isPending;
 
   /** Callbacks */
 
@@ -87,7 +85,7 @@ const ClientCard = ({
       color: "error",
       confirm: `Are you sure you want to delete ${fullName}? This action cannot be undone.`,
       onClick: () => {
-        archive.mutate(client.id);
+        clients.mutations.archive.mutate(client.id);
       },
     },
     {
@@ -96,7 +94,7 @@ const ClientCard = ({
       label: "Restore",
       icon: <Restore />,
       onClick: () => {
-        unarchive.mutate(client.id);
+        clients.mutations.restore.mutate(client.id);
       },
     },
   ];
