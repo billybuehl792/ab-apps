@@ -32,16 +32,7 @@ const MenuOptionsIconButton = ({
 
   /** Callbacks */
 
-  const onMouseDown: IconButtonProps["onMouseDown"] = (event) => {
-    event.stopPropagation();
-  };
-
-  const onTouchStart: IconButtonProps["onTouchStart"] = (event) => {
-    event.stopPropagation();
-  };
-
   const onClick: IconButtonProps["onClick"] = (event) => {
-    event.stopPropagation();
     if (includeMenu) setAnchorEl(event.currentTarget);
     else onClickProp(event);
   };
@@ -52,13 +43,7 @@ const MenuOptionsIconButton = ({
 
   return (
     <>
-      <IconButton
-        component="span"
-        onMouseDown={onMouseDown}
-        onTouchStart={onTouchStart}
-        onClick={onClick}
-        {...props}
-      >
+      <IconButton component="span" onClick={onClick} {...props}>
         {icon}
       </IconButton>
       {includeMenu && (

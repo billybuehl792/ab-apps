@@ -1,4 +1,4 @@
-import { useState, type MouseEvent } from "react";
+import { type MouseEvent } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import {
   Card,
@@ -9,50 +9,43 @@ import {
   Typography,
   type CardProps,
   type CardContentProps,
+  CardActions,
 } from "@mui/material";
 import { Delete, Edit, Info, Person, Restore } from "@mui/icons-material";
 import useClients from "@/hooks/useClients";
-import MenuOptionListDrawer from "@/components/modals/MenuOptionListDrawer";
+import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 import type { Client } from "@/store/types/clients";
 
-interface ClientCardProps extends Omit<CardProps, "onClick"> {
+interface ClientListCardProps extends Omit<CardProps, "onClick"> {
   client: Client;
   disabled?: boolean;
-  options?: MenuOption[];
   onClick?: (event: MouseEvent<HTMLButtonElement>, client: Client) => void;
+  options?: MenuOption[];
   slotProps?: {
     cardActionArea?: CardActionAreaProps;
     cardContent?: CardContentProps;
   };
 }
 
-const ClientCard = ({
+const ClientListCard = ({
   client,
-  disabled: disabledProp,
-  options: optionsProp,
+  disabled,
   onClick: onClickProp,
+  options: optionsProp,
   slotProps,
   ...props
-}: ClientCardProps) => {
-  const [modalOpen, setModalOpen] = useState(false);
-
+}: ClientListCardProps) => {
   /** Values */
 
   const navigate = useNavigate();
   const clients = useClients();
-
   const fullName = `${client.first_name} ${client.last_name}`;
-  const disabled = disabledProp || clients.mutations.archive.isPending;
 
   /** Callbacks */
 
   const onClick: CardActionAreaProps["onClick"] = (event) => {
     if (onClickProp) onClickProp(event, client);
-    else handleToggleModalOpen();
-  };
-
-  const handleToggleModalOpen = () => {
-    setModalOpen((prev) => !prev);
+    else void navigate({ to: `/app/clients/${client.id}` });
   };
 
   /** Options */
@@ -100,7 +93,13 @@ const ClientCard = ({
   ];
 
   return (
-    <Card {...props} sx={{ opacity: client.archived ? 0.5 : 1 }}>
+    <Stack
+      component={Card}
+      direction="row"
+      position="relative"
+      {...props}
+      sx={{ opacity: client.archived ? 0.5 : 1 }}
+    >
       <CardActionArea
         disabled={disabled}
         onClick={onClick}
@@ -110,6 +109,7 @@ const ClientCard = ({
           component={Stack}
           direction="row"
           spacing={2}
+          mr={7.5}
           alignItems="center"
           {...slotProps?.cardContent}
         >
@@ -124,18 +124,22 @@ const ClientCard = ({
           </Stack>
         </CardContent>
       </CardActionArea>
-
-      {/* Modals */}
-      {Boolean(options.length) && (
-        <MenuOptionListDrawer
-          title={fullName}
+      <CardActions
+        sx={{
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          right: 0,
+          pointerEvents: "none",
+        }}
+      >
+        <MenuOptionsIconButton
           options={options}
-          open={modalOpen}
-          onClose={handleToggleModalOpen}
+          sx={{ pointerEvents: "auto" }}
         />
-      )}
-    </Card>
+      </CardActions>
+    </Stack>
   );
 };
 
-export default ClientCard;
+export default ClientListCard;

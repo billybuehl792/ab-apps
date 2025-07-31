@@ -31,10 +31,10 @@ const NavigationFooter = (props: PaperProps) => {
       icon: <Groups />,
     },
     {
-      id: "account",
-      label: "Account",
-      to: "/app/account",
-      selected: pathname.startsWith("/app/account"),
+      id: "profile",
+      label: "Profile",
+      to: "/app/profile",
+      selected: pathname.startsWith("/app/profile"),
       icon: (
         <Avatar
           src={user?.photoURL || ""}

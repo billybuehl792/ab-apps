@@ -41,7 +41,7 @@ const SortAndFilterFormFiltersField = <T extends string = string>({
                 <SortAndFilterFormResetFiltersButton />
               </Grow>
             </Stack>
-            <FormGroup ref={ref} sx={{ ml: 2 }}>
+            <FormGroup ref={ref}>
               {options.map((option) => (
                 <FormControlLabel
                   key={option.id}
@@ -51,9 +51,9 @@ const SortAndFilterFormFiltersField = <T extends string = string>({
                   disabled={option.disabled || disabled}
                   control={
                     <Checkbox
-                      onChange={(event) => {
+                      onChange={(_, checked) => {
                         onChange(
-                          event.target.checked
+                          checked
                             ? [...value, option]
                             : value.filter(({ id }) => id !== option.id)
                         );

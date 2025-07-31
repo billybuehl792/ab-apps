@@ -42,20 +42,18 @@ const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
       icon: <Construction />,
     },
     {
-      id: "account",
-      label: "Account",
-      to: "/app/account",
+      id: "profile",
+      label: "Profile",
+      to: "/app/profile",
       render: Boolean(user),
-      selected: pathname.startsWith("/app/account"),
+      selected: pathname.startsWith("/app/profile"),
       icon: <Person />,
     },
     {
       id: "admin",
       label: "Admin",
       to: "/app/admin",
-      render: [AuthRole.ADMIN, AuthRole.SUPER_ADMIN].includes(
-        permissions?.role ?? AuthRole.STANDARD
-      ),
+      render: [AuthRole.ADMIN, AuthRole.SUPER_ADMIN].includes(permissions.role),
       selected: pathname.startsWith("/app/admin"),
       icon: <AdminPanelSettings />,
     },

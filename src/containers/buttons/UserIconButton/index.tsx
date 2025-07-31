@@ -23,11 +23,11 @@ const UserIconButton = (
 
   const options: MenuOption[] = [
     {
-      id: "account",
-      label: "Account",
-      selected: pathname === "/app/account",
+      id: "profile",
+      label: "Profile",
+      selected: pathname === "/app/profile",
       icon: <Person />,
-      onClick: () => void navigate({ to: "/app/account" }),
+      onClick: () => void navigate({ to: "/app/profile" }),
     },
     {
       id: "signOut",

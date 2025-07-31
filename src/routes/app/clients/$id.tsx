@@ -90,7 +90,7 @@ function RouteComponent() {
   ];
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1} p={2}>
       <Stack direction="row" spacing={1} alignItems="center">
         <Typography variant="h6" noWrap>
           {clientFullName}

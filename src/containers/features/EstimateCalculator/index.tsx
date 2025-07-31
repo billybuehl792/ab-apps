@@ -52,9 +52,6 @@ const EstimateCalculator = (props: StackProps<"form">) => {
       <Stack
         component="form"
         noValidate
-        position="relative"
-        overflow="auto"
-        flexGrow={1}
         onSubmit={onSubmit}
         onReset={onReset}
         {...props}
@@ -64,8 +61,8 @@ const EstimateCalculator = (props: StackProps<"form">) => {
           top={0}
           zIndex={1}
           spacing={1}
-          padding={2}
-          paddingBottom={0}
+          p={2}
+          pb={0}
           bgcolor={({ palette }) => palette.background.default}
         >
           <EstimateCalculatorMeta />

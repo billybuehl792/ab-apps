@@ -7,7 +7,7 @@ export const Route = createFileRoute("/app/admin")({
   component: RouteComponent,
   beforeLoad: ({ context }) => {
     const isAdmin = [AuthRole.ADMIN, AuthRole.SUPER_ADMIN].includes(
-      context.auth.permissions?.role ?? AuthRole.STANDARD
+      context.auth.permissions.role
     );
 
     if (!isAdmin) redirect({ to: "/app", replace: true, throw: true });
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/app/admin")({
 
 function RouteComponent() {
   return (
-    <Container maxWidth="lg" disableGutters>
+    <Container maxWidth="md" disableGutters>
       <Stack spacing={2} p={2}>
         <NavigationBreadcrumbs />
         <Outlet />

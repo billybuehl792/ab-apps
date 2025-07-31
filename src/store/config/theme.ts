@@ -45,6 +45,13 @@ export const theme = createTheme({
         },
       },
     },
+    MuiCardActions: {
+      styleOverrides: {
+        root: {
+          padding: 16,
+        },
+      },
+    },
     MuiDialogContent: {
       defaultProps: { dividers: true },
     },
