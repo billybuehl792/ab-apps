@@ -27,7 +27,9 @@ const EmptyState = ({
     >
       {icon ?? <FolderOff fontSize="large" color="disabled" />}
       {typeof text === "string" ? (
-        <Typography color="textDisabled">{text}</Typography>
+        <Typography color="textDisabled" textAlign="center">
+          {text}
+        </Typography>
       ) : (
         text
       )}

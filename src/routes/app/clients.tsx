@@ -4,8 +4,8 @@ import NavigationBreadcrumbs from "@/containers/lists/NavigationBreadcrumbs";
 import CreateClientLink from "@/containers/links/CreateClientLink";
 
 export const Route = createFileRoute("/app/clients")({
-  component: RouteComponent,
   loader: () => ({ crumb: "Clients" }),
+  component: RouteComponent,
 });
 
 function RouteComponent() {

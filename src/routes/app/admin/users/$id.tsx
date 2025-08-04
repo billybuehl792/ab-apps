@@ -23,5 +23,5 @@ function RouteComponent() {
 
   const { user } = Route.useLoaderData();
 
-  return <UserRecordDetailCard user={user} />;
+  return <UserRecordDetailCard user={user} editable />;
 }

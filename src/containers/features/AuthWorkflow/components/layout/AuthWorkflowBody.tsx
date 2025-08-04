@@ -9,10 +9,10 @@ import AuthWorkflowMultiFactorPhoneVerification from "./AuthWorkflowMultiFactorP
 const AuthWorkflowBody = () => {
   /** Values */
 
-  const { user } = useAuth();
+  const auth = useAuth();
   const { multiFactorResolver, multiFactorHint } = useAuthWorkflow();
 
-  if (user) return <AuthWorkflowSuccess user={user} />;
+  if (auth.user) return <AuthWorkflowSuccess user={auth.user} />;
   if (multiFactorResolver) {
     if (multiFactorHint) {
       if (multiFactorHint.factorId === FactorId.PHONE)

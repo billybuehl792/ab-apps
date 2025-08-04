@@ -1,27 +1,26 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { Container, Stack } from "@mui/material";
-import { AuthRole } from "@/store/enums/auth";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { Container, Divider, Stack } from "@mui/material";
 import NavigationBreadcrumbs from "@/containers/lists/NavigationBreadcrumbs";
 
 export const Route = createFileRoute("/app/admin")({
   component: RouteComponent,
-  beforeLoad: ({ context }) => {
-    const isAdmin = [AuthRole.ADMIN, AuthRole.SUPER_ADMIN].includes(
-      context.auth.permissions.role
-    );
-
-    if (!isAdmin) redirect({ to: "/app", replace: true, throw: true });
-  },
-  loader: () => ({ crumb: "AB Admin" }),
+  loader: () => ({ crumb: "Admin" }),
 });
 
 function RouteComponent() {
   return (
-    <Container maxWidth="md" disableGutters>
-      <Stack spacing={2} p={2}>
-        <NavigationBreadcrumbs />
-        <Outlet />
+    <Stack width="100%" height="100%">
+      <Container maxWidth="md" disableGutters>
+        <Stack spacing={2} p={2} pb={0}>
+          <NavigationBreadcrumbs />
+          <Divider />
+        </Stack>
+      </Container>
+      <Stack overflow="auto">
+        <Container maxWidth="md" disableGutters>
+          <Outlet />
+        </Container>
       </Stack>
-    </Container>
+    </Stack>
   );
 }

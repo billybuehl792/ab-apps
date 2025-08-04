@@ -11,13 +11,11 @@ const UserIconButton = (
   /** Values */
 
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const {
-    user,
-    mutations: { signOut },
-  } = useAuth();
+  const location = useLocation();
+  const auth = useAuth();
 
-  const userName = user?.displayName ?? user?.email ?? "User";
+  const userName = auth.user?.displayName ?? auth.user?.email ?? "User";
+  const photoURL = auth.user?.photoURL ?? "";
 
   /** Options */
 
@@ -25,7 +23,7 @@ const UserIconButton = (
     {
       id: "profile",
       label: "Profile",
-      selected: pathname === "/app/profile",
+      selected: location.pathname === "/app/profile",
       icon: <Person />,
       onClick: () => void navigate({ to: "/app/profile" }),
     },
@@ -34,14 +32,14 @@ const UserIconButton = (
       label: "Sign Out",
       icon: <Logout />,
       confirm: "Are you sure you want to sign out?",
-      onClick: signOut.mutate,
+      onClick: () => void navigate({ to: "/sign-out" }),
     },
   ];
 
   return (
     <MenuOptionsIconButton
       options={options}
-      icon={<Avatar src={user?.photoURL ?? ""} />}
+      icon={<Avatar src={photoURL} />}
       slotProps={{ menu: { title: userName } }}
       {...props}
     />

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { sendEmailVerification, type User } from "firebase/auth";
+import { type User } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import {
   Button,
@@ -9,7 +9,7 @@ import {
   type StackProps,
 } from "@mui/material";
 import { Check, NewReleases, Verified } from "@mui/icons-material";
-import { AuthMutationKeys } from "@/store/constants/auth";
+import { authMutations } from "@/store/mutations/auth";
 
 interface UserDetailCardEmailProps extends StackProps {
   user: User;
@@ -18,21 +18,20 @@ interface UserDetailCardEmailProps extends StackProps {
 const UserDetailCardEmail = ({ user, ...props }: UserDetailCardEmailProps) => {
   /** Values */
 
-  const { enqueueSnackbar } = useSnackbar();
+  const snackbar = useSnackbar();
 
   /** Mutations */
 
   const emailVerificationMutation = useMutation({
-    mutationKey: [...AuthMutationKeys.sendEmailVerification, user.uid],
-    mutationFn: () => sendEmailVerification(user),
-    onSuccess: () => {
-      enqueueSnackbar("Email verification sent", { variant: "success" });
-    },
-    onError: () => {
-      enqueueSnackbar("Failed to send email verification", {
+    ...authMutations.sendEmailVerificationCode(),
+    onSuccess: () =>
+      void snackbar.enqueueSnackbar("Email verification sent", {
+        variant: "success",
+      }),
+    onError: () =>
+      void snackbar.enqueueSnackbar("Failed to send email verification", {
         variant: "error",
-      });
-    },
+      }),
   });
 
   /** Queries */
@@ -50,7 +49,7 @@ const UserDetailCardEmail = ({ user, ...props }: UserDetailCardEmailProps) => {
   /** Callbacks */
 
   const handleSendEmailVerification = () => {
-    emailVerificationMutation.mutate();
+    emailVerificationMutation.mutate(user);
   };
 
   return (

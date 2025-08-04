@@ -9,6 +9,7 @@ const QUERY_KEY = ["auth"] as const;
 const company = () =>
   queryOptions({
     queryKey: [...QUERY_KEY, "company"] as const,
+    retry: false,
     queryFn: async () => {
       const res = await httpsCallable<unknown, Company>(
         functions,
@@ -22,6 +23,7 @@ const company = () =>
 const permissions = () =>
   queryOptions({
     queryKey: [...QUERY_KEY, "permissions"] as const,
+    retry: false,
     queryFn: async () => {
       const res = await httpsCallable<unknown, Permissions>(
         functions,

@@ -15,14 +15,17 @@ import useUsers from "@/hooks/useUsers";
 import UserEmailChip from "@/containers/chips/UserEmailChip";
 import UserPermissionsChip from "@/containers/chips/UserPermissionsChip";
 import UserCompanyChip from "@/containers/chips/UserCompanyChip";
+import EditIconButton from "@/components/buttons/EditIconButton";
 import { DateTimeFormat } from "@/store/enums/datetime";
 
 interface UserRecordDetailCardProps extends CardProps {
   user: UserRecord | string;
+  editable?: boolean;
 }
 
 const UserRecordDetailCard = ({
   user: userProp,
+  editable,
   ...props
 }: UserRecordDetailCardProps) => {
   /** Values */
@@ -89,20 +92,27 @@ const UserRecordDetailCard = ({
 
   return (
     <Card {...props}>
-      <CardContent component={Grid} container spacing={2}>
-        <Grid size={{ xs: 12, md: 4 }}>
-          <Stack spacing={1} alignItems="center">
-            <Avatar
-              src={user?.photoURL}
-              alt={user?.displayName ?? user?.email ?? "User"}
-              sx={{ width: 100, height: 100 }}
-            />
+      <CardContent
+        component={Stack}
+        direction="row"
+        spacing={2}
+        flexWrap="wrap"
+        useFlexGap
+      >
+        <Stack spacing={1} flexGrow={1} alignItems="center">
+          <Avatar
+            src={user?.photoURL}
+            alt={user?.displayName ?? user?.email ?? "User"}
+            sx={{ width: 100, height: 100 }}
+          />
+          <Stack component="span" direction="row" spacing={1}>
             <Typography variant="body1">
               {user?.displayName ?? user?.email ?? "User"}
             </Typography>
+            {editable && <EditIconButton size="small" />}
           </Stack>
-        </Grid>
-        <Grid size={{ xs: 12, md: 8 }}>
+        </Stack>
+        <Stack flexGrow={2} flexShrink={0}>
           <Stack spacing={2} divider={<Divider />}>
             <Stack spacing={1}>
               {details.map((detail) => (
@@ -132,8 +142,11 @@ const UserRecordDetailCard = ({
               ))}
             </Grid>
           </Stack>
-        </Grid>
+        </Stack>
       </CardContent>
+
+      {/* Modals */}
+      {editable && <></>}
     </Card>
   );
 };

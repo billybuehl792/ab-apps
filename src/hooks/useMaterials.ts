@@ -12,8 +12,8 @@ const useMaterials = (company?: Company | string) => {
   /** Values */
 
   const queryClient = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
   const auth = useAuth();
+  const snackbar = useSnackbar();
 
   const companyId =
     typeof company === "string" ? company : (company?.id ?? auth.company.id);
@@ -36,13 +36,13 @@ const useMaterials = (company?: Company | string) => {
       void queryClient.invalidateQueries({
         queryKey: [FirebaseCollection.MATERIALS, companyId],
       });
-      void enqueueSnackbar(
+      void snackbar.enqueueSnackbar(
         `${markdownUtils.bold(data.label)} material created`,
         { variant: "success" }
       );
     },
     onError: () =>
-      enqueueSnackbar("Error creating material", { variant: "error" }),
+      snackbar.enqueueSnackbar("Error creating material", { variant: "error" }),
   });
 
   const update = useMutation({
@@ -51,12 +51,15 @@ const useMaterials = (company?: Company | string) => {
       void queryClient.invalidateQueries({
         queryKey: [FirebaseCollection.MATERIALS, companyId],
       });
-      void enqueueSnackbar(`${markdownUtils.bold(data.label)} updated`, {
-        variant: "success",
-      });
+      void snackbar.enqueueSnackbar(
+        `${markdownUtils.bold(data.label)} updated`,
+        {
+          variant: "success",
+        }
+      );
     },
     onError: () =>
-      enqueueSnackbar("Error updating material", {
+      snackbar.enqueueSnackbar("Error updating material", {
         variant: "error",
       }),
   });
@@ -67,10 +70,10 @@ const useMaterials = (company?: Company | string) => {
       void queryClient.invalidateQueries({
         queryKey: [FirebaseCollection.MATERIALS, companyId],
       });
-      void enqueueSnackbar("Material deleted", { variant: "success" });
+      void snackbar.enqueueSnackbar("Material deleted", { variant: "success" });
     },
     onError: () =>
-      enqueueSnackbar("Error deleting material", { variant: "error" }),
+      snackbar.enqueueSnackbar("Error deleting material", { variant: "error" }),
   });
 
   return {

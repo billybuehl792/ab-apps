@@ -8,18 +8,12 @@ import type { Permissions } from "../types/auth";
 // FETCH
 
 export const getUser = onCall<{ id: string }>(async (request) => {
-  if (!request.auth)
-    throw new HttpsError("permission-denied", "Authentication required");
+  await authUtils.authGuard(request, {
+    permissions: { role: AuthRole.SUPER_ADMIN },
+  });
 
   try {
-    const auth = getAuth();
-    const user = await auth.getUser(String(request.auth.uid));
-    if (!authUtils.isAdmin(user))
-      throw new Error(
-        `User does not have a valid role. User must be an admin to access user data.`
-      );
-
-    return await auth.getUser(request.data.id);
+    return await getAuth().getUser(request.data.id);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     throw new HttpsError("invalid-argument", message);
@@ -28,18 +22,12 @@ export const getUser = onCall<{ id: string }>(async (request) => {
 
 export const getUserList = onCall<{ maxResults?: number; pageToken?: string }>(
   async (request) => {
-    if (!request.auth)
-      throw new HttpsError("permission-denied", "Authentication required");
+    await authUtils.authGuard(request, {
+      permissions: { role: AuthRole.SUPER_ADMIN },
+    });
 
     try {
-      const auth = getAuth();
-      const user = await auth.getUser(String(request.auth.uid));
-      if (!authUtils.isAdmin(user))
-        throw new Error(
-          `User does not have a valid role. User must be an admin to access the list of users.`
-        );
-
-      return await auth.listUsers(
+      return await getAuth().listUsers(
         request.data.maxResults,
         request.data.pageToken ?? undefined
       );
@@ -51,8 +39,9 @@ export const getUserList = onCall<{ maxResults?: number; pageToken?: string }>(
 );
 
 export const getUserPermissions = onCall<{ id: string }>(async (request) => {
-  if (!request.auth)
-    throw new HttpsError("permission-denied", "Authentication required");
+  await authUtils.authGuard(request, {
+    permissions: { role: AuthRole.SUPER_ADMIN },
+  });
 
   try {
     const user = await getAuth().getUser(String(request.data.id));
@@ -69,21 +58,21 @@ export const updatePermissions = onCall<{
   id: string;
   permissions: Permissions;
 }>(async (request) => {
-  if (!request.auth)
-    throw new HttpsError("permission-denied", "Authentication required");
+  await authUtils.authGuard(request, {
+    permissions: { role: AuthRole.SUPER_ADMIN },
+  });
 
   try {
-    const userId = String(request.data.id);
-    const role = String(request.data.permissions.role);
+    const auth = getAuth();
 
-    if (!Object.values(AuthRole).includes(role as AuthRole))
+    if (!Object.values(AuthRole).includes(request.data.permissions.role))
       throw new Error(
         `Role must be one of: ${Object.values(AuthRole).join(", ")}`
       );
 
-    const user = await getAuth().getUser(userId);
-    const permissions: Permissions = { role: role as AuthRole };
-    await getAuth().setCustomUserClaims(user.uid, {
+    const user = await auth.getUser(request.data.id);
+    const permissions: Permissions = { role: request.data.permissions.role };
+    await auth.setCustomUserClaims(user.uid, {
       ...user.customClaims,
       role: permissions.role,
     });
@@ -94,6 +83,7 @@ export const updatePermissions = onCall<{
       permissions,
     };
   } catch (error) {
-    throw new HttpsError("invalid-argument", "Error setting user role");
+    const message = error instanceof Error ? error.message : String(error);
+    throw new HttpsError("invalid-argument", message);
   }
 });

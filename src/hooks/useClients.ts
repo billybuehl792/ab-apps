@@ -11,9 +11,9 @@ import type { QueryParams } from "@/store/types/queries";
 const useClients = (company?: Company | string) => {
   /** Values */
 
-  const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
   const auth = useAuth();
+  const snackbar = useSnackbar();
 
   const companyId =
     typeof company === "string" ? company : (company?.id ?? auth.company.id);
@@ -37,13 +37,13 @@ const useClients = (company?: Company | string) => {
       void queryClient.invalidateQueries({
         queryKey: [FirebaseCollection.CLIENTS, companyId],
       });
-      void enqueueSnackbar(
+      void snackbar.enqueueSnackbar(
         `${markdownUtils.bold(data.first_name + " " + data.last_name)} client created`,
         { variant: "success" }
       );
     },
     onError: () =>
-      enqueueSnackbar("Error creating client", { variant: "error" }),
+      snackbar.enqueueSnackbar("Error creating client", { variant: "error" }),
   });
 
   const update = useMutation({
@@ -52,13 +52,13 @@ const useClients = (company?: Company | string) => {
       void queryClient.invalidateQueries({
         queryKey: [FirebaseCollection.CLIENTS, companyId],
       });
-      void enqueueSnackbar(
+      void snackbar.enqueueSnackbar(
         `${markdownUtils.bold(data.first_name + " " + data.last_name)} updated`,
         { variant: "success" }
       );
     },
     onError: () =>
-      enqueueSnackbar("Error updating client", {
+      snackbar.enqueueSnackbar("Error updating client", {
         variant: "error",
       }),
   });
@@ -69,10 +69,10 @@ const useClients = (company?: Company | string) => {
       void queryClient.invalidateQueries({
         queryKey: [FirebaseCollection.CLIENTS, companyId],
       });
-      void enqueueSnackbar("Client archived", { variant: "success" });
+      void snackbar.enqueueSnackbar("Client archived", { variant: "success" });
     },
     onError: () =>
-      enqueueSnackbar("Error archiving client", { variant: "error" }),
+      snackbar.enqueueSnackbar("Error archiving client", { variant: "error" }),
   });
 
   const restore = useMutation({
@@ -81,10 +81,10 @@ const useClients = (company?: Company | string) => {
       void queryClient.invalidateQueries({
         queryKey: [FirebaseCollection.CLIENTS, companyId],
       });
-      void enqueueSnackbar("Client restored", { variant: "success" });
+      void snackbar.enqueueSnackbar("Client restored", { variant: "success" });
     },
     onError: () =>
-      enqueueSnackbar("Error restoring client", { variant: "error" }),
+      snackbar.enqueueSnackbar("Error restoring client", { variant: "error" }),
   });
 
   return {

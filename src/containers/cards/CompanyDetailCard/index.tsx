@@ -46,7 +46,13 @@ const CompanyDetailCard = ({
 
   return (
     <Card {...props}>
-      <CardContent component={Stack} direction="row" alignItems="end">
+      <CardContent
+        component={Stack}
+        direction="row"
+        alignItems="end"
+        flexWrap="wrap"
+        useFlexGap
+      >
         <Avatar
           alt={alt}
           src={thumbnail}

@@ -72,6 +72,7 @@ const StatusWrapper = ({
     return (
       <StatusWrapperContainer {...props}>
         <EmptyState
+          minHeight={undefined}
           {...(typeof empty === "string" && { text: empty })}
           {...(typeof empty === "object" && { ...empty })}
           {...slotProps?.emptyState}
@@ -87,7 +88,6 @@ const StatusWrapperContainer = (props: StackProps) => {
     <Stack
       spacing={2}
       flexGrow={1}
-      minHeight={250}
       alignItems="center"
       justifyContent="center"
       p={4}

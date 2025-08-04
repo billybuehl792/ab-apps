@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "@tanstack/react-router";
 import { Stack, type StackProps } from "@mui/material";
 import { useSnackbar } from "notistack";
 import AuthWorkflowProvider from "./providers/AuthWorkflowProvider";
@@ -7,11 +8,7 @@ import AuthWorkflowBody from "./components/layout/AuthWorkflowBody";
 import { markdownUtils } from "@/store/utils/markdown";
 import type { AuthWorkflowContextValue } from "./types";
 
-interface AuthWorkflowProps extends StackProps {
-  onSuccess?: AuthWorkflowContextValue["onSuccess"];
-}
-
-const AuthWorkflow = ({ onSuccess, ...props }: AuthWorkflowProps) => {
+const AuthWorkflow = (props: StackProps) => {
   const [multiFactorHint, setMultiFactorHint] =
     useState<AuthWorkflowContextValue["multiFactorHint"]>(null);
   const [multiFactorResolver, setMultiFactorResolver] =
@@ -21,25 +18,17 @@ const AuthWorkflow = ({ onSuccess, ...props }: AuthWorkflowProps) => {
 
   /** Values */
 
-  const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
+  const snackbar = useSnackbar();
 
   /** Callbacks */
 
-  const handleSignInSuccess: AuthWorkflowContextValue["onSuccess"] = (
-    value
-  ) => {
-    enqueueSnackbar(
+  const onSuccess: AuthWorkflowContextValue["onSuccess"] = (value) => {
+    snackbar.enqueueSnackbar(
       `${markdownUtils.bold(value.user.displayName ?? value.user.email) || "User"} signed in`,
       { variant: "success" }
     );
-    resetWorkflow();
-    onSuccess?.(value);
-  };
-
-  const resetWorkflow = () => {
-    setMultiFactorHint(null);
-    setMultiFactorResolver(null);
-    setMultiFactorVerificationId(null);
+    setTimeout(() => void router.invalidate(), 200);
   };
 
   return (
@@ -48,7 +37,7 @@ const AuthWorkflow = ({ onSuccess, ...props }: AuthWorkflowProps) => {
         multiFactorHint,
         multiFactorResolver,
         multiFactorVerificationId,
-        onSuccess: handleSignInSuccess,
+        onSuccess,
         setMultiFactorHint,
         setMultiFactorVerificationId,
         setMultiFactorResolver,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useAuth from "@/hooks/useAuth";
+import { useNavigate } from "@tanstack/react-router";
 import { Button, type ButtonProps } from "@mui/material";
 import { Logout } from "@mui/icons-material";
 import ConfirmDialog from "@/components/modals/ConfirmDialog";
@@ -9,14 +9,14 @@ const SignOutButton = (props: ButtonProps) => {
 
   /** Values */
 
-  const {
-    mutations: { signOut },
-  } = useAuth();
+  const navigate = useNavigate();
 
   /** Callbacks */
 
-  const handleSignOut = () => {
-    signOut.mutate();
+  const handleSignOut = () => void navigate({ to: "/sign-out", replace: true });
+
+  const handleToggleConfirm = () => {
+    setConfirmOpen((prev) => !prev);
   };
 
   return (
@@ -25,9 +25,7 @@ const SignOutButton = (props: ButtonProps) => {
         variant="text"
         size="small"
         startIcon={<Logout />}
-        onClick={() => {
-          setConfirmOpen(true);
-        }}
+        onClick={handleToggleConfirm}
         {...props}
       >
         Sign Out
@@ -38,9 +36,7 @@ const SignOutButton = (props: ButtonProps) => {
         description="Are you sure you want to sign out?"
         confirmButtonText="Sign Out"
         onConfirm={handleSignOut}
-        onCancel={() => {
-          setConfirmOpen(false);
-        }}
+        onCancel={handleToggleConfirm}
       />
     </>
   );

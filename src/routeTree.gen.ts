@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignOutRouteImport } from './routes/sign-out'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
@@ -28,6 +29,11 @@ import { Route as AppAdminCompaniesIndexRouteImport } from './routes/app/admin/c
 import { Route as AppAdminUsersIdRouteImport } from './routes/app/admin/users/$id'
 import { Route as AppAdminCompaniesIdRouteImport } from './routes/app/admin/companies/$id'
 
+const SignOutRoute = SignOutRouteImport.update({
+  id: '/sign-out',
+  path: '/sign-out',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/sign-in': typeof SignInRoute
+  '/sign-out': typeof SignOutRoute
   '/app/admin': typeof AppAdminRouteWithChildren
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sign-in': typeof SignInRoute
+  '/sign-out': typeof SignOutRoute
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
   '/app/profile': typeof AppProfileRoute
   '/app': typeof AppIndexRoute
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/sign-in': typeof SignInRoute
+  '/sign-out': typeof SignOutRoute
   '/app/admin': typeof AppAdminRouteWithChildren
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/sign-in'
+    | '/sign-out'
     | '/app/admin'
     | '/app/clients'
     | '/app/estimate-calculator'
@@ -200,6 +210,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/sign-in'
+    | '/sign-out'
     | '/app/estimate-calculator'
     | '/app/profile'
     | '/app'
@@ -216,6 +227,7 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/sign-in'
+    | '/sign-out'
     | '/app/admin'
     | '/app/clients'
     | '/app/estimate-calculator'
@@ -237,10 +249,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   SignInRoute: typeof SignInRoute
+  SignOutRoute: typeof SignOutRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sign-out': {
+      id: '/sign-out'
+      path: '/sign-out'
+      fullPath: '/sign-out'
+      preLoaderRoute: typeof SignOutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sign-in': {
       id: '/sign-in'
       path: '/sign-in'
@@ -451,6 +471,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   SignInRoute: SignInRoute,
+  SignOutRoute: SignOutRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

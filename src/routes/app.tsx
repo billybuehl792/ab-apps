@@ -1,9 +1,7 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { Box, Paper, useMediaQuery } from "@mui/material";
-import useAuth from "@/hooks/useAuth";
 import NavigationList from "@/containers/lists/NavigationList";
 import NavigationFooter from "@/containers/layout/NavigationFooter";
-import StatusWrapper from "@/components/layout/StatusWrapper";
 import AppBar from "@/containers/layout/AppBar";
 import {
   APP_BAR_HEIGHT,
@@ -11,14 +9,17 @@ import {
   APP_FOOTER_HEIGHT,
   APP_SIDE_PANEL_WIDTH,
 } from "@/store/constants/layout";
+import { authUtils } from "@/store/utils/auth";
 
 export const Route = createFileRoute("/app")({
   component: RouteComponent,
   beforeLoad: ({ context, location }) => {
-    if (!context.auth.user)
+    if (!authUtils.authGuard(context.auth))
       redirect({
         to: "/sign-in",
-        search: { redirect: location.href },
+        search: {
+          redirect: location.pathname === "/app" ? undefined : location.href,
+        },
         replace: true,
         throw: true,
       });
@@ -30,8 +31,6 @@ function RouteComponent() {
 
   const isDesktop = useMediaQuery(({ breakpoints }) => breakpoints.up("sm"));
   const isMobile = useMediaQuery("(pointer: coarse)");
-
-  const { user, loading, company, permissions } = useAuth();
 
   return (
     <>
@@ -48,12 +47,7 @@ function RouteComponent() {
         right={0}
         overflow="auto"
       >
-        <StatusWrapper
-          loading={loading}
-          error={!user || !company || !permissions}
-        >
-          <Outlet />
-        </StatusWrapper>
+        <Outlet />
       </Box>
       {isDesktop && (
         <Paper

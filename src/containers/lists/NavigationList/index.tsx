@@ -10,6 +10,7 @@ import {
 import useAuth from "@/hooks/useAuth";
 import NestedList from "@/components/lists/NestedList";
 import { AuthRole } from "@/store/enums/auth";
+import { AuthRoleLevel } from "@/store/constants/auth";
 
 const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
   /** Values */
@@ -53,7 +54,7 @@ const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
       id: "admin",
       label: "Admin",
       to: "/app/admin",
-      render: [AuthRole.ADMIN, AuthRole.SUPER_ADMIN].includes(permissions.role),
+      render: AuthRoleLevel[permissions.role] >= AuthRoleLevel[AuthRole.ADMIN],
       selected: pathname.startsWith("/app/admin"),
       icon: <AdminPanelSettings />,
     },

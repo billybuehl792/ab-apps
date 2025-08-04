@@ -5,18 +5,15 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { onAuthStateChanged } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import { auth } from "@/store/config/firebase";
 import AuthContext from "@/context/AuthContext";
 import StatusWrapper from "@/components/layout/StatusWrapper";
-import {
-  AuthMutationKeys,
-  DEFAULT_COMPANY,
-  DEFAULT_PERMISSIONS,
-} from "@/store/constants/auth";
+import { DEFAULT_COMPANY, DEFAULT_PERMISSIONS } from "@/store/constants/auth";
 import { authQueries } from "@/store/queries/auth";
+import { authMutations } from "@/store/mutations/auth";
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] =
@@ -26,8 +23,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
   /** Values */
 
-  const queryClient = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
+  const snackbar = useSnackbar();
 
   /** Queries */
 
@@ -43,26 +39,14 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
   /** Mutations */
 
-  const signOutMutation = useMutation({
-    mutationKey: AuthMutationKeys.signOut,
-    mutationFn: () => signOut(auth),
-    onMutate: () => {
-      const tempUser = user;
-      setLoadingAuth(true);
-      setUser(null);
-      return { tempUser };
-    },
-    onSuccess: () => {
-      enqueueSnackbar("Signed out", { variant: "success" });
-      queryClient.clear();
-    },
-    onError: (error, _, context) => {
-      enqueueSnackbar(`Error signing out: ${error.message}`, {
+  const signOut = useMutation({
+    ...authMutations.signOut(),
+    onSuccess: () =>
+      void snackbar.enqueueSnackbar("Signed out", { variant: "success" }),
+    onError: (error) =>
+      snackbar.enqueueSnackbar(`Error signing out: ${error.message}`, {
         variant: "error",
-      });
-      setUser(context?.tempUser ?? null);
-      setLoadingAuth(false);
-    },
+      }),
   });
 
   /** Effects */
@@ -85,7 +69,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
           permissions: permissionsQuery.data ?? DEFAULT_PERMISSIONS,
           loading:
             loadingAuth || permissionsQuery.isLoading || companyQuery.isLoading,
-          mutations: { signOut: signOutMutation },
+          signOut,
         }),
         [
           user,
@@ -94,7 +78,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
           permissionsQuery.data,
           permissionsQuery.isLoading,
           loadingAuth,
-          signOutMutation,
+          signOut,
         ]
       )}
     >
@@ -111,15 +95,6 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
               : null
         }
         error={permissionsQuery.error || companyQuery.error}
-        slotProps={{
-          errorButton: {
-            children: "Sign Out",
-            loading: signOutMutation.isPending,
-            onClick: () => {
-              signOutMutation.mutate();
-            },
-          },
-        }}
         sx={{
           position: "fixed",
           top: 0,
