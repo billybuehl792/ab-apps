@@ -7,8 +7,8 @@ import { type UserRecord } from "firebase-admin/auth";
 import useUsers from "@/hooks/useUsers";
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
 import UserPermissionsFormDrawerRoleField from "./fields/UserPermissionsFormDrawerRoleField";
-import type { Permissions } from "@/store/types/auth";
 import { AuthRole } from "@/store/enums/auth";
+import type { Permissions } from "@/store/types/auth";
 
 interface UserPermissionsFormDrawerProps
   extends ComponentProps<typeof SwipeableDrawer> {

@@ -39,19 +39,17 @@ const Form = <T extends FieldValues = FieldValues, R = unknown, E = Error>({
 }: FormProps<T, R, E>) => {
   /** Callbacks */
 
-  const handleSubmit = methods.handleSubmit(async (formData) => {
+  const onSubmit = methods.handleSubmit(async (formData) => {
     try {
       const res = await onSubmitProp(formData);
       await onSuccess?.(res);
     } catch (error) {
-      methods.setError("root", {
-        message: getErrorMessage(error as Error),
-      });
+      methods.setError("root", { message: getErrorMessage(error as Error) });
       await onError?.(error as E);
     }
   });
 
-  const handleReset: FormEventHandler<HTMLFormElement> = (event) => {
+  const onReset: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
 
     onResetProp?.(event);
@@ -64,8 +62,8 @@ const Form = <T extends FieldValues = FieldValues, R = unknown, E = Error>({
         component="form"
         noValidate
         spacing={2}
-        onSubmit={handleSubmit}
-        onReset={handleReset}
+        onSubmit={onSubmit}
+        onReset={onReset}
         {...props}
       >
         <Stack spacing={2} {...slotProps?.fieldset}>
