@@ -18,6 +18,7 @@ interface StatusWrapperProps extends StackProps {
   loadingIcon?: JSX.Element;
   slotProps?: {
     errorButton?: ButtonProps;
+    errorCard?: Partial<ComponentProps<typeof ErrorCard>>;
     emptyState?: ComponentProps<typeof EmptyState>;
   };
 }
@@ -65,6 +66,7 @@ const StatusWrapper = ({
         <ErrorCard
           error={error}
           slotProps={{ errorButton: slotProps?.errorButton }}
+          {...slotProps?.errorCard}
         />
       </StatusWrapperContainer>
     );

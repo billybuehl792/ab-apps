@@ -9,7 +9,7 @@ export const Route = createFileRoute("/app/estimate-calculator")({
 function RouteComponent() {
   return (
     <Container maxWidth="md" disableGutters sx={{ height: "100%" }}>
-      <EstimateCalculator />
+      <EstimateCalculator height="100%" />
     </Container>
   );
 }

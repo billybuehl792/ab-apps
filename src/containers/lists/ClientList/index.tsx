@@ -32,8 +32,8 @@ const ClientList = ({
 
   /** Values */
 
-  const { company } = useAuth();
-  const companyId = companyIdProp ?? company.id;
+  const auth = useAuth();
+  const companyId = companyIdProp ?? auth.company.id;
 
   /** Queries */
 

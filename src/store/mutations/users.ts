@@ -25,7 +25,11 @@ const update = () =>
 
 const updatePermissions = () =>
   mutationOptions({
-    mutationKey: [...MUTATION_KEY, "updatePermissions"] as const,
+    mutationKey: [
+      ...MUTATION_KEY,
+      MutationVariant.UPDATE,
+      "permissions",
+    ] as const,
     mutationFn: async (body: { id: string; permissions: Permissions }) => {
       const res = await httpsCallable<
         { id: string; permissions: Permissions },

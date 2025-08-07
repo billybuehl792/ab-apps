@@ -54,7 +54,7 @@ export const getUserPermissions = onCall<{ id: string }>(async (request) => {
 
 // UPDATE
 
-export const updatePermissions = onCall<{
+export const updateUserPermissions = onCall<{
   id: string;
   permissions: Permissions;
 }>(async (request) => {

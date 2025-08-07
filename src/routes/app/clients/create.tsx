@@ -26,7 +26,7 @@ function RouteComponent() {
     void navigate({ to: "/app/clients" });
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1} p={2}>
       <Typography variant="h6">Create Client</Typography>
       <ClientForm
         slotProps={{ actions: { resetAsCancel: true, submitLabel: "Create" } }}
