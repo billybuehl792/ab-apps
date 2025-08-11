@@ -8,7 +8,7 @@ import Snackbar from "@/components/alerts/Snackbar";
 import GoogleMapsProvider from "./GoogleMapsProvider";
 import RouterProvider from "./RouterProvider";
 
-const Providers = ({ children }: PropsWithChildren) => {
+const RootProvider = ({ children }: PropsWithChildren) => {
   /** Values */
 
   const queryClient = new QueryClient();
@@ -41,4 +41,4 @@ const Providers = ({ children }: PropsWithChildren) => {
   );
 };
 
-export default Providers;
+export default RootProvider;

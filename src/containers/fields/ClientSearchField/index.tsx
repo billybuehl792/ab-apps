@@ -10,7 +10,7 @@ import {
   type AutocompleteProps,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import useClients from "@/hooks/useClients";
+import useClients from "@/store/hooks/useClients";
 import ClientMenuItem from "@/containers/menu-items/ClientMenuItem";
 import type { Client } from "@/store/types/clients";
 
@@ -31,17 +31,16 @@ const ClientSearchField = (props: ClientSearchFieldProps) => {
   /** Values */
 
   const navigate = useNavigate();
-  const { queries } = useClients();
+  const clients = useClients();
 
   /** Queries */
 
-  const query = useQuery(queries.search(debouncedSearch));
+  const query = useQuery(clients.queries.search(debouncedSearch));
 
   /** Callbacks */
 
-  const handleNavigateClient = (id: string) => {
+  const handleNavigateClient = (id: string) =>
     void navigate({ to: `/app/clients/${id}` });
-  };
 
   return (
     <Autocomplete

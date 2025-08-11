@@ -12,7 +12,7 @@ import {
   CardActions,
 } from "@mui/material";
 import { Delete, Edit, Info, Person, Restore } from "@mui/icons-material";
-import useClients from "@/hooks/useClients";
+import useClients from "@/store/hooks/useClients";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 import type { Client } from "@/store/types/clients";
 

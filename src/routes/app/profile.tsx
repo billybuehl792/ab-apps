@@ -1,18 +1,29 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Container, Divider, Stack } from "@mui/material";
-import useAuth from "@/hooks/useAuth";
+import { userQueries } from "@/store/queries/users";
 import UserRecordDetailCard from "@/containers/cards/UserRecordDetailCard";
 import NavigationBreadcrumbs from "@/containers/lists/NavigationBreadcrumbs";
+import StatusWrapper from "@/components/layout/StatusWrapper";
+import ErrorCard from "@/components/cards/ErrorCard";
 
 export const Route = createFileRoute("/app/profile")({
-  loader: () => ({ crumb: "Profile" }),
+  loader: async ({ context }) => {
+    const user = await context.queryClient.ensureQueryData(
+      userQueries.detail(context.auth.user?.uid ?? "")
+    );
+    return { user, crumb: "Profile" };
+  },
+  pendingComponent: () => (
+    <StatusWrapper loading loadingDescription="loading user..." />
+  ),
   component: RouteComponent,
+  errorComponent: ({ error }) => <ErrorCard error={error} />,
 });
 
 function RouteComponent() {
   /** Values */
 
-  const { user } = useAuth();
+  const { user } = Route.useLoaderData();
 
   return (
     <Stack width="100%" height="100%">
@@ -25,7 +36,7 @@ function RouteComponent() {
       <Stack overflow="auto">
         <Container maxWidth="md" disableGutters>
           <Stack p={2}>
-            <UserRecordDetailCard user={user?.uid ?? ""} />
+            <UserRecordDetailCard user={user} />
           </Stack>
         </Container>
       </Stack>

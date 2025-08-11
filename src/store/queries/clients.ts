@@ -47,24 +47,6 @@ const list = (companyId: string, params?: QueryParams) =>
       ),
   });
 
-const search = (companyId: string, term?: string) =>
-  queryOptions({
-    queryKey: [
-      FirebaseCollection.CLIENTS,
-      companyId,
-      QueryVariant.LIST,
-      term,
-    ] as const,
-    queryFn: () =>
-      searchClient.searchSingleIndex<Omit<Client, "id"> & { objectID: string }>(
-        {
-          indexName:
-            firebaseUtils.collections.getClientCollection(companyId).path,
-          searchParams: { query: term, filters: "NOT archived:true" },
-        }
-      ),
-  });
-
 const detail = (companyId: string, id: string) =>
   queryOptions({
     queryKey: [
@@ -83,6 +65,23 @@ const detail = (companyId: string, id: string) =>
 
       return docSnap;
     },
+  });
+
+const search = (companyId: string, term?: string) =>
+  queryOptions({
+    queryKey: [
+      FirebaseCollection.CLIENTS,
+      companyId,
+      QueryVariant.SEARCH,
+      term,
+    ] as const,
+    queryFn: () =>
+      searchClient.searchSingleIndex<Omit<Client, "id"> & { objectID: string }>(
+        {
+          indexName: `${companyId}_clients`,
+          searchParams: { query: term, filters: "NOT archived:true" },
+        }
+      ),
   });
 
 export const clientQueries = {

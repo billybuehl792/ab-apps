@@ -1,7 +1,7 @@
 import { type ComponentProps } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { type UserRecord } from "firebase-admin/auth";
-import useUsers from "@/hooks/useUsers";
+import useUsers from "@/store/hooks/useUsers";
 import CompanyChip from "../CompanyChip";
 
 const UserCompanyChip = ({

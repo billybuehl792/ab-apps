@@ -4,7 +4,7 @@ import { Button, Stack, useMediaQuery } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import { type User } from "firebase/auth";
 import { type UserRecord } from "firebase-admin/auth";
-import useUsers from "@/hooks/useUsers";
+import useUsers from "@/store/hooks/useUsers";
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
 import UserPermissionsFormDrawerRoleField from "./fields/UserPermissionsFormDrawerRoleField";
 import { AuthRole } from "@/store/enums/auth";

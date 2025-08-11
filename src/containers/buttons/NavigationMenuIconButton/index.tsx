@@ -11,6 +11,12 @@ const NavigationMenuIconButton = (props: IconButtonProps) => {
 
   const location = useLocation();
 
+  /** Callbacks */
+
+  const handleToggleMenuOpen = () => {
+    setMenuOpen((prev) => !prev);
+  };
+
   /** Effects */
 
   useEffect(() => {
@@ -19,21 +25,10 @@ const NavigationMenuIconButton = (props: IconButtonProps) => {
 
   return (
     <>
-      <IconButton
-        color="inherit"
-        onClick={() => {
-          setMenuOpen((prev) => !prev);
-        }}
-        {...props}
-      >
+      <IconButton color="inherit" onClick={handleToggleMenuOpen} {...props}>
         <Menu />
       </IconButton>
-      <NavigationDrawer
-        open={menuOpen}
-        onClose={() => {
-          setMenuOpen(false);
-        }}
-      />
+      <NavigationDrawer open={menuOpen} onClose={handleToggleMenuOpen} />
     </>
   );
 };

@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Stack, Typography } from "@mui/material";
 import { Delete, Restore } from "@mui/icons-material";
 import { clientQueries } from "@/store/queries/clients";
-import useClients from "@/hooks/useClients";
+import useClients from "@/store/hooks/useClients";
 import ClientDetailCard from "@/containers/cards/ClientDetailCard";
 import ClientForm from "@/containers/forms/ClientForm";
 import EditIconButton from "@/components/buttons/EditIconButton";

@@ -7,8 +7,8 @@ import {
   TablePagination,
   type TablePaginationProps,
 } from "@mui/material";
-import useUsers from "@/hooks/useUsers";
-import UserRecordCard from "@/containers/cards/UserRecordCard";
+import useUsers from "@/store/hooks/useUsers";
+import UserRecordListCard from "@/containers/cards/UserRecordListCard";
 import StatusWrapper from "@/components/layout/StatusWrapper";
 
 const ROWS_PER_PAGE = 10;
@@ -70,7 +70,7 @@ const UserList = (props: StackProps) => {
         }
       >
         {userListQuery.data?.users.map((user) => (
-          <UserRecordCard key={user.uid} user={user} />
+          <UserRecordListCard key={user.uid} user={user} />
         ))}
       </StatusWrapper>
       {(hasPreviousPage || hasNextPage) && (

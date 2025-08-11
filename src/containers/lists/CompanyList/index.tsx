@@ -9,9 +9,9 @@ import {
   type TablePaginationProps,
 } from "@mui/material";
 import { Store } from "@mui/icons-material";
-import useCompanies from "@/hooks/useCompanies";
+import useCompanies from "@/store/hooks/useCompanies";
 import StatusWrapper from "@/components/layout/StatusWrapper";
-import CompanyCard from "@/containers/cards/CompanyCard";
+import CompanyListCard from "@/containers/cards/CompanyListCard";
 
 const ROWS_PER_PAGE = 10;
 
@@ -77,7 +77,10 @@ const CompanyList = (props: StackProps) => {
         }
       >
         {listQuery.data?.docs.map((doc) => (
-          <CompanyCard key={doc.id} company={{ id: doc.id, ...doc.data() }} />
+          <CompanyListCard
+            key={doc.id}
+            company={{ id: doc.id, ...doc.data() }}
+          />
         ))}
         {countQuery.isSuccess &&
           countQuery.data.data().count > ROWS_PER_PAGE && (

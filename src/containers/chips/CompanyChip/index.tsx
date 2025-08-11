@@ -9,7 +9,7 @@ import {
   type ChipProps,
 } from "@mui/material";
 import { Store } from "@mui/icons-material";
-import useCompanies from "@/hooks/useCompanies";
+import useCompanies from "@/store/hooks/useCompanies";
 import type { Company } from "@/store/types/companies";
 
 const CompanyChip = ({

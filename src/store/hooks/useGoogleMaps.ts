@@ -1,6 +1,6 @@
 import { use } from "react";
 
-import GoogleMapsContext from "@/context/GoogleMapsContext";
+import GoogleMapsContext from "@/store/context/GoogleMapsContext";
 
 const useGoogleMaps = () => use(GoogleMapsContext);
 

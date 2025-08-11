@@ -6,7 +6,7 @@ const NavigationBreadcrumbs = (props: BreadcrumbsProps) => {
 
   const navigate = useNavigate();
   const matches = useMatches();
-  const { pathname } = useLocation();
+  const location = useLocation();
 
   const crumbs = matches
     .filter((match) => match.loaderData?.crumb)
@@ -32,7 +32,7 @@ const NavigationBreadcrumbs = (props: BreadcrumbsProps) => {
             handleCrumbClick(crumb.href);
           }}
           style={{ verticalAlign: "inherit" }}
-          {...(pathname === crumb.href && {
+          {...(location.pathname === crumb.href && {
             color: "textPrimary",
             fontWeight: "bold",
             onClick: undefined,

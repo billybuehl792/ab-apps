@@ -1,5 +1,5 @@
 import { type ContextType } from "react";
-import AuthContext from "@/context/AuthContext";
+import AuthContext from "@/store/context/AuthContext";
 import { AuthRoleLevel } from "../constants/auth";
 import type { Permissions } from "../types/auth";
 
@@ -22,10 +22,11 @@ export const authGuard = (
   };
 
   if (!auth.user) return handleDenied("User is not authenticated");
-  if (options?.permissions) {
+  if (options?.permissions?.role) {
     if (
+      !auth.permissions.role ||
       AuthRoleLevel[auth.permissions.role] <
-      AuthRoleLevel[options.permissions.role]
+        AuthRoleLevel[options.permissions.role]
     )
       return handleDenied("Insufficient permissions to access this resource");
   }

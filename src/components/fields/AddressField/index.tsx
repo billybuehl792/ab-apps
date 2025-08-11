@@ -9,7 +9,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useSnackbar } from "notistack";
 import { useDebounce } from "use-debounce";
-import useGoogleMaps from "@/hooks/useGoogleMaps";
+import useGoogleMaps from "@/store/hooks/useGoogleMaps";
 import AddressMenuItem from "@/components/menu-items/AddressMenuItem";
 import { getBoundsFromLatLng } from "@/store/utils/maps";
 import { DEFAULT_LAT_LNG } from "@/store/constants/maps";

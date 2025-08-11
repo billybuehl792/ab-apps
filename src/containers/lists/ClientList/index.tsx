@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { Groups } from "@mui/icons-material";
 import { clientQueries } from "@/store/queries/clients";
-import useAuth from "@/hooks/useAuth";
+import useAuth from "@/store/hooks/useAuth";
 import CreateClientLink from "@/containers/links/CreateClientLink";
 import ClientListCard from "@/containers/cards/ClientListCard";
 import StatusWrapper from "@/components/layout/StatusWrapper";

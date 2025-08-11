@@ -7,7 +7,7 @@ import {
   type PaperProps,
 } from "@mui/material";
 import { Groups, Home } from "@mui/icons-material";
-import useAuth from "@/hooks/useAuth";
+import useAuth from "@/store/hooks/useAuth";
 
 const NavigationFooter = (props: PaperProps) => {
   /** Values */

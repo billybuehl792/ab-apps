@@ -1,5 +1,5 @@
 import { type UseFormReturn } from "react-hook-form";
-import useMaterials from "@/hooks/useMaterials";
+import useMaterials from "@/store/hooks/useMaterials";
 import type { Address } from "@/store/types/locations";
 import type { Material } from "@/store/types/materials";
 

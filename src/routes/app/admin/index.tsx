@@ -7,7 +7,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import useAuth from "@/hooks/useAuth";
+import useAuth from "@/store/hooks/useAuth";
 import StatusWrapper from "@/components/layout/StatusWrapper";
 import { AuthRoleLevel } from "@/store/constants/auth";
 import { AdminPanelSettings, People, Store } from "@mui/icons-material";
@@ -25,7 +25,9 @@ function RouteComponent() {
     {
       id: "AB Admin",
       label: "AB Admin",
-      render: AuthRoleLevel[auth.permissions.role] >= AuthRoleLevel.super_admin,
+      render:
+        !!auth.permissions.role &&
+        AuthRoleLevel[auth.permissions.role] >= AuthRoleLevel.super_admin,
       items: [
         {
           id: "users",

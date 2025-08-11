@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, type PropsWithChildren } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
-
-import GoogleMapsContext from "@/context/GoogleMapsContext";
+import GoogleMapsContext from "@/store/context/GoogleMapsContext";
 
 const loader = new Loader({
   apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string,

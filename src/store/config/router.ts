@@ -1,6 +1,6 @@
 import { routeTree } from "@/routeTree.gen";
 import { createRouter } from "@tanstack/react-router";
-import useAuth from "@/hooks/useAuth";
+import useAuth from "../hooks/useAuth";
 
 const router = createRouter({
   routeTree,

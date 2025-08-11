@@ -8,11 +8,11 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { onAuthStateChanged } from "firebase/auth";
 import { useSnackbar } from "notistack";
+import AuthContext from "@/store/context/AuthContext";
 import { auth } from "@/store/config/firebase";
 import { authQueries } from "@/store/queries/auth";
 import { authMutations } from "@/store/mutations/auth";
 import { companyQueries } from "@/store/queries/companies";
-import AuthContext from "@/context/AuthContext";
 import StatusWrapper from "@/components/layout/StatusWrapper";
 import { AuthRole } from "@/store/enums/auth";
 import { DEFAULT_COMPANY } from "@/store/constants/auth";

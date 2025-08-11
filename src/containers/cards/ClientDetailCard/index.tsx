@@ -7,11 +7,10 @@ import {
 } from "@mui/material";
 import type { Client } from "@/store/types/clients";
 
-interface ClientDetailCardProps extends CardProps {
-  client: Client;
-}
-
-const ClientDetailCard = ({ client, ...props }: ClientDetailCardProps) => {
+const ClientDetailCard = ({
+  client,
+  ...props
+}: CardProps & { client: Client }) => {
   /** Values */
 
   const fullName = `${client.first_name} ${client.last_name}`;

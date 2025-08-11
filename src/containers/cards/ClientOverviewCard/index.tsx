@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Person } from "@mui/icons-material";
-import useClients from "@/hooks/useClients";
+import useClients from "@/store/hooks/useClients";
 
 const ClientOverviewCard = (props: CardProps) => {
   /** Values */

@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import router from "./store/config/router";
 import ReactDOM from "react-dom/client";
 import * as Sentry from "@sentry/react";
-import Providers from "./providers";
+import RootProvider from "./containers/providers/RootProvider";
 
 import "reset-css/reset.css";
 import "./store/utils/string";
@@ -43,7 +43,7 @@ if (!rootElement.innerHTML) {
   });
   root.render(
     <StrictMode>
-      <Providers />
+      <RootProvider />
     </StrictMode>
   );
 }

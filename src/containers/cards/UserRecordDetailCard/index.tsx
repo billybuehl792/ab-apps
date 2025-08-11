@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import {
   Avatar,
   Card,
@@ -7,86 +6,86 @@ import {
   Divider,
   Grid2 as Grid,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
 import { type UserRecord } from "firebase-admin/auth";
-import useUsers from "@/hooks/useUsers";
 import UserEmailChip from "@/containers/chips/UserEmailChip";
-import UserPermissionsChip from "@/containers/chips/UserPermissionsChip";
+import PermissionsChip from "@/containers/chips/PermissionsChip";
 import UserCompanyChip from "@/containers/chips/UserCompanyChip";
 import EditIconButton from "@/components/buttons/EditIconButton";
 import { DateTimeFormat } from "@/store/enums/datetime";
+import type { Permissions } from "@/store/types/auth";
 
 interface UserRecordDetailCardProps extends CardProps {
-  user: UserRecord | string;
+  user: UserRecord;
   editable?: boolean;
 }
 
 const UserRecordDetailCard = ({
-  user: userProp,
+  user,
   editable,
   ...props
 }: UserRecordDetailCardProps) => {
   /** Values */
 
-  const users = useUsers();
-  const userId = typeof userProp === "string" ? userProp : userProp.uid;
-
-  /** Queries */
-
-  const userRecordQuery = useQuery({
-    ...users.queries.detail(userId),
-    enabled: typeof userProp === "string",
-  });
-
-  /** Data */
-
-  const user = typeof userProp === "string" ? userRecordQuery.data : userProp;
-
-  /** Items */
+  const role = (user.customClaims?.role ?? null) as Permissions["role"];
+  const displayName = user.displayName ?? user.email ?? "User";
 
   const details = [
     {
-      id: "email",
-      label: "Email",
-      value: <UserEmailChip user={userProp} />,
-    },
-    {
       id: "id",
       label: "ID",
-      value: <Typography variant="body2">{userId}</Typography>,
+      value: <Typography variant="body2">{user.uid}</Typography>,
+    },
+    {
+      id: "email",
+      label: "Email",
+      value: <UserEmailChip user={user} />,
     },
     {
       id: "permissions",
       label: "Permissions",
-      value: <UserPermissionsChip user={userProp} />,
+      value: <PermissionsChip permissions={{ role }} />,
     },
     {
       id: "company",
       label: "Company",
-      value: <UserCompanyChip user={userProp} />,
+      value: <UserCompanyChip user={user} />,
     },
   ];
 
   const metadata = [
     {
-      id: "lastSignInTime",
-      label: "Last Sign In",
-      value: user
-        ? dayjs(user.metadata.lastSignInTime).format(
+      id: "creationTime",
+      label: "Created",
+      value: (
+        <Tooltip
+          title={dayjs(user.metadata.creationTime).format(
             DateTimeFormat.DATETIME_MERIDIEM
-          )
-        : "-",
+          )}
+        >
+          <Typography variant="body2" width="fit-content">
+            {dayjs(user.metadata.creationTime).fromNow()}
+          </Typography>
+        </Tooltip>
+      ),
     },
     {
-      id: "creationTime",
-      label: "Created At",
-      value: user
-        ? dayjs(user.metadata.creationTime).format(
+      id: "lastSignInTime",
+      label: "Last Sign In",
+      value: (
+        <Tooltip
+          title={dayjs(user.metadata.lastSignInTime).format(
             DateTimeFormat.DATETIME_MERIDIEM
-          )
-        : "-",
+          )}
+        >
+          <Typography variant="body2" width="fit-content">
+            {dayjs(user.metadata.lastSignInTime).fromNow()}
+          </Typography>
+        </Tooltip>
+      ),
     },
   ];
 
@@ -101,31 +100,29 @@ const UserRecordDetailCard = ({
       >
         <Stack spacing={1} flexGrow={1} alignItems="center">
           <Avatar
-            src={user?.photoURL}
-            alt={user?.displayName ?? user?.email ?? "User"}
+            src={user.photoURL}
+            alt={displayName}
             sx={{ width: 100, height: 100 }}
           />
           <Stack component="span" direction="row" spacing={1}>
-            <Typography variant="body1">
-              {user?.displayName ?? user?.email ?? "User"}
-            </Typography>
+            <Typography variant="body1">{displayName}</Typography>
             {editable && <EditIconButton size="small" />}
           </Stack>
         </Stack>
         <Stack flexGrow={2} flexShrink={0}>
           <Stack spacing={2} divider={<Divider />}>
             <Stack spacing={1}>
-              {details.map((detail) => (
+              {details.map((item) => (
                 <Stack
-                  key={detail.id}
+                  key={item.id}
                   direction="row"
                   spacing={1}
                   alignItems="center"
                 >
                   <Typography variant="body2" color="textSecondary">
-                    {detail.label}:
+                    {item.label}:
                   </Typography>
-                  {detail.value}
+                  {item.value}
                 </Stack>
               ))}
             </Stack>
@@ -136,7 +133,7 @@ const UserRecordDetailCard = ({
                     <Typography variant="body2" color="textSecondary">
                       {item.label}:
                     </Typography>
-                    <Typography variant="body2">{item.value}</Typography>
+                    {item.value}
                   </Stack>
                 </Grid>
               ))}

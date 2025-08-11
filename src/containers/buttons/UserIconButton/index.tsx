@@ -2,7 +2,7 @@ import { type ComponentProps } from "react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Avatar } from "@mui/material";
 import { Logout, Person } from "@mui/icons-material";
-import useAuth from "@/hooks/useAuth";
+import useAuth from "@/store/hooks/useAuth";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 
 const UserIconButton = (
