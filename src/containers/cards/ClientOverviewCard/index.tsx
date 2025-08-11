@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
   Card,
@@ -15,20 +15,15 @@ import useClients from "@/store/hooks/useClients";
 const ClientOverviewCard = (props: CardProps) => {
   /** Values */
 
-  const navigate = useNavigate();
   const clients = useClients();
 
   /** Queries */
 
   const clientCountQuery = useQuery(clients.queries.count({ archived: false }));
 
-  /** Callbacks */
-
-  const handleOnClick = () => void navigate({ to: "/app/clients" });
-
   return (
     <Card {...props}>
-      <CardActionArea onClick={handleOnClick}>
+      <CardActionArea LinkComponent={Link} href="/app/clients">
         <Stack component={CardContent} spacing={2}>
           <Person fontSize="large" />
           <Stack spacing={1}>

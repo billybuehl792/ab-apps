@@ -1,5 +1,5 @@
 import { type MouseEvent } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
   Card,
   CardActionArea,
@@ -99,8 +99,9 @@ const ClientListCard = ({
     >
       <CardActionArea
         disabled={disabled}
-        onClick={onClick}
-        {...slotProps?.cardActionArea}
+        {...(onClickProp
+          ? { onClick }
+          : { LinkComponent: Link, href: `/app/clients/${client.id}` })}
       >
         <CardContent
           component={Stack}
