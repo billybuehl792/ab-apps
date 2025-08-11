@@ -55,20 +55,17 @@ const ClientListCard = ({
       id: "detail",
       label: "Detail",
       icon: <Info />,
-      onClick: () => {
-        void navigate({ to: `/app/clients/${client.id}` });
-      },
+      onClick: () => void navigate({ to: `/app/clients/${client.id}` }),
     },
     {
       id: "edit",
       label: "Edit",
       icon: <Edit />,
-      onClick: () => {
+      onClick: () =>
         void navigate({
           to: `/app/clients/${client.id}`,
           search: { edit: true },
-        });
-      },
+        }),
     },
     {
       id: "archive",

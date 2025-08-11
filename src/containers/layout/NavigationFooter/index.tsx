@@ -12,32 +12,32 @@ import useAuth from "@/store/hooks/useAuth";
 const NavigationFooter = (props: PaperProps) => {
   /** Values */
 
-  const { pathname } = useLocation();
-  const { user } = useAuth();
+  const location = useLocation();
+  const auth = useAuth();
 
   const actions: ListItem[] = [
     {
       id: "home",
       label: "Dashboard",
       to: "/app",
-      selected: pathname === "/app",
+      selected: location.pathname === "/app",
       icon: <Home />,
     },
     {
       id: "clients",
       label: "Clients",
       to: "/app/clients",
-      selected: pathname.startsWith("/app/clients"),
+      selected: location.pathname.startsWith("/app/clients"),
       icon: <Groups />,
     },
     {
       id: "profile",
       label: "Profile",
       to: "/app/profile",
-      selected: pathname.startsWith("/app/profile"),
+      selected: location.pathname.startsWith("/app/profile"),
       icon: (
         <Avatar
-          src={user?.photoURL || ""}
+          src={auth.user?.photoURL || ""}
           sx={{ width: 20, height: 20, fontSize: ".75rem" }}
         />
       ),
@@ -58,11 +58,10 @@ const NavigationFooter = (props: PaperProps) => {
         {actions.map((action) => (
           <BottomNavigationAction
             key={action.id}
-            component={Link}
             value={action.id}
-            to={action.to}
             label={action.label}
             icon={action.icon}
+            {...(!!action.to && { LinkComponent: Link, href: action.to })}
           />
         ))}
       </BottomNavigation>

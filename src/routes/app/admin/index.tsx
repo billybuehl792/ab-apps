@@ -65,7 +65,9 @@ function RouteComponent() {
                 {section.items?.map((item) => (
                   <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
                     <Card>
-                      <CardActionArea component={Link} to={item.to}>
+                      <CardActionArea
+                        {...(!!item.to && { LinkComponent: Link, to: item.to })}
+                      >
                         <CardContent component={Stack} spacing={1}>
                           {item.icon}
                           <Typography variant="body2" noWrap>

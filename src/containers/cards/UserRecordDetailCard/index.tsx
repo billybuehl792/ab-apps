@@ -13,7 +13,7 @@ import dayjs from "dayjs";
 import { type UserRecord } from "firebase-admin/auth";
 import UserEmailChip from "@/containers/chips/UserEmailChip";
 import PermissionsChip from "@/containers/chips/PermissionsChip";
-import UserCompanyChip from "@/containers/chips/UserCompanyChip";
+import CompanyChip from "@/containers/chips/CompanyChip";
 import EditIconButton from "@/components/buttons/EditIconButton";
 import { DateTimeFormat } from "@/store/enums/datetime";
 import type { Permissions } from "@/store/types/auth";
@@ -30,6 +30,7 @@ const UserRecordDetailCard = ({
 }: UserRecordDetailCardProps) => {
   /** Values */
 
+  const companyId = String(user.customClaims?.companyId ?? "");
   const role = (user.customClaims?.role ?? null) as Permissions["role"];
   const displayName = user.displayName ?? user.email ?? "User";
 
@@ -52,7 +53,7 @@ const UserRecordDetailCard = ({
     {
       id: "company",
       label: "Company",
-      value: <UserCompanyChip user={user} />,
+      value: <CompanyChip company={companyId} />,
     },
   ];
 
