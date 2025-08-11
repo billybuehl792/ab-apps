@@ -9,6 +9,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import Metadata from "@/components/lists/Metadata";
 import UserEmailChip from "@/containers/chips/UserEmailChip";
 import PermissionsChip from "@/containers/chips/PermissionsChip";
 import type { Permissions } from "@/store/types/auth";
@@ -55,26 +56,7 @@ const UserRecordListCard = ({ user, ...props }: UserRecordListCardProps) => {
               <PermissionsChip permissions={{ role }} />
             </Stack>
 
-            {/* Metadata */}
-            <Stack>
-              {metadata.map((item) => (
-                <Stack
-                  key={item.id}
-                  direction="row"
-                  spacing={1}
-                  alignItems="center"
-                >
-                  <Typography variant="caption" color="text.secondary">
-                    {item.label}:
-                  </Typography>
-                  {typeof item.value === "string" ? (
-                    <Typography variant="caption">{item.value}</Typography>
-                  ) : (
-                    item.value
-                  )}
-                </Stack>
-              ))}
-            </Stack>
+            <Metadata items={metadata} variant="caption" />
           </Stack>
         </CardContent>
       </CardActionArea>

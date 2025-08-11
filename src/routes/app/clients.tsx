@@ -11,7 +11,7 @@ export const Route = createFileRoute("/app/clients")({
 function RouteComponent() {
   /** Values */
 
-  const { pathname } = useLocation();
+  const location = useLocation();
 
   return (
     <Stack width="100%" height="100%">
@@ -24,7 +24,7 @@ function RouteComponent() {
             justifyContent="space-between"
           >
             <NavigationBreadcrumbs />
-            {pathname === "/app/clients" && <CreateClientLink />}
+            {location.pathname === "/app/clients" && <CreateClientLink />}
           </Stack>
           <Divider />
         </Stack>

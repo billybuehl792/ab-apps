@@ -4,13 +4,13 @@ import {
   CardContent,
   type CardProps,
   Divider,
-  Grid2 as Grid,
   Stack,
   Tooltip,
   Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
 import { type UserRecord } from "firebase-admin/auth";
+import Metadata from "@/components/lists/Metadata";
 import UserEmailChip from "@/containers/chips/UserEmailChip";
 import PermissionsChip from "@/containers/chips/PermissionsChip";
 import CompanyChip from "@/containers/chips/CompanyChip";
@@ -110,35 +110,17 @@ const UserRecordDetailCard = ({
             {editable && <EditIconButton size="small" />}
           </Stack>
         </Stack>
-        <Stack flexGrow={2} flexShrink={0}>
+        <Stack flexGrow={2}>
           <Stack spacing={2} divider={<Divider />}>
-            <Stack spacing={1}>
-              {details.map((item) => (
-                <Stack
-                  key={item.id}
-                  direction="row"
-                  spacing={1}
-                  alignItems="center"
-                >
-                  <Typography variant="body2" color="textSecondary">
-                    {item.label}:
-                  </Typography>
-                  {item.value}
-                </Stack>
-              ))}
-            </Stack>
-            <Grid container spacing={1}>
-              {metadata.map((item) => (
-                <Grid key={item.id} size={{ xs: 6, md: 4 }}>
-                  <Stack spacing={1}>
-                    <Typography variant="body2" color="textSecondary">
-                      {item.label}:
-                    </Typography>
-                    {item.value}
-                  </Stack>
-                </Grid>
-              ))}
-            </Grid>
+            <Metadata items={details} spacing={1} />
+            <Metadata
+              items={metadata}
+              direction="row"
+              spacing={4}
+              slotProps={{
+                item: { direction: "column" },
+              }}
+            />
           </Stack>
         </Stack>
       </CardContent>

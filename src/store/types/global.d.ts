@@ -48,13 +48,6 @@ declare global {
     onClick?: (event: MouseEvent, id: string) => void;
   }
 
-  interface Metadata {
-    lastModified: string;
-    name: string;
-    size: string;
-    type: string;
-  }
-
   interface String {
     /**
      * Capitalizes the first character of a string.

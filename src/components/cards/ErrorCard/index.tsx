@@ -51,12 +51,18 @@ const ErrorCard = ({
         component={Stack}
         spacing={1}
         alignItems="center"
+        maxWidth="200"
         {...slotProps?.cardContent}
       >
         {message ? (
           <>
             {icon ?? <ErrorOutline fontSize="large" color="error" />}
-            <Typography color="error" textAlign="center">
+            <Typography
+              component="span"
+              color="error"
+              textAlign="center"
+              sx={{ wordBreak: "break-word" }}
+            >
               {message}
             </Typography>
           </>
