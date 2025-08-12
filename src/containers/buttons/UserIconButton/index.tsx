@@ -1,5 +1,5 @@
 import { type ComponentProps } from "react";
-import { useLocation, useNavigate } from "@tanstack/react-router";
+import { useLocation } from "@tanstack/react-router";
 import { Avatar } from "@mui/material";
 import { Logout, Person } from "@mui/icons-material";
 import useAuth from "@/store/hooks/useAuth";
@@ -10,7 +10,6 @@ const UserIconButton = (
 ) => {
   /** Values */
 
-  const navigate = useNavigate();
   const location = useLocation();
   const auth = useAuth();
 
@@ -25,14 +24,13 @@ const UserIconButton = (
       label: "Profile",
       selected: location.pathname === "/app/profile",
       icon: <Person />,
-      onClick: () => void navigate({ to: "/app/profile" }),
+      link: { to: "/app/profile" },
     },
     {
       id: "signOut",
       label: "Sign Out",
       icon: <Logout />,
-      confirm: "Are you sure you want to sign out?",
-      onClick: () => void navigate({ to: "/sign-out" }),
+      link: { to: "/sign-out" },
     },
   ];
 

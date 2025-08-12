@@ -45,7 +45,7 @@ const MenuOptionListModal = ({
   ) : (
     <MenuOptionListMenu
       anchorEl={anchorEl}
-      open={Boolean(open)}
+      open={open}
       options={options}
       disableCloseOnSelect={disableCloseOnSelect}
       onClose={onClose}

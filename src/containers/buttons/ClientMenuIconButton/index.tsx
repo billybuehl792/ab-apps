@@ -1,5 +1,5 @@
 import { type ComponentProps } from "react";
-import { useLocation, useNavigate } from "@tanstack/react-router";
+import { useLocation } from "@tanstack/react-router";
 import { Delete, Edit, Info, Restore } from "@mui/icons-material";
 import useClients from "@/store/hooks/useClients";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
@@ -17,7 +17,6 @@ const ClientMenuIconButton = ({
 }: ClientMenuIconButtonProps) => {
   /** Values */
 
-  const navigate = useNavigate();
   const location = useLocation();
   const clients = useClients();
 
@@ -32,7 +31,7 @@ const ClientMenuIconButton = ({
       id: "detail",
       label: "Detail",
       icon: <Info />,
-      onClick: () => void navigate({ to: `/app/clients/${client.id}` }),
+      link: { to: "/app/clients/$id", params: { id: client.id } },
     },
     {
       id: "edit",
@@ -40,11 +39,11 @@ const ClientMenuIconButton = ({
       disabled: isEditing,
       label: "Edit",
       icon: <Edit />,
-      onClick: () =>
-        void navigate({
-          to: `/app/clients/${client.id}`,
-          search: { edit: true },
-        }),
+      link: {
+        to: "/app/clients/$id",
+        params: { id: client.id },
+        search: { edit: true },
+      },
     },
     {
       id: "archive",
@@ -52,9 +51,14 @@ const ClientMenuIconButton = ({
       label: "Delete",
       icon: <Delete />,
       color: "error",
-      confirm: `Are you sure you want to delete ${fullName}? This action cannot be undone.`,
       onClick: () => {
-        clients.mutations.archive.mutate(client.id);
+        if (
+          confirm(
+            `Are you sure you want to delete ${fullName}? This action cannot be undone.`
+          )
+        ) {
+          clients.mutations.archive.mutate(client.id);
+        }
       },
     },
     {

@@ -1,5 +1,5 @@
 import { type ReactNode, type MouseEvent } from "react";
-import { type ToOptions } from "@tanstack/react-router";
+import { LinkOptions, type ToOptions } from "@tanstack/react-router";
 
 declare global {
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
@@ -26,12 +26,13 @@ declare global {
     render?: boolean;
     label: string;
     icon?: ReactNode;
-    selected?: boolean;
+    description?: ReactNode;
     disabled?: boolean;
+    selected?: boolean;
     color?: "primary" | "secondary" | "error" | "warning" | "info" | "success";
-    confirm?: boolean | string;
-    tooltip?: string;
+    tooltip?: ReactNode;
     disableCloseOnSelect?: boolean;
+    link?: LinkOptions;
     onClick?: VoidFunction;
   }
 

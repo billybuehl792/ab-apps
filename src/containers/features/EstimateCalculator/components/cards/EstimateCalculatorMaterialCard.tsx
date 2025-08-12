@@ -32,10 +32,14 @@ const EstimateCalculatorMaterialCard = ({
       label: "Delete",
       icon: <Delete />,
       color: "error",
-      confirm:
-        "Are you sure you want to delete this material? This action cannot be undone.",
       onClick: () => {
-        materials.mutations.remove.mutate(material.id);
+        if (
+          confirm(
+            "Are you sure you want to delete this material? This action cannot be undone."
+          )
+        ) {
+          materials.mutations.remove.mutate(material.id);
+        }
       },
     },
   ];

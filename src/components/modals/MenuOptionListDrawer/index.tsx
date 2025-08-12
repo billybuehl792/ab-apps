@@ -1,16 +1,14 @@
 import { type ComponentProps } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { MenuList, useMediaQuery } from "@mui/material";
+import { theme } from "@/store/config/theme";
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
-import MenuOptionList from "@/components/lists/MenuOptionList";
-import { useMediaQuery } from "@mui/material";
-import { sxAsArray } from "@/store/utils/sx";
+import MenuOptionMenuItem from "@/components/menu-items/MenuOptionMenuItem";
 
 interface MenuOptionListDrawerProps
-  extends Omit<Partial<ComponentProps<typeof SwipeableDrawer>>, "slotProps"> {
+  extends Partial<ComponentProps<typeof SwipeableDrawer>> {
   options: MenuOption[];
   disableCloseOnSelect?: boolean;
-  slotProps?: {
-    list?: Partial<ComponentProps<typeof MenuOptionList>>;
-  } & ComponentProps<typeof SwipeableDrawer>["slotProps"];
 }
 
 /**
@@ -21,34 +19,45 @@ const MenuOptionListDrawer = ({
   disableCloseOnSelect,
   title = "Options",
   onClose,
-  slotProps,
   ...props
 }: MenuOptionListDrawerProps) => {
   /** Values */
 
   const isSm = useMediaQuery((theme) => theme.breakpoints.up("sm"));
+  const navigate = useNavigate();
+
+  /** Callbacks */
+
+  const handleMenuItemClicked = (option: MenuOption) => {
+    if (option.link) void navigate(option.link);
+    else if (option.onClick) option.onClick();
+  };
 
   return (
     <SwipeableDrawer
       title={title}
       anchor={isSm ? "right" : "bottom"}
       onClose={onClose}
-      slotProps={slotProps}
       {...props}
     >
-      <MenuOptionList
-        options={options.map((option) => ({
-          ...option,
-          onClick: () => {
-            option.onClick?.();
-            if (!disableCloseOnSelect && !option.disableCloseOnSelect)
-              onClose?.();
-          },
-        }))}
-        {...slotProps?.list}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        sx={[{ minWidth: 300 }, ...sxAsArray(slotProps?.list?.sx)]}
-      />
+      <MenuList sx={{ minWidth: 300 }}>
+        {options
+          .filter(({ render }) => render !== false)
+          .map(({ onClick, link, ...option }) => (
+            <MenuOptionMenuItem
+              key={option.id}
+              option={option}
+              onClick={() => {
+                if (!disableCloseOnSelect || !option.disableCloseOnSelect) {
+                  onClose?.();
+                  setTimeout(() => {
+                    handleMenuItemClicked({ link, onClick, ...option });
+                  }, theme.transitions.duration.leavingScreen);
+                } else handleMenuItemClicked({ link, onClick, ...option });
+              }}
+            />
+          ))}
+      </MenuList>
     </SwipeableDrawer>
   );
 };
