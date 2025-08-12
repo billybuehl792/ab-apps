@@ -4,7 +4,11 @@ import { Button, type ButtonProps } from "@mui/material";
 import { Logout } from "@mui/icons-material";
 import ConfirmDialog from "@/components/modals/ConfirmDialog";
 
-const SignOutButton = (props: ButtonProps) => {
+interface SignOutButtonProps extends ButtonProps {
+  confirm?: boolean;
+}
+
+const SignOutButton = ({ confirm, ...props }: SignOutButtonProps) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   /** Values */
@@ -13,10 +17,15 @@ const SignOutButton = (props: ButtonProps) => {
 
   /** Callbacks */
 
-  const handleSignOut = () => void navigate({ to: "/sign-out", replace: true });
+  const handleSignOut = () => void navigate({ to: "/sign-out" });
 
   const handleToggleConfirm = () => {
     setConfirmOpen((prev) => !prev);
+  };
+
+  const handleOnClick = () => {
+    if (confirm) handleToggleConfirm();
+    else handleSignOut();
   };
 
   return (
@@ -25,19 +34,21 @@ const SignOutButton = (props: ButtonProps) => {
         variant="text"
         size="small"
         startIcon={<Logout />}
-        onClick={handleToggleConfirm}
+        onClick={handleOnClick}
         {...props}
       >
         Sign Out
       </Button>
-      <ConfirmDialog
-        open={confirmOpen}
-        title="Sign Out"
-        description="Are you sure you want to sign out?"
-        confirmButtonText="Sign Out"
-        onConfirm={handleSignOut}
-        onCancel={handleToggleConfirm}
-      />
+      {!!confirm && (
+        <ConfirmDialog
+          open={confirmOpen}
+          title="Sign Out"
+          description="Are you sure you want to sign out?"
+          confirmButtonText="Sign Out"
+          onConfirm={handleSignOut}
+          onCancel={handleToggleConfirm}
+        />
+      )}
     </>
   );
 };

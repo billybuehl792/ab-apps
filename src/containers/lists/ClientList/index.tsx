@@ -33,7 +33,7 @@ const ClientList = ({
   /** Values */
 
   const auth = useAuth();
-  const companyId = companyIdProp ?? auth.company.id;
+  const companyId = companyIdProp ?? auth.profile.company?.id ?? "";
 
   /** Queries */
 
@@ -47,7 +47,7 @@ const ClientList = ({
       ...params,
       startAfter: lastDocs[lastDocs.length - 1],
     }),
-    enabled: Boolean(countQuery.isSuccess),
+    enabled: countQuery.isSuccess,
   });
 
   /** Callbacks */
@@ -74,8 +74,8 @@ const ClientList = ({
         empty={
           countQuery.isSuccess &&
           countQuery.data.data().count === 0 && {
-            text: "No Clients",
             icon: <Groups fontSize="large" color="disabled" />,
+            description: "No Clients",
             children: <CreateClientLink />,
           }
         }

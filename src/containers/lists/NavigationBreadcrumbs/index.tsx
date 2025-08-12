@@ -1,10 +1,13 @@
-import { useLocation, useMatches, useNavigate } from "@tanstack/react-router";
-import { Breadcrumbs, Link, type BreadcrumbsProps } from "@mui/material";
+import { Link, useLocation, useMatches } from "@tanstack/react-router";
+import {
+  Breadcrumbs,
+  Link as MuiLink,
+  type BreadcrumbsProps,
+} from "@mui/material";
 
 const NavigationBreadcrumbs = (props: BreadcrumbsProps) => {
   /** Values */
 
-  const navigate = useNavigate();
   const matches = useMatches();
   const location = useLocation();
 
@@ -13,34 +16,32 @@ const NavigationBreadcrumbs = (props: BreadcrumbsProps) => {
     .map(({ loaderData, pathname }) => ({
       href: pathname,
       label: loaderData?.crumb,
+      disabled: `${location.pathname}/` === pathname,
+      selected: location.pathname === pathname,
     }));
-
-  /** Callbacks */
-
-  const handleCrumbClick = (to: string) => void navigate({ to });
 
   return (
     <Breadcrumbs {...props}>
-      {crumbs.map((crumb) => (
-        <Link
+      {crumbs.map((crumb, index) => (
+        <MuiLink
           key={crumb.href}
-          component="button"
+          component={Link}
+          to={crumb.href}
           variant="body2"
           underline="none"
           color="inherit"
-          onClick={() => {
-            handleCrumbClick(crumb.href);
-          }}
           style={{ verticalAlign: "inherit" }}
-          {...(location.pathname === crumb.href && {
+          {...((crumb.selected || crumb.disabled) && {
+            component: "span",
+            to: undefined,
+          })}
+          {...(index === crumbs.length - 1 && {
             color: "textPrimary",
             fontWeight: "bold",
-            onClick: undefined,
-            sx: { cursor: "default" },
           })}
         >
           {crumb.label}
-        </Link>
+        </MuiLink>
       ))}
     </Breadcrumbs>
   );

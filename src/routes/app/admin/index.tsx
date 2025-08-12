@@ -9,8 +9,9 @@ import {
 } from "@mui/material";
 import useAuth from "@/store/hooks/useAuth";
 import StatusWrapper from "@/components/layout/StatusWrapper";
-import { AuthRoleLevel } from "@/store/constants/auth";
 import { AdminPanelSettings, People, Store } from "@mui/icons-material";
+import { authUtils } from "@/store/utils/auth";
+import { AuthRole } from "@/store/enums/auth";
 
 export const Route = createFileRoute("/app/admin/")({
   component: RouteComponent,
@@ -25,9 +26,9 @@ function RouteComponent() {
     {
       id: "AB Admin",
       label: "AB Admin",
-      render:
-        !!auth.permissions.role &&
-        AuthRoleLevel[auth.permissions.role] >= AuthRoleLevel.super_admin,
+      render: authUtils.authGuard(auth, {
+        permissions: { role: AuthRole.SUPER_ADMIN },
+      }),
       items: [
         {
           id: "users",
@@ -52,7 +53,7 @@ function RouteComponent() {
         slotProps={{
           emptyState: {
             icon: <AdminPanelSettings fontSize="large" color="disabled" />,
-            text: "No admin sections currently available",
+            description: "No admin sections currently available",
           },
         }}
       >

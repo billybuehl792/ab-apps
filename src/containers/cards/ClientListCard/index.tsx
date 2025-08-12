@@ -1,5 +1,4 @@
-import { type MouseEvent } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   Card,
   CardActionArea,
@@ -11,16 +10,15 @@ import {
   type CardContentProps,
   CardActions,
 } from "@mui/material";
-import { Delete, Edit, Info, Person, Restore } from "@mui/icons-material";
-import useClients from "@/store/hooks/useClients";
-import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
+import { Person } from "@mui/icons-material";
+import ClientMenuIconButton from "@/containers/buttons/ClientMenuIconButton";
 import type { Client } from "@/store/types/clients";
 
 interface ClientListCardProps extends Omit<CardProps, "onClick"> {
   client: Client;
   disabled?: boolean;
-  onClick?: (event: MouseEvent<HTMLButtonElement>, client: Client) => void;
   options?: MenuOption[];
+  onClick?: CardActionAreaProps["onClick"];
   slotProps?: {
     cardActionArea?: CardActionAreaProps;
     cardContent?: CardContentProps;
@@ -30,64 +28,14 @@ interface ClientListCardProps extends Omit<CardProps, "onClick"> {
 const ClientListCard = ({
   client,
   disabled,
-  onClick: onClickProp,
-  options: optionsProp,
+  onClick,
+  options,
   slotProps,
   ...props
 }: ClientListCardProps) => {
   /** Values */
 
-  const navigate = useNavigate();
-  const clients = useClients();
   const fullName = `${client.first_name} ${client.last_name}`;
-
-  /** Callbacks */
-
-  const onClick: CardActionAreaProps["onClick"] = (event) => {
-    if (onClickProp) onClickProp(event, client);
-    else void navigate({ to: `/app/clients/${client.id}` });
-  };
-
-  /** Options */
-
-  const options: MenuOption[] = optionsProp ?? [
-    {
-      id: "detail",
-      label: "Detail",
-      icon: <Info />,
-      onClick: () => void navigate({ to: `/app/clients/${client.id}` }),
-    },
-    {
-      id: "edit",
-      label: "Edit",
-      icon: <Edit />,
-      onClick: () =>
-        void navigate({
-          to: `/app/clients/${client.id}`,
-          search: { edit: true },
-        }),
-    },
-    {
-      id: "archive",
-      render: !client.archived,
-      label: "Delete",
-      icon: <Delete />,
-      color: "error",
-      confirm: `Are you sure you want to delete ${fullName}? This action cannot be undone.`,
-      onClick: () => {
-        clients.mutations.archive.mutate(client.id);
-      },
-    },
-    {
-      id: "unarchive",
-      render: client.archived,
-      label: "Restore",
-      icon: <Restore />,
-      onClick: () => {
-        clients.mutations.restore.mutate(client.id);
-      },
-    },
-  ];
 
   return (
     <Stack
@@ -99,7 +47,7 @@ const ClientListCard = ({
     >
       <CardActionArea
         disabled={disabled}
-        {...(onClickProp
+        {...(onClick
           ? { onClick }
           : { LinkComponent: Link, href: `/app/clients/${client.id}` })}
       >
@@ -131,7 +79,8 @@ const ClientListCard = ({
           pointerEvents: "none",
         }}
       >
-        <MenuOptionsIconButton
+        <ClientMenuIconButton
+          client={client}
           options={options}
           sx={{ pointerEvents: "auto" }}
         />

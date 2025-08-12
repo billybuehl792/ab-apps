@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignOutRouteImport } from './routes/sign-out'
 import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as MisconfiguredRouteImport } from './routes/misconfigured'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
@@ -18,6 +19,7 @@ import { Route as AppProfileRouteImport } from './routes/app/profile'
 import { Route as AppEstimateCalculatorRouteImport } from './routes/app/estimate-calculator'
 import { Route as AppClientsRouteImport } from './routes/app/clients'
 import { Route as AppAdminRouteImport } from './routes/app/admin'
+import { Route as AppProfileIndexRouteImport } from './routes/app/profile/index'
 import { Route as AppClientsIndexRouteImport } from './routes/app/clients/index'
 import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
 import { Route as AppClientsCreateRouteImport } from './routes/app/clients/create'
@@ -37,6 +39,11 @@ const SignOutRoute = SignOutRouteImport.update({
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MisconfiguredRoute = MisconfiguredRouteImport.update({
+  id: '/misconfigured',
+  path: '/misconfigured',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppRoute = AppRouteImport.update({
@@ -73,6 +80,11 @@ const AppAdminRoute = AppAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AppRoute,
+} as any)
+const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppProfileRoute,
 } as any)
 const AppClientsIndexRoute = AppClientsIndexRouteImport.update({
   id: '/',
@@ -128,12 +140,13 @@ const AppAdminCompaniesIdRoute = AppAdminCompaniesIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/misconfigured': typeof MisconfiguredRoute
   '/sign-in': typeof SignInRoute
   '/sign-out': typeof SignOutRoute
   '/app/admin': typeof AppAdminRouteWithChildren
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
-  '/app/profile': typeof AppProfileRoute
+  '/app/profile': typeof AppProfileRouteWithChildren
   '/app/': typeof AppIndexRoute
   '/app/admin/companies': typeof AppAdminCompaniesRouteWithChildren
   '/app/admin/users': typeof AppAdminUsersRouteWithChildren
@@ -141,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/app/clients/create': typeof AppClientsCreateRoute
   '/app/admin/': typeof AppAdminIndexRoute
   '/app/clients/': typeof AppClientsIndexRoute
+  '/app/profile/': typeof AppProfileIndexRoute
   '/app/admin/companies/$id': typeof AppAdminCompaniesIdRoute
   '/app/admin/users/$id': typeof AppAdminUsersIdRoute
   '/app/admin/companies/': typeof AppAdminCompaniesIndexRoute
@@ -148,15 +162,16 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/misconfigured': typeof MisconfiguredRoute
   '/sign-in': typeof SignInRoute
   '/sign-out': typeof SignOutRoute
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
-  '/app/profile': typeof AppProfileRoute
   '/app': typeof AppIndexRoute
   '/app/clients/$id': typeof AppClientsIdRoute
   '/app/clients/create': typeof AppClientsCreateRoute
   '/app/admin': typeof AppAdminIndexRoute
   '/app/clients': typeof AppClientsIndexRoute
+  '/app/profile': typeof AppProfileIndexRoute
   '/app/admin/companies/$id': typeof AppAdminCompaniesIdRoute
   '/app/admin/users/$id': typeof AppAdminUsersIdRoute
   '/app/admin/companies': typeof AppAdminCompaniesIndexRoute
@@ -166,12 +181,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
+  '/misconfigured': typeof MisconfiguredRoute
   '/sign-in': typeof SignInRoute
   '/sign-out': typeof SignOutRoute
   '/app/admin': typeof AppAdminRouteWithChildren
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
-  '/app/profile': typeof AppProfileRoute
+  '/app/profile': typeof AppProfileRouteWithChildren
   '/app/': typeof AppIndexRoute
   '/app/admin/companies': typeof AppAdminCompaniesRouteWithChildren
   '/app/admin/users': typeof AppAdminUsersRouteWithChildren
@@ -179,6 +195,7 @@ export interface FileRoutesById {
   '/app/clients/create': typeof AppClientsCreateRoute
   '/app/admin/': typeof AppAdminIndexRoute
   '/app/clients/': typeof AppClientsIndexRoute
+  '/app/profile/': typeof AppProfileIndexRoute
   '/app/admin/companies/$id': typeof AppAdminCompaniesIdRoute
   '/app/admin/users/$id': typeof AppAdminUsersIdRoute
   '/app/admin/companies/': typeof AppAdminCompaniesIndexRoute
@@ -189,6 +206,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/app'
+    | '/misconfigured'
     | '/sign-in'
     | '/sign-out'
     | '/app/admin'
@@ -202,6 +220,7 @@ export interface FileRouteTypes {
     | '/app/clients/create'
     | '/app/admin/'
     | '/app/clients/'
+    | '/app/profile/'
     | '/app/admin/companies/$id'
     | '/app/admin/users/$id'
     | '/app/admin/companies/'
@@ -209,15 +228,16 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/misconfigured'
     | '/sign-in'
     | '/sign-out'
     | '/app/estimate-calculator'
-    | '/app/profile'
     | '/app'
     | '/app/clients/$id'
     | '/app/clients/create'
     | '/app/admin'
     | '/app/clients'
+    | '/app/profile'
     | '/app/admin/companies/$id'
     | '/app/admin/users/$id'
     | '/app/admin/companies'
@@ -226,6 +246,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/app'
+    | '/misconfigured'
     | '/sign-in'
     | '/sign-out'
     | '/app/admin'
@@ -239,6 +260,7 @@ export interface FileRouteTypes {
     | '/app/clients/create'
     | '/app/admin/'
     | '/app/clients/'
+    | '/app/profile/'
     | '/app/admin/companies/$id'
     | '/app/admin/users/$id'
     | '/app/admin/companies/'
@@ -248,6 +270,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  MisconfiguredRoute: typeof MisconfiguredRoute
   SignInRoute: typeof SignInRoute
   SignOutRoute: typeof SignOutRoute
 }
@@ -266,6 +289,13 @@ declare module '@tanstack/react-router' {
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/misconfigured': {
+      id: '/misconfigured'
+      path: '/misconfigured'
+      fullPath: '/misconfigured'
+      preLoaderRoute: typeof MisconfiguredRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app': {
@@ -316,6 +346,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/admin'
       preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/app/profile/': {
+      id: '/app/profile/'
+      path: '/'
+      fullPath: '/app/profile/'
+      preLoaderRoute: typeof AppProfileIndexRouteImport
+      parentRoute: typeof AppProfileRoute
     }
     '/app/clients/': {
       id: '/app/clients/'
@@ -449,11 +486,23 @@ const AppClientsRouteWithChildren = AppClientsRoute._addFileChildren(
   AppClientsRouteChildren,
 )
 
+interface AppProfileRouteChildren {
+  AppProfileIndexRoute: typeof AppProfileIndexRoute
+}
+
+const AppProfileRouteChildren: AppProfileRouteChildren = {
+  AppProfileIndexRoute: AppProfileIndexRoute,
+}
+
+const AppProfileRouteWithChildren = AppProfileRoute._addFileChildren(
+  AppProfileRouteChildren,
+)
+
 interface AppRouteChildren {
   AppAdminRoute: typeof AppAdminRouteWithChildren
   AppClientsRoute: typeof AppClientsRouteWithChildren
   AppEstimateCalculatorRoute: typeof AppEstimateCalculatorRoute
-  AppProfileRoute: typeof AppProfileRoute
+  AppProfileRoute: typeof AppProfileRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
 }
 
@@ -461,7 +510,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAdminRoute: AppAdminRouteWithChildren,
   AppClientsRoute: AppClientsRouteWithChildren,
   AppEstimateCalculatorRoute: AppEstimateCalculatorRoute,
-  AppProfileRoute: AppProfileRoute,
+  AppProfileRoute: AppProfileRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
 }
 
@@ -470,6 +519,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  MisconfiguredRoute: MisconfiguredRoute,
   SignInRoute: SignInRoute,
   SignOutRoute: SignOutRoute,
 }

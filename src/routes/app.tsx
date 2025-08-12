@@ -23,6 +23,8 @@ export const Route = createFileRoute("/app")({
         replace: true,
         throw: true,
       });
+    if (!authUtils.userProfileIsValid(context.auth))
+      redirect({ to: "/misconfigured", replace: true, throw: true });
   },
 });
 

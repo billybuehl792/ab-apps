@@ -5,53 +5,31 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { onAuthStateChanged } from "firebase/auth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import AuthContext from "@/store/context/AuthContext";
 import { auth } from "@/store/config/firebase";
-import { authQueries } from "@/store/queries/auth";
 import { authMutations } from "@/store/mutations/auth";
 import { companyQueries } from "@/store/queries/companies";
 import StatusWrapper from "@/components/layout/StatusWrapper";
-import { AuthRole } from "@/store/enums/auth";
-import { DEFAULT_COMPANY } from "@/store/constants/auth";
+import { authUtils } from "@/store/utils/auth";
 import type { Company } from "@/store/types/companies";
+import type { Permissions } from "@/store/types/auth";
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] =
     useState<ContextType<typeof AuthContext>["user"]>(null);
-  const [loadingAuth, setLoadingAuth] =
+  const [profile, setProfile] = useState<
+    ContextType<typeof AuthContext>["profile"]
+  >({ company: null, permissions: null });
+  const [loading, setLoading] =
     useState<ContextType<typeof AuthContext>["loading"]>(true);
 
   /** Values */
 
+  const queryClient = useQueryClient();
   const snackbar = useSnackbar();
-
-  /** Queries */
-
-  const userCustomClaimsQuery = useQuery({
-    ...authQueries.customClaims(),
-    enabled: Boolean(user),
-  });
-
-  const companyId = String(userCustomClaimsQuery.data?.claims.companyId);
-  const role = Object.values(AuthRole).includes(
-    userCustomClaimsQuery.data?.claims.role as AuthRole
-  )
-    ? (userCustomClaimsQuery.data?.claims.role as AuthRole)
-    : AuthRole.STANDARD;
-
-  const userCompanyQuery = useQuery({
-    ...companyQueries.detail(companyId),
-    enabled: Boolean(user) && userCustomClaimsQuery.isSuccess,
-    retry: false,
-    select: (data): Company => ({
-      id: data.id,
-      ...data.data(),
-    }),
-  });
-  const company = userCompanyQuery.data ?? DEFAULT_COMPANY;
 
   /** Mutations */
 
@@ -67,22 +45,60 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
   /** Callbacks */
 
-  const handleSignOut = () => {
-    signOut.mutate(undefined, {
-      onSuccess: () => {
-        location.reload();
-      },
-    });
+  const handleFetchCompany = async (companyId: string | null) => {
+    try {
+      if (!companyId) throw new Error("No company ID provided");
+      const data = await queryClient.fetchQuery(
+        companyQueries.detail(companyId)
+      );
+      return { id: data.id, ...data.data() } as Company;
+    } catch (_error) {
+      snackbar.enqueueSnackbar("Error retrieving user's company", {
+        variant: "error",
+      });
+      return null;
+    }
   };
+
+  const handleFetchProfile = async (user: User) => {
+    let permissions: Permissions | null = null;
+    let company: Company | null = null;
+
+    setLoading(true);
+
+    try {
+      const idTokenResult = await user.getIdTokenResult();
+      permissions = authUtils.getPermissionsFromCustomClaims(
+        idTokenResult.claims
+      );
+      const companyId = authUtils.getCompanyIdFromCustomClaims(
+        idTokenResult.claims
+      );
+      company = await handleFetchCompany(companyId);
+    } catch (_error) {
+      snackbar.enqueueSnackbar("Error retrieving user data", {
+        variant: "error",
+      });
+    } finally {
+      setLoading(false);
+      setProfile({ company, permissions });
+    }
+  };
+
   /** Effects */
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
-      setLoadingAuth(false);
+      if (user) void handleFetchProfile(user);
+      else {
+        setLoading(false);
+        setProfile({ company: null, permissions: null });
+      }
     });
 
     return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -90,53 +106,24 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       value={useMemo(
         () => ({
           user,
-          company,
-          permissions: { role },
-          loading: loadingAuth || userCustomClaimsQuery.isLoading,
+          profile,
+          loading,
           signOut,
         }),
-        [
-          user,
-          company,
-          role,
-          loadingAuth,
-          userCustomClaimsQuery.isLoading,
-          signOut,
-        ]
+        [user, profile, loading, signOut]
       )}
     >
       <StatusWrapper
         component="main"
-        loading={
-          loadingAuth ||
-          userCustomClaimsQuery.isLoading ||
-          userCompanyQuery.isLoading
-        }
-        loadingDescription={
-          userCustomClaimsQuery.isLoading
-            ? "Loading user information..."
-            : userCompanyQuery.isLoading
-              ? "Loading company information..."
-              : undefined
-        }
-        error={
-          (userCustomClaimsQuery.isError || userCompanyQuery.isError) &&
-          "Error loading user information. Contact an admin for support."
-        }
-        slotProps={{
-          errorButton: {
-            children: "Sign out",
-            onClick: handleSignOut,
-          },
-        }}
+        loading={loading}
         sx={{
-          position: "fixed",
+          position: "absolute",
           top: 0,
           left: 0,
           bottom: 0,
           right: 0,
-          color: "primary.contrastText",
-          bgcolor: "primary.main",
+          color: (theme) => theme.palette.primary.contrastText,
+          bgcolor: (theme) => theme.palette.background.default,
         }}
       >
         {children}

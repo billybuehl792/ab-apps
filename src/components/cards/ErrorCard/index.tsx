@@ -1,4 +1,4 @@
-import { type JSX } from "react";
+import { ReactNode, type JSX } from "react";
 import {
   Button,
   type ButtonProps,
@@ -6,6 +6,7 @@ import {
   CardContent,
   type CardContentProps,
   type CardProps,
+  Divider,
   Stack,
   Typography,
 } from "@mui/material";
@@ -13,6 +14,7 @@ import { ErrorOutline } from "@mui/icons-material";
 
 interface ErrorCardProps extends CardProps {
   error: boolean | string | Error | JSX.Element;
+  description?: ReactNode;
   icon?: JSX.Element;
   slotProps?: {
     cardContent?: CardContentProps;
@@ -23,6 +25,7 @@ interface ErrorCardProps extends CardProps {
 const ErrorCard = ({
   children,
   error = "Something went wrong...",
+  description,
   icon,
   slotProps,
   ...props
@@ -68,6 +71,12 @@ const ErrorCard = ({
           </>
         ) : (
           content
+        )}
+        {!!description && (
+          <>
+            <Divider sx={{ width: "100%" }} />
+            {description}
+          </>
         )}
         {!!slotProps?.errorButton && (
           <Button children="Retry" {...slotProps.errorButton} />

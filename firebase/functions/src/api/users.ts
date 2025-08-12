@@ -8,9 +8,10 @@ import type { Permissions } from "../types/auth";
 // FETCH
 
 export const getUser = onCall<{ id: string }>(async (request) => {
-  await authUtils.authGuard(request, {
-    permissions: { role: AuthRole.SUPER_ADMIN },
-  });
+  if (!request.auth?.uid || request.data.id !== request.auth.uid)
+    await authUtils.authGuard(request, {
+      permissions: { role: AuthRole.SUPER_ADMIN },
+    });
 
   try {
     return await getAuth().getUser(request.data.id);

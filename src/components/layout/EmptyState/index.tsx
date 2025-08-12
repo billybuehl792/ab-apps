@@ -1,18 +1,15 @@
-import { type JSX } from "react";
+import { type ReactNode, type JSX } from "react";
 import { Stack, Typography, type StackProps } from "@mui/material";
 import { FolderOff } from "@mui/icons-material";
 
 interface EmptyStateProps extends StackProps {
   icon?: JSX.Element;
-  text?: string | JSX.Element;
+  description?: ReactNode;
 }
 
-/**
- * This component renders an empty state with an optional icon and text.
- */
 const EmptyState = ({
   icon,
-  text = "No data available",
+  description = "No data available",
   children,
   ...props
 }: EmptyStateProps) => {
@@ -26,12 +23,12 @@ const EmptyState = ({
       {...props}
     >
       {icon ?? <FolderOff fontSize="large" color="disabled" />}
-      {typeof text === "string" ? (
+      {typeof description === "string" ? (
         <Typography color="textDisabled" textAlign="center">
-          {text}
+          {description}
         </Typography>
       ) : (
-        text
+        description
       )}
       {children}
     </Stack>

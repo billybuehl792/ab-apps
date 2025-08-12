@@ -5,7 +5,6 @@ import FullScreen from "@/components/layout/FullScreen";
 import { authUtils } from "@/store/utils/auth";
 
 export const Route = createFileRoute("/sign-in")({
-  component: RouteComponent,
   validateSearch: (search: Record<string, unknown>): { redirect?: string } => ({
     redirect: (search.redirect as string) || undefined,
   }),
@@ -13,6 +12,7 @@ export const Route = createFileRoute("/sign-in")({
     if (authUtils.authGuard(context.auth))
       redirect({ to: search.redirect ?? "/app", replace: true, throw: true });
   },
+  component: RouteComponent,
 });
 
 function RouteComponent() {

@@ -16,7 +16,9 @@ const useClients = (company?: Company | string) => {
   const snackbar = useSnackbar();
 
   const companyId =
-    typeof company === "string" ? company : (company?.id ?? auth.company.id);
+    typeof company === "string"
+      ? company
+      : (company?.id ?? auth.profile.company?.id ?? "");
 
   /** Queries */
 

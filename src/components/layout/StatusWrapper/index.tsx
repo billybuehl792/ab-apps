@@ -53,7 +53,7 @@ const StatusWrapper = ({
                 </Typography>
               )}
           {loadingDescription && (
-            <Typography variant="caption" color="inherit" noWrap>
+            <Typography variant="caption" color="textSecondary" noWrap>
               {loadingDescription}
             </Typography>
           )}

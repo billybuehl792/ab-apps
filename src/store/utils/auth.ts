@@ -1,6 +1,8 @@
 import { type ContextType } from "react";
+import { type ParsedToken } from "firebase/auth";
 import AuthContext from "@/store/context/AuthContext";
 import { AuthRoleLevel } from "../constants/auth";
+import { AuthRole } from "../enums/auth";
 import type { Permissions } from "../types/auth";
 
 /**
@@ -24,8 +26,8 @@ export const authGuard = (
   if (!auth.user) return handleDenied("User is not authenticated");
   if (options?.permissions?.role) {
     if (
-      !auth.permissions.role ||
-      AuthRoleLevel[auth.permissions.role] <
+      !auth.profile.permissions?.role ||
+      AuthRoleLevel[auth.profile.permissions.role] <
         AuthRoleLevel[options.permissions.role]
     )
       return handleDenied("Insufficient permissions to access this resource");
@@ -34,4 +36,36 @@ export const authGuard = (
   return true;
 };
 
-export const authUtils = { authGuard };
+/**
+ * Checks if the user is configured with a company and permissions.
+ * @param auth - The authentication context containing user and permissions.
+ * @returns True if the user is configured, otherwise false.
+ */
+export const userProfileIsValid = (auth: ContextType<typeof AuthContext>) => {
+  return !!auth.profile.company && !!auth.profile.permissions;
+};
+
+export const getCompanyIdFromCustomClaims = (claims?: ParsedToken) => {
+  const rawCompanyId = claims?.companyId;
+  return typeof rawCompanyId === "string" || typeof rawCompanyId === "number"
+    ? String(rawCompanyId)
+    : null;
+};
+
+export const getPermissionsFromCustomClaims = (claims?: ParsedToken) => {
+  const role = claims?.role;
+  if (
+    typeof role === "string" &&
+    Object.values(AuthRole).includes(role as AuthRole)
+  )
+    return { role } as Permissions;
+
+  return null;
+};
+
+export const authUtils = {
+  authGuard,
+  userProfileIsValid,
+  getCompanyIdFromCustomClaims,
+  getPermissionsFromCustomClaims,
+};

@@ -31,7 +31,7 @@ const CompanyList = (props: StackProps) => {
       limit: ROWS_PER_PAGE,
       startAfter: lastDocs[lastDocs.length - 1],
     }),
-    enabled: Boolean(countQuery.isSuccess),
+    enabled: countQuery.isSuccess,
   });
 
   /** Callbacks */
@@ -58,8 +58,8 @@ const CompanyList = (props: StackProps) => {
         empty={
           countQuery.isSuccess &&
           countQuery.data.data().count === 0 && {
-            text: "No Clients",
             icon: <Store fontSize="large" color="disabled" />,
+            description: "No Clients",
           }
         }
         loading={
