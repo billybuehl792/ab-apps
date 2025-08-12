@@ -12,6 +12,7 @@ interface ClientMenuIconButtonProps
 
 const ClientMenuIconButton = ({
   client,
+  options: optionsProp,
   ...props
 }: ClientMenuIconButtonProps) => {
   /** Values */
@@ -26,7 +27,7 @@ const ClientMenuIconButton = ({
     location.pathname === `/app/clients/${client.id}` &&
     Boolean(location.search.edit);
 
-  const options: MenuOption[] = [
+  const options: MenuOption[] = optionsProp ?? [
     {
       id: "detail",
       label: "Detail",
