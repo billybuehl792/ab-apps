@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { Box, Paper, useMediaQuery } from "@mui/material";
+import { Box, Paper, Stack, Typography, useMediaQuery } from "@mui/material";
 import NavigationList from "@/containers/lists/NavigationList";
 import NavigationFooter from "@/containers/layout/NavigationFooter";
 import AppBar from "@/containers/layout/AppBar";
@@ -10,6 +10,9 @@ import {
   APP_SIDE_PANEL_WIDTH,
 } from "@/store/constants/layout";
 import { authUtils } from "@/store/utils/auth";
+import FullScreen from "@/components/layout/FullScreen";
+import ErrorCard from "@/components/cards/ErrorCard";
+import SignOutButton from "@/containers/buttons/SignOutButton";
 
 export const Route = createFileRoute("/app")({
   component: RouteComponent,
@@ -24,8 +27,30 @@ export const Route = createFileRoute("/app")({
         throw: true,
       });
     if (!authUtils.userProfileIsValid(context.auth))
-      redirect({ to: "/misconfigured", replace: true, throw: true });
+      throw new Error("Invalid user configuration", {
+        cause:
+          "There is an error with your user configuration. Contact an admin for support.",
+      });
   },
+  errorComponent: ({ error }) => (
+    <FullScreen component="main">
+      <ErrorCard
+        error={error}
+        {...(typeof error.cause === "string" && {
+          description: (
+            <Stack spacing={1}>
+              <Typography variant="body2" color="textSecondary">
+                {error.cause}
+              </Typography>
+              <Stack direction="row" justifyContent="center">
+                <SignOutButton />
+              </Stack>
+            </Stack>
+          ),
+        })}
+      />
+    </FullScreen>
+  ),
 });
 
 function RouteComponent() {
@@ -38,7 +63,7 @@ function RouteComponent() {
     <>
       <Box
         component="main"
-        position="absolute"
+        position="fixed"
         top={APP_BAR_HEIGHT}
         bottom={
           isDesktop

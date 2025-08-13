@@ -1,4 +1,4 @@
-import { ReactNode, type JSX } from "react";
+import { type ReactNode, type JSX } from "react";
 import {
   Button,
   type ButtonProps,
@@ -16,6 +16,7 @@ interface ErrorCardProps extends CardProps {
   error: boolean | string | Error | JSX.Element;
   description?: ReactNode;
   icon?: JSX.Element;
+  errorButton?: ButtonProps;
   slotProps?: {
     cardContent?: CardContentProps;
     errorButton?: ButtonProps;
@@ -27,6 +28,7 @@ const ErrorCard = ({
   error = "Something went wrong...",
   description,
   icon,
+  errorButton,
   slotProps,
   ...props
 }: ErrorCardProps) => {
@@ -78,8 +80,12 @@ const ErrorCard = ({
             {description}
           </>
         )}
-        {!!slotProps?.errorButton && (
-          <Button children="Retry" {...slotProps.errorButton} />
+        {(!!errorButton || !!slotProps?.errorButton) && (
+          <Button
+            children="Retry"
+            {...errorButton}
+            {...slotProps?.errorButton}
+          />
         )}
       </CardContent>
     </Card>
