@@ -36,18 +36,18 @@ export const Route = createFileRoute("/app")({
     <FullScreen component="main">
       <ErrorCard
         error={error}
-        {...(typeof error.cause === "string" && {
-          description: (
-            <Stack spacing={1}>
+        description={
+          <Stack spacing={1}>
+            {typeof error.cause === "string" && (
               <Typography variant="body2" color="textSecondary">
                 {error.cause}
               </Typography>
-              <Stack direction="row" justifyContent="center">
-                <SignOutButton />
-              </Stack>
+            )}
+            <Stack direction="row" justifyContent="center">
+              <SignOutButton disableConfirm />
             </Stack>
-          ),
-        })}
+          </Stack>
+        }
       />
     </FullScreen>
   ),

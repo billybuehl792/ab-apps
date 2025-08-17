@@ -1,9 +1,10 @@
 import { type ComponentProps } from "react";
-import { useLocation } from "@tanstack/react-router";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Avatar } from "@mui/material";
 import { Logout, Person } from "@mui/icons-material";
 import useAuth from "@/store/hooks/useAuth";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
+import useModal from "@/store/hooks/useModal";
 
 const UserIconButton = (
   props: Partial<ComponentProps<typeof MenuOptionsIconButton>>
@@ -11,7 +12,9 @@ const UserIconButton = (
   /** Values */
 
   const location = useLocation();
+  const navigate = useNavigate();
   const auth = useAuth();
+  const { confirm } = useModal();
 
   const userName = auth.user?.displayName ?? auth.user?.email ?? "User";
   const photoURL = auth.user?.photoURL ?? "";
@@ -30,7 +33,13 @@ const UserIconButton = (
       id: "signOut",
       label: "Sign Out",
       icon: <Logout />,
-      link: { to: "/sign-out" },
+      onClick: () =>
+        void confirm({
+          title: "Sign Out",
+          message: "Are you sure you want to sign out?",
+        }).then((confirmed) => {
+          if (confirmed) void navigate({ to: "/sign-out" });
+        }),
     },
   ];
 

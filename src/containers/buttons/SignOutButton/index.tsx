@@ -1,55 +1,43 @@
-import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Button, type ButtonProps } from "@mui/material";
+import useModal from "@/store/hooks/useModal";
 import { Logout } from "@mui/icons-material";
-import ConfirmDialog from "@/components/modals/ConfirmDialog";
 
 interface SignOutButtonProps extends ButtonProps {
-  confirm?: boolean;
+  disableConfirm?: boolean;
 }
 
-const SignOutButton = ({ confirm, ...props }: SignOutButtonProps) => {
-  const [confirmOpen, setConfirmOpen] = useState(false);
-
+const SignOutButton = ({ disableConfirm, ...props }: SignOutButtonProps) => {
   /** Values */
 
   const navigate = useNavigate();
+  const { confirm } = useModal();
 
   /** Callbacks */
 
   const handleSignOut = () => void navigate({ to: "/sign-out" });
 
-  const handleToggleConfirm = () => {
-    setConfirmOpen((prev) => !prev);
-  };
-
-  const handleOnClick = () => {
-    if (confirm) handleToggleConfirm();
-    else handleSignOut();
+  const handleOnClick = async () => {
+    if (disableConfirm) handleSignOut();
+    else {
+      const confirmed = await confirm({
+        title: "Sign Out",
+        message: "Are you sure you want to sign out?",
+      });
+      if (confirmed) handleSignOut();
+    }
   };
 
   return (
-    <>
-      <Button
-        variant="text"
-        size="small"
-        startIcon={<Logout />}
-        onClick={handleOnClick}
-        {...props}
-      >
-        Sign Out
-      </Button>
-      {!!confirm && (
-        <ConfirmDialog
-          open={confirmOpen}
-          title="Sign Out"
-          description="Are you sure you want to sign out?"
-          confirmButtonText="Sign Out"
-          onConfirm={handleSignOut}
-          onCancel={handleToggleConfirm}
-        />
-      )}
-    </>
+    <Button
+      variant="text"
+      size="small"
+      startIcon={<Logout />}
+      onClick={() => void handleOnClick()}
+      {...props}
+    >
+      Sign Out
+    </Button>
   );
 };
 

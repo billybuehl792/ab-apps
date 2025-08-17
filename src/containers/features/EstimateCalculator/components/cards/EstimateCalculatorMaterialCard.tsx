@@ -1,5 +1,6 @@
 import { type ComponentProps } from "react";
 import { Delete, Edit } from "@mui/icons-material";
+import useModal from "@/store/hooks/useModal";
 import useMaterials from "@/store/hooks/useMaterials";
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 import MaterialCard from "@/containers/cards/MaterialCard";
@@ -16,6 +17,7 @@ const EstimateCalculatorMaterialCard = ({
 
   /** Values */
 
+  const { confirm } = useModal();
   const { setMaterialModal } = useEstimateCalculator();
 
   const options: MenuOption[] = [
@@ -32,15 +34,13 @@ const EstimateCalculatorMaterialCard = ({
       label: "Delete",
       icon: <Delete />,
       color: "error",
-      onClick: () => {
-        if (
-          confirm(
-            "Are you sure you want to delete this material? This action cannot be undone."
-          )
-        ) {
-          materials.mutations.remove.mutate(material.id);
-        }
-      },
+      onClick: () =>
+        void confirm({
+          title: `Delete ${material.label}?`,
+          message: `Are you sure you want to delete ${material.label}? This action cannot be undone.`,
+        }).then((confirmed) => {
+          if (confirmed) materials.mutations.remove.mutate(material.id);
+        }),
     },
   ];
 

@@ -7,6 +7,7 @@ import AuthProvider from "./AuthProvider";
 import Snackbar from "@/components/alerts/Snackbar";
 import GoogleMapsProvider from "./GoogleMapsProvider";
 import RouterProvider from "./RouterProvider";
+import ModalProvider from "./ModalProvider";
 
 const RootProvider = ({ children }: PropsWithChildren) => {
   /** Values */
@@ -31,9 +32,11 @@ const RootProvider = ({ children }: PropsWithChildren) => {
       <QueryClientProvider client={queryClient}>
         <GoogleMapsProvider>
           <ThemeProvider theme={theme}>
-            <AuthProvider>
-              <RouterProvider>{children}</RouterProvider>
-            </AuthProvider>
+            <ModalProvider>
+              <AuthProvider>
+                <RouterProvider>{children}</RouterProvider>
+              </AuthProvider>
+            </ModalProvider>
           </ThemeProvider>
         </GoogleMapsProvider>
       </QueryClientProvider>

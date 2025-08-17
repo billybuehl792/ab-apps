@@ -5,7 +5,6 @@ import { clientQueries } from "@/store/queries/clients";
 import useClients from "@/store/hooks/useClients";
 import ClientDetailCard from "@/containers/cards/ClientDetailCard";
 import ClientForm from "@/containers/forms/ClientForm";
-import EditIconButton from "@/components/buttons/EditIconButton";
 import ClientMenuIconButton from "@/containers/buttons/ClientMenuIconButton";
 import ErrorCard from "@/components/cards/ErrorCard";
 import StatusWrapper from "@/components/layout/StatusWrapper";
@@ -55,19 +54,12 @@ function RouteComponent() {
   const onCancel: ComponentProps<typeof ClientForm>["onReset"] = () =>
     void navigate({ to: `/app/clients/${client.id}` });
 
-  const handleEditToggle = () =>
-    void navigate({
-      to: `/app/clients/${client.id}`,
-      search: { edit: !edit },
-    });
-
   return (
-    <Stack spacing={1} p={2}>
+    <Stack spacing={2} p={2}>
       <Stack direction="row" spacing={1} alignItems="center">
         <Typography variant="h6" noWrap>
           {clientFullName}
         </Typography>
-        <EditIconButton active={edit} onClick={handleEditToggle} />
         <Stack direction="row" flexGrow={1} justifyContent="flex-end">
           <ClientMenuIconButton client={client} />
         </Stack>
