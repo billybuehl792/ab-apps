@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { Box, Container, Stack } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import NavigationBreadcrumbs from "@/containers/lists/NavigationBreadcrumbs";
 import PageHeader from "@/components/layout/PageHeader";
 import ErrorCard from "@/components/cards/ErrorCard";
@@ -24,17 +24,13 @@ export const Route = createFileRoute("/app/admin")({
 
 function RouteComponent() {
   return (
-    <Stack width="100%" height="100%">
+    <>
+      <PageHeader title={<NavigationBreadcrumbs />} />
       <Container maxWidth="md" disableGutters>
-        <PageHeader title={<NavigationBreadcrumbs />} />
+        <Box p={2}>
+          <Outlet />
+        </Box>
       </Container>
-      <Box overflow="auto">
-        <Container maxWidth="md" disableGutters>
-          <Box p={2}>
-            <Outlet />
-          </Box>
-        </Container>
-      </Box>
-    </Stack>
+    </>
   );
 }

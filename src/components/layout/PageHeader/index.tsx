@@ -1,43 +1,62 @@
 import { type ReactNode } from "react";
-import { Divider, Stack, Typography, type StackProps } from "@mui/material";
+import {
+  Container,
+  type ContainerProps,
+  Divider,
+  Stack,
+  Typography,
+} from "@mui/material";
 
-interface PageHeaderProps extends Omit<StackProps, "title"> {
+interface PageHeaderProps extends Omit<ContainerProps, "title"> {
   title?: ReactNode;
   endContent?: ReactNode;
-  disableDivider?: boolean;
+  bottomContent?: ReactNode;
 }
 
 const PageHeader = ({
   title,
   endContent,
-  disableDivider,
+  bottomContent,
   ...props
 }: PageHeaderProps) => {
   return (
-    <Stack position="relative" p={2} {...props}>
-      <Stack
-        direction="row"
-        spacing={1}
-        alignItems="center"
-        justifyContent="space-between"
-        height={24}
-      >
-        {typeof title === "string" ? (
-          <Typography variant="body2" fontWeight="bold">
-            {title}
-          </Typography>
-        ) : (
-          title
-        )}
-        {endContent}
-      </Stack>
-      {!disableDivider && (
+    <Container
+      maxWidth="md"
+      disableGutters
+      sx={{
+        position: "sticky",
+        top: 0,
+        bgcolor: ({ palette }) => palette.background.paper,
+        zIndex: ({ zIndex }) => zIndex.appBar,
+      }}
+      {...props}
+    >
+      <Stack p={2}>
+        <Stack spacing={1}>
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            justifyContent="space-between"
+            height={24}
+          >
+            {typeof title === "string" ? (
+              <Typography variant="body2" fontWeight="bold">
+                {title}
+              </Typography>
+            ) : (
+              title
+            )}
+            {endContent}
+          </Stack>
+          {bottomContent}
+        </Stack>
         <Divider
           variant="inset"
           sx={{ position: "absolute", bottom: 0, left: 0, right: 0, mx: 2 }}
         />
-      )}
-    </Stack>
+      </Stack>
+    </Container>
   );
 };
 

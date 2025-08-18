@@ -61,9 +61,17 @@ function RouteComponent() {
 
   return (
     <>
+      <AppBar
+        sx={{
+          position: "fixed",
+          top: 0,
+          width: "100%",
+          height: APP_BAR_HEIGHT,
+        }}
+      />
       <Box
         component="main"
-        position="fixed"
+        position="absolute"
         top={APP_BAR_HEIGHT}
         bottom={
           isDesktop
@@ -94,7 +102,6 @@ function RouteComponent() {
           <NavigationList />
         </Paper>
       )}
-      <AppBar sx={{ height: APP_BAR_HEIGHT }} />
       {!isDesktop && (
         <NavigationFooter
           sx={{

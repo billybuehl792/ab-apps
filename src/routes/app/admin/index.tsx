@@ -47,7 +47,7 @@ function RouteComponent() {
   ];
 
   return (
-    <Stack spacing={2} p={2}>
+    <Stack spacing={2}>
       <StatusWrapper
         empty={!sections.find((s) => s.render !== false)}
         slotProps={{

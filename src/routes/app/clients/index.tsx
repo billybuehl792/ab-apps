@@ -25,15 +25,16 @@ function RouteComponent() {
   };
 
   return (
-    <Stack spacing={2} p={2} pt={0}>
+    <>
       <Stack
         position="sticky"
-        top={0}
+        top={56}
         direction="row"
         spacing={1}
         alignItems="center"
-        pt={2}
         zIndex={1}
+        pt={2}
+        mt={-2}
         bgcolor={(theme) => theme.palette.background.paper}
       >
         <ClientSearchField />
@@ -43,7 +44,7 @@ function RouteComponent() {
           onSubmit={handleSortAndFilterSubmit}
         />
       </Stack>
-      <ClientList params={{ orderBy: selectedSort?.id }} />
-    </Stack>
+      <ClientList params={{ orderBy: selectedSort?.id }} mt={2} />
+    </>
   );
 }
