@@ -1,32 +1,39 @@
 import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
-import { Container, Stack } from "@mui/material";
-
+import { Container, Divider, Stack } from "@mui/material";
 import NavigationBreadcrumbs from "@/containers/lists/NavigationBreadcrumbs";
 import CreateClientLink from "@/containers/links/CreateClientLink";
 
 export const Route = createFileRoute("/app/clients")({
-  component: RouteComponent,
   loader: () => ({ crumb: "Clients" }),
+  component: RouteComponent,
 });
 
 function RouteComponent() {
   /** Values */
 
-  const { pathname } = useLocation();
+  const location = useLocation();
 
   return (
-    <Container maxWidth="lg" disableGutters>
-      <Stack spacing={2} p={2}>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <NavigationBreadcrumbs />
-          {pathname === "/app/clients" && <CreateClientLink />}
+    <Stack width="100%" height="100%">
+      <Container maxWidth="md" disableGutters>
+        <Stack spacing={2} p={2} pb={0}>
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <NavigationBreadcrumbs />
+            {location.pathname === "/app/clients" && <CreateClientLink />}
+          </Stack>
+          <Divider />
         </Stack>
-        <Outlet />
+      </Container>
+      <Stack overflow="auto">
+        <Container maxWidth="md" disableGutters>
+          <Outlet />
+        </Container>
       </Stack>
-    </Container>
+    </Stack>
   );
 }

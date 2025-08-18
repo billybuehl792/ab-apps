@@ -1,14 +1,14 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { theme } from "@/config/theme";
-import type { EstimateCalculatorValues } from "../types";
+import { theme } from "@/store/config/theme";
+import type { EstimateCalculatorForm } from "../types";
 
 /**
  * Generate a PDF document for the estimate calculator.
  * @param data - The data to be included in the PDF.
  * @returns The generated PDF document.
  */
-export const createEstimateCalculatorDoc = (data: EstimateCalculatorValues) => {
+export const createEstimateCalculatorDoc = (data: EstimateCalculatorForm) => {
   const materialTotal = data.materials.reduce(
     (acc, { value, count }) => acc + value * (count ?? 0),
     0

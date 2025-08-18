@@ -7,41 +7,40 @@ import {
   type PaperProps,
 } from "@mui/material";
 import { Groups, Home } from "@mui/icons-material";
-
-import useAuth from "@/hooks/auth/useAuth";
+import useAuth from "@/store/hooks/useAuth";
 
 const NavigationFooter = (props: PaperProps) => {
   /** Values */
 
-  const { pathname } = useLocation();
-  const { user } = useAuth();
+  const location = useLocation();
+  const auth = useAuth();
 
   const actions: ListItem[] = [
     {
       id: "home",
       label: "Dashboard",
-      to: "/app",
-      selected: pathname === "/app",
       icon: <Home />,
+      selected: location.pathname === "/app",
+      link: { to: "/app" },
     },
     {
       id: "clients",
       label: "Clients",
-      to: "/app/clients",
-      selected: pathname.startsWith("/app/clients"),
+      selected: location.pathname.startsWith("/app/clients"),
       icon: <Groups />,
+      link: { to: "/app/clients" },
     },
     {
-      id: "account",
-      label: "Account",
-      to: "/app/account",
-      selected: pathname.startsWith("/app/account"),
+      id: "profile",
+      label: "Profile",
       icon: (
         <Avatar
-          src={user?.photoURL || ""}
+          src={auth.user?.photoURL || ""}
           sx={{ width: 20, height: 20, fontSize: ".75rem" }}
         />
       ),
+      selected: location.pathname.startsWith("/app/profile"),
+      link: { to: "/app/profile" },
     },
   ];
 
@@ -59,11 +58,10 @@ const NavigationFooter = (props: PaperProps) => {
         {actions.map((action) => (
           <BottomNavigationAction
             key={action.id}
-            component={Link}
             value={action.id}
-            to={action.to}
             label={action.label}
             icon={action.icon}
+            {...(!!action.link && { LinkComponent: Link, ...action.link })}
           />
         ))}
       </BottomNavigation>

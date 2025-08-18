@@ -1,6 +1,7 @@
 import { FactorId } from "firebase/auth";
-
+import useAuth from "@/store/hooks/useAuth";
 import useAuthWorkflow from "../../hooks/useAuthWorkflow";
+import AuthWorkflowSuccess from "./AuthWorkflowSuccess";
 import AuthWorkflowSignIn from "./AuthWorkflowSignIn";
 import AuthWorkflowMultiFactorHints from "./AuthWorkflowMultiFactorHints";
 import AuthWorkflowMultiFactorPhoneVerification from "./AuthWorkflowMultiFactorPhoneVerification";
@@ -8,8 +9,10 @@ import AuthWorkflowMultiFactorPhoneVerification from "./AuthWorkflowMultiFactorP
 const AuthWorkflowBody = () => {
   /** Values */
 
+  const auth = useAuth();
   const { multiFactorResolver, multiFactorHint } = useAuthWorkflow();
 
+  if (auth.user) return <AuthWorkflowSuccess user={auth.user} />;
   if (multiFactorResolver) {
     if (multiFactorHint) {
       if (multiFactorHint.factorId === FactorId.PHONE)

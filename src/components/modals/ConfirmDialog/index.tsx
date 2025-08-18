@@ -10,9 +10,12 @@ import {
 } from "@mui/material";
 import DialogTitle from "../DialogTitle";
 
-interface ConfirmDialogProps extends Omit<DialogProps, "title"> {
+interface ConfirmDialogProps extends Omit<DialogProps, "title" | "content"> {
   title?: ReactNode;
   description?: ReactNode;
+  content?: ReactNode;
+  confirmButtonText?: string;
+  cancelButtonText?: string;
   onConfirm?: ButtonProps["onClick"];
   onCancel?: DialogProps["onClose"];
 }
@@ -20,6 +23,9 @@ interface ConfirmDialogProps extends Omit<DialogProps, "title"> {
 const ConfirmDialog = ({
   title,
   description,
+  content,
+  confirmButtonText,
+  cancelButtonText,
   onConfirm,
   onCancel,
   onClose: onCloseProp,
@@ -46,6 +52,11 @@ const ConfirmDialog = ({
         <DialogContentText id="alert-dialog-description">
           {description ?? "Are you sure you want to continue?"}
         </DialogContentText>
+        {typeof content === "string" ? (
+          <DialogContentText>{content}</DialogContentText>
+        ) : (
+          content
+        )}
       </DialogContent>
       <DialogActions>
         <Button
@@ -55,10 +66,10 @@ const ConfirmDialog = ({
             onClose(new CloseEvent("close"), "backdropClick");
           }}
         >
-          Cancel
+          {cancelButtonText ?? "Cancel"}
         </Button>
         <Button onClick={onConfirm} autoFocus>
-          Confirm
+          {confirmButtonText ?? "Confirm"}
         </Button>
       </DialogActions>
     </Dialog>

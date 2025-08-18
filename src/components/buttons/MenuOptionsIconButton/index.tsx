@@ -1,9 +1,7 @@
 import { type ReactNode, useState, type ComponentProps } from "react";
 import { IconButton, type IconButtonProps } from "@mui/material";
 import { MoreVert } from "@mui/icons-material";
-
 import MenuOptionListModal from "@/components/modals/MenuOptionListModal";
-import { EMPTY_OBJECT } from "@/constants/utility";
 
 const DEFAULT_ICON = <MoreVert />;
 
@@ -23,7 +21,7 @@ const MenuOptionsIconButton = ({
   title = "Options",
   icon = DEFAULT_ICON,
   onClick: onClickProp,
-  slotProps: { menu: menuProps } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: MenuOptionsIconButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -34,16 +32,7 @@ const MenuOptionsIconButton = ({
 
   /** Callbacks */
 
-  const onMouseDown: IconButtonProps["onMouseDown"] = (event) => {
-    event.stopPropagation();
-  };
-
-  const onTouchStart: IconButtonProps["onTouchStart"] = (event) => {
-    event.stopPropagation();
-  };
-
   const onClick: IconButtonProps["onClick"] = (event) => {
-    event.stopPropagation();
     if (includeMenu) setAnchorEl(event.currentTarget);
     else onClickProp(event);
   };
@@ -54,13 +43,7 @@ const MenuOptionsIconButton = ({
 
   return (
     <>
-      <IconButton
-        component="span"
-        onMouseDown={onMouseDown}
-        onTouchStart={onTouchStart}
-        onClick={onClick}
-        {...props}
-      >
+      <IconButton component="span" onClick={onClick} {...props}>
         {icon}
       </IconButton>
       {includeMenu && (
@@ -70,7 +53,7 @@ const MenuOptionsIconButton = ({
           anchorEl={anchorEl}
           options={options}
           onClose={onMenuClose}
-          {...menuProps}
+          {...slotProps?.menu}
         />
       )}
     </>

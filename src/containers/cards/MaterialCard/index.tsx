@@ -9,11 +9,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-
-import { sxAsArray } from "@/utils/sx";
-import { EMPTY_OBJECT } from "@/constants/utility";
-import type { Material } from "@/types/firebase";
+import { sxAsArray } from "@/store/utils/sx";
+import { EMPTY_OBJECT } from "@/store/constants/utility";
 import MenuOptionListDrawer from "@/components/modals/MenuOptionListDrawer";
+import type { Material } from "@/store/types/materials";
 
 interface MaterialCardProps extends Omit<CardProps, "onClick"> {
   material: Material;

@@ -1,6 +1,5 @@
 import { type ComponentProps } from "react";
 import { useMediaQuery } from "@mui/material";
-
 import SwipeableDrawer from "../SwipeableDrawer";
 import SortAndFilterForm from "@/components/forms/SortAndFilterForm";
 

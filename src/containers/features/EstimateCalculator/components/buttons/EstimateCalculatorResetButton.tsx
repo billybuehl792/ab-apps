@@ -1,19 +1,16 @@
 import { Button, type ButtonProps } from "@mui/material";
-
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 
 const EstimateCalculatorResetButton = (props: ButtonProps) => {
   /** Values */
 
-  const {
-    methods: { reset },
-  } = useEstimateCalculator();
+  const { methods } = useEstimateCalculator();
 
   /** Callbacks */
 
   const onReset: ButtonProps["onClick"] = (event) => {
     event.preventDefault();
-    reset();
+    methods.reset();
   };
 
   return (

@@ -1,22 +1,28 @@
 import { type ReactNode, type ComponentProps } from "react";
 import {
   Box,
-  type BoxProps,
   SwipeableDrawer as MuiSwipeableDrawer,
   Stack,
   type SwipeableDrawerProps as MuiSwipeableDrawerProps,
   useMediaQuery,
   type StackProps,
+  styled,
 } from "@mui/material";
-
 import DrawerHeader from "../DrawerHeader";
-import { sxAsArray } from "@/utils/sx";
-import { EMPTY_OBJECT } from "@/constants/utility";
-import { APP_BOTTOM_SAFE_AREA_HEIGHT } from "@/constants/layout";
+import { APP_BOTTOM_SAFE_AREA_HEIGHT } from "@/store/constants/layout";
 
 const iOS =
   typeof navigator !== "undefined" &&
   /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+const Puller = styled(Box)(({ theme }) => ({
+  width: 30,
+  height: 5,
+  borderRadius: 10,
+  backgroundColor: theme.palette.grey[400],
+  marginTop: theme.spacing(1),
+  marginBottom: theme.spacing(0.25),
+}));
 
 interface SwipeableDrawerProps
   extends Omit<
@@ -35,24 +41,6 @@ interface SwipeableDrawerProps
   } & MuiSwipeableDrawerProps["slotProps"];
 }
 
-const Puller = (props: BoxProps) => (
-  <Box
-    {...props}
-    sx={[
-      {
-        width: 30,
-        height: 5,
-        borderRadius: 10,
-        bgcolor: ({ palette }) => palette.grey[400],
-        mt: 1,
-        mb: 0.25,
-      },
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      ...sxAsArray(props.sx),
-    ]}
-  />
-);
-
 /**
  * This component is a wrapper around the Mui SwipeableDrawer component.
  * It provides a bottom drawer with a puller and customizable styles.
@@ -65,12 +53,7 @@ const SwipeableDrawer = ({
   hideHeader,
   onOpen,
   onClose,
-  slotProps: {
-    puller: pullerProps,
-    header: headerProps,
-    content: contentProps,
-    ...slotProps
-  } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: SwipeableDrawerProps) => {
   /** Values */
@@ -92,17 +75,18 @@ const SwipeableDrawer = ({
         transition: {
           mountOnEnter: true,
           unmountOnExit: true,
-          ...(typeof slotProps.transition === "object" && slotProps.transition),
+          ...(typeof slotProps?.transition === "object" &&
+            slotProps.transition),
         },
         paper: {
-          ...(typeof slotProps.paper === "object" && slotProps.paper),
+          ...(typeof slotProps?.paper === "object" && slotProps.paper),
           sx: [
             isTouch && {
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
             },
             anchor === "bottom" && {
-              height: fullHeight ? "95vh" : "auto",
+              height: fullHeight ? "calc(100vh - 40px)" : "auto",
             },
           ],
         },
@@ -111,17 +95,17 @@ const SwipeableDrawer = ({
     >
       {isTouch && (
         <Stack direction="row" justifyContent="center">
-          <Puller {...pullerProps} />
+          <Puller {...slotProps?.puller} />
         </Stack>
       )}
       {!hideHeader && (
-        <DrawerHeader title={title} onClose={onClose} {...headerProps} />
+        <DrawerHeader title={title} onClose={onClose} {...slotProps?.header} />
       )}
       <Stack
         overflow="auto"
         flexGrow={1}
         pb={isTouch ? APP_BOTTOM_SAFE_AREA_HEIGHT / 8 : 0}
-        {...contentProps}
+        {...slotProps?.content}
       >
         {children}
       </Stack>

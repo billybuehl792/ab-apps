@@ -11,20 +11,15 @@ const EstimateCalculatorTaxField = (
 ) => {
   /** Values */
 
-  const {
-    methods: {
-      formState: { errors },
-      register,
-    },
-  } = useEstimateCalculator();
+  const { methods } = useEstimateCalculator();
 
   return (
     <PercentField
       size="small"
       placeholder="0"
-      error={!!errors.tax}
+      error={!!methods.formState.errors.tax}
       sx={{ width: 110, flexShrink: 0 }}
-      {...register("tax", {
+      {...methods.register("tax", {
         min: {
           value: MIN,
           message: `Value cannot be less than ${String(MIN)}%`,

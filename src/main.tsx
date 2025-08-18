@@ -1,16 +1,13 @@
 import { StrictMode } from "react";
-import router from "./router";
-import App from "./App";
-
+import router from "./store/config/router";
 import ReactDOM from "react-dom/client";
 import * as Sentry from "@sentry/react";
-
-import Providers from "./providers";
+import RootProvider from "./containers/providers/RootProvider";
 
 import "reset-css/reset.css";
-import "./utils/string";
-import "./utils/number";
-import "./utils/dayjs";
+import "./store/utils/string";
+import "./store/utils/number";
+import "./store/utils/dayjs";
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -28,6 +25,7 @@ Sentry.init({
   ],
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1.0,
+  enabled: import.meta.env.PROD,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -45,9 +43,7 @@ if (!rootElement.innerHTML) {
   });
   root.render(
     <StrictMode>
-      <Providers>
-        <App />
-      </Providers>
+      <RootProvider />
     </StrictMode>
   );
 }

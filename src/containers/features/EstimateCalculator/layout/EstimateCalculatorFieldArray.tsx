@@ -1,27 +1,16 @@
-import { useEffect, useMemo, type ComponentProps } from "react";
+import { useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useFieldArray } from "react-hook-form";
 import { Skeleton, Stack, type StackProps } from "@mui/material";
-
 import useEstimateCalculator from "../hooks/useEstimateCalculator";
 import EstimateCalculatorMaterialCard from "../components/cards/EstimateCalculatorMaterialCard";
 import EstimateCalculatorTaxCard from "../components/cards/EstimateCalculatorTaxCard";
 import EstimateCalculatorAdditionalCard from "../components/cards/EstimateCalculatorAdditionalCard";
 import EstimateCalculatorAddMaterialButton from "../components/buttons/EstimateCalculatorAddMaterialButton";
 import { ESTIMATE_CALCULATOR_DEFAULT_VALUES } from "@/containers/features/EstimateCalculator/constants";
-import { EMPTY_OBJECT } from "@/constants/utility";
-import type { EstimateCalculatorValues } from "../types";
+import type { EstimateCalculatorForm } from "../types";
 
-interface EstimateCalculatorFieldArrayProps extends StackProps {
-  slotProps?: {
-    card?: Partial<ComponentProps<typeof EstimateCalculatorMaterialCard>>;
-  };
-}
-
-const EstimateCalculatorFieldArray = ({
-  slotProps: { card: cardProps } = EMPTY_OBJECT,
-  ...props
-}: EstimateCalculatorFieldArrayProps) => {
+const EstimateCalculatorFieldArray = (props: StackProps) => {
   /** Values */
 
   const { queryOptions, methods } = useEstimateCalculator();
@@ -29,7 +18,7 @@ const EstimateCalculatorFieldArray = ({
   /** Queries */
 
   const materialsQuery = useQuery(queryOptions);
-  const materials: EstimateCalculatorValues["materials"] = useMemo(
+  const materials: EstimateCalculatorForm["materials"] = useMemo(
     () =>
       materialsQuery.data?.docs.map((doc) => ({
         id: doc.id,
@@ -43,7 +32,7 @@ const EstimateCalculatorFieldArray = ({
 
   const { control, setValue, getValues, reset } = methods;
   const fieldArray = useFieldArray<
-    EstimateCalculatorValues,
+    EstimateCalculatorForm,
     "materials",
     "fieldId"
   >({
@@ -89,7 +78,6 @@ const EstimateCalculatorFieldArray = ({
                   key={material.id}
                   material={material}
                   index={index}
-                  {...cardProps}
                 />
               )
             )}

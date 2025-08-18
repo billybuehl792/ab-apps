@@ -1,14 +1,8 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { orderBy, where } from "firebase/firestore";
 import { Stack } from "@mui/material";
-import { Groups } from "@mui/icons-material";
-
-import clientCollection from "@/lib/collections/firebase/clientCollection";
-import PaginatedList from "@/components/lists/PaginatedList";
-import CreateClientLink from "@/containers/links/CreateClientLink";
+import ClientList from "@/containers/lists/ClientList";
 import ClientSearchField from "@/containers/fields/ClientSearchField";
-import ClientCard from "@/containers/cards/ClientCard";
 import SortAndFilterIconButton from "@/components/buttons/SortAndFilterIconButton";
 import { type SortAndFilterFormValues } from "@/components/forms/SortAndFilterForm";
 
@@ -16,47 +10,40 @@ export const Route = createFileRoute("/app/clients/")({
   component: RouteComponent,
 });
 
+const SORT_OPTIONS: MenuOption[] = [
+  { id: "first_name", label: "First Name" },
+  { id: "last_name", label: "Last Name" },
+];
+
 function RouteComponent() {
-  const [sort, setSort] = useState<MenuOption | null>(null);
-  const [filters, setFilters] = useState<MenuOption[]>([]);
-
-  /** Values */
-
-  const sortOptions: MenuOption<"first_name" | "last_name">[] = [
-    { id: "first_name", label: "First Name" },
-    { id: "last_name", label: "Last Name" },
-  ];
+  const [selectedSort, setSelectedSort] = useState<MenuOption | null>(null);
 
   /** Callbacks */
 
   const handleSortAndFilterSubmit = (data: SortAndFilterFormValues) => {
-    setSort(data.sort);
-    setFilters(data.filters);
+    setSelectedSort(data.sort);
   };
 
   return (
-    <Stack spacing={1}>
-      <Stack direction="row" spacing={1} alignItems="center">
+    <Stack spacing={2} p={2} pt={0}>
+      <Stack
+        position="sticky"
+        top={0}
+        direction="row"
+        spacing={1}
+        alignItems="center"
+        pt={2}
+        zIndex={1}
+        bgcolor={(theme) => theme.palette.background.paper}
+      >
         <ClientSearchField />
         <SortAndFilterIconButton
-          values={{ sort, filters }}
-          sortOptions={sortOptions}
+          values={{ sort: selectedSort, filters: [] }}
+          sortOptions={SORT_OPTIONS}
           onSubmit={handleSortAndFilterSubmit}
         />
       </Stack>
-      <PaginatedList
-        collection={clientCollection}
-        constraints={[
-          where("archived", "!=", true),
-          orderBy(sort?.id ?? "first_name"),
-        ]}
-        renderItem={(client) => <ClientCard key={client.id} client={client} />}
-        emptyState={{
-          text: "No Clients",
-          icon: <Groups fontSize="large" color="disabled" />,
-          children: <CreateClientLink />,
-        }}
-      />
+      <ClientList params={{ orderBy: selectedSort?.id }} />
     </Stack>
   );
 }

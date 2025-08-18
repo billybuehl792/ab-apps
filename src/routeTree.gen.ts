@@ -9,17 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignOutRouteImport } from './routes/sign-out'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app/index'
+import { Route as AppProfileRouteImport } from './routes/app/profile'
 import { Route as AppEstimateCalculatorRouteImport } from './routes/app/estimate-calculator'
 import { Route as AppClientsRouteImport } from './routes/app/clients'
-import { Route as AppAccountRouteImport } from './routes/app/account'
+import { Route as AppAdminRouteImport } from './routes/app/admin'
+import { Route as AppProfileIndexRouteImport } from './routes/app/profile/index'
 import { Route as AppClientsIndexRouteImport } from './routes/app/clients/index'
+import { Route as AppAdminIndexRouteImport } from './routes/app/admin/index'
 import { Route as AppClientsCreateRouteImport } from './routes/app/clients/create'
 import { Route as AppClientsIdRouteImport } from './routes/app/clients/$id'
+import { Route as AppAdminUsersRouteImport } from './routes/app/admin/users'
+import { Route as AppAdminCompaniesRouteImport } from './routes/app/admin/companies'
+import { Route as AppAdminUsersIndexRouteImport } from './routes/app/admin/users/index'
+import { Route as AppAdminCompaniesIndexRouteImport } from './routes/app/admin/companies/index'
+import { Route as AppAdminUsersIdRouteImport } from './routes/app/admin/users/$id'
+import { Route as AppAdminCompaniesIdRouteImport } from './routes/app/admin/companies/$id'
 
+const SignOutRoute = SignOutRouteImport.update({
+  id: '/sign-out',
+  path: '/sign-out',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
@@ -40,6 +55,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppEstimateCalculatorRoute = AppEstimateCalculatorRouteImport.update({
   id: '/estimate-calculator',
   path: '/estimate-calculator',
@@ -50,15 +70,25 @@ const AppClientsRoute = AppClientsRouteImport.update({
   path: '/clients',
   getParentRoute: () => AppRoute,
 } as any)
-const AppAccountRoute = AppAccountRouteImport.update({
-  id: '/account',
-  path: '/account',
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AppRoute,
+} as any)
+const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppProfileRoute,
 } as any)
 const AppClientsIndexRoute = AppClientsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppClientsRoute,
+} as any)
+const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAdminRoute,
 } as any)
 const AppClientsCreateRoute = AppClientsCreateRouteImport.update({
   id: '/create',
@@ -70,41 +100,97 @@ const AppClientsIdRoute = AppClientsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppClientsRoute,
 } as any)
+const AppAdminUsersRoute = AppAdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminCompaniesRoute = AppAdminCompaniesRouteImport.update({
+  id: '/companies',
+  path: '/companies',
+  getParentRoute: () => AppAdminRoute,
+} as any)
+const AppAdminUsersIndexRoute = AppAdminUsersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAdminUsersRoute,
+} as any)
+const AppAdminCompaniesIndexRoute = AppAdminCompaniesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppAdminCompaniesRoute,
+} as any)
+const AppAdminUsersIdRoute = AppAdminUsersIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppAdminUsersRoute,
+} as any)
+const AppAdminCompaniesIdRoute = AppAdminCompaniesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppAdminCompaniesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/sign-in': typeof SignInRoute
-  '/app/account': typeof AppAccountRoute
+  '/sign-out': typeof SignOutRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
+  '/app/profile': typeof AppProfileRouteWithChildren
   '/app/': typeof AppIndexRoute
+  '/app/admin/companies': typeof AppAdminCompaniesRouteWithChildren
+  '/app/admin/users': typeof AppAdminUsersRouteWithChildren
   '/app/clients/$id': typeof AppClientsIdRoute
   '/app/clients/create': typeof AppClientsCreateRoute
+  '/app/admin/': typeof AppAdminIndexRoute
   '/app/clients/': typeof AppClientsIndexRoute
+  '/app/profile/': typeof AppProfileIndexRoute
+  '/app/admin/companies/$id': typeof AppAdminCompaniesIdRoute
+  '/app/admin/users/$id': typeof AppAdminUsersIdRoute
+  '/app/admin/companies/': typeof AppAdminCompaniesIndexRoute
+  '/app/admin/users/': typeof AppAdminUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sign-in': typeof SignInRoute
-  '/app/account': typeof AppAccountRoute
+  '/sign-out': typeof SignOutRoute
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
   '/app': typeof AppIndexRoute
   '/app/clients/$id': typeof AppClientsIdRoute
   '/app/clients/create': typeof AppClientsCreateRoute
+  '/app/admin': typeof AppAdminIndexRoute
   '/app/clients': typeof AppClientsIndexRoute
+  '/app/profile': typeof AppProfileIndexRoute
+  '/app/admin/companies/$id': typeof AppAdminCompaniesIdRoute
+  '/app/admin/users/$id': typeof AppAdminUsersIdRoute
+  '/app/admin/companies': typeof AppAdminCompaniesIndexRoute
+  '/app/admin/users': typeof AppAdminUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/sign-in': typeof SignInRoute
-  '/app/account': typeof AppAccountRoute
+  '/sign-out': typeof SignOutRoute
+  '/app/admin': typeof AppAdminRouteWithChildren
   '/app/clients': typeof AppClientsRouteWithChildren
   '/app/estimate-calculator': typeof AppEstimateCalculatorRoute
+  '/app/profile': typeof AppProfileRouteWithChildren
   '/app/': typeof AppIndexRoute
+  '/app/admin/companies': typeof AppAdminCompaniesRouteWithChildren
+  '/app/admin/users': typeof AppAdminUsersRouteWithChildren
   '/app/clients/$id': typeof AppClientsIdRoute
   '/app/clients/create': typeof AppClientsCreateRoute
+  '/app/admin/': typeof AppAdminIndexRoute
   '/app/clients/': typeof AppClientsIndexRoute
+  '/app/profile/': typeof AppProfileIndexRoute
+  '/app/admin/companies/$id': typeof AppAdminCompaniesIdRoute
+  '/app/admin/users/$id': typeof AppAdminUsersIdRoute
+  '/app/admin/companies/': typeof AppAdminCompaniesIndexRoute
+  '/app/admin/users/': typeof AppAdminUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -112,45 +198,79 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/sign-in'
-    | '/app/account'
+    | '/sign-out'
+    | '/app/admin'
     | '/app/clients'
     | '/app/estimate-calculator'
+    | '/app/profile'
     | '/app/'
+    | '/app/admin/companies'
+    | '/app/admin/users'
     | '/app/clients/$id'
     | '/app/clients/create'
+    | '/app/admin/'
     | '/app/clients/'
+    | '/app/profile/'
+    | '/app/admin/companies/$id'
+    | '/app/admin/users/$id'
+    | '/app/admin/companies/'
+    | '/app/admin/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/sign-in'
-    | '/app/account'
+    | '/sign-out'
     | '/app/estimate-calculator'
     | '/app'
     | '/app/clients/$id'
     | '/app/clients/create'
+    | '/app/admin'
     | '/app/clients'
+    | '/app/profile'
+    | '/app/admin/companies/$id'
+    | '/app/admin/users/$id'
+    | '/app/admin/companies'
+    | '/app/admin/users'
   id:
     | '__root__'
     | '/'
     | '/app'
     | '/sign-in'
-    | '/app/account'
+    | '/sign-out'
+    | '/app/admin'
     | '/app/clients'
     | '/app/estimate-calculator'
+    | '/app/profile'
     | '/app/'
+    | '/app/admin/companies'
+    | '/app/admin/users'
     | '/app/clients/$id'
     | '/app/clients/create'
+    | '/app/admin/'
     | '/app/clients/'
+    | '/app/profile/'
+    | '/app/admin/companies/$id'
+    | '/app/admin/users/$id'
+    | '/app/admin/companies/'
+    | '/app/admin/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   SignInRoute: typeof SignInRoute
+  SignOutRoute: typeof SignOutRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sign-out': {
+      id: '/sign-out'
+      path: '/sign-out'
+      fullPath: '/sign-out'
+      preLoaderRoute: typeof SignOutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sign-in': {
       id: '/sign-in'
       path: '/sign-in'
@@ -179,6 +299,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/profile': {
+      id: '/app/profile'
+      path: '/profile'
+      fullPath: '/app/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/estimate-calculator': {
       id: '/app/estimate-calculator'
       path: '/estimate-calculator'
@@ -193,12 +320,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppClientsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/account': {
-      id: '/app/account'
-      path: '/account'
-      fullPath: '/app/account'
-      preLoaderRoute: typeof AppAccountRouteImport
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/app/profile/': {
+      id: '/app/profile/'
+      path: '/'
+      fullPath: '/app/profile/'
+      preLoaderRoute: typeof AppProfileIndexRouteImport
+      parentRoute: typeof AppProfileRoute
     }
     '/app/clients/': {
       id: '/app/clients/'
@@ -206,6 +340,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/clients/'
       preLoaderRoute: typeof AppClientsIndexRouteImport
       parentRoute: typeof AppClientsRoute
+    }
+    '/app/admin/': {
+      id: '/app/admin/'
+      path: '/'
+      fullPath: '/app/admin/'
+      preLoaderRoute: typeof AppAdminIndexRouteImport
+      parentRoute: typeof AppAdminRoute
     }
     '/app/clients/create': {
       id: '/app/clients/create'
@@ -221,8 +362,93 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppClientsIdRouteImport
       parentRoute: typeof AppClientsRoute
     }
+    '/app/admin/users': {
+      id: '/app/admin/users'
+      path: '/users'
+      fullPath: '/app/admin/users'
+      preLoaderRoute: typeof AppAdminUsersRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/companies': {
+      id: '/app/admin/companies'
+      path: '/companies'
+      fullPath: '/app/admin/companies'
+      preLoaderRoute: typeof AppAdminCompaniesRouteImport
+      parentRoute: typeof AppAdminRoute
+    }
+    '/app/admin/users/': {
+      id: '/app/admin/users/'
+      path: '/'
+      fullPath: '/app/admin/users/'
+      preLoaderRoute: typeof AppAdminUsersIndexRouteImport
+      parentRoute: typeof AppAdminUsersRoute
+    }
+    '/app/admin/companies/': {
+      id: '/app/admin/companies/'
+      path: '/'
+      fullPath: '/app/admin/companies/'
+      preLoaderRoute: typeof AppAdminCompaniesIndexRouteImport
+      parentRoute: typeof AppAdminCompaniesRoute
+    }
+    '/app/admin/users/$id': {
+      id: '/app/admin/users/$id'
+      path: '/$id'
+      fullPath: '/app/admin/users/$id'
+      preLoaderRoute: typeof AppAdminUsersIdRouteImport
+      parentRoute: typeof AppAdminUsersRoute
+    }
+    '/app/admin/companies/$id': {
+      id: '/app/admin/companies/$id'
+      path: '/$id'
+      fullPath: '/app/admin/companies/$id'
+      preLoaderRoute: typeof AppAdminCompaniesIdRouteImport
+      parentRoute: typeof AppAdminCompaniesRoute
+    }
   }
 }
+
+interface AppAdminCompaniesRouteChildren {
+  AppAdminCompaniesIdRoute: typeof AppAdminCompaniesIdRoute
+  AppAdminCompaniesIndexRoute: typeof AppAdminCompaniesIndexRoute
+}
+
+const AppAdminCompaniesRouteChildren: AppAdminCompaniesRouteChildren = {
+  AppAdminCompaniesIdRoute: AppAdminCompaniesIdRoute,
+  AppAdminCompaniesIndexRoute: AppAdminCompaniesIndexRoute,
+}
+
+const AppAdminCompaniesRouteWithChildren =
+  AppAdminCompaniesRoute._addFileChildren(AppAdminCompaniesRouteChildren)
+
+interface AppAdminUsersRouteChildren {
+  AppAdminUsersIdRoute: typeof AppAdminUsersIdRoute
+  AppAdminUsersIndexRoute: typeof AppAdminUsersIndexRoute
+}
+
+const AppAdminUsersRouteChildren: AppAdminUsersRouteChildren = {
+  AppAdminUsersIdRoute: AppAdminUsersIdRoute,
+  AppAdminUsersIndexRoute: AppAdminUsersIndexRoute,
+}
+
+const AppAdminUsersRouteWithChildren = AppAdminUsersRoute._addFileChildren(
+  AppAdminUsersRouteChildren,
+)
+
+interface AppAdminRouteChildren {
+  AppAdminCompaniesRoute: typeof AppAdminCompaniesRouteWithChildren
+  AppAdminUsersRoute: typeof AppAdminUsersRouteWithChildren
+  AppAdminIndexRoute: typeof AppAdminIndexRoute
+}
+
+const AppAdminRouteChildren: AppAdminRouteChildren = {
+  AppAdminCompaniesRoute: AppAdminCompaniesRouteWithChildren,
+  AppAdminUsersRoute: AppAdminUsersRouteWithChildren,
+  AppAdminIndexRoute: AppAdminIndexRoute,
+}
+
+const AppAdminRouteWithChildren = AppAdminRoute._addFileChildren(
+  AppAdminRouteChildren,
+)
 
 interface AppClientsRouteChildren {
   AppClientsIdRoute: typeof AppClientsIdRoute
@@ -240,17 +466,31 @@ const AppClientsRouteWithChildren = AppClientsRoute._addFileChildren(
   AppClientsRouteChildren,
 )
 
+interface AppProfileRouteChildren {
+  AppProfileIndexRoute: typeof AppProfileIndexRoute
+}
+
+const AppProfileRouteChildren: AppProfileRouteChildren = {
+  AppProfileIndexRoute: AppProfileIndexRoute,
+}
+
+const AppProfileRouteWithChildren = AppProfileRoute._addFileChildren(
+  AppProfileRouteChildren,
+)
+
 interface AppRouteChildren {
-  AppAccountRoute: typeof AppAccountRoute
+  AppAdminRoute: typeof AppAdminRouteWithChildren
   AppClientsRoute: typeof AppClientsRouteWithChildren
   AppEstimateCalculatorRoute: typeof AppEstimateCalculatorRoute
+  AppProfileRoute: typeof AppProfileRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppAccountRoute: AppAccountRoute,
+  AppAdminRoute: AppAdminRouteWithChildren,
   AppClientsRoute: AppClientsRouteWithChildren,
   AppEstimateCalculatorRoute: AppEstimateCalculatorRoute,
+  AppProfileRoute: AppProfileRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
 }
 
@@ -260,6 +500,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   SignInRoute: SignInRoute,
+  SignOutRoute: SignOutRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

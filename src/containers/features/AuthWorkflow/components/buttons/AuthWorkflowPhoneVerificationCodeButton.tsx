@@ -8,8 +8,8 @@ import {
 import { Box, Button, Stack, type ButtonProps } from "@mui/material";
 import { Message } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
-
-import { auth } from "@/config/firebase";
+import { auth } from "@/store/config/firebase";
+import { authMutations } from "@/store/mutations/auth";
 import useAuthWorkflow from "../../hooks/useAuthWorkflow";
 
 interface AuthWorkflowPhoneVerificationCodeButtonProps extends ButtonProps {
@@ -36,17 +36,7 @@ const AuthWorkflowPhoneVerificationCodeButton = ({
   /** Mutations */
 
   const sendPhoneVerificationCodeMutation = useMutation({
-    mutationKey: ["sendPhoneVerificationCode"],
-    mutationFn: async (verifier: RecaptchaVerifier) => {
-      if (!multiFactorResolver) throw new Error("No multi-factor resolver");
-      return await phoneAuthProvider.verifyPhoneNumber(
-        {
-          multiFactorHint,
-          session: multiFactorResolver.session,
-        },
-        verifier
-      );
-    },
+    ...authMutations.sendPhoneVerificationCode(),
     onSuccess: (verificationId) => {
       setMultiFactorHint(multiFactorHint);
       setMultiFactorVerificationId(verificationId);
@@ -65,10 +55,16 @@ const AuthWorkflowPhoneVerificationCodeButton = ({
   /** Callbacks */
 
   const handleSendPhoneVerificationCode = async () => {
+    if (!multiFactorResolver) return;
     setRecaptchaPending(true);
     const recaptchaVerifier = new RecaptchaVerifier(auth, containerId, {
       callback: () => {
-        sendPhoneVerificationCodeMutation.mutate(recaptchaVerifier);
+        sendPhoneVerificationCodeMutation.mutate({
+          phoneAuthProvider,
+          multiFactorHint,
+          session: multiFactorResolver.session,
+          verifier: recaptchaVerifier,
+        });
         setRecaptchaPending(false);
       },
       "expired-callback": () => {

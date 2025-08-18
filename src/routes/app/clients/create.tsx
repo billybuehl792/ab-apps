@@ -1,8 +1,7 @@
 import { type ComponentProps } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Stack, Typography } from "@mui/material";
-
-import useClients from "@/hooks/firebase/useClients";
+import useClients from "@/store/hooks/useClients";
 import ClientForm from "@/containers/forms/ClientForm";
 
 export const Route = createFileRoute("/app/clients/create")({
@@ -14,12 +13,12 @@ function RouteComponent() {
   /** Values */
 
   const navigate = useNavigate();
-  const { create } = useClients();
+  const clients = useClients();
 
   /** Callbacks */
 
   const onSubmit: ComponentProps<typeof ClientForm>["onSubmit"] = (data) =>
-    create.mutateAsync(data, {
+    clients.mutations.create.mutateAsync(data, {
       onSuccess: ({ id }) => void navigate({ to: `/app/clients/${id}` }),
     });
 
@@ -27,7 +26,7 @@ function RouteComponent() {
     void navigate({ to: "/app/clients" });
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1} p={2}>
       <Typography variant="h6">Create Client</Typography>
       <ClientForm
         slotProps={{ actions: { resetAsCancel: true, submitLabel: "Create" } }}

@@ -1,65 +1,52 @@
 import { type ComponentProps } from "react";
-import { signOut } from "firebase/auth";
-import { useNavigate } from "@tanstack/react-router";
-import { useMutation } from "@tanstack/react-query";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Avatar } from "@mui/material";
 import { Logout, Person } from "@mui/icons-material";
-import { useSnackbar } from "notistack";
-
-import { auth } from "@/config/firebase";
-import useAuth from "@/hooks/auth/useAuth";
+import useAuth from "@/store/hooks/useAuth";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
+import useConfirm from "@/store/hooks/useConfirm";
 
 const UserIconButton = (
   props: Partial<ComponentProps<typeof MenuOptionsIconButton>>
 ) => {
   /** Values */
 
+  const location = useLocation();
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
-  const { user } = useAuth();
+  const auth = useAuth();
+  const { confirm } = useConfirm();
 
-  const userName = user?.displayName ?? user?.email ?? "User";
-
-  /** Mutations */
-
-  const signOutMutation = useMutation({
-    mutationKey: ["signOut"],
-    mutationFn: () => signOut(auth),
-    onSuccess: () => {
-      enqueueSnackbar("Signed out", { variant: "success" });
-      void navigate({ to: "/sign-in" });
-    },
-    onError: (error) => {
-      enqueueSnackbar(`Error signing out: ${error.message}`, {
-        variant: "error",
-      });
-    },
-  });
+  const userName = auth.user?.displayName ?? auth.user?.email ?? "User";
+  const photoURL = auth.user?.photoURL ?? "";
 
   /** Options */
 
   const options: MenuOption[] = [
     {
-      id: "account",
-      label: "Account",
+      id: "profile",
+      label: "Profile",
+      selected: location.pathname === "/app/profile",
       icon: <Person />,
-      onClick: () => void navigate({ to: "/app/account" }),
+      link: { to: "/app/profile" },
     },
     {
       id: "signOut",
       label: "Sign Out",
       icon: <Logout />,
-      onClick: () => {
-        signOutMutation.mutate();
-      },
+      onClick: () =>
+        void confirm({
+          title: "Sign Out",
+          message: "Are you sure you want to sign out?",
+        }).then((confirmed) => {
+          if (confirmed) void navigate({ to: "/sign-out" });
+        }),
     },
   ];
 
   return (
     <MenuOptionsIconButton
       options={options}
-      icon={<Avatar src={user?.photoURL ?? ""} />}
+      icon={<Avatar src={photoURL} />}
       slotProps={{ menu: { title: userName } }}
       {...props}
     />

@@ -5,7 +5,6 @@ import {
   useMediaQuery,
   type AppBarProps as MuiAppBarProps,
 } from "@mui/material";
-
 import UserIconButton from "@/containers/buttons/UserIconButton";
 import AppLogoLink from "@/containers/links/AppLogoLink";
 import NavigationMenuIconButton from "@/containers/buttons/NavigationMenuIconButton";

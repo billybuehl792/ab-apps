@@ -1,6 +1,5 @@
 import { type ComponentProps } from "react";
 import { Controller } from "react-hook-form";
-
 import AddressField from "@/components/fields/AddressField";
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 
@@ -9,14 +8,12 @@ const EstimateCalculatorAddressField = (
 ) => {
   /** Values */
 
-  const {
-    methods: { control },
-  } = useEstimateCalculator();
+  const { methods } = useEstimateCalculator();
 
   return (
     <Controller
       name="address"
-      control={control}
+      control={methods.control}
       rules={{ required: "Address is required" }}
       render={({ field: { onChange, ...field }, formState: { errors } }) => (
         <AddressField
