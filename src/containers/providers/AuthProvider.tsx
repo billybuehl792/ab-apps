@@ -1,12 +1,6 @@
-import {
-  type ContextType,
-  type PropsWithChildren,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { type PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { onAuthStateChanged, onIdTokenChanged, User } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import AuthContext from "@/store/context/AuthContext";
 import { auth } from "@/store/config/firebase";
@@ -15,16 +9,15 @@ import { companyQueries } from "@/store/queries/companies";
 import StatusWrapper from "@/components/layout/StatusWrapper";
 import { authUtils } from "@/store/utils/auth";
 import type { Company } from "@/store/types/companies";
-import type { Permissions } from "@/store/types/auth";
+import type { Permissions, Profile } from "@/store/types/auth";
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [user, setUser] =
-    useState<ContextType<typeof AuthContext>["user"]>(null);
-  const [profile, setProfile] = useState<
-    ContextType<typeof AuthContext>["profile"]
-  >({ company: null, permissions: null });
-  const [loading, setLoading] =
-    useState<ContextType<typeof AuthContext>["loading"]>(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile>({
+    company: null,
+    permissions: null,
+  });
+  const [loading, setLoading] = useState<boolean>(true);
 
   /** Values */
 
@@ -99,6 +92,14 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
 
     return unsubscribe;
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onIdTokenChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    return unsubscribe;
   }, []);
 
   return (

@@ -9,7 +9,7 @@ import {
   RecaptchaVerifier,
   sendEmailVerification,
   signInWithEmailAndPassword,
-  User,
+  type User,
 } from "firebase/auth";
 import { auth } from "@/store/config/firebase";
 import { QUERY_KEY } from "../constants/queries";

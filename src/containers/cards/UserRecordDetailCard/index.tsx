@@ -124,9 +124,6 @@ const UserRecordDetailCard = ({
           </Stack>
         </Stack>
       </CardContent>
-
-      {/* Modals */}
-      {editable && <></>}
     </Card>
   );
 };
