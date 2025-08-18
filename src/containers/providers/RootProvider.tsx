@@ -7,7 +7,7 @@ import AuthProvider from "./AuthProvider";
 import Snackbar from "@/components/alerts/Snackbar";
 import GoogleMapsProvider from "./GoogleMapsProvider";
 import RouterProvider from "./RouterProvider";
-import ModalProvider from "./ModalProvider";
+import ConfirmProvider from "./ConfirmProvider";
 
 const RootProvider = ({ children }: PropsWithChildren) => {
   /** Values */
@@ -17,10 +17,7 @@ const RootProvider = ({ children }: PropsWithChildren) => {
   return (
     <SnackbarProvider
       maxSnack={3}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
       Components={{
         default: Snackbar,
         success: Snackbar,
@@ -32,11 +29,11 @@ const RootProvider = ({ children }: PropsWithChildren) => {
       <QueryClientProvider client={queryClient}>
         <GoogleMapsProvider>
           <ThemeProvider theme={theme}>
-            <ModalProvider>
+            <ConfirmProvider>
               <AuthProvider>
                 <RouterProvider>{children}</RouterProvider>
               </AuthProvider>
-            </ModalProvider>
+            </ConfirmProvider>
           </ThemeProvider>
         </GoogleMapsProvider>
       </QueryClientProvider>

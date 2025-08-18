@@ -5,20 +5,20 @@ import {
   useState,
   type PropsWithChildren,
 } from "react";
-import ModalContext from "@/store/context/ModalContext";
+import ConfirmContext from "@/store/context/ConfirmContext";
 import ConfirmDialog from "@/components/modals/ConfirmDialog";
 
-const ModalProvider = ({ children }: PropsWithChildren) => {
+const ConfirmProvider = ({ children }: PropsWithChildren) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmOptions, setConfirmOptions] =
-    useState<Parameters<ContextType<typeof ModalContext>["confirm"]>[0]>();
+    useState<Parameters<ContextType<typeof ConfirmContext>["confirm"]>[0]>();
   const [confirmResolver, setConfirmResolver] = useState<
     ((result: boolean) => void) | null
   >(null);
 
   /** Callbacks */
 
-  const handleConfirm: ContextType<typeof ModalContext>["confirm"] =
+  const handleConfirm: ContextType<typeof ConfirmContext>["confirm"] =
     useCallback((options) => {
       setConfirmOptions(options);
       setConfirmOpen(true);
@@ -35,7 +35,7 @@ const ModalProvider = ({ children }: PropsWithChildren) => {
   };
 
   return (
-    <ModalContext
+    <ConfirmContext
       value={useMemo(() => ({ confirm: handleConfirm }), [handleConfirm])}
     >
       {children}
@@ -58,8 +58,8 @@ const ModalProvider = ({ children }: PropsWithChildren) => {
           setConfirmOptions(undefined);
         }}
       />
-    </ModalContext>
+    </ConfirmContext>
   );
 };
 
-export default ModalProvider;
+export default ConfirmProvider;

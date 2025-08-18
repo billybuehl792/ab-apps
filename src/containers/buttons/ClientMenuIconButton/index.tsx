@@ -1,7 +1,7 @@
 import { type ComponentProps } from "react";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import { Delete, Edit, Info, Restore } from "@mui/icons-material";
-import useModal from "@/store/hooks/useModal";
+import useConfirm from "@/store/hooks/useConfirm";
 import useClients from "@/store/hooks/useClients";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
 import type { Client } from "@/store/types/clients";
@@ -21,7 +21,7 @@ const ClientMenuIconButton = ({
   const navigate = useNavigate();
   const location = useLocation();
   const clients = useClients();
-  const { confirm } = useModal();
+  const { confirm } = useConfirm();
 
   const fullName = `${client.first_name} ${client.last_name}`;
 

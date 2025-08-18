@@ -4,7 +4,7 @@ import { Avatar } from "@mui/material";
 import { Logout, Person } from "@mui/icons-material";
 import useAuth from "@/store/hooks/useAuth";
 import MenuOptionsIconButton from "@/components/buttons/MenuOptionsIconButton";
-import useModal from "@/store/hooks/useModal";
+import useConfirm from "@/store/hooks/useConfirm";
 
 const UserIconButton = (
   props: Partial<ComponentProps<typeof MenuOptionsIconButton>>
@@ -14,7 +14,7 @@ const UserIconButton = (
   const location = useLocation();
   const navigate = useNavigate();
   const auth = useAuth();
-  const { confirm } = useModal();
+  const { confirm } = useConfirm();
 
   const userName = auth.user?.displayName ?? auth.user?.email ?? "User";
   const photoURL = auth.user?.photoURL ?? "";

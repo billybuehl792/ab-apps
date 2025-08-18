@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Button, type ButtonProps } from "@mui/material";
-import useModal from "@/store/hooks/useModal";
 import { Logout } from "@mui/icons-material";
+import useConfirm from "@/store/hooks/useConfirm";
 
 interface SignOutButtonProps extends ButtonProps {
   disableConfirm?: boolean;
@@ -11,7 +11,7 @@ const SignOutButton = ({ disableConfirm, ...props }: SignOutButtonProps) => {
   /** Values */
 
   const navigate = useNavigate();
-  const { confirm } = useModal();
+  const { confirm } = useConfirm();
 
   /** Callbacks */
 

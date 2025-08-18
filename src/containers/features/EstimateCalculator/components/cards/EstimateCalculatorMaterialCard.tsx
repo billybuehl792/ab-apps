@@ -1,6 +1,6 @@
 import { type ComponentProps } from "react";
 import { Delete, Edit } from "@mui/icons-material";
-import useModal from "@/store/hooks/useModal";
+import useConfirm from "@/store/hooks/useConfirm";
 import useMaterials from "@/store/hooks/useMaterials";
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 import MaterialCard from "@/containers/cards/MaterialCard";
@@ -17,7 +17,7 @@ const EstimateCalculatorMaterialCard = ({
 
   /** Values */
 
-  const { confirm } = useModal();
+  const { confirm } = useConfirm();
   const { setMaterialModal } = useEstimateCalculator();
 
   const options: MenuOption[] = [
