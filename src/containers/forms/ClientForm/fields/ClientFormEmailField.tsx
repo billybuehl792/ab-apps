@@ -1,16 +1,15 @@
 import { type ComponentProps } from "react";
 import { useFormContext } from "react-hook-form";
-
 import EmailField from "@/components/fields/EmailField";
-import { RegexPattern } from "@/utils/regex";
-import { ClientData } from "@/types/firebase";
+import { RegexPattern } from "@/store/utils/regex";
+import type { ClientForm } from "..";
 
 const MAX_LENGTH = 128;
 
 const ClientFormEmailField = (props: ComponentProps<typeof EmailField>) => {
   /** Values */
 
-  const { formState, register } = useFormContext<ClientData>();
+  const { formState, register } = useFormContext<ClientForm>();
 
   return (
     <EmailField

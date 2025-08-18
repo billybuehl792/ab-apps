@@ -45,22 +45,17 @@ const SortAndFilterFormFilterField = <T extends string = string>({
               name={name}
               aria-labelledby={`${name}-label`}
               value={value?.id || ""}
-              onChange={(event) => {
-                const selectedOption = options.find(
-                  (option) => option.id === event.target.value
-                );
+              onChange={(_, value) => {
+                const selectedOption = options.find(({ id }) => id === value);
                 onChange(selectedOption || null);
               }}
-              sx={{ ml: 2 }}
               {...field}
             >
               <FormControlLabel
                 value=""
                 label="None"
                 control={<Radio />}
-                sx={{
-                  color: ({ palette }) => palette.text.disabled,
-                }}
+                sx={{ color: ({ palette }) => palette.text.disabled }}
               />
               {options.map((option) => (
                 <FormControlLabel

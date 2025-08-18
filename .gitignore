@@ -27,3 +27,6 @@ dev-dist
 # Local Netlify folder
 .netlify
 .vercel
+
+# Config
+firebase-admin/config/*

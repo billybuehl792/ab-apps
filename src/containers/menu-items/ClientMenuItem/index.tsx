@@ -1,6 +1,6 @@
-import type { Client } from "@/types/firebase";
 import { MenuItem, Stack, Typography, type MenuItemProps } from "@mui/material";
 import { Person } from "@mui/icons-material";
+import type { Client } from "@/store/types/clients";
 
 interface ClientMenuItemProps extends MenuItemProps {
   client: Client;

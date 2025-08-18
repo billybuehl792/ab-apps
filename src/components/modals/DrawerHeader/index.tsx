@@ -10,15 +10,11 @@ import CloseIconButton from "@/components/buttons/CloseIconButton";
 
 interface DrawerHeaderProps extends Omit<StackProps, "title"> {
   title?: ReactNode;
-  endContent?: ReactNode;
-  hideDivider?: boolean;
   onClose?: DrawerProps["onClose"];
 }
 
 const DrawerHeader = ({
   title,
-  endContent,
-  hideDivider,
   onClose: onCloseProp,
   ...props
 }: DrawerHeaderProps) => {
@@ -36,7 +32,7 @@ const DrawerHeader = ({
         direction="row"
         justifyContent="space-between"
         px={2}
-        py={1}
+        py={1.5}
         {...props}
       >
         {!!title &&
@@ -47,19 +43,9 @@ const DrawerHeader = ({
           ) : (
             title
           ))}
-        {!!onCloseProp && (
-          <Stack
-            direction="row"
-            flexGrow={1}
-            alignItems="center"
-            justifyContent="end"
-          >
-            {endContent}
-            <CloseIconButton onClick={onClose} />
-          </Stack>
-        )}
+        {!!onCloseProp && <CloseIconButton onClick={onClose} />}
       </Stack>
-      {!hideDivider && <Divider variant="middle" />}
+      <Divider variant="middle" />
     </>
   );
 };

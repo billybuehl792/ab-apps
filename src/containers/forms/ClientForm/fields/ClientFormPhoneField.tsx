@@ -1,13 +1,13 @@
 import { type ComponentProps } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import PhoneField from "@/components/fields/PhoneField";
-import { RegexPattern } from "@/utils/regex";
-import type { ClientData } from "@/types/firebase";
+import { RegexPattern } from "@/store/utils/regex";
+import type { ClientForm } from "..";
 
 const ClientFormPhoneField = (props: ComponentProps<typeof PhoneField>) => {
   /** Values */
 
-  const { control } = useFormContext<ClientData>();
+  const { control } = useFormContext<ClientForm>();
 
   return (
     <Controller

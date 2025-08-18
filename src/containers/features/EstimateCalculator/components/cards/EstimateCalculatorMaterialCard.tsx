@@ -1,7 +1,7 @@
 import { type ComponentProps } from "react";
 import { Delete, Edit } from "@mui/icons-material";
-
-import useMaterials from "@/hooks/firebase/useMaterials";
+import useConfirm from "@/store/hooks/useConfirm";
+import useMaterials from "@/store/hooks/useMaterials";
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 import MaterialCard from "@/containers/cards/MaterialCard";
 import EstimateCalculatorCountField from "../fields/EstimateCalculatorCountField";
@@ -13,10 +13,11 @@ const EstimateCalculatorMaterialCard = ({
 }: ComponentProps<typeof MaterialCard> & { index: number }) => {
   /** Mutations */
 
-  const { archive } = useMaterials();
+  const materials = useMaterials();
 
   /** Values */
 
+  const { confirm } = useConfirm();
   const { setMaterialModal } = useEstimateCalculator();
 
   const options: MenuOption[] = [
@@ -33,11 +34,13 @@ const EstimateCalculatorMaterialCard = ({
       label: "Delete",
       icon: <Delete />,
       color: "error",
-      confirm:
-        "Are you sure you want to delete this material? This action cannot be undone.",
-      onClick: () => {
-        archive.mutate(material.id);
-      },
+      onClick: () =>
+        void confirm({
+          title: `Delete ${material.label}?`,
+          message: `Are you sure you want to delete ${material.label}? This action cannot be undone.`,
+        }).then((confirmed) => {
+          if (confirmed) materials.mutations.remove.mutate(material.id);
+        }),
     },
   ];
 

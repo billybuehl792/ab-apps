@@ -1,6 +1,6 @@
-import type { EstimateCalculatorValues } from "../types";
+import type { EstimateCalculatorForm } from "../types";
 
-export const ESTIMATE_CALCULATOR_DEFAULT_VALUES: EstimateCalculatorValues = {
+export const ESTIMATE_CALCULATOR_DEFAULT_VALUES: EstimateCalculatorForm = {
   address: {
     place_id: "",
     primary_text: "",

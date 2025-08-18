@@ -1,6 +1,5 @@
 import { Button, type ButtonProps } from "@mui/material";
 import { Add } from "@mui/icons-material";
-
 import useEstimateCalculator from "../../hooks/useEstimateCalculator";
 
 const EstimateCalculatorAddMaterialButton = (props: ButtonProps) => {

@@ -16,8 +16,7 @@ const AuthWorkflowMultiFactorHints = (props: StackProps) => {
       </Typography>
       <Stack spacing={1}>
         {multiFactorResolver?.hints.map((hint) => {
-          const isPhone = hint.factorId === FactorId.PHONE;
-          if (isPhone)
+          if (hint.factorId === FactorId.PHONE)
             return (
               <AuthWorkflowPhoneVerificationCodeButton
                 key={hint.uid}

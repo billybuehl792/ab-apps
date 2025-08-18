@@ -1,6 +1,5 @@
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { getCountFromServer, query, where } from "firebase/firestore";
 import {
   Card,
   CardActionArea,
@@ -11,31 +10,20 @@ import {
   Typography,
 } from "@mui/material";
 import { Person } from "@mui/icons-material";
-
-import clientCollection from "@/lib/collections/firebase/clientCollection";
+import useClients from "@/store/hooks/useClients";
 
 const ClientOverviewCard = (props: CardProps) => {
   /** Values */
 
-  const navigate = useNavigate();
+  const clients = useClients();
 
   /** Queries */
 
-  const clientCountQuery = useQuery({
-    queryKey: ["count", clientCollection] as const,
-    queryFn: ({ queryKey: [_, collection] }) =>
-      getCountFromServer(query(collection, where("archived", "!=", true))),
-  });
-
-  /** Callbacks */
-
-  const handleOnClick = () => {
-    void navigate({ to: "/app/clients" });
-  };
+  const clientCountQuery = useQuery(clients.queries.count({ archived: false }));
 
   return (
     <Card {...props}>
-      <CardActionArea onClick={handleOnClick}>
+      <CardActionArea LinkComponent={Link} href="/app/clients">
         <Stack component={CardContent} spacing={2}>
           <Person fontSize="large" />
           <Stack spacing={1}>

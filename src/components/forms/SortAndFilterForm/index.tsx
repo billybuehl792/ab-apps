@@ -1,10 +1,8 @@
 import { type ComponentProps } from "react";
 import { useForm, type UseFormProps } from "react-hook-form";
-
 import Form from "@/components/forms/Form";
 import SortAndFilterFormSortField from "./fields/SortAndFilterFormSortField";
 import SortAndFilterFormFiltersField from "./fields/SortAndFilterFormFiltersField";
-import { EMPTY_ARRAY } from "@/constants/utility";
 
 export interface SortAndFilterFormValues<S = string, F = string> {
   sort: MenuOption<S> | null;
@@ -27,8 +25,8 @@ const SortAndFilterForm = <
   S extends string = string,
   F extends string = string,
 >({
-  sortOptions = EMPTY_ARRAY,
-  filterOptions = EMPTY_ARRAY,
+  sortOptions,
+  filterOptions,
   ...props
 }: SortAndFilterFormProps<S, F>) => {
   /** Values */
@@ -48,10 +46,10 @@ const SortAndFilterForm = <
         actions: { submitLabel: "Apply", ...props.slotProps?.actions },
       }}
     >
-      {Boolean(sortOptions.length) && (
+      {!!sortOptions?.length && (
         <SortAndFilterFormSortField options={sortOptions} />
       )}
-      {Boolean(filterOptions.length) && (
+      {!!filterOptions?.length && (
         <SortAndFilterFormFiltersField options={filterOptions} />
       )}
     </Form>

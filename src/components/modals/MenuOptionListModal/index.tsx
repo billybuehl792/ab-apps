@@ -1,9 +1,7 @@
 import { type ReactNode, type ComponentProps } from "react";
 import { useMediaQuery, type MenuProps } from "@mui/material";
-
 import MenuOptionListDrawer from "../MenuOptionListDrawer";
 import MenuOptionListMenu from "../MenuOptionListMenu";
-import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface MenuOptionListModalProps {
   anchorEl?: MenuProps["anchorEl"];
@@ -29,7 +27,7 @@ const MenuOptionListModal = ({
   disableCloseOnSelect,
   title = "Options",
   onClose,
-  slotProps: { drawer: drawerProps, menu: menuProps } = EMPTY_OBJECT,
+  slotProps,
 }: MenuOptionListModalProps) => {
   /** Values */
 
@@ -42,16 +40,16 @@ const MenuOptionListModal = ({
       options={options}
       disableCloseOnSelect={disableCloseOnSelect}
       onClose={onClose}
-      {...drawerProps}
+      {...slotProps?.drawer}
     />
   ) : (
     <MenuOptionListMenu
       anchorEl={anchorEl}
-      open={Boolean(open)}
+      open={open}
       options={options}
       disableCloseOnSelect={disableCloseOnSelect}
       onClose={onClose}
-      {...menuProps}
+      {...slotProps?.menu}
     />
   );
 };

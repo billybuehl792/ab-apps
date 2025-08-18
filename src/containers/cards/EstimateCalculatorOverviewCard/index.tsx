@@ -1,4 +1,4 @@
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   Card,
   CardActionArea,
@@ -10,19 +10,9 @@ import {
 import { Construction } from "@mui/icons-material";
 
 const EstimateCalculatorOverviewCard = (props: CardProps) => {
-  /** Values */
-
-  const navigate = useNavigate();
-
-  /** Callbacks */
-
-  const handleOnClick = () => {
-    void navigate({ to: "/app/estimate-calculator" });
-  };
-
   return (
     <Card {...props}>
-      <CardActionArea onClick={handleOnClick}>
+      <CardActionArea LinkComponent={Link} href="/app/estimate-calculator">
         <Stack component={CardContent} spacing={2}>
           <Construction fontSize="large" />
           <Stack spacing={1}>

@@ -1,8 +1,5 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
-  component: () => <Outlet />,
-  beforeLoad: () => {
-    redirect({ to: "/app", throw: true });
-  },
+  beforeLoad: () => redirect({ to: "/app", replace: true, throw: true }),
 });

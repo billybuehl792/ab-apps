@@ -1,23 +1,18 @@
 import { Grid2 as Grid, type Grid2Props as GridProps } from "@mui/material";
-
 import useEstimateCalculator from "../hooks/useEstimateCalculator";
 import EstimateCalculatorHeaderCard from "../components/cards/EstimateCalculatorHeaderCard";
 
 const EstimateCalculatorOutput = (props: GridProps) => {
   /** Values */
 
-  const {
-    methods: { watch },
-  } = useEstimateCalculator();
+  const { methods } = useEstimateCalculator();
 
-  const fieldArray = watch("materials");
-  const tax = watch("tax");
-  const additional = watch("additional");
+  const tax = methods.watch("tax");
+  const additional = methods.watch("additional");
+  const materialTotal = methods
+    .watch("materials")
+    .reduce((acc, { value, count }) => acc + value * (count ?? 0), 0);
 
-  const materialTotal = fieldArray.reduce(
-    (acc, { value, count }) => acc + value * (count ?? 0),
-    0
-  );
   const subtotal = materialTotal + (additional ?? 0);
   const total = subtotal + (subtotal * tax) / 100;
 

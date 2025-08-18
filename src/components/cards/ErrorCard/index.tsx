@@ -1,36 +1,54 @@
 import { type ReactNode, type JSX } from "react";
 import {
+  Button,
+  type ButtonProps,
   Card,
   CardContent,
   type CardContentProps,
   type CardProps,
+  Divider,
   Stack,
   Typography,
 } from "@mui/material";
 import { ErrorOutline } from "@mui/icons-material";
-import { EMPTY_OBJECT } from "@/constants/utility";
 
 interface ErrorCardProps extends CardProps {
-  message?: ReactNode;
-  error?: Error;
+  error: boolean | string | Error | JSX.Element;
+  description?: ReactNode;
   icon?: JSX.Element;
+  errorButton?: ButtonProps;
   slotProps?: {
     cardContent?: CardContentProps;
+    errorButton?: ButtonProps;
   };
 }
 
 const ErrorCard = ({
   children,
-  error,
+  error = "Something went wrong...",
+  description,
   icon,
-  message,
-  slotProps: { cardContent: cardContentProps } = EMPTY_OBJECT,
+  errorButton,
+  slotProps,
   ...props
 }: ErrorCardProps) => {
   /** Values */
 
+  const message =
+    typeof error === "string"
+      ? error
+      : error instanceof Error
+        ? error.message
+        : typeof error === "boolean"
+          ? "An unexpected error occurred."
+          : undefined;
+
   const content =
-    children ?? message ?? error?.message ?? "Something went wrong...";
+    children ||
+    (typeof error !== "string" &&
+      typeof error !== "boolean" &&
+      !(error instanceof Error) &&
+      error);
 
   return (
     <Card {...props}>
@@ -38,13 +56,36 @@ const ErrorCard = ({
         component={Stack}
         spacing={1}
         alignItems="center"
-        {...cardContentProps}
+        maxWidth="200"
+        {...slotProps?.cardContent}
       >
-        {icon ?? <ErrorOutline fontSize="large" color="error" />}
-        {typeof content === "string" ? (
-          <Typography variant="body2">{content}</Typography>
+        {message ? (
+          <>
+            {icon ?? <ErrorOutline fontSize="large" color="error" />}
+            <Typography
+              component="span"
+              color="error"
+              textAlign="center"
+              sx={{ wordBreak: "break-word" }}
+            >
+              {message}
+            </Typography>
+          </>
         ) : (
           content
+        )}
+        {!!description && (
+          <>
+            <Divider sx={{ width: "100%" }} />
+            {description}
+          </>
+        )}
+        {(!!errorButton || !!slotProps?.errorButton) && (
+          <Button
+            children="Retry"
+            {...errorButton}
+            {...slotProps?.errorButton}
+          />
         )}
       </CardContent>
     </Card>

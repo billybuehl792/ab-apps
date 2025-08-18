@@ -2,7 +2,7 @@ import { type ComponentProps } from "react";
 import { useFormContext } from "react-hook-form";
 
 import PasswordField from "@/components/fields/PasswordField";
-import type { SignInFormValues } from "..";
+import type { SignInForm } from "..";
 
 const MAX_LENGTH = 128;
 const MIN_LENGTH = 12;
@@ -12,7 +12,7 @@ const SignInFormPasswordField = (
 ) => {
   /** Values */
 
-  const { formState, register } = useFormContext<SignInFormValues>();
+  const { formState, register } = useFormContext<SignInForm>();
 
   return (
     <PasswordField

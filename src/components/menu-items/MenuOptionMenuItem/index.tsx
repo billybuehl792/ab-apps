@@ -1,4 +1,4 @@
-import { type ComponentProps, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import {
   ListItemIcon,
   type ListItemIconProps,
@@ -7,80 +7,56 @@ import {
   MenuItem,
   type MenuItemProps,
 } from "@mui/material";
-
-import ConfirmDialog from "@/components/modals/ConfirmDialog";
-import { sxAsArray } from "@/utils/sx";
-import { EMPTY_OBJECT } from "@/constants/utility";
+import { sxAsArray } from "@/store/utils/sx";
 
 interface MenuOptionMenuItemProps extends MenuItemProps {
   option: MenuOption;
   slotProps?: {
     text?: ListItemTextProps;
     icon?: ListItemIconProps;
-    confirmDialog?: Partial<ComponentProps<typeof ConfirmDialog>>;
   };
 }
 
 const MenuOptionMenuItem = ({
   option,
-  slotProps: {
-    text: textProps,
-    icon: iconProps,
-    confirmDialog: confirmDialogProps,
-  } = EMPTY_OBJECT,
+  slotProps,
   ...props
 }: MenuOptionMenuItemProps) => {
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-
   /** Values */
 
   const color = option.color ? `${option.color}.main` : undefined;
 
-  /** Callbacks */
-
-  const onClick: MenuItemProps["onClick"] = () => {
-    if (option.confirm) setConfirmDialogOpen(true);
-    else option.onClick?.();
-  };
-
   return (
-    <>
-      <MenuItem
-        disabled={option.disabled}
-        onClick={onClick}
-        {...props}
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        sx={[{ color }, ...sxAsArray(props.sx)]}
-      >
-        {!!option.icon && (
-          <ListItemIcon
-            {...iconProps}
-            sx={[
-              { svg: { color } },
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-              ...sxAsArray(iconProps?.sx),
-            ]}
-          >
-            {option.icon}
-          </ListItemIcon>
-        )}
-        <ListItemText {...textProps}>{option.label}</ListItemText>
-      </MenuItem>
-      {!!option.confirm && (
-        <ConfirmDialog
-          open={confirmDialogOpen}
-          title={option.label}
-          description={
-            typeof option.confirm === "string" ? option.confirm : undefined
-          }
-          onConfirm={option.onClick}
-          onCancel={() => {
-            setConfirmDialogOpen(false);
-          }}
-          {...confirmDialogProps}
-        />
+    <MenuItem
+      selected={option.selected}
+      disabled={option.disabled}
+      onClick={option.onClick}
+      {...(!!option.link && {
+        component: Link,
+        ...option.link,
+      })}
+      {...props}
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      sx={[{ color }, ...sxAsArray(props.sx)]}
+    >
+      {!!option.icon && (
+        <ListItemIcon
+          {...slotProps?.icon}
+          sx={[
+            { svg: { color } },
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            ...sxAsArray(slotProps?.icon?.sx),
+          ]}
+        >
+          {option.icon}
+        </ListItemIcon>
       )}
-    </>
+      <ListItemText
+        primary={option.label}
+        secondary={option.description}
+        {...slotProps?.text}
+      />
+    </MenuItem>
   );
 };
 

@@ -10,14 +10,17 @@ import {
   type AutocompleteProps,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import { searchClient } from "@/config/algolia";
-import clientCollection from "@/lib/collections/firebase/clientCollection";
+import useClients from "@/store/hooks/useClients";
 import ClientMenuItem from "@/containers/menu-items/ClientMenuItem";
-import type { ClientData } from "@/types/firebase";
+import type { Client } from "@/store/types/clients";
 
-type Hit = ClientData & { objectID: string };
 type ClientSearchFieldProps = Omit<
-  AutocompleteProps<Hit, false, false, false>,
+  AutocompleteProps<
+    Omit<Client, "id"> & { objectID: string },
+    false,
+    false,
+    false
+  >,
   "renderInput" | "options"
 >;
 
@@ -28,23 +31,16 @@ const ClientSearchField = (props: ClientSearchFieldProps) => {
   /** Values */
 
   const navigate = useNavigate();
+  const clients = useClients();
 
   /** Queries */
 
-  const query = useQuery({
-    queryKey: ["search", clientCollection, debouncedSearch] as const,
-    queryFn: async ({ queryKey: [_, collection, term] }) =>
-      searchClient.searchSingleIndex<ClientData & { objectID: string }>({
-        indexName: collection.id,
-        searchParams: { query: term, filters: "NOT archived:true" },
-      }),
-  });
+  const query = useQuery(clients.queries.search(debouncedSearch));
 
   /** Callbacks */
 
-  const handleNavigateClient = (id: string) => {
+  const handleNavigateClient = (id: string) =>
     void navigate({ to: `/app/clients/${id}` });
-  };
 
   return (
     <Autocomplete
