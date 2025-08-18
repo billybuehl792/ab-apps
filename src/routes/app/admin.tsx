@@ -8,12 +8,10 @@ import ErrorCard from "@/components/cards/ErrorCard";
 export const Route = createFileRoute("/app/admin")({
   loader: () => ({ crumb: "Admin" }),
   beforeLoad: ({ context }) => {
-    if (
-      !authUtils.authGuard(context.auth, {
-        permissions: { role: AuthRole.ADMIN },
-      })
-    )
-      throw Error("Only admins can access this page");
+    const isAdmin = authUtils.authGuard(context.auth, {
+      permissions: { role: AuthRole.ADMIN },
+    });
+    if (!isAdmin) throw Error("Only admins can access this page");
   },
   component: RouteComponent,
   errorComponent: ({ error }) => <ErrorCard error={error} />,

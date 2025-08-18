@@ -19,28 +19,28 @@ const NavigationFooter = (props: PaperProps) => {
     {
       id: "home",
       label: "Dashboard",
-      to: "/app",
-      selected: location.pathname === "/app",
       icon: <Home />,
+      selected: location.pathname === "/app",
+      link: { to: "/app" },
     },
     {
       id: "clients",
       label: "Clients",
-      to: "/app/clients",
       selected: location.pathname.startsWith("/app/clients"),
       icon: <Groups />,
+      link: { to: "/app/clients" },
     },
     {
       id: "profile",
       label: "Profile",
-      to: "/app/profile",
-      selected: location.pathname.startsWith("/app/profile"),
       icon: (
         <Avatar
           src={auth.user?.photoURL || ""}
           sx={{ width: 20, height: 20, fontSize: ".75rem" }}
         />
       ),
+      selected: location.pathname.startsWith("/app/profile"),
+      link: { to: "/app/profile" },
     },
   ];
 
@@ -61,7 +61,7 @@ const NavigationFooter = (props: PaperProps) => {
             value={action.id}
             label={action.label}
             icon={action.icon}
-            {...(!!action.to && { LinkComponent: Link, href: action.to })}
+            {...(!!action.link && { LinkComponent: Link, ...action.link })}
           />
         ))}
       </BottomNavigation>

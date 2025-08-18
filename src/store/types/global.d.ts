@@ -1,5 +1,5 @@
-import { type ReactNode, type MouseEvent } from "react";
-import { LinkOptions, type ToOptions } from "@tanstack/react-router";
+import { type ReactNode } from "react";
+import { type LinkOptions } from "@tanstack/react-router";
 
 declare global {
   var FIREBASE_APPCHECK_DEBUG_TOKEN: boolean | string | undefined;
@@ -36,17 +36,10 @@ declare global {
     onClick?: VoidFunction;
   }
 
-  interface ListItem {
-    id: string;
-    render?: boolean;
-    label: string;
-    icon?: ReactNode;
-    to?: ToOptions["to"];
+  interface ListItem
+    extends Omit<MenuOption, "color" | "disableCloseOnSelect"> {
     items?: ListItem[];
-    disabled?: boolean;
-    selected?: boolean;
     expanded?: boolean;
-    onClick?: (event: MouseEvent, id: string) => void;
   }
 
   interface String {

@@ -34,13 +34,13 @@ function RouteComponent() {
           id: "users",
           label: "Users",
           icon: <People fontSize="large" />,
-          to: "/app/admin/users",
+          link: { to: "/app/admin/users" },
         },
         {
           id: "companies",
           label: "Companies",
           icon: <Store fontSize="large" />,
-          to: "/app/admin/companies",
+          link: { to: "/app/admin/companies" },
         },
       ],
     },
@@ -67,7 +67,10 @@ function RouteComponent() {
                   <Grid key={item.id} size={{ xs: 12, sm: 6, md: 4 }}>
                     <Card>
                       <CardActionArea
-                        {...(!!item.to && { LinkComponent: Link, to: item.to })}
+                        {...(!!item.link && {
+                          LinkComponent: Link,
+                          ...item.link,
+                        })}
                       >
                         <CardContent component={Stack} spacing={1}>
                           {item.icon}

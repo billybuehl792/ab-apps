@@ -1,11 +1,10 @@
 import { type ComponentProps, useState, useEffect } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import {
   Collapse,
   List,
   ListItem,
   ListItemButton,
-  type ListItemButtonProps,
   ListItemIcon,
   ListItemText,
   type ListItemProps,
@@ -47,17 +46,8 @@ const NestedListItem = ({
 
   /** Values */
 
-  const navigate = useNavigate();
-
   const hasChildren =
     item.items?.some(({ render }) => render !== false) ?? false;
-
-  /** Callbacks */
-
-  const handleOnClick: ListItemButtonProps["onClick"] = (event) => {
-    if (item.onClick) item.onClick(event, item.id);
-    else if (item.to) void navigate({ to: item.to });
-  };
 
   /** Effects */
 
@@ -84,7 +74,8 @@ const NestedListItem = ({
         <ListItemButton
           selected={item.selected}
           disabled={item.disabled}
-          onClick={handleOnClick}
+          {...(item.link && { LinkComponent: Link, ...item.link })}
+          onClick={item.onClick}
         >
           {!!item.icon && (
             <ListItemIcon sx={{ minWidth: 36 }}>{item.icon}</ListItemIcon>
