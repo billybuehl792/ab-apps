@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Stack } from "@mui/material";
 import { userQueries } from "@/store/queries/users";
 import UserRecordDetailCard from "@/containers/cards/UserRecordDetailCard";
 import StatusWrapper from "@/components/layout/StatusWrapper";
@@ -24,9 +23,5 @@ function RouteComponent() {
 
   const { user } = Route.useLoaderData();
 
-  return (
-    <Stack p={2}>
-      <UserRecordDetailCard user={user} />
-    </Stack>
-  );
+  return <UserRecordDetailCard user={user} />;
 }
