@@ -17,7 +17,8 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     company: null,
     permissions: null,
   });
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
+  const [loadingProfile, setLoadingProfile] = useState(true);
 
   /** Values */
 
@@ -58,7 +59,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     let company: Company | null = null;
 
     setLoading(true);
-
+    setLoadingProfile(true);
     try {
       const idTokenResult = await user.getIdTokenResult();
       permissions = authUtils.getPermissionsFromCustomClaims(
@@ -74,6 +75,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       });
     } finally {
       setLoading(false);
+      setLoadingProfile(false);
       setProfile({ company, permissions });
     }
   };
@@ -117,6 +119,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       <StatusWrapper
         component="main"
         loading={loading}
+        {...(loadingProfile && { loadingDescription: "Loading profile..." })}
         sx={{
           position: "absolute",
           top: 0,
@@ -124,7 +127,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
           bottom: 0,
           right: 0,
           color: (theme) => theme.palette.primary.contrastText,
-          bgcolor: (theme) => theme.palette.background.default,
+          bgcolor: (theme) => theme.palette.primary.main,
         }}
       >
         {children}
