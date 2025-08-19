@@ -1,10 +1,4 @@
-import {
-  type ContextType,
-  type PropsWithChildren,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { type PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { useSnackbar } from "notistack";
@@ -15,16 +9,16 @@ import { companyQueries } from "@/store/queries/companies";
 import StatusWrapper from "@/components/layout/StatusWrapper";
 import { authUtils } from "@/store/utils/auth";
 import type { Company } from "@/store/types/companies";
-import type { Permissions } from "@/store/types/auth";
+import type { Permissions, Profile } from "@/store/types/auth";
 
 const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [user, setUser] =
-    useState<ContextType<typeof AuthContext>["user"]>(null);
-  const [profile, setProfile] = useState<
-    ContextType<typeof AuthContext>["profile"]
-  >({ company: null, permissions: null });
-  const [loading, setLoading] =
-    useState<ContextType<typeof AuthContext>["loading"]>(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile>({
+    company: null,
+    permissions: null,
+  });
+  const [loading, setLoading] = useState(true);
+  const [loadingProfile, setLoadingProfile] = useState(true);
 
   /** Values */
 
@@ -32,6 +26,17 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const snackbar = useSnackbar();
 
   /** Mutations */
+
+  const reloadUser = useMutation({
+    ...authMutations.reloadUser(),
+    onSuccess: () => {
+      setUser(auth.currentUser);
+    },
+    onError: (error) =>
+      snackbar.enqueueSnackbar(`Error reloading user: ${error.message}`, {
+        variant: "error",
+      }),
+  });
 
   const signOut = useMutation({
     ...authMutations.signOut(),
@@ -65,7 +70,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     let company: Company | null = null;
 
     setLoading(true);
-
+    setLoadingProfile(true);
     try {
       const idTokenResult = await user.getIdTokenResult();
       permissions = authUtils.getPermissionsFromCustomClaims(
@@ -81,6 +86,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       });
     } finally {
       setLoading(false);
+      setLoadingProfile(false);
       setProfile({ company, permissions });
     }
   };
@@ -109,13 +115,15 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
           profile,
           loading,
           signOut,
+          reloadUser,
         }),
-        [user, profile, loading, signOut]
+        [user, profile, loading, signOut, reloadUser]
       )}
     >
       <StatusWrapper
         component="main"
         loading={loading}
+        {...(loadingProfile && { loadingDescription: "Loading profile..." })}
         sx={{
           position: "absolute",
           top: 0,
@@ -123,7 +131,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
           bottom: 0,
           right: 0,
           color: (theme) => theme.palette.primary.contrastText,
-          bgcolor: (theme) => theme.palette.background.default,
+          bgcolor: (theme) => theme.palette.primary.main,
         }}
       >
         {children}

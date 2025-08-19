@@ -14,18 +14,15 @@ import Metadata from "@/components/lists/Metadata";
 import UserEmailChip from "@/containers/chips/UserEmailChip";
 import PermissionsChip from "@/containers/chips/PermissionsChip";
 import CompanyChip from "@/containers/chips/CompanyChip";
-import EditIconButton from "@/components/buttons/EditIconButton";
 import { DateTimeFormat } from "@/store/enums/datetime";
 import type { Permissions } from "@/store/types/auth";
 
 interface UserRecordDetailCardProps extends CardProps {
   user: UserRecord;
-  editable?: boolean;
 }
 
 const UserRecordDetailCard = ({
   user,
-  editable,
   ...props
 }: UserRecordDetailCardProps) => {
   /** Values */
@@ -107,7 +104,6 @@ const UserRecordDetailCard = ({
           />
           <Stack component="span" direction="row" spacing={1}>
             <Typography variant="body1">{displayName}</Typography>
-            {editable && <EditIconButton size="small" />}
           </Stack>
         </Stack>
         <Stack flexGrow={2}>
@@ -124,9 +120,6 @@ const UserRecordDetailCard = ({
           </Stack>
         </Stack>
       </CardContent>
-
-      {/* Modals */}
-      {editable && <></>}
     </Card>
   );
 };

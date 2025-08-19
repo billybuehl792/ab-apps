@@ -37,9 +37,7 @@ const UserIconButton = (
         void confirm({
           title: "Sign Out",
           message: "Are you sure you want to sign out?",
-        }).then((confirmed) => {
-          if (confirmed) void navigate({ to: "/sign-out" });
-        }),
+        }).then((confirmed) => confirmed && void navigate({ to: "/sign-out" })),
     },
   ];
 
