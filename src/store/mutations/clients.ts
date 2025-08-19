@@ -1,28 +1,19 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { addDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { firebaseUtils } from "../utils/firebase";
-import { FirebaseCollection } from "../enums/firebase";
-import { MutationVariant } from "../enums/queries";
+import { clientQueries } from "../queries/clients";
 import type { Client } from "../types/clients";
 
 const create = (companyId: string) =>
   mutationOptions({
-    mutationKey: [
-      FirebaseCollection.CLIENTS,
-      companyId,
-      MutationVariant.CREATE,
-    ] as const,
+    mutationKey: [...clientQueries(companyId).queryKey, "create"] as const,
     mutationFn: (data: Omit<Client, "id">) =>
       addDoc(firebaseUtils.collections.getClientCollection(companyId), data),
   });
 
 const update = (companyId: string) =>
   mutationOptions({
-    mutationKey: [
-      FirebaseCollection.CLIENTS,
-      companyId,
-      MutationVariant.UPDATE,
-    ] as const,
+    mutationKey: [...clientQueries(companyId).queryKey, "update"] as const,
     mutationFn: async ({ id, ...data }: Client) => {
       const docRef = doc(
         firebaseUtils.collections.getClientCollection(companyId),
@@ -34,11 +25,7 @@ const update = (companyId: string) =>
 
 const archive = (companyId: string) =>
   mutationOptions({
-    mutationKey: [
-      FirebaseCollection.CLIENTS,
-      companyId,
-      MutationVariant.ARCHIVE,
-    ] as const,
+    mutationKey: [...clientQueries(companyId).queryKey, "archive"] as const,
     mutationFn: async (id: string) => {
       const docRef = doc(
         firebaseUtils.collections.getClientCollection(companyId),
@@ -50,11 +37,7 @@ const archive = (companyId: string) =>
 
 const restore = (companyId: string) =>
   mutationOptions({
-    mutationKey: [
-      FirebaseCollection.CLIENTS,
-      companyId,
-      MutationVariant.RESTORE,
-    ] as const,
+    mutationKey: [...clientQueries(companyId).queryKey, "restore"] as const,
     mutationFn: async (id: string) => {
       const docRef = doc(
         firebaseUtils.collections.getClientCollection(companyId),

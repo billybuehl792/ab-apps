@@ -5,42 +5,10 @@ interface EditIconButtonProps extends IconButtonProps {
   active?: boolean;
 }
 
-/**
- * This component renders an `IconButton` with an `Edit` icon.
- */
-const EditIconButton = ({
-  active,
-  onClick: onClickProp,
-  ...props
-}: EditIconButtonProps) => {
-  /** Callbacks */
-
-  const onMouseDown: IconButtonProps["onMouseDown"] = (event) => {
-    event.stopPropagation();
-  };
-
-  const onTouchStart: IconButtonProps["onTouchStart"] = (event) => {
-    event.stopPropagation();
-  };
-
-  const onClick: IconButtonProps["onClick"] = (event) => {
-    event.stopPropagation();
-    onClickProp?.(event);
-  };
-
+const EditIconButton = ({ active, ...props }: EditIconButtonProps) => {
   return (
-    <IconButton
-      component="span"
-      onMouseDown={onMouseDown}
-      onTouchStart={onTouchStart}
-      onClick={onClick}
-      {...props}
-    >
-      {active ? (
-        <EditOff fontSize={props.size} />
-      ) : (
-        <Edit fontSize={props.size} />
-      )}
+    <IconButton component="span" {...props}>
+      {active ? <EditOff fontSize="inherit" /> : <Edit fontSize="inherit" />}
     </IconButton>
   );
 };

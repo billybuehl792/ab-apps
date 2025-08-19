@@ -1,11 +1,9 @@
 import { type ComponentProps } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Stack, Typography } from "@mui/material";
 import { clientQueries } from "@/store/queries/clients";
 import useClients from "@/store/hooks/useClients";
 import ClientDetailCard from "@/containers/cards/ClientDetailCard";
 import ClientForm from "@/containers/forms/ClientForm";
-import ClientMenuIconButton from "@/containers/buttons/ClientMenuIconButton";
 import ErrorCard from "@/components/cards/ErrorCard";
 import StatusWrapper from "@/components/layout/StatusWrapper";
 import type { Client } from "@/store/types/clients";
@@ -39,8 +37,6 @@ function RouteComponent() {
   const navigate = useNavigate();
   const clients = useClients();
 
-  const clientFullName = `${client.first_name} ${client.last_name}`;
-
   /** Mutations */
 
   /** Callbacks */
@@ -55,16 +51,7 @@ function RouteComponent() {
     void navigate({ to: `/app/clients/${client.id}` });
 
   return (
-    <Stack spacing={2} p={2}>
-      <Stack direction="row" spacing={1} alignItems="center">
-        <Typography variant="h6" noWrap>
-          {clientFullName}
-        </Typography>
-        <Stack direction="row" flexGrow={1} justifyContent="flex-end">
-          <ClientMenuIconButton client={client} />
-        </Stack>
-      </Stack>
-
+    <>
       {edit ? (
         <ClientForm
           values={client}
@@ -78,6 +65,6 @@ function RouteComponent() {
       ) : (
         <ClientDetailCard client={client} />
       )}
-    </Stack>
+    </>
   );
 }

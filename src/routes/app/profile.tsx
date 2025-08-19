@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { Container, Divider, Stack, Typography } from "@mui/material";
+import { Box, Container } from "@mui/material";
+import PageHeader from "@/components/layout/PageHeader";
 
 export const Route = createFileRoute("/app/profile")({
   component: RouteComponent,
@@ -7,20 +8,13 @@ export const Route = createFileRoute("/app/profile")({
 
 function RouteComponent() {
   return (
-    <Stack width="100%" height="100%">
+    <>
+      <PageHeader title="Profile" />
       <Container maxWidth="md" disableGutters>
-        <Stack spacing={2} p={2} pb={0}>
-          <Typography variant="body2" fontWeight="bold">
-            Profile
-          </Typography>
-          <Divider />
-        </Stack>
-      </Container>
-      <Stack overflow="auto">
-        <Container maxWidth="md" disableGutters>
+        <Box p={2}>
           <Outlet />
-        </Container>
-      </Stack>
-    </Stack>
+        </Box>
+      </Container>
+    </>
   );
 }

@@ -1,21 +1,16 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { Stack } from "@mui/material";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
+import ErrorCard from "@/components/cards/ErrorCard";
 import { authUtils } from "@/store/utils/auth";
 import { AuthRole } from "@/store/enums/auth";
 
 export const Route = createFileRoute("/app/admin/users")({
   beforeLoad: ({ context }) => {
-    if (
-      !authUtils.authGuard(context.auth, {
-        permissions: { role: AuthRole.SUPER_ADMIN },
-      })
-    )
-      redirect({ to: "/app/admin", replace: true, throw: true });
+    const isSuperAdmin = authUtils.authGuard(context.auth, {
+      permissions: { role: AuthRole.SUPER_ADMIN },
+    });
+    if (!isSuperAdmin) throw Error("Only super admins can access this page");
   },
   loader: () => ({ crumb: "Users" }),
-  component: () => (
-    <Stack p={2}>
-      <Outlet />
-    </Stack>
-  ),
+  component: Outlet,
+  errorComponent: ({ error }) => <ErrorCard error={error} />,
 });

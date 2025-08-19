@@ -6,21 +6,14 @@ import {
   getDocs,
   query,
 } from "firebase/firestore";
-import { FirebaseCollection } from "../enums/firebase";
 import { searchClient } from "../config/algolia";
 import { firebaseUtils } from "../utils/firebase";
-import { QueryVariant } from "../enums/queries";
 import type { QueryParams } from "../types/queries";
 import type { Client } from "../types/clients";
 
 const count = (companyId: string, params?: QueryParams) =>
   queryOptions({
-    queryKey: [
-      FirebaseCollection.CLIENTS,
-      companyId,
-      QueryVariant.COUNT,
-      params,
-    ] as const,
+    queryKey: [...clientQueries(companyId).queryKey, "count", params] as const,
     queryFn: () =>
       getCountFromServer(
         query(
@@ -32,12 +25,7 @@ const count = (companyId: string, params?: QueryParams) =>
 
 const list = (companyId: string, params?: QueryParams) =>
   queryOptions({
-    queryKey: [
-      FirebaseCollection.CLIENTS,
-      companyId,
-      QueryVariant.LIST,
-      params,
-    ] as const,
+    queryKey: [...clientQueries(companyId).queryKey, "list", params] as const,
     queryFn: () =>
       getDocs(
         query(
@@ -49,12 +37,7 @@ const list = (companyId: string, params?: QueryParams) =>
 
 const detail = (companyId: string, id: string) =>
   queryOptions({
-    queryKey: [
-      FirebaseCollection.CLIENTS,
-      companyId,
-      QueryVariant.DETAIL,
-      id,
-    ] as const,
+    queryKey: [...clientQueries(companyId).queryKey, "detail", id] as const,
     queryFn: async () => {
       const docRef = doc(
         firebaseUtils.collections.getClientCollection(companyId),
@@ -69,12 +52,7 @@ const detail = (companyId: string, id: string) =>
 
 const search = (companyId: string, term?: string) =>
   queryOptions({
-    queryKey: [
-      FirebaseCollection.CLIENTS,
-      companyId,
-      QueryVariant.SEARCH,
-      term,
-    ] as const,
+    queryKey: [...clientQueries(companyId).queryKey, "search", term] as const,
     queryFn: () =>
       searchClient.searchSingleIndex<Omit<Client, "id"> & { objectID: string }>(
         {
@@ -84,9 +62,12 @@ const search = (companyId: string, term?: string) =>
       ),
   });
 
-export const clientQueries = {
-  count,
-  list,
-  detail,
-  search,
-};
+export const clientQueries = Object.assign(
+  (companyId?: string) => {
+    const queryKey = companyId
+      ? (["clients", companyId] as const)
+      : (["clients"] as const);
+    return { queryKey };
+  },
+  { count, detail, list, search }
+);

@@ -1,20 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Stack } from "@mui/material";
-import { userQueries } from "@/store/queries/users";
-import UserRecordDetailCard from "@/containers/cards/UserRecordDetailCard";
-import StatusWrapper from "@/components/layout/StatusWrapper";
 import ErrorCard from "@/components/cards/ErrorCard";
+import UserDetailCard from "@/containers/cards/UserDetailCard";
 
 export const Route = createFileRoute("/app/profile/")({
-  loader: async ({ context }) => {
-    const user = await context.queryClient.ensureQueryData(
-      userQueries.detail(context.auth.user?.uid ?? "")
-    );
-    return { user, crumb: user.displayName ?? "Me" };
+  loader: ({ context }) => {
+    if (!context.auth.user) throw new Error("User not authenticated");
+
+    return {
+      user: context.auth.user,
+      profile: context.auth.profile,
+      crumb: context.auth.user.displayName ?? "Me",
+    };
   },
-  pendingComponent: () => (
-    <StatusWrapper loading loadingDescription="loading user..." />
-  ),
   errorComponent: ({ error }) => <ErrorCard error={error} sx={{ m: 2 }} />,
   component: RouteComponent,
 });
@@ -22,11 +19,7 @@ export const Route = createFileRoute("/app/profile/")({
 function RouteComponent() {
   /** Values */
 
-  const { user } = Route.useLoaderData();
+  const { user, profile } = Route.useLoaderData();
 
-  return (
-    <Stack p={2}>
-      <UserRecordDetailCard user={user} />
-    </Stack>
-  );
+  return <UserDetailCard user={user} profile={profile} />;
 }

@@ -11,23 +11,20 @@ import {
   companyConverter,
   materialConverter,
 } from "../converters";
-import { FirebaseCollection } from "../enums/firebase";
 import type { QueryParams } from "../types/queries";
 
 const getCompanyCollection = () =>
-  collection(db, FirebaseCollection.COMPANIES).withConverter(companyConverter);
+  collection(db, "companies").withConverter(companyConverter);
 
 const getClientCollection = (companyId: string) =>
-  collection(
-    db,
-    `${FirebaseCollection.COMPANIES}/${companyId}/${FirebaseCollection.CLIENTS}`
-  ).withConverter(clientConverter);
+  collection(db, `companies/${companyId}/clients`).withConverter(
+    clientConverter
+  );
 
 const getMaterialCollection = (companyId: string) =>
-  collection(
-    db,
-    `${FirebaseCollection.COMPANIES}/${companyId}/${FirebaseCollection.MATERIALS}`
-  ).withConverter(materialConverter);
+  collection(db, `companies/${companyId}/materials`).withConverter(
+    materialConverter
+  );
 
 const getQueryConstraints = (params?: QueryParams) => {
   const constraints = [];
@@ -41,11 +38,11 @@ const getQueryConstraints = (params?: QueryParams) => {
   return constraints;
 };
 
-const collections = {
-  getCompanyCollection,
-  getClientCollection,
-  getMaterialCollection,
+export const firebaseUtils = {
+  collections: {
+    getCompanyCollection,
+    getClientCollection,
+    getMaterialCollection,
+  },
+  queries: { getQueryConstraints },
 };
-const queries = { getQueryConstraints };
-
-export const firebaseUtils = { collections, queries };

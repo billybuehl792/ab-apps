@@ -1,36 +1,36 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { Container, Divider, Stack } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import NavigationBreadcrumbs from "@/containers/lists/NavigationBreadcrumbs";
-import { authUtils } from "@/store/utils/auth";
-import { AuthRole } from "@/store/enums/auth";
+import PageHeader from "@/components/layout/PageHeader";
 import ErrorCard from "@/components/cards/ErrorCard";
+import { AuthRole } from "@/store/enums/auth";
+import { authUtils } from "@/store/utils/auth";
 
 export const Route = createFileRoute("/app/admin")({
-  loader: () => ({ crumb: "Admin" }),
   beforeLoad: ({ context }) => {
     const isAdmin = authUtils.authGuard(context.auth, {
       permissions: { role: AuthRole.ADMIN },
     });
     if (!isAdmin) throw Error("Only admins can access this page");
   },
+  loader: () => ({ crumb: "Admin" }),
   component: RouteComponent,
-  errorComponent: ({ error }) => <ErrorCard error={error} />,
+  errorComponent: ({ error }) => (
+    <Box p={2}>
+      <ErrorCard error={error} />
+    </Box>
+  ),
 });
 
 function RouteComponent() {
   return (
-    <Stack width="100%" height="100%">
+    <>
+      <PageHeader title={<NavigationBreadcrumbs />} />
       <Container maxWidth="md" disableGutters>
-        <Stack spacing={2} p={2} pb={0}>
-          <NavigationBreadcrumbs />
-          <Divider />
-        </Stack>
-      </Container>
-      <Stack overflow="auto">
-        <Container maxWidth="md" disableGutters>
+        <Box p={2}>
           <Outlet />
-        </Container>
-      </Stack>
-    </Stack>
+        </Box>
+      </Container>
+    </>
   );
 }
