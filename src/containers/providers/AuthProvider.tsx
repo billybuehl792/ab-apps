@@ -1,6 +1,6 @@
 import { type PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { onAuthStateChanged, onIdTokenChanged, User } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { useSnackbar } from "notistack";
 import AuthContext from "@/store/context/AuthContext";
 import { auth } from "@/store/config/firebase";
@@ -26,6 +26,17 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const snackbar = useSnackbar();
 
   /** Mutations */
+
+  const reloadUser = useMutation({
+    ...authMutations.reloadUser(),
+    onSuccess: () => {
+      setUser(auth.currentUser);
+    },
+    onError: (error) =>
+      snackbar.enqueueSnackbar(`Error reloading user: ${error.message}`, {
+        variant: "error",
+      }),
+  });
 
   const signOut = useMutation({
     ...authMutations.signOut(),
@@ -96,14 +107,6 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = onIdTokenChanged(auth, (user) => {
-      setUser(user);
-    });
-
-    return unsubscribe;
-  }, []);
-
   return (
     <AuthContext
       value={useMemo(
@@ -112,8 +115,9 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
           profile,
           loading,
           signOut,
+          reloadUser,
         }),
-        [user, profile, loading, signOut]
+        [user, profile, loading, signOut, reloadUser]
       )}
     >
       <StatusWrapper

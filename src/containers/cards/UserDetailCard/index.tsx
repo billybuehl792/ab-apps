@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { type User } from "firebase/auth";
 import {
-  Avatar,
   Card,
   CardContent,
   Divider,
@@ -10,6 +9,7 @@ import {
   type CardProps,
 } from "@mui/material";
 import EditIconButton from "@/components/buttons/EditIconButton";
+import UserAvatarUploadIconButton from "@/containers/buttons/UserAvatarUploadIconButton";
 import UserDisplayNameFormDrawer from "@/containers/modals/UserDisplayNameFormDrawer";
 import UserEmailChip from "@/containers/chips/UserEmailChip";
 import PermissionsChip from "@/containers/chips/PermissionsChip";
@@ -60,11 +60,7 @@ const UserDetailCard = ({ user, profile, ...props }: UserDetailCardProps) => {
     <Card {...props}>
       <CardContent component={Stack} spacing={2} divider={<Divider />}>
         <Stack spacing={1} alignItems="center">
-          <Avatar
-            src={user.photoURL ?? undefined}
-            alt={user.displayName ?? undefined}
-            sx={{ width: 100, height: 100 }}
-          />
+          <UserAvatarUploadIconButton user={user} />
           <Stack direction="row" spacing={1} alignItems="center">
             <Typography variant="body1">{user.displayName ?? "-"}</Typography>
             <EditIconButton

@@ -8,9 +8,11 @@ export default createContext<{
   profile: Profile;
   loading: boolean;
   signOut: UseMutationResult<void, Error, void>;
+  reloadUser: UseMutationResult<void, Error, User>;
 }>({
   user: null,
   loading: false,
   profile: { company: null, permissions: null },
   signOut: {} as UseMutationResult<void, Error, void>,
+  reloadUser: {} as UseMutationResult<void, Error, User>,
 });

@@ -12,24 +12,29 @@ import {
   type User,
 } from "firebase/auth";
 import { auth } from "@/store/config/firebase";
-import { QUERY_KEY } from "../constants/queries";
 
 const signIn = () =>
   mutationOptions({
-    mutationKey: [...QUERY_KEY.auth, "signIn"] as const,
+    mutationKey: ["auth", "signIn"] as const,
     mutationFn: (data: { email: string; password: string }) =>
       signInWithEmailAndPassword(auth, data.email, data.password),
   });
 
 const signOut = () =>
   mutationOptions({
-    mutationKey: [...QUERY_KEY.auth, "signOut"] as const,
+    mutationKey: ["auth", "signOut"] as const,
     mutationFn: () => _signOut(auth),
+  });
+
+const reloadUser = () =>
+  mutationOptions({
+    mutationKey: ["auth", "reloadUser"] as const,
+    mutationFn: (user: User) => user.reload(),
   });
 
 const sendPhoneVerificationCode = () =>
   mutationOptions({
-    mutationKey: [...QUERY_KEY.auth, "sendPhoneVerificationCode"] as const,
+    mutationKey: ["auth", "sendPhoneVerificationCode"] as const,
     mutationFn: (data: {
       phoneAuthProvider: PhoneAuthProvider;
       multiFactorHint: MultiFactorInfo;
@@ -47,13 +52,13 @@ const sendPhoneVerificationCode = () =>
 
 const sendEmailVerificationCode = () =>
   mutationOptions({
-    mutationKey: [...QUERY_KEY.auth, "sendEmailVerificationCode"] as const,
+    mutationKey: ["auth", "sendEmailVerificationCode"] as const,
     mutationFn: (user: User) => sendEmailVerification(user),
   });
 
 const verifyPhoneCode = () =>
   mutationOptions({
-    mutationKey: [...QUERY_KEY.auth, "verifyPhoneCode"] as const,
+    mutationKey: ["auth", "verifyPhoneCode"] as const,
     mutationFn: (data: {
       code: string;
       multiFactorResolver: MultiFactorResolver;
@@ -72,6 +77,7 @@ const verifyPhoneCode = () =>
 export const authMutations = {
   signIn,
   signOut,
+  reloadUser,
   sendEmailVerificationCode,
   sendPhoneVerificationCode,
   verifyPhoneCode,

@@ -3,7 +3,6 @@ import { useSnackbar } from "notistack";
 import useAuth from "./useAuth";
 import { materialQueries } from "@/store/queries/materials";
 import { materialMutations } from "@/store/mutations/materials";
-import { FirebaseCollection } from "@/store/enums/firebase";
 import { markdownUtils } from "@/store/utils/markdown";
 import type { Company } from "@/store/types/companies";
 import type { QueryParams } from "@/store/types/queries";
@@ -35,10 +34,8 @@ const useMaterials = (company?: Company | string) => {
   const create = useMutation({
     ...materialMutations.create(companyId),
     onSuccess: (_, data) => {
-      void queryClient.invalidateQueries({
-        queryKey: [FirebaseCollection.MATERIALS, companyId],
-      });
-      void snackbar.enqueueSnackbar(
+      void queryClient.invalidateQueries(materialQueries(companyId));
+      snackbar.enqueueSnackbar(
         `${markdownUtils.bold(data.label)} material created`,
         { variant: "success" }
       );
@@ -50,15 +47,10 @@ const useMaterials = (company?: Company | string) => {
   const update = useMutation({
     ...materialMutations.update(companyId),
     onSuccess: (_, data) => {
-      void queryClient.invalidateQueries({
-        queryKey: [FirebaseCollection.MATERIALS, companyId],
+      void queryClient.invalidateQueries(materialQueries(companyId));
+      snackbar.enqueueSnackbar(`${markdownUtils.bold(data.label)} updated`, {
+        variant: "success",
       });
-      void snackbar.enqueueSnackbar(
-        `${markdownUtils.bold(data.label)} updated`,
-        {
-          variant: "success",
-        }
-      );
     },
     onError: () =>
       snackbar.enqueueSnackbar("Error updating material", {
@@ -69,10 +61,8 @@ const useMaterials = (company?: Company | string) => {
   const remove = useMutation({
     ...materialMutations.remove(companyId),
     onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: [FirebaseCollection.MATERIALS, companyId],
-      });
-      void snackbar.enqueueSnackbar("Material deleted", { variant: "success" });
+      void queryClient.invalidateQueries(materialQueries(companyId));
+      snackbar.enqueueSnackbar("Material deleted", { variant: "success" });
     },
     onError: () =>
       snackbar.enqueueSnackbar("Error deleting material", { variant: "error" }),

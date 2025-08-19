@@ -6,17 +6,14 @@ import {
   getDocs,
   query,
 } from "firebase/firestore";
-import { FirebaseCollection } from "../enums/firebase";
 import { firebaseUtils } from "../utils/firebase";
-import { QueryVariant } from "../enums/queries";
 import type { QueryParams } from "../types/queries";
 
 const count = (companyId: string, params?: QueryParams) =>
   queryOptions({
     queryKey: [
-      FirebaseCollection.MATERIALS,
-      companyId,
-      QueryVariant.COUNT,
+      ...materialQueries(companyId).queryKey,
+      "count",
       params,
     ] as const,
     queryFn: () =>
@@ -30,12 +27,7 @@ const count = (companyId: string, params?: QueryParams) =>
 
 const list = (companyId: string, params?: QueryParams) =>
   queryOptions({
-    queryKey: [
-      FirebaseCollection.MATERIALS,
-      companyId,
-      QueryVariant.LIST,
-      params,
-    ] as const,
+    queryKey: [...materialQueries(companyId).queryKey, "list", params] as const,
     queryFn: () =>
       getDocs(
         query(
@@ -47,12 +39,7 @@ const list = (companyId: string, params?: QueryParams) =>
 
 const detail = (companyId: string, id: string) =>
   queryOptions({
-    queryKey: [
-      FirebaseCollection.MATERIALS,
-      companyId,
-      QueryVariant.DETAIL,
-      id,
-    ] as const,
+    queryKey: [...materialQueries(companyId).queryKey, "detail", id] as const,
     queryFn: async () => {
       const docRef = doc(
         firebaseUtils.collections.getMaterialCollection(companyId),
@@ -65,8 +52,12 @@ const detail = (companyId: string, id: string) =>
     },
   });
 
-export const materialQueries = {
-  count,
-  list,
-  detail,
-};
+export const materialQueries = Object.assign(
+  (companyId?: string) => {
+    const queryKey = companyId
+      ? (["materials", companyId] as const)
+      : (["materials"] as const);
+    return { queryKey };
+  },
+  { count, detail, list }
+);

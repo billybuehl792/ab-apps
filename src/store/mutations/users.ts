@@ -1,15 +1,14 @@
 import { mutationOptions } from "@tanstack/react-query";
 import { type UserRecord, type UpdateRequest } from "firebase-admin/auth";
+import { updateProfile, User } from "firebase/auth";
 import { httpsCallable } from "firebase/functions";
 import { functions } from "../config/firebase";
-import { MutationVariant } from "../enums/queries";
+import { userQueries } from "../queries/users";
 import type { Permissions } from "../types/auth";
-
-const MUTATION_KEY = ["users"] as const;
 
 const update = () =>
   mutationOptions({
-    mutationKey: [...MUTATION_KEY, MutationVariant.UPDATE] as const,
+    mutationKey: [...userQueries().queryKey, "update"] as const,
     mutationFn: async (body: { id: string; body: UpdateRequest }) => {
       const res = await httpsCallable<
         { id: string; body: UpdateRequest },
@@ -23,13 +22,27 @@ const update = () =>
     },
   });
 
+const updateUserProfile = () =>
+  mutationOptions({
+    mutationKey: [...userQueries().queryKey, "updateUserProfile"] as const,
+    mutationFn: async ({
+      user,
+      displayName,
+      photoUrl,
+    }: {
+      user: User;
+      displayName?: string;
+      photoUrl?: string;
+    }) =>
+      updateProfile(user, {
+        displayName: displayName ?? user.displayName ?? "",
+        photoURL: photoUrl ?? user.photoURL ?? "",
+      }),
+  });
+
 const updatePermissions = () =>
   mutationOptions({
-    mutationKey: [
-      ...MUTATION_KEY,
-      MutationVariant.UPDATE,
-      "permissions",
-    ] as const,
+    mutationKey: [...userQueries().queryKey, "updatePermissions"] as const,
     mutationFn: async (body: { id: string; permissions: Permissions }) => {
       const res = await httpsCallable<
         { id: string; permissions: Permissions },
@@ -45,5 +58,6 @@ const updatePermissions = () =>
 
 export const userMutations = {
   update,
+  updateUserProfile,
   updatePermissions,
 };

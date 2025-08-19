@@ -42,21 +42,16 @@ const UserPermissionsFormDrawer = ({
   /** Callbacks */
 
   const handleSubmit = methods.handleSubmit((data) => {
-    if (data.role === userPermissionsQuery.data?.role) handleOnClose();
+    if (data.role === userPermissionsQuery.data?.role) onClose?.();
     else
       users.mutations.updatePermissions.mutate(
         { id: userId, permissions: data },
-        { onSuccess: handleOnClose }
+        { onSuccess: onClose }
       );
   }) as FormEventHandler;
 
   const handleReset: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    handleOnClose();
-  };
-
-  const handleOnClose = () => {
-    methods.reset();
     onClose?.();
   };
 
@@ -70,7 +65,7 @@ const UserPermissionsFormDrawer = ({
     <SwipeableDrawer
       title="Permissions"
       anchor={isMobile || !isSm ? "bottom" : "right"}
-      onClose={handleOnClose}
+      onClose={onClose}
       {...props}
       slotProps={{ content: { minWidth: 300 }, ...props.slotProps }}
     >

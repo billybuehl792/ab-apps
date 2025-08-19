@@ -1,10 +1,8 @@
 import { type FormEventHandler, type ComponentProps, useEffect } from "react";
-import { useRouter } from "@tanstack/react-router";
-import { useMutation } from "@tanstack/react-query";
 import { Button, Stack, TextField, useMediaQuery } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import { type User } from "firebase/auth";
-import { profileMutations } from "@/store/mutations/profile";
+import useUsers from "@/store/hooks/useUsers";
 import SwipeableDrawer from "@/components/modals/SwipeableDrawer";
 
 interface UserDisplayNameForm {
@@ -25,15 +23,10 @@ const UserDisplayNameFormDrawer = ({
 }: UserDisplayNameFormDrawerProps) => {
   /** Values */
 
-  const router = useRouter();
   const isMobile = useMediaQuery("(pointer: coarse)");
   const isSm = useMediaQuery((theme) => theme.breakpoints.up("sm"));
 
-  /** Mutations */
-
-  const updateDisplayNameMutation = useMutation(
-    profileMutations.updateProfile()
-  );
+  const users = useUsers();
 
   /** Form */
 
@@ -42,15 +35,9 @@ const UserDisplayNameFormDrawer = ({
   /** Callbacks */
 
   const handleSubmit = methods.handleSubmit((data) => {
-    updateDisplayNameMutation.mutate(
+    users.mutations.updateUserProfile.mutate(
       { user, ...data },
-      {
-        onSuccess: () => {
-          void user.getIdToken(true);
-          void router.invalidate();
-          onClose?.();
-        },
-      }
+      { onSuccess: onClose }
     );
   }) as FormEventHandler;
 
@@ -106,7 +93,7 @@ const UserDisplayNameFormDrawer = ({
           >
             <Button
               type="submit"
-              loading={updateDisplayNameMutation.isPending}
+              loading={users.mutations.updateUserProfile.isPending}
               disabled={methods.formState.disabled}
             >
               Submit
