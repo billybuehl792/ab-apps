@@ -87,6 +87,19 @@ const AddressField = ({
     enabled: !!places && !!inputValue.trim(),
   });
 
+  const baseOptions = autocompleteSuggestionsQuery.data ?? [];
+  const options: Address[] = inputValue.trim()
+    ? [
+        {
+          place_id: "manual",
+          primary_text: inputValue,
+          secondary_text: "manual entry",
+          text: inputValue,
+        },
+        ...baseOptions,
+      ]
+    : baseOptions;
+
   /** Effects */
 
   useEffect(() => {
@@ -108,7 +121,7 @@ const AddressField = ({
 
   return (
     <Autocomplete
-      options={autocompleteSuggestionsQuery.data ?? []}
+      options={options}
       noOptionsText={
         !places
           ? "Could not load Google Places Library"
