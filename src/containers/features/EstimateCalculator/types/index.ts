@@ -1,7 +1,11 @@
 import { type UseFormReturn } from "react-hook-form";
 import useMaterials from "@/store/hooks/useMaterials";
+import { ESTIMATE_CALCULATOR_CATEGORY_OPTIONS } from "../constants";
 import type { Address } from "@/store/types/locations";
 import type { Material } from "@/store/types/materials";
+
+export type TEstimateCalculatorCategory =
+  (typeof ESTIMATE_CALCULATOR_CATEGORY_OPTIONS)[number]["value"];
 
 export interface EstimateCalculatorForm {
   name: string;
@@ -18,6 +22,8 @@ export interface EstimateCalculatorContextValue {
     unknown,
     EstimateCalculatorForm
   >;
+  category: TEstimateCalculatorCategory;
+  onCategoryChange: (category: TEstimateCalculatorCategory) => void;
   materialModal: { open: boolean; material: Material | null };
   setMaterialModal: (open: boolean, material: Material | null) => void;
 }

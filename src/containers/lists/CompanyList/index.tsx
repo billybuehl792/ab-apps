@@ -24,12 +24,16 @@ const CompanyList = (props: StackProps) => {
 
   /** Queries */
 
-  const countQuery = useQuery(companies.queries.count({ archived: false }));
+  const countQuery = useQuery(
+    companies.queries.count({
+      filters: [{ field: "archived", operator: "==", value: false }],
+    }),
+  );
   const listQuery = useQuery({
     ...companies.queries.list({
-      archived: false,
       limit: ROWS_PER_PAGE,
       startAfter: lastDocs[lastDocs.length - 1],
+      filters: [{ field: "archived", operator: "==", value: false }],
     }),
     enabled: countQuery.isSuccess,
   });
@@ -38,11 +42,11 @@ const CompanyList = (props: StackProps) => {
 
   const handlePageChange: TablePaginationProps["onPageChange"] = (
     _event,
-    page
+    page,
   ) => {
     if (page < lastDocs.length)
       setLastDocs((current) =>
-        current.slice(0, Math.max(current.length - 1, 0))
+        current.slice(0, Math.max(current.length - 1, 0)),
       );
     else {
       const currentLastDoc = listQuery.data?.docs[listQuery.data.size - 1];

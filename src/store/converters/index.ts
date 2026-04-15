@@ -32,6 +32,7 @@ export const clientConverter = {
 
 export const materialConverter = {
   toFirestore: (material: Omit<Material, "id">) => ({
+    category: material.category,
     label: material.label.trim(),
     value: +material.value,
     description: material.description || "",
