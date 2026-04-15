@@ -1,24 +1,42 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { theme } from "@/store/config/theme";
-import type { EstimateCalculatorForm } from "../types";
+import { ESTIMATE_CALCULATOR_CATEGORY_OPTIONS } from "../constants";
+import type {
+  EstimateCalculatorForm,
+  TEstimateCalculatorCategory,
+} from "../types";
 
 /**
  * Generate a PDF document for the estimate calculator.
  * @param data - The data to be included in the PDF.
+ * @param category - The category of the estimate, which may affect the PDF content or formatting.
  * @returns The generated PDF document.
  */
-export const createEstimateCalculatorDoc = (data: EstimateCalculatorForm) => {
+export const createEstimateCalculatorDoc = (
+  data: EstimateCalculatorForm,
+  category: TEstimateCalculatorCategory,
+) => {
   const materialTotal = data.materials.reduce(
     (acc, { value, count }) => acc + value * (count ?? 0),
-    0
+    0,
   );
   const subtotal = materialTotal + (data.additional ?? 0);
   const total = subtotal + (subtotal * data.tax) / 100;
+  const categoryLabel =
+    ESTIMATE_CALCULATOR_CATEGORY_OPTIONS.find(
+      (option) => option.value === category,
+    )?.label ?? "-";
 
   const doc = new jsPDF();
 
   // Meta
+  autoTable(doc, {
+    headStyles: { fillColor: theme.palette.primary.main },
+    head: [["Estimate Information"]],
+    body: [[`${categoryLabel} Estimate`]],
+  });
+
   autoTable(doc, {
     headStyles: { fillColor: theme.palette.primary.main },
     head: [["Customer Information"]],

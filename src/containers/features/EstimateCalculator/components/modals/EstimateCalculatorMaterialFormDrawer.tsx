@@ -6,19 +6,17 @@ import MaterialFormDrawer from "@/containers/modals/MaterialFormDrawer";
 import MaterialForm from "@/containers/forms/MaterialForm";
 
 const EstimateCalculatorMaterialFormDrawer = (
-  props: Partial<ComponentProps<typeof MaterialFormDrawer>>
+  props: Partial<ComponentProps<typeof MaterialFormDrawer>>,
 ) => {
   /** Values */
 
   const queryClient = useQueryClient();
-  const { queryOptions, materialModal, setMaterialModal } =
+  const { queryOptions, category, materialModal, setMaterialModal } =
     useEstimateCalculator();
 
   /** Mutations */
 
-  const {
-    mutations: { update, create },
-  } = useMaterials();
+  const materialsHook = useMaterials();
 
   /** Callbacks */
 
@@ -31,15 +29,17 @@ const EstimateCalculatorMaterialFormDrawer = (
   };
 
   const handleSubmit: ComponentProps<typeof MaterialForm>["onSubmit"] = async (
-    data
+    data,
   ) => {
+    const formData = { ...data, category };
+
     if (materialModal.material)
-      await update.mutateAsync(
-        { id: materialModal.material.id, ...data },
-        { onSuccess: () => void queryClient.invalidateQueries(queryOptions) }
+      await materialsHook.mutations.update.mutateAsync(
+        { id: materialModal.material.id, ...formData },
+        { onSuccess: () => void queryClient.invalidateQueries(queryOptions) },
       );
     else
-      await create.mutateAsync(data, {
+      await materialsHook.mutations.create.mutateAsync(formData, {
         onSuccess: () => void queryClient.invalidateQueries(queryOptions),
       });
 

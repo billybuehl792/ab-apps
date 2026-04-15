@@ -37,7 +37,7 @@ const useMaterials = (company?: Company | string) => {
       void queryClient.invalidateQueries(materialQueries(companyId));
       snackbar.enqueueSnackbar(
         `${markdownUtils.bold(data.label)} material created`,
-        { variant: "success" }
+        { variant: "success" },
       );
     },
     onError: () =>

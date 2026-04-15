@@ -1,4 +1,3 @@
-import { type FormEventHandler } from "react";
 import { useSnackbar } from "notistack";
 import { Button, type ButtonProps } from "@mui/material";
 import { SaveAlt } from "@mui/icons-material";
@@ -8,14 +7,14 @@ import { createEstimateCalculatorDoc } from "../../utils";
 const EstimateCalculatorExportButton = (props: ButtonProps) => {
   /** Values */
 
-  const { methods } = useEstimateCalculator();
+  const { methods, category } = useEstimateCalculator();
   const { enqueueSnackbar } = useSnackbar();
 
   /** Callbacks */
 
   const handleSaveDocument = methods.handleSubmit((formData) => {
     try {
-      const doc = createEstimateCalculatorDoc(formData);
+      const doc = createEstimateCalculatorDoc(formData, category);
       doc.save(`${formData.name}.pdf`);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") return;
@@ -24,7 +23,7 @@ const EstimateCalculatorExportButton = (props: ButtonProps) => {
       });
       throw error;
     }
-  }) as FormEventHandler;
+  });
 
   return (
     <Button
