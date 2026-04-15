@@ -38,14 +38,16 @@ const ClientList = ({
   /** Queries */
 
   const countQuery = useQuery(
-    clientQueries.count(companyId, { archived: false })
+    clientQueries.count(companyId, {
+      filters: [{ field: "archived", operator: "==", value: false }],
+    }),
   );
   const listQuery = useQuery({
     ...clientQueries.list(companyId, {
-      archived: false,
       limit: ROWS_PER_PAGE,
-      ...params,
+      filters: [{ field: "archived", operator: "==", value: false }],
       startAfter: lastDocs[lastDocs.length - 1],
+      ...params,
     }),
     enabled: countQuery.isSuccess,
   });
@@ -54,11 +56,11 @@ const ClientList = ({
 
   const handlePageChange: TablePaginationProps["onPageChange"] = (
     _event,
-    page
+    page,
   ) => {
     if (page < lastDocs.length)
       setLastDocs((current) =>
-        current.slice(0, Math.max(current.length - 1, 0))
+        current.slice(0, Math.max(current.length - 1, 0)),
       );
     else {
       const currentLastDoc = listQuery.data?.docs[listQuery.data.size - 1];

@@ -19,7 +19,11 @@ const ClientOverviewCard = (props: CardProps) => {
 
   /** Queries */
 
-  const clientCountQuery = useQuery(clients.queries.count({ archived: false }));
+  const clientCountQuery = useQuery(
+    clients.queries.count({
+      filters: [{ field: "archived", operator: "==", value: false }],
+    }),
+  );
 
   return (
     <Card {...props}>

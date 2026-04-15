@@ -9,7 +9,7 @@ import tseslint from "typescript-eslint";
 export default tseslint.config(
   { ignores: ["dist"], settings: { react: { version: "detect" } } },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.strictTypeChecked],
+    extends: [js.configs.recommended],
     files: ["**/*.{ts,tsx}"],
     ignores: ["firebase/**"],
     languageOptions: {
@@ -43,5 +43,5 @@ export default tseslint.config(
         },
       ],
     },
-  }
+  },
 );

@@ -18,18 +18,20 @@ const getCompanyCollection = () =>
 
 const getClientCollection = (companyId: string) =>
   collection(db, `companies/${companyId}/clients`).withConverter(
-    clientConverter
+    clientConverter,
   );
 
 const getMaterialCollection = (companyId: string) =>
   collection(db, `companies/${companyId}/materials`).withConverter(
-    materialConverter
+    materialConverter,
   );
 
 const getQueryConstraints = (params?: QueryParams) => {
   const constraints = [];
-  if (typeof params?.archived === "boolean")
-    constraints.push(where("archived", "==", params.archived));
+  if (Array.isArray(params?.filters)) {
+    for (const filter of params.filters)
+      constraints.push(where(filter.field, filter.operator, filter.value));
+  }
   if (params?.startAfter) constraints.push(startAfter(params.startAfter));
   if (typeof params?.limit === "number") constraints.push(limit(params.limit));
   if (typeof params?.orderBy === "string")

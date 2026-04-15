@@ -1,4 +1,4 @@
-import { type FormEventHandler, useState } from "react";
+import React, { useState } from "react";
 import { Stack, type StackProps } from "@mui/material";
 import { useForm } from "react-hook-form";
 import useMaterials from "@/store/hooks/useMaterials";
@@ -8,42 +8,51 @@ import EstimateCalculatorFieldArray from "./layout/EstimateCalculatorFieldArray"
 import EstimateCalculatorMeta from "./layout/EstimateCalculatorMeta";
 import EstimateCalculatorFooter from "./layout/EstimateCalculatorFooter";
 import EstimateCalculatorMaterialFormDrawer from "./components/modals/EstimateCalculatorMaterialFormDrawer";
-import { ESTIMATE_CALCULATOR_DEFAULT_VALUES } from "./constants";
+import {
+  ESTIMATE_CALCULATOR_CATEGORY_OPTIONS,
+  ESTIMATE_CALCULATOR_DEFAULT_VALUES,
+} from "./constants";
 import type {
+  TEstimateCalculatorCategory,
   EstimateCalculatorContextValue,
   EstimateCalculatorForm,
 } from "./types";
 
-const EstimateCalculator = (props: StackProps<"form">) => {
+type TEstimateCalculatorProps = Omit<
+  StackProps<"form">,
+  "component" | "onSubmit" | "onReset"
+>;
+
+const EstimateCalculator: React.FC<TEstimateCalculatorProps> = (props) => {
   const [materialModal, setMaterialModal] = useState<
     EstimateCalculatorContextValue["materialModal"]
   >({ open: false, material: null });
+  const [category, setCategory] = useState<TEstimateCalculatorCategory>(
+    ESTIMATE_CALCULATOR_CATEGORY_OPTIONS[0].value,
+  );
 
   /** Values */
 
   const materials = useMaterials();
 
-  const queryOptions = materials.queries.list({ orderBy: "label" });
+  const queryOptions = materials.queries.list({
+    orderBy: "label",
+    filters: [{ field: "category", operator: "==", value: category }],
+  });
   const methods = useForm<EstimateCalculatorForm>({
     defaultValues: ESTIMATE_CALCULATOR_DEFAULT_VALUES,
   });
 
   /** Callbacks */
 
-  const onSubmit: FormEventHandler = (event) => {
-    event.preventDefault();
-  };
-
-  const onReset: FormEventHandler = (event) => {
-    event.preventDefault();
-  };
-
   return (
     <EstimateCalculatorProvider
       value={{
         queryOptions,
         methods,
+        category,
         materialModal,
+        onCategoryChange: setCategory,
         setMaterialModal: (open, material) => {
           setMaterialModal({ open, material: material ?? null });
         },
@@ -52,8 +61,8 @@ const EstimateCalculator = (props: StackProps<"form">) => {
       <Stack
         component="form"
         noValidate
-        onSubmit={onSubmit}
-        onReset={onReset}
+        onSubmit={(event) => event.preventDefault()}
+        onReset={(event) => event.preventDefault()}
         {...props}
       >
         <Stack
