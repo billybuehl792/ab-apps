@@ -28,7 +28,8 @@ const NavigationList = (props: Partial<ComponentProps<typeof NestedList>>) => {
     },
     {
       id: "clients",
-      render: Boolean(auth.user),
+      // render: Boolean(auth.user),
+      render: false,
       label: "Clients",
       icon: <Groups />,
       selected: location.pathname.startsWith("/app/clients"),

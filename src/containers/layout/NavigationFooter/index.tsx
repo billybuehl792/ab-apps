@@ -24,6 +24,7 @@ const NavigationFooter = (props: PaperProps) => {
       link: { to: "/app" },
     },
     {
+      render: false,
       id: "clients",
       label: "Clients",
       selected: location.pathname.startsWith("/app/clients"),
@@ -55,15 +56,17 @@ const NavigationFooter = (props: PaperProps) => {
       {...props}
     >
       <BottomNavigation value={value} sx={{ height: "100%" }}>
-        {actions.map((action) => (
-          <BottomNavigationAction
-            key={action.id}
-            value={action.id}
-            label={action.label}
-            icon={action.icon}
-            {...(!!action.link && { LinkComponent: Link, ...action.link })}
-          />
-        ))}
+        {actions
+          .filter((action) => action.render !== false)
+          .map((action) => (
+            <BottomNavigationAction
+              key={action.id}
+              value={action.id}
+              label={action.label}
+              icon={action.icon}
+              {...(!!action.link && { LinkComponent: Link, ...action.link })}
+            />
+          ))}
       </BottomNavigation>
     </Paper>
   );
