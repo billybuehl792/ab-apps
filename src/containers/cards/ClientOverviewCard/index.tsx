@@ -11,8 +11,17 @@ import {
 } from "@mui/material";
 import { Person } from "@mui/icons-material";
 import useClients from "@/store/hooks/useClients";
+import React from "react";
+import { sxAsArray } from "@/store/utils/sx";
 
-const ClientOverviewCard = (props: CardProps) => {
+interface IClientOverviewCardProps extends CardProps {
+  disabled?: boolean;
+}
+
+const ClientOverviewCard: React.FC<IClientOverviewCardProps> = ({
+  disabled,
+  ...props
+}) => {
   /** Values */
 
   const clients = useClients();
@@ -26,8 +35,15 @@ const ClientOverviewCard = (props: CardProps) => {
   );
 
   return (
-    <Card {...props}>
-      <CardActionArea LinkComponent={Link} href="/app/clients">
+    <Card
+      {...props}
+      sx={[disabled ? { color: "text.disabled" } : {}, ...sxAsArray(props?.sx)]}
+    >
+      <CardActionArea
+        LinkComponent={Link}
+        href="/app/clients"
+        disabled={disabled}
+      >
         <Stack component={CardContent} spacing={2}>
           <Person fontSize="large" />
           <Stack spacing={1}>

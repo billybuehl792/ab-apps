@@ -14,7 +14,7 @@ function RouteComponent() {
         <Typography variant="h6">Overview</Typography>
         <Grid container spacing={1}>
           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-            <ClientOverviewCard />
+            <ClientOverviewCard disabled />
           </Grid>
         </Grid>
         <Typography variant="h6">My Apps</Typography>

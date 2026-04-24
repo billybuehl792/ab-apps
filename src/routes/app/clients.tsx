@@ -1,6 +1,7 @@
 import {
   createFileRoute,
   Outlet,
+  redirect,
   useLocation,
   useMatches,
 } from "@tanstack/react-router";
@@ -11,6 +12,9 @@ import PageHeader from "@/components/layout/PageHeader";
 import ClientMenuIconButton from "@/containers/buttons/ClientMenuIconButton";
 
 export const Route = createFileRoute("/app/clients")({
+  beforeLoad: () => {
+    redirect({ to: "/app", replace: true, throw: true });
+  },
   loader: () => ({ crumb: "Clients" }),
   component: RouteComponent,
 });
