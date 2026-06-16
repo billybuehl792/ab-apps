@@ -15,7 +15,13 @@ const EstimateCalculatorExportButton = (props: ButtonProps) => {
   const handleSaveDocument = methods.handleSubmit((formData) => {
     try {
       const doc = createEstimateCalculatorDoc(formData, category);
-      doc.save(`${formData.name}.pdf`);
+      // doc.autoPrint();
+      // Create blob URL for better PWA compatibility
+      const blob = doc.output("blob");
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+      // Cleanup the object URL after a short delay
+      setTimeout(() => URL.revokeObjectURL(url), 100);
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") return;
       enqueueSnackbar("Something went wrong while attempting to export file", {
